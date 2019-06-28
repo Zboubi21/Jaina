@@ -20,7 +20,7 @@ public class FireFlameInstantiator : MonoBehaviour {
 	}
 
 	public void DestroyInstantiator(float time){
-		Debug.Log("Je vais mourir dans : " + time);
+		// Debug.Log("Je vais mourir dans : " + time);
 		Destroy(gameObject, time);
 	}
 

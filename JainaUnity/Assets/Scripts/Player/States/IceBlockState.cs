@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class IceBlockState : IState {
 
@@ -42,7 +43,7 @@ public class IceBlockState : IState {
 		m_playerManager.m_powers.m_Block.m_actualIceBlockTimer += Time.deltaTime;
 
 		if(m_playerManager.m_powers.m_Block.m_actualIceBlockTimer >= m_playerManager.m_powers.m_Block.m_timeToBeInIceBlock){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 	}
 

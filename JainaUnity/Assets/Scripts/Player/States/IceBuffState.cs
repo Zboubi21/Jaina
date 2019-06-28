@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class IceBuffState : IState {
 	
@@ -27,7 +28,7 @@ public class IceBuffState : IState {
 		}
 
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceBuff.m_waitTimeToExitState + m_playerManager.m_powers.m_iceBuff.m_waitTimeToThrowSpell){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
 		m_stateTimer += Time.deltaTime;

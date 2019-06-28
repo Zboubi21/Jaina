@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using TMPro;
 using EZCameraShake;
+using PlayerStateEnum;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerManager : MonoBehaviour {
@@ -351,6 +352,12 @@ public class PlayerManager : MonoBehaviour {
 			new FireTrailState(this),			// 7 - Fire Trail
 			new ArcaneExplosionState(this),		// 8 - Arcane Explosion
 		});
+
+		string[] PlayerStateNames = System.Enum.GetNames (typeof(PlayerState));
+		if(m_sM.States.Count != PlayerStateNames.Length){
+			Debug.LogError("You need to have the same number of State in PlayerManager and PlayerStateEnum");
+		}
+
 		m_agent = GetComponent<NavMeshAgent>();
 		SetUIElements();
 
@@ -372,8 +379,8 @@ public class PlayerManager : MonoBehaviour {
 		m_sM.FixedUpdate();
 	}
 
-	public void ChangeState(int index){
-		m_sM.ChangeState(index);
+	public void ChangeState(PlayerState newPlayerState){
+		m_sM.ChangeState((int)newPlayerState);
 	}
 
 	void UpdateInputButtons(){

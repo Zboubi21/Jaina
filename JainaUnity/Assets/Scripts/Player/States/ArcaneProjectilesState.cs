@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class ArcaneProjectilesState : IState {
 
@@ -59,12 +60,12 @@ public class ArcaneProjectilesState : IState {
 
 		//On sort de la state
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToExitState + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowThirdSpell){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
 		//Si le joueur veut ressortir de la state
 		if(m_playerManager.m_leftSpellButton){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
 		m_stateTimer += Time.deltaTime;

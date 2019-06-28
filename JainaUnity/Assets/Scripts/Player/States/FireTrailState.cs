@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class FireTrailState : IState {
 
@@ -26,7 +27,7 @@ public class FireTrailState : IState {
 		}
 
 		if(m_stateTimer >= m_playerManager.m_powers.m_fireTrail.m_waitTimeToExitState + m_playerManager.m_powers.m_fireTrail.m_waitTimeToThrowSpell){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
 		m_stateTimer += Time.deltaTime;

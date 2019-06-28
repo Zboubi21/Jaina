@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class ArcaneExplosionState : IState {
 
@@ -30,7 +31,7 @@ public class ArcaneExplosionState : IState {
 		}
 
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneExplosion.m_waitTimeToExitState + m_playerManager.m_powers.m_arcaneExplosion.m_waitTimeToThrowSpell){
-			m_playerManager.ChangeState(0);
+			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
 		m_stateTimer += Time.deltaTime;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class BlinkState : IState {
 
@@ -27,7 +28,7 @@ public class BlinkState : IState {
       // m_playerManager.transform.position = destination;  // IMPOSSIBLE de se TP avec le vide au millieu
       m_playerManager.SetTpPoint(destination);              // POSSIBLE de se TP avec le vide au millieu
       
-      m_playerManager.ChangeState(0);
+      m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
     }
 
     public void FixedUpdate(){
