@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class ImpatienceState : IState
 {
@@ -86,7 +87,7 @@ public class ImpatienceState : IState
         {
             if (m_enemyController.CanAttackWhenImpatience() || m_enemyController.PlayerInAttackBox())
             {
-                m_enemyController.ChangeState(5); //Attack
+                m_enemyController.ChangeState(EnemyState.AttackState); //Attack
             }
         }
         //else

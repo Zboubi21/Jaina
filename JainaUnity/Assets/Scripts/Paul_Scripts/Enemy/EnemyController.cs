@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using EnemyStateEnum;
 
 public class EnemyController : MonoBehaviour {
 
@@ -17,17 +18,17 @@ public class EnemyController : MonoBehaviour {
         Anim = GetComponentInChildren<Animator>();
 
         if(!m_isInstatiate){
-            ChangeState(0);
+            ChangeState(EnemyState.IdleState);
         }
         else
         {
-            ChangeState(3);
+            ChangeState(EnemyState.ChaseState);
         }
     }
 
-    public void ChangeState(int i)
+    public void ChangeState(EnemyState newEnemyState)
     {
-        m_sM.ChangeState(i);
+        m_sM.ChangeState((int)newEnemyState);
     }
 
     public int GetLastStateIndex()
@@ -486,7 +487,7 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            ChangeState(1);
+            ChangeState(EnemyState.StunState);
         }
     }
 
@@ -497,7 +498,7 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            ChangeState(6);
+            ChangeState(EnemyState.FrozenState);
         }
     }
 
@@ -535,7 +536,7 @@ public class EnemyController : MonoBehaviour {
 
     public void OnEnemyDie()
     {
-        ChangeState(7); // Die
+        ChangeState(EnemyState.DieState); // Die
     }
 
     public virtual void Die()
@@ -561,7 +562,7 @@ public class EnemyController : MonoBehaviour {
                     Enemy.Add(hitCollider[i]);
                     if (!hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled)
                     {
-                        hitCollider[i].gameObject.GetComponent<EnemyController>().ChangeState(CurrentState);
+                        hitCollider[i].gameObject.GetComponent<EnemyController>().ChangeState((EnemyState)CurrentState);
                     }
                 }
             }

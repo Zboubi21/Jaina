@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class IdleState : IState
 {
@@ -36,7 +37,7 @@ public class IdleState : IState
     {
         if (m_enemyController.PlayerInLookRange())
         {
-            m_enemyController.ChangeState(3);
+            m_enemyController.ChangeState(EnemyState.ChaseState);
         }
     }
 

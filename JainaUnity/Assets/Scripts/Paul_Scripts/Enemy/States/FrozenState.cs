@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class FrozenState : IState
 {
@@ -59,7 +60,7 @@ public class FrozenState : IState
 
     public virtual void GetOutOfState()
     {
-        m_enemyController.ChangeState(3);
+        m_enemyController.ChangeState(EnemyState.ChaseState);
         /*if (m_enemyController.GetLastStateIndex() != 1)
         {
             m_enemyController.ChangeState(m_enemyController.GetLastStateIndex());

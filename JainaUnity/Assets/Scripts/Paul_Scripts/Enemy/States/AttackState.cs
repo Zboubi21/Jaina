@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class AttackState : IState
 {
@@ -62,15 +63,15 @@ public class AttackState : IState
         {
             if (!m_enemyController.InAttackRange())
             {
-                m_enemyController.ChangeState(3); // ChaseState
+                m_enemyController.ChangeState(EnemyState.ChaseState); // ChaseState
             }
             else if (m_enemyController.InAttackRange() && !m_enemyController.PlayerInAttackBox())
             {
-                m_enemyController.ChangeState(4); // Impatience
+                m_enemyController.ChangeState(EnemyState.ImpatienceState); // Impatience
             }
             else
             {
-                m_enemyController.ChangeState(5); // Attack
+                m_enemyController.ChangeState(EnemyState.AttackState); // Attack
             }
         }
     }

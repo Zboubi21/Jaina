@@ -352,15 +352,13 @@ public class PlayerManager : MonoBehaviour {
 			new FireTrailState(this),			// 7 - Fire Trail
 			new ArcaneExplosionState(this),		// 8 - Arcane Explosion
 		});
-
-		string[] PlayerStateNames = System.Enum.GetNames (typeof(PlayerState));
-		if(m_sM.States.Count != PlayerStateNames.Length){
+		string[] playerStateNames = System.Enum.GetNames (typeof(PlayerState));
+		if(m_sM.States.Count != playerStateNames.Length){
 			Debug.LogError("You need to have the same number of State in PlayerManager and PlayerStateEnum");
 		}
 
 		m_agent = GetComponent<NavMeshAgent>();
 		SetUIElements();
-
 	}
 	
 	void OnEnable(){

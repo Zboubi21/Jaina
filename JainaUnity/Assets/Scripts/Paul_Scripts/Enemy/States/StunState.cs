@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class StunState : IState
 {
@@ -48,7 +49,7 @@ public class StunState : IState
         
         if(!HasBeenOnAlert)
         {
-            m_enemyController.ChangeState(2);
+            m_enemyController.ChangeState(EnemyState.AlerteState);
             HasBeenOnAlert = true;
         }
         //else if (m_enemyController.GetLastStateIndex() != 6)
@@ -57,7 +58,7 @@ public class StunState : IState
         //}
         else
         {
-            m_enemyController.ChangeState(3);
+            m_enemyController.ChangeState(EnemyState.ChaseState);
         }
 
     }

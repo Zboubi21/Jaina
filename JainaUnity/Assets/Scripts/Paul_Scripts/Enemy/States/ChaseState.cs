@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyStateEnum;
 
 public class ChaseState : IState
 {
@@ -87,11 +88,11 @@ public class ChaseState : IState
     {
         if (m_enemyController.InAttackRange() /*Stopping Distance*/ && m_enemyController.PlayerInAttackBox()) //GreenBox
         {
-            m_enemyController.ChangeState(5); //Attack
+            m_enemyController.ChangeState(EnemyState.AttackState); //Attack
         }
         else if (m_enemyController.IsChasing())
         {
-            m_enemyController.ChangeState(4); // Impatience
+            m_enemyController.ChangeState(EnemyState.ImpatienceState); // Impatience
         }
     }
     #endregion
