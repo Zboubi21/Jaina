@@ -14,6 +14,7 @@ public class IceBuff : Spell {
 	[SerializeField] float m_scaleMini;
 	[SerializeField] float m_scaleMaxi;
 
+	PlayerManager m_playerManager;
 	bool m_canModifyTheScale = false;
 	float m_actualScale;
 	Animation m_anim;
@@ -27,7 +28,9 @@ public class IceBuff : Spell {
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
-			PlayerManager.Instance.m_autoAttacks.m_isBuff = true;
+			m_playerManager = col.GetComponent<PlayerManager>();
+			m_playerManager.m_autoAttacks.m_isBuff = true;
+			m_playerManager.On_AutoAttackBuffChange(true);
 		}
 	}
 
@@ -50,7 +53,7 @@ public class IceBuff : Spell {
 
 	void OnTriggerExit(Collider col){
 		if(col.CompareTag("Player")){
-			PlayerManager.Instance.m_autoAttacks.m_isBuff = false;			
+			m_playerManager.m_autoAttacks.m_isBuff = false;			
 		}
 	}
 
@@ -65,7 +68,7 @@ public class IceBuff : Spell {
 	}
 
 	public void DestroyBuff(){
-		PlayerManager.Instance.m_autoAttacks.m_isBuff = false;
+		m_playerManager.m_autoAttacks.m_isBuff = false;
 		Destroy(gameObject);
 	}
 

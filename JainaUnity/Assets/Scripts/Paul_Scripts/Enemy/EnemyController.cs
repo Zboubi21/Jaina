@@ -472,7 +472,7 @@ public class EnemyController : MonoBehaviour {
             StartCoroutine(CoolDownTimerBeforeGettingStunable());
         }else
         {
-            Debug.Log("J'ai pas a être stun moi pd de merde ");
+            // Debug.Log("J'ai pas a être stun moi pd de merde ");
         }
     }
 
@@ -558,7 +558,7 @@ public class EnemyController : MonoBehaviour {
             {
                 if(hitCollider[i] != Mycollider)
                 {
-                        Debug.Log("Le collider " + i + " est : " + hitCollider[i].name + " et sont BeenYelled est à "+ hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled);
+                    // Debug.Log("Le collider " + i + " est : " + hitCollider[i].name + " et sont BeenYelled est à "+ hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled);
                     Enemy.Add(hitCollider[i]);
                     if (!hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled)
                     {

@@ -25,7 +25,8 @@ public class FireTrail : Spell {
     {
         if (other.CompareTag("Enemy"))
         {
-            print("feu");
+
+            // print("feu");
             other.gameObject.GetComponent<CharacterStats>().FireTrail();
         }
     }

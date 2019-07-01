@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour {
 		public float m_cooldown = 0.25f;
 		public float m_buffCooldown = 0.125f;
 		[HideInInspector] public bool m_isBuff = false;
-		[HideInInspector] public float m_actualCooldown = 0;
+		/*[HideInInspector]*/ public float m_actualCooldown = 0;
 
 		[Header("Prefabs")]
 		public Transform m_spawnRoot;
@@ -297,7 +297,7 @@ public class PlayerManager : MonoBehaviour {
 	public LayerMask m_enemyLayer;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
-	[HideInInspector] public bool m_autoAttackCooldown = false;
+	bool m_canAutoAttack = true;
 	
 #region Input Buttons
 
@@ -359,6 +359,10 @@ public class PlayerManager : MonoBehaviour {
 
 		m_agent = GetComponent<NavMeshAgent>();
 		SetUIElements();
+	}
+
+	void Start(){
+		InitializeStartAutoAttackCooldown();
 	}
 	
 	void OnEnable(){
@@ -664,38 +668,46 @@ public class PlayerManager : MonoBehaviour {
 
 			m_powers.m_arcaneExplosion.m_cooldownImage.fillAmount = 1;
 		}
-		AutoAttack();
+		AutoAttackCooldown();
 	}
 
-	public void AutoAttack(){
-		if(m_autoAttackCooldown){
-
+	void InitializeStartAutoAttackCooldown(){
+		m_autoAttacks.m_actualCooldown = m_autoAttacks.m_cooldown;
+	}
+	void AutoAttackCooldown(){
+		if(!m_canAutoAttack){
 			m_autoAttacks.m_actualCooldown -= Time.deltaTime;
-
 			if(m_autoAttacks.m_actualCooldown <= 0){
-
+				m_canAutoAttack = true;
 				if(m_autoAttacks.m_isBuff){
 					m_autoAttacks.m_actualCooldown = m_autoAttacks.m_buffCooldown;
 				}else{
 					m_autoAttacks.m_actualCooldown = m_autoAttacks.m_cooldown;
 				}
-
-				switch(m_currentElement){
-					case ElementType.Arcane:
-						Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
-					break;
-					case ElementType.Ice:
-						Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
-					break;
-					case ElementType.Fire:
-						Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
-					break;
-				}
-
-				m_autoAttackCooldown = false;
-			
 			}
-			
+		}
+	}
+	public void AutoAttack(){
+		if(m_canAutoAttack){
+			m_canAutoAttack = false;
+			switch(m_currentElement){
+				case ElementType.Arcane:
+					Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+				break;
+				case ElementType.Ice:
+					Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+				break;
+				case ElementType.Fire:
+					Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+				break;
+			}
+		}
+	}
+	public void On_AutoAttackBuffChange(bool isBuff){
+		if(isBuff){
+			if(m_autoAttacks.m_actualCooldown > m_autoAttacks.m_buffCooldown){
+				m_autoAttacks.m_actualCooldown = m_autoAttacks.m_buffCooldown;
+			}
 		}
 	}
 

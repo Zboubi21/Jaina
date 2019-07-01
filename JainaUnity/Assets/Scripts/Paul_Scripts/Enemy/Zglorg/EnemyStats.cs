@@ -150,7 +150,7 @@ public class EnemyStats : CharacterStats {
             FireMarkCount = 0;
             TimerTickDamage = saveDamageTick;
             StartFireCooldown = false;
-            Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
+            // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
             TakeDamage(FireExplosionDamage);
             Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
         }
@@ -186,7 +186,7 @@ public class EnemyStats : CharacterStats {
         TimeBetweenFireTrailTicks -= Time.deltaTime;
         if(TimeBetweenFireTrailTicks <= 0)
         {
-            Debug.Log("FireTrailTicks");
+            // Debug.Log("FireTrailTicks");
             TakeDamage(DamageFireTrailTicks);
             //Debug.Log("Boom " + DamageFireTrailTicks + " damage dans les dents");
         }
@@ -222,10 +222,10 @@ public class EnemyStats : CharacterStats {
         else if(m_canvas.activeSelf)
         {
             timeBeforeLifeBarOff -= Time.deltaTime;
-            Debug.Log(timeBeforeLifeBarOff);
+            // Debug.Log(timeBeforeLifeBarOff);
             if (timeBeforeLifeBarOff <= 0)
             {
-                Debug.Log("LifeBarOff");
+                // Debug.Log("LifeBarOff");
                 m_canvas.SetActive(false);
                 timeBeforeLifeBarOff = saveTimeBeforeLifeBarOff;
             }
