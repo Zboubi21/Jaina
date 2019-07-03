@@ -18,6 +18,7 @@ public class ArcaneExplosionState : IState {
 		m_stateTimer = 0;
 		m_spellIsThrow = false;
 		m_playerManager.StopPlayerMovement();
+		m_playerManager.ChangePower(true);			
     }
 
     public void Update(){
@@ -45,7 +46,7 @@ public class ArcaneExplosionState : IState {
 		m_playerManager.m_powers.m_arcaneExplosion.m_startCooldown = true;
 		m_playerManager.MovePlayer();
 		m_playerManager.m_canThrowSpell = true;
-		m_playerManager.ChangePower(true);			
+		// m_playerManager.ChangePower(true);			
 	}
 
 }

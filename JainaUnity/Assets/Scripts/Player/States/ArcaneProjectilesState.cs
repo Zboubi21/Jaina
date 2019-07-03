@@ -13,7 +13,7 @@ public class ArcaneProjectilesState : IState {
 	// Constructor (CTOR)
 	PlayerManager m_playerManager;
     public ArcaneProjectilesState (PlayerManager playerManager){
-		  m_playerManager = playerManager;
+		m_playerManager = playerManager;
     }
 
     public void Enter(){
@@ -22,7 +22,8 @@ public class ArcaneProjectilesState : IState {
 		m_secondSpellIsThrow = false;
 		m_thirdSpellIsThrow = false;
 		m_playerManager.StopPlayerMovement();
-    }
+		m_playerManager.ChangePower(false);			
+    }	
 
     public void Update(){
 		//First spell
@@ -79,7 +80,7 @@ public class ArcaneProjectilesState : IState {
 		m_playerManager.m_powers.m_arcaneProjectiles.m_startCooldown = true;
 		m_playerManager.MovePlayer();
 		m_playerManager.m_canThrowSpell = true;
-		m_playerManager.ChangePower(false);			
+		// m_playerManager.ChangePower(false);			
     }
 	
 }

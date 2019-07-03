@@ -282,6 +282,9 @@ public class PlayerManager : MonoBehaviour {
 				public float m_timeToFinish = 0.25f;
 				public AnimationCurve m_curveAnim;
 
+				public RectTransform m_leftLeftPosition;
+				public RectTransform m_leftRightPosition;
+
 				public RectTransform m_rightLeftPosition;
 				public RectTransform m_rightRightPosition;
 			}
@@ -461,7 +464,7 @@ public class PlayerManager : MonoBehaviour {
 				m_currentElement = rightSpell == true ? m_currentElement = ElementType.Ice : m_currentElement = ElementType.Arcane;
 			break;
 		}
-		ChangeUIElements();
+		ChangeUIElements(rightSpell);
 	}
 
 	void SetUIElements(){
@@ -473,12 +476,388 @@ public class PlayerManager : MonoBehaviour {
 		m_rightMiddlePos = m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition;
 		m_rightRightPos = m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
 
-		// m_powers.m_fireBalls.m_uI.m_secondSpellImage
+		ChangeSpellAlpha(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0);
+		ChangeSpellAlpha(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0);
+		ChangeSpellAlpha(m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0);
+		ChangeSpellAlpha(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0);
+		ChangeSpellAlpha(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0);
+		ChangeSpellAlpha(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0);
 
 		ChangeUIElements();
 	}
 
-	IEnumerator MoveToYourNextPosition(RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition){
+	void ChangeUIElements(bool rightSpell = true){
+		switch(m_currentElement){
+			case ElementType.Arcane:
+				// --------------------------
+				// ---------- LEFT ----------
+				// --------------------------
+
+				// -------------------------
+				// ---------- ICE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 
+					m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				// --------------------------
+				// ---------- FIRE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 
+					m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0));
+					// --------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+				
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+
+
+				// ---------------------------
+				// ---------- RIGHT ----------
+				// ---------------------------
+
+				// -------------------------
+				// ---------- ICE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+					m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
+					m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}				
+				
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+				
+				// --------------------------
+				// ---------- FIRE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
+					
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+					m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
+					m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
+					// --------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+				
+			break;
+			case ElementType.Ice:
+				// --------------------------
+				// ---------- LEFT ----------
+				// --------------------------
+
+				// --------------------------
+				// ---------- FIRE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 
+					m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+				
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				// ----------------------------
+				// ---------- ARCANE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 
+					m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0));
+					// ----------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+				
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+
+
+				// ---------------------------
+				// ---------- RIGHT ----------
+				// ---------------------------
+
+				// --------------------------
+				// ---------- FIRE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
+					
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+					m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
+					m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
+					// --------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}				
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				// ----------------------------
+				// ---------- ARCANE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+					m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
+					m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
+					// ----------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+			break;
+			case ElementType.Fire:
+				// --------------------------
+				// ---------- LEFT ----------
+				// --------------------------
+
+				// ----------------------------
+				// ---------- ARCANE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 
+					m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+				
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				// -------------------------
+				// ---------- ICE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 
+					m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+
+
+				// ---------------------------
+				// ---------- RIGHT ----------
+				// ---------------------------
+
+				// ----------------------------
+				// ---------- ARCANE ----------
+				if(!rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
+					
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
+					
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+					m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
+					m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
+					// ----------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}				
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				// -------------------------
+				// ---------- ICE ----------
+				if(rightSpell){
+					// First
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+					// Second
+					m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
+					StartCoroutine(ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
+
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+					m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
+					m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
+					// -------------------------
+				}else{
+					StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+
+					StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+					StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+				}
+			break;
+		}
+	}
+
+	void ChangeSpellAlpha(Image spellImg, Image cdImg, TextMeshProUGUI text, float newAlpha){
+		spellImg.color = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, newAlpha);
+		cdImg.color = new Color(cdImg.color.r, cdImg.color.g, cdImg.color.b, newAlpha);
+		text.color = new Color(text.color.r, text.color.g, text.color.b, newAlpha);
+	}
+
+	IEnumerator ChangeSpellAlphaCorout(Image spellImg, Image cdImg, TextMeshProUGUI text, float fromAlpha, float toAlpha){
+		
+		float distance = Mathf.Abs(fromAlpha - toAlpha);
+		float moveFracJourney = new float();
+		float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
+		Color desiredColor = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, toAlpha);
+
+		while(spellImg.color != desiredColor){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			float alphaValue = Mathf.Lerp(fromAlpha, toAlpha, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
+			spellImg.color = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, alphaValue);
+			cdImg.color = new Color(cdImg.color.r, cdImg.color.g, cdImg.color.b, alphaValue);
+			text.color = new Color(text.color.r, text.color.g, text.color.b, alphaValue);
+			yield return null;
+		}
+	}
+
+	IEnumerator MoveToYourNextPosition(RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition, RectTransform firstSpellToTp = null, Image firstSpellImg = null, Image firstCdImg = null, TextMeshProUGUI firstText = null, float firstNewAlpha = 0, Image secondSpellImg = null, Image secondCdImg = null, TextMeshProUGUI secondText = null, float secondNewAlpha = 0){
 		
 		float distance = Vector3.Distance(fromPosition, toPosition);
 		float moveFracJourney = new float();
@@ -488,6 +867,11 @@ public class PlayerManager : MonoBehaviour {
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
 			transformObject.localPosition = Vector3.Lerp(fromPosition, toPosition, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
 			yield return null;
+		}
+		if(firstSpellToTp != null){
+			firstSpellToTp.localPosition = transformObject.localPosition;				// On TP le spell principal
+			ChangeSpellAlpha(firstSpellImg, firstCdImg, firstText, firstNewAlpha);		// On enlève sa transparence
+			ChangeSpellAlpha(secondSpellImg, secondCdImg, secondText, secondNewAlpha);	// On met transparent le spell secondaire
 		}
 	}
 	IEnumerator ChangeSpriteSize(RectTransform transformObject, Vector2 fromScale, Vector2 toScale){
@@ -512,89 +896,6 @@ public class PlayerManager : MonoBehaviour {
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
 			textObject.fontSize = Mathf.Lerp(fromSize, toSize, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
 			yield return null;
-		}
-	}
-
-	void ChangeUIElements(){
-		switch(m_currentElement){
-			case ElementType.Arcane:
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-				
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-				
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-			break;
-			case ElementType.Ice:
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-				
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-			break;
-			case ElementType.Fire:
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
-
-				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
-				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
-				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
-			break;
 		}
 	}
 
