@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour {
 		public float m_cooldown = 0.25f;
 		public float m_buffCooldown = 0.125f;
 		[HideInInspector] public bool m_isBuff = false;
-		/*[HideInInspector]*/ public float m_actualCooldown = 0;
+		[HideInInspector] public float m_actualCooldown = 0;
 
 		[Header("Prefabs")]
 		public Transform m_spawnRoot;
@@ -101,7 +101,7 @@ public class PlayerManager : MonoBehaviour {
             public float m_timeFreezed = 3f;
 
             [Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 		}
@@ -123,7 +123,7 @@ public class PlayerManager : MonoBehaviour {
 			public bool m_stopMovingAfterSpell = true;
 
 			[Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 
@@ -146,7 +146,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 		}
@@ -171,7 +171,7 @@ public class PlayerManager : MonoBehaviour {
             public int m_fireTrailTickDamage = 5;
 
 			[Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 		}
@@ -197,7 +197,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 
@@ -250,7 +250,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public GameObject m_UiParent;
+			public RectTransform m_UiParent;
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
 
@@ -260,6 +260,22 @@ public class PlayerManager : MonoBehaviour {
 			public float m_roughnessShake = 4f;
 			public float m_fadeInTimeShake = 0.1f;
 			public float m_fadeOutTimeShake = 0.1f;
+		}
+
+		[Header("UI")]
+		public UI m_uI = new UI();
+		[System.Serializable] public class UI {
+			[Header("Width/Height")]
+			public Vector2 m_minScale = new Vector2(44, 44);
+			public Vector2 m_maxScale = new Vector2(58, 58);
+
+			[Header("Text size")]
+			public float m_minSize = 20;
+			public float m_maxSize = 30;
+
+			[Header("Positions")]
+			public RectTransform m_rightLeftPosition;
+			public RectTransform m_rightRightPosition;
 		}
 	}
 
@@ -440,13 +456,13 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void SetUIElements(){
-		m_topLeftPos = m_powers.m_fireBalls.m_UiParent.transform.position;
-		m_middleLeftPos = m_powers.m_iceNova.m_UiParent.transform.position;
-		m_botLeftPos = m_powers.m_arcaneProjectiles.m_UiParent.transform.position;
+		m_topLeftPos = m_powers.m_iceNova.m_UiParent.position;
+		m_middleLeftPos = m_powers.m_arcaneProjectiles.m_UiParent.position;
+		m_botLeftPos = m_powers.m_fireBalls.m_UiParent.position;
 
-		m_topRightPos = m_powers.m_fireTrail.m_UiParent.transform.position;
-		m_middleRightPos = m_powers.m_iceBuff.m_UiParent.transform.position;
-		m_botRightPos = m_powers.m_arcaneExplosion.m_UiParent.transform.position;
+		m_topRightPos = m_powers.m_iceBuff.m_UiParent.position;
+		m_middleRightPos = m_powers.m_arcaneExplosion.m_UiParent.position;
+		m_botRightPos = m_powers.m_fireTrail.m_UiParent.position;
 
 		ChangeUIElements();
 	}
@@ -454,31 +470,82 @@ public class PlayerManager : MonoBehaviour {
 	void ChangeUIElements(){
 		switch(m_currentElement){
 			case ElementType.Arcane:
-				m_powers.m_fireBalls.m_UiParent.transform.position = m_topLeftPos;
-				m_powers.m_iceNova.m_UiParent.transform.position = m_botLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.transform.position = m_middleLeftPos;
+				m_powers.m_fireBalls.m_UiParent.position = m_topLeftPos;
+				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_minSize;
 
-				m_powers.m_arcaneExplosion.m_UiParent.transform.position = m_middleRightPos;
-				m_powers.m_iceBuff.m_UiParent.transform.position = m_botRightPos;
-				m_powers.m_fireTrail.m_UiParent.transform.position = m_topRightPos;
+				m_powers.m_iceNova.m_UiParent.position = m_botLeftPos;
+				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_minSize;
+				
+				m_powers.m_arcaneProjectiles.m_UiParent.position = m_middleLeftPos;
+				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_maxSize;
+
+
+				m_powers.m_arcaneExplosion.m_UiParent.position = m_middleRightPos;
+				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_maxSize;
+
+				m_powers.m_iceBuff.m_UiParent.position = m_botRightPos;
+				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_minSize;
+				
+				m_powers.m_fireTrail.m_UiParent.position = m_topRightPos;
+				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_minSize;
 			break;
 			case ElementType.Ice:
-				m_powers.m_fireBalls.m_UiParent.transform.position = m_botLeftPos;
-				m_powers.m_iceNova.m_UiParent.transform.position = m_middleLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.transform.position = m_topLeftPos;
+				m_powers.m_fireBalls.m_UiParent.position = m_botLeftPos;
+				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_minSize;
+				
+				m_powers.m_iceNova.m_UiParent.position = m_middleLeftPos;
+				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_maxSize;
 
-				m_powers.m_arcaneExplosion.m_UiParent.transform.position = m_topRightPos;
-				m_powers.m_iceBuff.m_UiParent.transform.position = m_middleRightPos;
-				m_powers.m_fireTrail.m_UiParent.transform.position = m_botRightPos;
+				m_powers.m_arcaneProjectiles.m_UiParent.position = m_topLeftPos;
+				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+
+				m_powers.m_arcaneExplosion.m_UiParent.position = m_topRightPos;
+				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+				m_powers.m_iceBuff.m_UiParent.position = m_middleRightPos;
+				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_maxSize;
+
+				m_powers.m_fireTrail.m_UiParent.position = m_botRightPos;
+				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_minSize;
 			break;
 			case ElementType.Fire:
-				m_powers.m_fireBalls.m_UiParent.transform.position = m_middleLeftPos;
-				m_powers.m_iceNova.m_UiParent.transform.position = m_topLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.transform.position = m_botLeftPos;
+				m_powers.m_fireBalls.m_UiParent.position = m_middleLeftPos;
+				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_maxSize;
 
-				m_powers.m_arcaneExplosion.m_UiParent.transform.position = m_botRightPos;
-				m_powers.m_iceBuff.m_UiParent.transform.position = m_topRightPos;
-				m_powers.m_fireTrail.m_UiParent.transform.position = m_middleRightPos;
+				m_powers.m_iceNova.m_UiParent.position = m_topLeftPos;
+				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+				m_powers.m_arcaneProjectiles.m_UiParent.position = m_botLeftPos;
+				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+
+				m_powers.m_arcaneExplosion.m_UiParent.position = m_botRightPos;
+				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+				m_powers.m_iceBuff.m_UiParent.position = m_topRightPos;
+				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
+				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_minSize;
+
+				m_powers.m_fireTrail.m_UiParent.position = m_middleRightPos;
+				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
+				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_maxSize;
 			break;
 		}
 	}
