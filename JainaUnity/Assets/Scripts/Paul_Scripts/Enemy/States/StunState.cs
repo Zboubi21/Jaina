@@ -41,7 +41,10 @@ public class StunState : IState
 
     public void Exit()
     {
-        BeStunable(false);
+        if (!m_enemyController.IsRootByIceNova)
+        {
+            BeStunable(false);
+        }
     }
 
     public virtual void GetOutOfState()
@@ -60,7 +63,6 @@ public class StunState : IState
         {
             m_enemyController.ChangeState(EnemyState.ChaseState);
         }
-
     }
 
     public virtual void IsStunable()

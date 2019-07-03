@@ -61,19 +61,22 @@ public class AttackState : IState
     {
         if (m_enemyController.CheckAnimEnd1)
         {
-            if (!m_enemyController.InAttackRange())
+            if (/*!m_enemyController.InAttackRange() &&*/ !m_enemyController.PlayerInAttackBox())
             {
+
                 m_enemyController.ChangeState(EnemyState.ChaseState); // ChaseState
             }
-            else if (m_enemyController.InAttackRange() && !m_enemyController.PlayerInAttackBox())
+            /*else if (m_enemyController.InAttackRange() && !m_enemyController.PlayerInAttackBox() && m_enemyController.IsChasing())
             {
                 m_enemyController.ChangeState(EnemyState.ImpatienceState); // Impatience
-            }
+            }*/
             else
             {
                 m_enemyController.ChangeState(EnemyState.AttackState); // Attack
             }
+
         }
+
     }
 
     #endregion

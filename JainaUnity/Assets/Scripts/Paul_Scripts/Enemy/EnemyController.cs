@@ -24,6 +24,10 @@ public class EnemyController : MonoBehaviour {
         {
             ChangeState(EnemyState.ChaseState);
         }
+        if (m_isInstatiate)
+        {
+            LogicAtStart();
+        }
     }
 
     public void ChangeState(EnemyState newEnemyState)
@@ -41,7 +45,7 @@ public class EnemyController : MonoBehaviour {
 
     [Header("Radius Variable")]
     public float lookRadius = 10f;
-    public float maxLookRadiusOnAlert = 20f;
+    public float maxLookRadiusOnAlert = 50f;
     public float yellRadius = 5f;
     [Range(0.1f, 5f)]
     public float RadiusExpansionSpeed = 1;
@@ -88,6 +92,7 @@ public class EnemyController : MonoBehaviour {
     float agentSpeed;
     [Header("Impatience Sprint")]
     float currentTimeBeforeGettingImpatient;
+    float currentTimeBeforeGettingImpatientWhenInAttackRange;
     public float speedSprint = 15f;
     public float TimeBeforeGettingImpatient = 3f;
     bool beingAttacked;
@@ -298,10 +303,22 @@ public class EnemyController : MonoBehaviour {
             agentSpeed = value;
         }
     }
+
+    public bool IsRootByIceNova
+    {
+        get
+        {
+            return m_isRootByIceNova;
+        }
+
+        set
+        {
+            m_isRootByIceNova = value;
+        }
+    }
     #endregion
-
-    public virtual void Start () {
-
+    public virtual void LogicAtStart()
+    {
         // Get Instance Of The Player and his CharacterStats
         target = PlayerManager.Instance.gameObject.transform;
         TargetStats1 = target.GetComponent<CharacterStats>();
@@ -322,17 +339,33 @@ public class EnemyController : MonoBehaviour {
 
         currentImpatience = AttackImpatience;
         currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
-
+        currentTimeBeforeGettingImpatientWhenInAttackRange = SaveCurrentTimeBeforeGettingImpatient;
 
         //saveTimeBeforeGettingStunable = timeBeingStuned;
         //saveTimerAttackedFreeze = timerAttackedFreeze;
         //Debug.Log(Rac.animationClips[0].length);
         //enemyController = GetComponents<EnemyController>();
     }
-	
-	void Update () {
+
+    public virtual void Start () {
+
+        if (!m_isInstatiate)
+        {
+            LogicAtStart();
+        }
+    }
+
+    void Update () {
 
         m_sM.Update();
+        if (IsRootByIceNova)
+        {
+            if (FreezTiming())
+            {
+                IsRootByIceNova = false;
+                anim.SetTrigger("Chase");
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -383,7 +416,7 @@ public class EnemyController : MonoBehaviour {
     public void IsAlert()
     {
         alertExpensionSpeed += (Time.deltaTime / (1 / RadiusExpansionSpeed));
-        lookRadius = Mathf.Lerp(StartlookRadius, maxLookRadiusOnAlert, Mathf.PingPong(alertExpensionSpeed, 1));
+        lookRadius = Mathf.Lerp(StartlookRadius, maxLookRadiusOnAlert, /*Mathf.PingPong(*/alertExpensionSpeed/*, 1)*/);
     }
 
     public void FaceTarget()
@@ -409,7 +442,7 @@ public class EnemyController : MonoBehaviour {
             currentImpatience = AttackImpatience;
             return true;
         }
-        else if (!InAttackRange())
+        else if (!PlayerInAttackBox())
         {
             return false;
         }
@@ -442,6 +475,17 @@ public class EnemyController : MonoBehaviour {
         {
             _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
             currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
+            return true;
+        }
+        return false;
+    }
+    public bool IsInAttackRangeForToLong()
+    {
+        currentTimeBeforeGettingImpatientWhenInAttackRange -= Time.deltaTime;
+        if (currentTimeBeforeGettingImpatientWhenInAttackRange <= 0)
+        {
+            //_signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
+            currentTimeBeforeGettingImpatientWhenInAttackRange = SaveCurrentTimeBeforeGettingImpatient;
             return true;
         }
         return false;
@@ -498,7 +542,39 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            ChangeState(EnemyState.FrozenState);
+            //ChangeState(EnemyState.FrozenState);
+            Anim.SetTrigger("Idle");
+            FreezTime = PlayerManager.Instance.m_powers.m_iceNova.m_timeFreezed;
+            if (freezedObject == null)
+            {
+                freezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
+            }
+            IsRootByIceNova = true;
+            BeFreezed(IsRootByIceNova);
+        }
+    }
+    bool m_isRootByIceNova;
+    float FreezTime;
+    GameObject freezedObject;
+
+    public bool FreezTiming()
+    {
+        FreezTime -= Time.deltaTime;
+        if (FreezTime <= 0)
+        {
+            IsRootByIceNova = false;
+            BeFreezed(IsRootByIceNova);
+            return true;
+        }
+        return false;
+    }
+
+    public virtual void BeFreezed(bool b)
+    {
+        StopMoving(b);
+        if (!b)
+        {
+            DestroyGameObject(freezedObject);
         }
     }
 
@@ -541,9 +617,17 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Die()
     {
-        Destroy(GetComponent<CapsuleCollider>());
-        Destroy(gameObject, 3f);
+        StartCoroutine(OnWaitForAnimToEnd());
+        //Destroy(GetComponent<CapsuleCollider>());
+        // Destroy(gameObject, 3f);
         // ObjectPooler.Instance.ReturnToPool("Zglorg", gameObject);
+    }
+
+    IEnumerator OnWaitForAnimToEnd()
+    {
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        yield return new WaitForSeconds(3f);                            //Animation time
+        gameObject.SetActive(false);
     }
 
     #endregion

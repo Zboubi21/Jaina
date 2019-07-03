@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using EnemyStateEnum;
 
 public class EnemyStats : CharacterStats {
 
@@ -58,7 +59,7 @@ public class EnemyStats : CharacterStats {
 
     //bool checkiIfItIsDead;
 
-
+    
     public override void Start()
     {
         base.Start();
@@ -155,6 +156,7 @@ public class EnemyStats : CharacterStats {
             Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
         }
     }
+
     public override void IceMark(float timerDebuf)
     {
         base.IceMark(timerDebuf);
@@ -164,8 +166,22 @@ public class EnemyStats : CharacterStats {
             iceHasBeenInstanciated = true;
         }
         StartGivreCooldown = true;
-        agent.speed = ((saveSpeed) * ((100f - iceSlow) / 100f));
+        agent.speed = ((saveSpeed) * ((100f - (iceSlow* GivreMarkCount)) / 100f));
         TimerGivre = saveTimerGivre = timerDebuf;
+        if (GivreMarkCount == 5)
+        {
+            Destroy(MarqueDeGivre);
+            iceHasBeenInstanciated = false;
+            GivreMarkCount = 0;
+            StartGivreCooldown = false;
+            // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
+
+            enemyController.ChangeState(EnemyState.FrozenState); // Block In Ice
+
+           
+
+            //Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
+        }
     }
     public override void ArcaneExplosion(int damage)
     {

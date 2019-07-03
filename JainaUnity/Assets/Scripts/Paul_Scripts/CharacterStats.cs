@@ -136,7 +136,7 @@ public class CharacterStats : MonoBehaviour {
     }
     public virtual void IceMark(float timerDebuf)
     {
-        if (GivreMarkCount == 0)
+        if (GivreMarkCount <= 5)
         {
             GivreMarkCount++;
         }

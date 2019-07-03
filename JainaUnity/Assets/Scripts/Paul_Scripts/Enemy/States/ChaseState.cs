@@ -16,19 +16,26 @@ public class ChaseState : IState
 
     public void Enter()
     {
-        StateAnimation(m_enemyController.Anim);
         MakeThenBeingYelledable(hasCalledFunction);
+        StateAnimation(m_enemyController.Anim);
+
+        if(m_enemyController._signImpatience != null)
+        {
+            m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
+        }
+
     }
 
     public void FixedUpdate()
     {
         Destination();
+        FaceTarget();
     }
 
     public void Update()
     {
-        OnYelling();
         GetOutOfState();
+        OnYelling();
     }
 
     public void Exit()
@@ -41,7 +48,14 @@ public class ChaseState : IState
 
     public virtual void StateAnimation(Animator anim)
     {
-        anim.SetTrigger("Chase");
+        if (!m_enemyController.IsRootByIceNova)
+        {
+            anim.SetTrigger("Chase");
+        }
+        else
+        {
+            anim.SetTrigger("Idle");
+        }
     }
 
     #endregion
@@ -51,6 +65,11 @@ public class ChaseState : IState
     public virtual void Destination()
     {
         m_enemyController.SetDestination();
+    }
+
+    public virtual void FaceTarget()
+    {
+        m_enemyController.FaceTarget();
     }
 
     #endregion
@@ -63,7 +82,7 @@ public class ChaseState : IState
         {
             for (int i = 0, l = m_enemyController.Enemy.Count; i < l; i++)
             {
-                if(m_enemyController.Enemy[i].gameObject != null){  // J'ai rajouté ça sinon il y avait des errurs ! <3
+                if(m_enemyController.Enemy[i] != null){  // J'ai rajouté ça sinon il y avait des errurs ! <3
                     m_enemyController.Enemy[i].gameObject.GetComponent<EnemyController>().BeenYelled = false;
                 }
                 yell = false;
@@ -86,13 +105,21 @@ public class ChaseState : IState
     #region Leaving State
     public virtual void GetOutOfState()
     {
-        if (m_enemyController.InAttackRange() /*Stopping Distance*/ && m_enemyController.PlayerInAttackBox()) //GreenBox
+        if (/*m_enemyController.InAttackRange()*/ /*Stopping Distance*/ /*&&*/ m_enemyController.PlayerInAttackBox()) //GreenBox
         {
             m_enemyController.ChangeState(EnemyState.AttackState); //Attack
         }
-        else if (m_enemyController.IsChasing())
+        //else if (m_enemyController.InAttackRange() /*Stopping Distance*/ && !m_enemyController.PlayerInAttackBox() && m_enemyController.IsInAttackRangeForToLong())
+        //{
+        //    Debug.Log("Nop");
+        //    m_enemyController.ChangeState(EnemyState.AttackState); //Attack
+        //}
+        else if (!m_enemyController.IsRootByIceNova)
         {
-            m_enemyController.ChangeState(EnemyState.ImpatienceState); // Impatience
+            if (m_enemyController.IsChasing())
+            {
+                m_enemyController.ChangeState(EnemyState.ImpatienceState); // Impatience
+            }
         }
     }
     #endregion

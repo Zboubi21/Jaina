@@ -43,6 +43,7 @@ public class AlerteState : IState
     {
         m_enemyController.IsAlert();
     }
+
     public virtual void LookingForTarget()
     {
         if (m_enemyController.PlayerInLookRange())

@@ -43,7 +43,14 @@ public class ImpatienceState : IState
 
     public virtual void StateAnimation(Animator anim)
     {
-        anim.SetTrigger("Impatience");
+        if (!m_enemyController.IsRootByIceNova)
+        {
+            anim.SetTrigger("Impatience");
+        }
+        else
+        {
+            anim.SetTrigger("Idle");
+        }
     }
 
     #endregion
@@ -83,7 +90,7 @@ public class ImpatienceState : IState
 
     public virtual void GetOutOfState()
     {
-        if (m_enemyController.InAttackRange())
+        if (/*m_enemyController.InAttackRange()*/m_enemyController.PlayerInAttackBox())
         {
             if (m_enemyController.CanAttackWhenImpatience() || m_enemyController.PlayerInAttackBox())
             {
