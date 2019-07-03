@@ -101,9 +101,7 @@ public class PlayerManager : MonoBehaviour {
             public float m_timeFreezed = 3f;
 
             [Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
 		}
 		public IceBuff m_iceBuff = new IceBuff();
 		[System.Serializable] public class IceBuff {
@@ -123,9 +121,7 @@ public class PlayerManager : MonoBehaviour {
 			public bool m_stopMovingAfterSpell = true;
 
 			[Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
 
 			[HideInInspector] public GameObject m_actualBuff;
 		}
@@ -146,9 +142,8 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
+
 		}
 		public FireTrail m_fireTrail = new FireTrail();
 		[System.Serializable] public class FireTrail {
@@ -171,9 +166,7 @@ public class PlayerManager : MonoBehaviour {
             public int m_fireTrailTickDamage = 5;
 
 			[Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
 		}
 
 		public ArcaneProjectiles m_arcaneProjectiles = new ArcaneProjectiles();
@@ -197,9 +190,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
 
 			[Header("Shake camera")]
 			public ShakeCamera m_ShakeCamera = new ShakeCamera();
@@ -250,9 +241,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_waitTimeToExitState = 0;
 
 			[Header("UI")]
-			public RectTransform m_UiParent;
-			public TextMeshProUGUI m_text;
-			public Image m_cooldownImage;
+			public SpellUI m_uI = new SpellUI();
 
 			[Header("Shake camera")]
 			public bool m_useShakeCam = true;
@@ -260,6 +249,20 @@ public class PlayerManager : MonoBehaviour {
 			public float m_roughnessShake = 4f;
 			public float m_fadeInTimeShake = 0.1f;
 			public float m_fadeOutTimeShake = 0.1f;
+		}
+
+		[System.Serializable] public class SpellUI {
+			[Header("First UI")]
+			public RectTransform m_firstUiParent;
+			public TextMeshProUGUI m_firsText;
+			public Image m_firstSpellImage;
+			public Image m_firstCooldownImage;
+
+			[Header("Second UI")]
+			public RectTransform m_secondUiParent;
+			public TextMeshProUGUI m_secondText;
+			public Image m_secondSpellImage;
+			public Image m_secondCooldownImage;
 		}
 
 		[Header("UI")]
@@ -273,9 +276,15 @@ public class PlayerManager : MonoBehaviour {
 			public float m_minSize = 20;
 			public float m_maxSize = 30;
 
-			[Header("Positions")]
-			public RectTransform m_rightLeftPosition;
-			public RectTransform m_rightRightPosition;
+			[Header("UI Animations")]
+			public UIAnimations m_uIAnimations = new UIAnimations();
+			[System.Serializable] public class UIAnimations {
+				public float m_timeToFinish = 0.25f;
+				public AnimationCurve m_curveAnim;
+
+				public RectTransform m_rightLeftPosition;
+				public RectTransform m_rightRightPosition;
+			}
 		}
 	}
 
@@ -328,12 +337,12 @@ public class PlayerManager : MonoBehaviour {
 #endregion Input Buttons
 
 #region UI Positions
-	Vector3 m_topLeftPos;
-	Vector3 m_middleLeftPos;
-	Vector3 m_botLeftPos;
-	Vector3 m_topRightPos;
-	Vector3 m_middleRightPos;
-	Vector3 m_botRightPos;
+	Vector3 m_leftLeftPos;
+	Vector3 m_leftMiddlePos;
+	Vector3 m_leftRightPos;
+	Vector3 m_rightLeftPos;
+	Vector3 m_rightMiddlePos;
+	Vector3 m_rightRightPos;
 #endregion UI Positions
 
 	NavMeshAgent m_agent;
@@ -456,96 +465,135 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void SetUIElements(){
-		m_topLeftPos = m_powers.m_iceNova.m_UiParent.position;
-		m_middleLeftPos = m_powers.m_arcaneProjectiles.m_UiParent.position;
-		m_botLeftPos = m_powers.m_fireBalls.m_UiParent.position;
+		m_leftLeftPos = m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition;
+		m_leftMiddlePos = m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition;
+		m_leftRightPos = m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition;
 
-		m_topRightPos = m_powers.m_iceBuff.m_UiParent.position;
-		m_middleRightPos = m_powers.m_arcaneExplosion.m_UiParent.position;
-		m_botRightPos = m_powers.m_fireTrail.m_UiParent.position;
+		m_rightLeftPos = m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition;
+		m_rightMiddlePos = m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition;
+		m_rightRightPos = m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
+
+		// m_powers.m_fireBalls.m_uI.m_secondSpellImage
 
 		ChangeUIElements();
+	}
+
+	IEnumerator MoveToYourNextPosition(RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition){
+		
+		float distance = Vector3.Distance(fromPosition, toPosition);
+		float moveFracJourney = new float();
+		float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
+
+		while(transformObject.localPosition != toPosition){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			transformObject.localPosition = Vector3.Lerp(fromPosition, toPosition, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
+			yield return null;
+		}
+	}
+	IEnumerator ChangeSpriteSize(RectTransform transformObject, Vector2 fromScale, Vector2 toScale){
+		
+		float distance = Vector3.Distance(fromScale, toScale);
+		float moveFracJourney = new float();
+		float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
+
+		while(transformObject.sizeDelta != toScale){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			transformObject.sizeDelta = Vector3.Lerp(fromScale, toScale, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
+			yield return null;
+		}
+	}
+	IEnumerator ChangeFontSize(TextMeshProUGUI textObject, float fromSize, float toSize){
+		
+		float distance = Mathf.Abs(fromSize - toSize);
+		float moveFracJourney = new float();
+		float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
+
+		while(textObject.fontSize != toSize){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			textObject.fontSize = Mathf.Lerp(fromSize, toSize, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
+			yield return null;
+		}
 	}
 
 	void ChangeUIElements(){
 		switch(m_currentElement){
 			case ElementType.Arcane:
-				m_powers.m_fireBalls.m_UiParent.position = m_topLeftPos;
-				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
-				m_powers.m_iceNova.m_UiParent.position = m_botLeftPos;
-				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
+
+
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				
-				m_powers.m_arcaneProjectiles.m_UiParent.position = m_middleLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_maxSize;
-
-
-				m_powers.m_arcaneExplosion.m_UiParent.position = m_middleRightPos;
-				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_maxSize;
-
-				m_powers.m_iceBuff.m_UiParent.position = m_botRightPos;
-				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 				
-				m_powers.m_fireTrail.m_UiParent.position = m_topRightPos;
-				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 			break;
 			case ElementType.Ice:
-				m_powers.m_fireBalls.m_UiParent.position = m_botLeftPos;
-				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				
-				m_powers.m_iceNova.m_UiParent.position = m_middleLeftPos;
-				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_maxSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
-				m_powers.m_arcaneProjectiles.m_UiParent.position = m_topLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
 
-				m_powers.m_arcaneExplosion.m_UiParent.position = m_topRightPos;
-				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
-				m_powers.m_iceBuff.m_UiParent.position = m_middleRightPos;
-				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_maxSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
-				m_powers.m_fireTrail.m_UiParent.position = m_botRightPos;
-				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 			break;
 			case ElementType.Fire:
-				m_powers.m_fireBalls.m_UiParent.position = m_middleLeftPos;
-				m_powers.m_fireBalls.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_fireBalls.m_text.fontSize = m_powers.m_uI.m_maxSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
-				m_powers.m_iceNova.m_UiParent.position = m_topLeftPos;
-				m_powers.m_iceNova.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_iceNova.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
-				m_powers.m_arcaneProjectiles.m_UiParent.position = m_botLeftPos;
-				m_powers.m_arcaneProjectiles.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_arcaneProjectiles.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
 
-				m_powers.m_arcaneExplosion.m_UiParent.position = m_botRightPos;
-				m_powers.m_arcaneExplosion.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_arcaneExplosion.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 
-				m_powers.m_iceBuff.m_UiParent.position = m_topRightPos;
-				m_powers.m_iceBuff.m_UiParent.sizeDelta = m_powers.m_uI.m_minScale;
-				m_powers.m_iceBuff.m_text.fontSize = m_powers.m_uI.m_minSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
-				m_powers.m_fireTrail.m_UiParent.position = m_middleRightPos;
-				m_powers.m_fireTrail.m_UiParent.sizeDelta = m_powers.m_uI.m_maxScale;
-				m_powers.m_fireTrail.m_text.fontSize = m_powers.m_uI.m_maxSize;
+				StartCoroutine(MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+				StartCoroutine(ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
+				StartCoroutine(ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 			break;
 		}
 	}
@@ -599,141 +647,183 @@ public class PlayerManager : MonoBehaviour {
 		}
 		// Ice Nova
 		if(m_powers.m_iceNova.m_startCooldown){
-			m_powers.m_iceNova.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_iceNova.m_text.gameObject.SetActive(true);
+			m_powers.m_iceNova.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_iceNova.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_iceNova.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_iceNova.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_iceNova.m_actualCooldown > 0){
 				m_powers.m_iceNova.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_iceNova.m_canSwitch = false;
 
-				m_powers.m_iceNova.m_text.text = m_powers.m_iceNova.m_actualCooldown.ToString("F1");
-				m_powers.m_iceNova.m_cooldownImage.fillAmount -= 1 / m_powers.m_iceNova.m_cooldown * Time.deltaTime;
+				m_powers.m_iceNova.m_uI.m_firsText.text = m_powers.m_iceNova.m_actualCooldown.ToString("F1");
+				m_powers.m_iceNova.m_uI.m_secondText.text = m_powers.m_iceNova.m_actualCooldown.ToString("F1");
+				m_powers.m_iceNova.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_iceNova.m_cooldown * Time.deltaTime;
+				m_powers.m_iceNova.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_iceNova.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_iceNova.m_actualCooldown = m_powers.m_iceNova.m_cooldown;
 				m_powers.m_iceNova.m_startCooldown = false;
 				m_powers.m_iceNova.m_canSwitch = true;
 
-				m_powers.m_iceNova.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_iceNova.m_text.gameObject.SetActive(false);
+				m_powers.m_iceNova.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_iceNova.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_iceNova.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_iceNova.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_iceNova.m_actualCooldown = m_powers.m_iceNova.m_cooldown;
 
-			m_powers.m_iceNova.m_cooldownImage.fillAmount = 1;
+			m_powers.m_iceNova.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_iceNova.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
 		// Ice Buff
 		if(m_powers.m_iceBuff.m_startCooldown){
-			m_powers.m_iceBuff.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_iceBuff.m_text.gameObject.SetActive(true);
+			m_powers.m_iceBuff.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_iceBuff.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_iceBuff.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_iceBuff.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_iceBuff.m_actualCooldown > 0){
 				m_powers.m_iceBuff.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_iceBuff.m_canSwitch = false;
 
-				m_powers.m_iceBuff.m_text.text = m_powers.m_iceBuff.m_actualCooldown.ToString("F1");
-				m_powers.m_iceBuff.m_cooldownImage.fillAmount -= 1 / m_powers.m_iceBuff.m_cooldown * Time.deltaTime;
+				m_powers.m_iceBuff.m_uI.m_firsText.text = m_powers.m_iceBuff.m_actualCooldown.ToString("F1");
+				m_powers.m_iceBuff.m_uI.m_secondText.text = m_powers.m_iceBuff.m_actualCooldown.ToString("F1");
+				m_powers.m_iceBuff.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_iceBuff.m_cooldown * Time.deltaTime;
+				m_powers.m_iceBuff.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_iceBuff.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_iceBuff.m_actualCooldown = m_powers.m_iceBuff.m_cooldown;
 				m_powers.m_iceBuff.m_startCooldown = false;
 				m_powers.m_iceBuff.m_canSwitch = true;
 
-				m_powers.m_iceBuff.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_iceBuff.m_text.gameObject.SetActive(false);
+				m_powers.m_iceBuff.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_iceBuff.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_iceBuff.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_iceBuff.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_iceBuff.m_actualCooldown = m_powers.m_iceBuff.m_cooldown;
 
-			m_powers.m_iceBuff.m_cooldownImage.fillAmount = 1;
+			m_powers.m_iceBuff.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_iceBuff.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
 		// Fire Balls
 		if(m_powers.m_fireBalls.m_startCooldown){
-			m_powers.m_fireBalls.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_fireBalls.m_text.gameObject.SetActive(true);
+			m_powers.m_fireBalls.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_fireBalls.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_fireBalls.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_fireBalls.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_fireBalls.m_actualCooldown > 0){
 				m_powers.m_fireBalls.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_fireBalls.m_canSwitch = false;
 
-				m_powers.m_fireBalls.m_text.text = m_powers.m_fireBalls.m_actualCooldown.ToString("F1");
-				m_powers.m_fireBalls.m_cooldownImage.fillAmount -= 1 / m_powers.m_fireBalls.m_cooldown * Time.deltaTime;
+				m_powers.m_fireBalls.m_uI.m_firsText.text = m_powers.m_fireBalls.m_actualCooldown.ToString("F1");
+				m_powers.m_fireBalls.m_uI.m_secondText.text = m_powers.m_fireBalls.m_actualCooldown.ToString("F1");
+				m_powers.m_fireBalls.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_fireBalls.m_cooldown * Time.deltaTime;
+				m_powers.m_fireBalls.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_fireBalls.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_fireBalls.m_actualCooldown = m_powers.m_fireBalls.m_cooldown;
 				m_powers.m_fireBalls.m_startCooldown = false;
 				m_powers.m_fireBalls.m_canSwitch = true;
 
-				m_powers.m_fireBalls.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_fireBalls.m_text.gameObject.SetActive(false);
+				m_powers.m_fireBalls.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_fireBalls.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_fireBalls.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_fireBalls.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_fireBalls.m_actualCooldown = m_powers.m_fireBalls.m_cooldown;
 
-			m_powers.m_fireBalls.m_cooldownImage.fillAmount = 1;
+			m_powers.m_fireBalls.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_fireBalls.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
 		// Fire Trail
 		if(m_powers.m_fireTrail.m_startCooldown){
-			m_powers.m_fireTrail.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_fireTrail.m_text.gameObject.SetActive(true);
+			m_powers.m_fireTrail.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_fireTrail.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_fireTrail.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_fireTrail.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_fireTrail.m_actualCooldown > 0){
 				m_powers.m_fireTrail.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_fireTrail.m_canSwitch = false;
 
-				m_powers.m_fireTrail.m_text.text = m_powers.m_fireTrail.m_actualCooldown.ToString("F1");
-				m_powers.m_fireTrail.m_cooldownImage.fillAmount -= 1 / m_powers.m_fireTrail.m_cooldown * Time.deltaTime;
+				m_powers.m_fireTrail.m_uI.m_firsText.text = m_powers.m_fireTrail.m_actualCooldown.ToString("F1");
+				m_powers.m_fireTrail.m_uI.m_secondText.text = m_powers.m_fireTrail.m_actualCooldown.ToString("F1");
+				m_powers.m_fireTrail.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_fireTrail.m_cooldown * Time.deltaTime;
+				m_powers.m_fireTrail.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_fireTrail.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_fireTrail.m_actualCooldown = m_powers.m_fireTrail.m_cooldown;
 				m_powers.m_fireTrail.m_startCooldown = false;
 				m_powers.m_fireTrail.m_canSwitch = true;
 
-				m_powers.m_fireTrail.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_fireTrail.m_text.gameObject.SetActive(false);
+				m_powers.m_fireTrail.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_fireTrail.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_fireTrail.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_fireTrail.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_fireTrail.m_actualCooldown = m_powers.m_fireTrail.m_cooldown;
 
-			m_powers.m_fireTrail.m_cooldownImage.fillAmount = 1;
+			m_powers.m_fireTrail.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_fireTrail.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
 		// Arcane Projectiles
 		if(m_powers.m_arcaneProjectiles.m_startCooldown){
-			m_powers.m_arcaneProjectiles.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_arcaneProjectiles.m_text.gameObject.SetActive(true);
+			m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_arcaneProjectiles.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_arcaneProjectiles.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_arcaneProjectiles.m_actualCooldown > 0){
 				m_powers.m_arcaneProjectiles.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_arcaneProjectiles.m_canSwitch = false;
 
-				m_powers.m_arcaneProjectiles.m_text.text = m_powers.m_arcaneProjectiles.m_actualCooldown.ToString("F1");
-				m_powers.m_arcaneProjectiles.m_cooldownImage.fillAmount -= 1 / m_powers.m_arcaneProjectiles.m_cooldown * Time.deltaTime;
+				m_powers.m_arcaneProjectiles.m_uI.m_firsText.text = m_powers.m_arcaneProjectiles.m_actualCooldown.ToString("F1");
+				m_powers.m_arcaneProjectiles.m_uI.m_secondText.text = m_powers.m_arcaneProjectiles.m_actualCooldown.ToString("F1");
+				m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_arcaneProjectiles.m_cooldown * Time.deltaTime;
+				m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_arcaneProjectiles.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_arcaneProjectiles.m_actualCooldown = m_powers.m_arcaneProjectiles.m_cooldown;
 				m_powers.m_arcaneProjectiles.m_startCooldown = false;
 				m_powers.m_arcaneProjectiles.m_canSwitch = true;
 
-				m_powers.m_arcaneProjectiles.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_arcaneProjectiles.m_text.gameObject.SetActive(false);
+				m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_arcaneProjectiles.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_arcaneProjectiles.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_arcaneProjectiles.m_actualCooldown = m_powers.m_arcaneProjectiles.m_cooldown;
 
-			m_powers.m_arcaneProjectiles.m_cooldownImage.fillAmount = 1;
+			m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
-		// Arcane Exploqion
+		// Arcane Explosion
 		if(m_powers.m_arcaneExplosion.m_startCooldown){
-			m_powers.m_arcaneExplosion.m_cooldownImage.gameObject.SetActive(true);
-			m_powers.m_arcaneExplosion.m_text.gameObject.SetActive(true);
+			m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage.gameObject.SetActive(true);
+			m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage.gameObject.SetActive(true);
+			m_powers.m_arcaneExplosion.m_uI.m_firsText.gameObject.SetActive(true);
+			m_powers.m_arcaneExplosion.m_uI.m_secondText.gameObject.SetActive(true);
 			if(m_powers.m_arcaneExplosion.m_actualCooldown > 0){
 				m_powers.m_arcaneExplosion.m_actualCooldown -= Time.deltaTime;
 				m_powers.m_arcaneExplosion.m_canSwitch = false;
 
-				m_powers.m_arcaneExplosion.m_text.text = m_powers.m_arcaneExplosion.m_actualCooldown.ToString("F1");
-				m_powers.m_arcaneExplosion.m_cooldownImage.fillAmount -= 1 / m_powers.m_arcaneExplosion.m_cooldown * Time.deltaTime;
+				m_powers.m_arcaneExplosion.m_uI.m_firsText.text = m_powers.m_arcaneExplosion.m_actualCooldown.ToString("F1");
+				m_powers.m_arcaneExplosion.m_uI.m_secondText.text = m_powers.m_arcaneExplosion.m_actualCooldown.ToString("F1");
+				m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage.fillAmount -= 1 / m_powers.m_arcaneExplosion.m_cooldown * Time.deltaTime;
+				m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage.fillAmount -= 1 / m_powers.m_arcaneExplosion.m_cooldown * Time.deltaTime;
 			}else{
 				m_powers.m_arcaneExplosion.m_actualCooldown = m_powers.m_arcaneExplosion.m_cooldown;
 				m_powers.m_arcaneExplosion.m_startCooldown = false;
 				m_powers.m_arcaneExplosion.m_canSwitch = true;
 
-				m_powers.m_arcaneExplosion.m_cooldownImage.gameObject.SetActive(false);
-				m_powers.m_arcaneExplosion.m_text.gameObject.SetActive(false);
+				m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage.gameObject.SetActive(false);
+				m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage.gameObject.SetActive(false);
+				m_powers.m_arcaneExplosion.m_uI.m_firsText.gameObject.SetActive(false);
+				m_powers.m_arcaneExplosion.m_uI.m_secondText.gameObject.SetActive(false);
 			}
 		}else{
 			m_powers.m_arcaneExplosion.m_actualCooldown = m_powers.m_arcaneExplosion.m_cooldown;
 
-			m_powers.m_arcaneExplosion.m_cooldownImage.fillAmount = 1;
+			m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage.fillAmount = 1;
+			m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage.fillAmount = 1;
 		}
 		AutoAttackCooldown();
 	}
