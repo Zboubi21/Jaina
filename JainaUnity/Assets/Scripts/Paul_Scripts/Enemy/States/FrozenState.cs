@@ -18,7 +18,7 @@ public class FrozenState : IState
     public void Enter()
     {
         BeingStun(true);
-        m_timeBeingFrozen = 3f/*PlayerManager.Instance.m_percentMultiplicateur*/;
+        m_timeBeingFrozen = PlayerManager.Instance.m_debuffs.m_IceSlow.m_frozenTime;
         if (freezedObject == null)
         {
             freezedObject = m_enemyController.InstantiateObjects(m_enemyController.m_fxs.m_freezed, m_enemyController.transform.position, m_enemyController.transform.rotation, m_enemyController.transform);

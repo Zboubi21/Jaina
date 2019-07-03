@@ -315,7 +315,8 @@ public class PlayerManager : MonoBehaviour {
 		{
 			[Range(0,100)]
 			public int m_iceSlow = 25;
-		}
+            public float m_frozenTime;
+        }
     }
 
     #endregion Public [System.Serializable] Variables
