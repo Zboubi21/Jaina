@@ -41,6 +41,7 @@ public class PlayerManager : MonoBehaviour {
 		public float m_buffCooldown = 0.125f;
 		[HideInInspector] public bool m_isBuff = false;
 		[HideInInspector] public float m_actualCooldown = 0;
+		public bool m_isInBuff = false;
 
 		[Header("Prefabs")]
 		public Transform m_spawnRoot;
@@ -324,7 +325,17 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+	[Header("Move speed")]
+	public MoveSpeed m_moveSpeed = new MoveSpeed();
+	[System.Serializable] public class MoveSpeed {
+		public float m_normalspeed = 10;
+		public float m_fastSpeed = 15;
+		[Space]
+		public float m_timeToKeepFastSpeed = 2;
+	}
+
     #endregion Public [System.Serializable] Variables
+
     [Space]
 	public GameObject m_playerMesh;
 	public GameObject m_jainaMesh;
@@ -406,6 +417,7 @@ public class PlayerManager : MonoBehaviour {
 	void Start(){
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
 		InitializeStartAutoAttackCooldown();
+		SetPlayerSPeed(m_moveSpeed.m_normalspeed);
 	}
 	
 	void OnEnable(){
@@ -417,7 +429,6 @@ public class PlayerManager : MonoBehaviour {
 		UpdateInputButtons();
 		RaycastToMovePlayer();
 		DecreaseCooldown();
-		LookEnemyLifeBar();
 	}
 
 	void FixedUpdate(){
@@ -451,6 +462,7 @@ public class PlayerManager : MonoBehaviour {
 	public void MovePlayer(){
 		if(PlayerTargetPosition != Vector3.zero){
 			m_agent.SetDestination(PlayerTargetPosition);
+			// Debug.Log("Jaina direction = " + transform.TransformDirection(transform.rotation.eulerAngles));
 		}
 	}
 	public void StopPlayerMovement(){
@@ -465,6 +477,17 @@ public class PlayerManager : MonoBehaviour {
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
             m_playerMesh.transform.rotation = newRotation;
         }
+	}
+	public void SetPlayerSPeed(float newSpeed){
+		// Debug.Log("new speed = " + newSpeed);
+		m_agent.speed = newSpeed;
+	}
+	public void StartChangePlayerSpeedCorout(float newSpeed){
+		StartCoroutine(ChangePlayerSpeed(newSpeed));
+	}
+	IEnumerator ChangePlayerSpeed(float newSpeed){
+		yield return new WaitForSeconds(m_moveSpeed.m_timeToKeepFastSpeed);
+		SetPlayerSPeed(m_moveSpeed.m_normalspeed);
 	}
 
 	public void ChangePower(bool rightSpell){
@@ -1334,20 +1357,6 @@ public class PlayerManager : MonoBehaviour {
 
 	public void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
 		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
-	}
-
-
-	EnemyStats m_currentEnemyStats;
-	void LookEnemyLifeBar(){
-		/*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit enemyHit;
-        if(Physics.Raycast (ray, out enemyHit, Mathf.Infinity, m_enemyLayer)){
-            EnemyStats enemyStatsTemp = enemyHit.collider.gameObject.GetComponent<EnemyStats>();
-			if(m_currentEnemyStats != enemyStatsTemp){
-				m_currentEnemyStats = enemyStatsTemp;
-				BigEnemyLifeBarManager.Instance.ShowLifeBar(m_currentEnemyStats);
-			}
-        }*/
 	}
 
 	public void SetTpPoint(Vector3 position){

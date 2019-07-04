@@ -14,6 +14,7 @@ public class IceBuff : Spell {
 	[SerializeField] float m_scaleMini;
 	[SerializeField] float m_scaleMaxi;
 
+	bool m_playerIsInTrigger = false;
 	PlayerManager m_playerManager;
 	bool m_canModifyTheScale = false;
 	float m_actualScale;
@@ -26,11 +27,19 @@ public class IceBuff : Spell {
 		StartCoroutine(WaitTheEndOfTheStartAnimation());
 	}
 
+	void Update(){
+		Debug.Log("m_playerIsInTrigger = " + m_playerIsInTrigger);
+	}
+
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
+			m_playerIsInTrigger = true;
 			m_playerManager = col.GetComponent<PlayerManager>();
 			m_playerManager.m_autoAttacks.m_isBuff = true;
 			m_playerManager.On_AutoAttackBuffChange(true);
+
+			// m_playerManager.m_autoAttacks.m_isInBuff = true;
+			m_playerManager.SetPlayerSPeed(m_playerManager.m_moveSpeed.m_fastSpeed);
 		}
 	}
 
@@ -47,13 +56,14 @@ public class IceBuff : Spell {
 			}else{
 				transform.localScale = new Vector3(m_actualScale, transform.localScale.y, m_actualScale);
 			}
-
 		}
 	}
 
 	void OnTriggerExit(Collider col){
 		if(col.CompareTag("Player")){
+			m_playerIsInTrigger = false;
 			m_playerManager.m_autoAttacks.m_isBuff = false;			
+			m_playerManager.StartChangePlayerSpeedCorout(m_playerManager.m_moveSpeed.m_fastSpeed);
 		}
 	}
 
@@ -69,6 +79,9 @@ public class IceBuff : Spell {
 
 	public void DestroyBuff(){
 		m_playerManager.m_autoAttacks.m_isBuff = false;
+
+		// m_playerIsInTrigger = false;
+
 		Destroy(gameObject);
 	}
 

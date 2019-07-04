@@ -21328,7 +21328,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1237398796937988}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.30070576, z: 0, w: 0.953717}
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -21336,7 +21336,7 @@ Transform:
   - {fileID: 4625302301825978}
   m_Father: {fileID: 4954510844769794}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -35, z: 0}
 --- !u!4 &4413589214127970
 Transform:
   m_ObjectHideFlags: 1
@@ -23264,7 +23264,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1725417616846374}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -23272,7 +23272,7 @@ Transform:
   - {fileID: 224559674433525962}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4572148741524972
 Transform:
   m_ObjectHideFlags: 1
@@ -27398,7 +27398,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1802688898866892}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.30070576, z: 0, w: 0.953717}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -27407,7 +27407,7 @@ Transform:
   - {fileID: 4412306544536084}
   m_Father: {fileID: 4571970679071876}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 35, z: 0}
 --- !u!4 &4954965711617350
 Transform:
   m_ObjectHideFlags: 1
@@ -30551,6 +30551,7 @@ MonoBehaviour:
     m_buffCooldown: 0.125
     m_isBuff: 0
     m_actualCooldown: 0
+    m_isInBuff: 0
     m_spawnRoot: {fileID: 4153908591210074}
     m_arcaneAttack: {fileID: 1933447009849798, guid: a20536f4726052f4a8cae547827cf029,
       type: 2}
@@ -30771,6 +30772,10 @@ MonoBehaviour:
     m_IceSlow:
       m_iceSlow: 25
       m_frozenTime: 0
+  m_moveSpeed:
+    m_normalspeed: 10
+    m_fastSpeed: 15
+    m_timeToKeepFastSpeed: 2
   m_playerMesh: {fileID: 1802688898866892}
   m_jainaMesh: {fileID: 1237398796937988}
   m_groundLayer:
