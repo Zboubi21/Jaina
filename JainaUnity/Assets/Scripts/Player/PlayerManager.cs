@@ -327,6 +327,7 @@ public class PlayerManager : MonoBehaviour {
     #endregion Public [System.Serializable] Variables
     [Space]
 	public GameObject m_playerMesh;
+	public GameObject m_jainaMesh;
 	public LayerMask m_groundLayer;
 	public LayerMask m_enemyLayer;
 
@@ -369,6 +370,13 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+	Animator m_jainaAnimator;
+	public Animator JainaAnimator{
+        get{
+            return m_jainaAnimator;
+        }
+    }
+
     void Awake(){
 		if(Instance == null){
 			Instance = this;
@@ -396,6 +404,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void Start(){
+		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
 		InitializeStartAutoAttackCooldown();
 	}
 	

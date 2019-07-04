@@ -15,10 +15,11 @@ public class FireBallsState : IState {
     }
 
     public void Enter(){
-		m_stateTimer = 0;
-		m_spellIsThrow = false;
-		m_playerManager.StopPlayerMovement();
-		m_playerManager.ChangePower(false);			
+			m_playerManager.JainaAnimator.SetTrigger("FireBalls");
+			m_stateTimer = 0;
+			m_spellIsThrow = false;
+			m_playerManager.StopPlayerMovement();
+			m_playerManager.ChangePower(false);			
     }
 
     public void Update(){

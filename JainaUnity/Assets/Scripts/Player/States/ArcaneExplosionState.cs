@@ -15,6 +15,7 @@ public class ArcaneExplosionState : IState {
     }
 
     public void Enter(){
+		m_playerManager.JainaAnimator.SetTrigger("ArcaneExplosion");
 		m_stateTimer = 0;
 		m_spellIsThrow = false;
 		m_playerManager.StopPlayerMovement();
