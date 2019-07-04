@@ -19,6 +19,7 @@ public class ImpatienceState : IState
     {
         StateAnimation(m_enemyController.Anim);
         ImpatienceEffect(m_enemyController.speedSprint);
+        m_enemyController.IsImpatient = true;
     }
 
     public void FixedUpdate()
@@ -34,6 +35,8 @@ public class ImpatienceState : IState
 
     public void Exit()
     {
+        m_enemyController.IsImpatient = false;
+
         ImpatienceEffect(m_enemyController.AgentSpeed);
         DestroySign();
     }

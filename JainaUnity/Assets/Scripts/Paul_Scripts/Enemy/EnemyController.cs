@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour {
         if (m_isInstatiate)
         {
             LogicAtStart();
+            LogicWhenEnable();
         }
     }
 
@@ -88,6 +89,7 @@ public class EnemyController : MonoBehaviour {
     [Header("Impatience Sign")]
     public GameObject ImpatienceSign;
     public Transform ImpatienceSignRoot;
+    bool m_isImpatient;
     GameObject _impatienceSign;
     float agentSpeed;
     [Header("Impatience Sprint")]
@@ -115,6 +117,7 @@ public class EnemyController : MonoBehaviour {
     NavMeshAgent agent;
     Animator anim;
     CharacterStats TargetStats;
+    CharacterStats myStats;
     Collider Mycollider;
     Collider[] enemyController;
 
@@ -316,7 +319,27 @@ public class EnemyController : MonoBehaviour {
             m_isRootByIceNova = value;
         }
     }
+
+    public bool IsImpatient
+    {
+        get
+        {
+            return m_isImpatient;
+        }
+
+        set
+        {
+            m_isImpatient = value;
+        }
+    }
     #endregion
+
+    public virtual void LogicWhenEnable()
+    {
+        myStats = GetComponent<CharacterStats>();
+        myStats.CurrentHealth = myStas.maxHealth;
+    }
+
     public virtual void LogicAtStart()
     {
         // Get Instance Of The Player and his CharacterStats
@@ -346,13 +369,15 @@ public class EnemyController : MonoBehaviour {
         //Debug.Log(Rac.animationClips[0].length);
         //enemyController = GetComponents<EnemyController>();
     }
-
+    EnemyStats enemystats;
     public virtual void Start () {
 
         if (!m_isInstatiate)
         {
             LogicAtStart();
         }
+        enemystats = GetComponent<EnemyStats>();
+
     }
 
     void Update () {
@@ -493,6 +518,7 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Sprint(float speed)
     {
+        speed = speed * ((100f - (PlayerManager.Instance.m_debuffs.m_IceSlow.m_iceSlow * enemystats.GivreMarkCount)) / 100f);
         agent.speed = speed;
     }
 

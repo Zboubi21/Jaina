@@ -27,9 +27,9 @@ public class EnemyStats : CharacterStats {
     public GameObject m_canvas;
     public float timeBeforeLifeBarOff = 5f;
     float saveTimeBeforeLifeBarOff;
-    float TimerArcane;
-    float TimerFire;
-    float TimerGivre;
+    float m_timerArcane;
+    float m_timerFire;
+    float m_timerGivre;
 
     float saveTimerArcane;
     float saveTimerFire;
@@ -56,10 +56,127 @@ public class EnemyStats : CharacterStats {
 
     float TimeBetweenFireTrailTicks;
     int DamageFireTrailTicks;
+    #region get set
+    public bool ArcaneHasBeenInstanciated
+    {
+        get
+        {
+            return arcaneHasBeenInstanciated;
+        }
 
+        set
+        {
+            arcaneHasBeenInstanciated = value;
+        }
+    }
+
+    public bool FireHasBeenInstanciated
+    {
+        get
+        {
+            return fireHasBeenInstanciated;
+        }
+
+        set
+        {
+            fireHasBeenInstanciated = value;
+        }
+    }
+
+    public bool IceHasBeenInstanciated
+    {
+        get
+        {
+            return iceHasBeenInstanciated;
+        }
+
+        set
+        {
+            iceHasBeenInstanciated = value;
+        }
+    }
+
+    public float TimerArcane
+    {
+        get
+        {
+            return m_timerArcane;
+        }
+
+        set
+        {
+            m_timerArcane = value;
+        }
+    }
+
+    public float TimerFire
+    {
+        get
+        {
+            return m_timerFire;
+        }
+
+        set
+        {
+            m_timerFire = value;
+        }
+    }
+
+    public float TimerGivre
+    {
+        get
+        {
+            return m_timerGivre;
+        }
+
+        set
+        {
+            m_timerGivre = value;
+        }
+    }
+
+    public float SaveTimerArcane
+    {
+        get
+        {
+            return saveTimerArcane;
+        }
+
+        set
+        {
+            saveTimerArcane = value;
+        }
+    }
+
+    public float SaveTimerFire
+    {
+        get
+        {
+            return saveTimerFire;
+        }
+
+        set
+        {
+            saveTimerFire = value;
+        }
+    }
+
+    public float SaveTimerGivre
+    {
+        get
+        {
+            return saveTimerGivre;
+        }
+
+        set
+        {
+            saveTimerGivre = value;
+        }
+    }
+    #endregion
     //bool checkiIfItIsDead;
 
-    
+
     public override void Start()
     {
         base.Start();
@@ -119,7 +236,7 @@ public class EnemyStats : CharacterStats {
             arcaneHasBeenInstanciated = true;
         }
         StartArcaneCooldown = true;
-        TimerArcane = saveTimerArcane = timerDebuf;
+        m_timerArcane = saveTimerArcane = timerDebuf;
     }
     public override void AutoAttackFireMark(float timerDebuf)
     {
@@ -131,7 +248,7 @@ public class EnemyStats : CharacterStats {
             fireHasBeenInstanciated = true;
         }
         StartFireCooldown = true;
-        TimerFire = saveTimerFire = timerDebuf;
+        m_timerFire = saveTimerFire = timerDebuf;
     }
     public override void FireMark(float timerDebuf)
     {
@@ -143,7 +260,7 @@ public class EnemyStats : CharacterStats {
             fireHasBeenInstanciated = true;
         }
         StartFireCooldown = true;
-        TimerFire = saveTimerFire = timerDebuf;
+        m_timerFire = saveTimerFire = timerDebuf;
         if (FireMarkCount == 2)
         {
             Destroy(MarqueDeFeu);
@@ -166,17 +283,22 @@ public class EnemyStats : CharacterStats {
             iceHasBeenInstanciated = true;
         }
         StartGivreCooldown = true;
-        agent.speed = ((saveSpeed) * ((100f - (iceSlow* GivreMarkCount)) / 100f));
-        TimerGivre = saveTimerGivre = timerDebuf;
+        if(GivreMarkCount < 5)
+        {
+            agent.speed = ((agent.speed) * ((100f - (iceSlow/* GivreMarkCount*/)) / 100f));
+        }
+        m_timerGivre = saveTimerGivre = timerDebuf;
         if (GivreMarkCount == 5)
         {
-            Destroy(MarqueDeGivre);
+            /*Destroy(MarqueDeGivre);
             iceHasBeenInstanciated = false;
             GivreMarkCount = 0;
-            StartGivreCooldown = false;
+            StartGivreCooldown = false;*/
+
+
             // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
 
-            enemyController.ChangeState(EnemyState.FrozenState); // Block In Ice
+            //enemyController.ChangeState(EnemyState.FrozenState); // Block In Ice
 
            
 
@@ -252,8 +374,8 @@ public class EnemyStats : CharacterStats {
     {
         if (StartArcaneCooldown)
         {
-            TimerArcane -= Time.deltaTime;
-            if (TimerArcane <= 0)
+            m_timerArcane -= Time.deltaTime;
+            if (m_timerArcane <= 0)
             {
                 Destroy(MarqueDeArcane);
                 arcaneHasBeenInstanciated = false;
@@ -262,15 +384,15 @@ public class EnemyStats : CharacterStats {
             }
             else
             {
-                MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, TimerArcane);
+                MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
             }
         }
         if (StartFireCooldown)
         {
-            TimerFire -= Time.deltaTime;
-            MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, TimerFire);
+            m_timerFire -= Time.deltaTime;
+            MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
             TimerTickDamage -= Time.deltaTime;
-            if (TimerFire <= 0)
+            if (m_timerFire <= 0)
             {
                 Destroy(MarqueDeFeu);
                 fireHasBeenInstanciated = false;
@@ -286,11 +408,18 @@ public class EnemyStats : CharacterStats {
         }
         if (StartGivreCooldown)
         {
-            TimerGivre -= Time.deltaTime;
-            MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, TimerGivre);
-            if (TimerGivre <= 0)
+            m_timerGivre -= Time.deltaTime;
+            MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
+            if (m_timerGivre <= 0)
             {
-                agent.speed = saveSpeed;
+                if (enemyController.IsImpatient)
+                {
+                    agent.speed = enemyController.speedSprint;
+                }
+                else
+                {
+                    agent.speed = saveSpeed;
+                }
                 Destroy(MarqueDeGivre);
                 iceHasBeenInstanciated = false;
                 GivreMarkCount = 0;
@@ -308,6 +437,36 @@ public class EnemyStats : CharacterStats {
     {
         base.Die();
         //checkiIfItIsDead = true;
+        if(MarqueDeArcane != null)
+        {
+            Destroy(MarqueDeArcane);
+            arcaneHasBeenInstanciated = false;
+            ArcanMarkCount = 0;
+            StartArcaneCooldown = false;
+        }
+        if(MarqueDeFeu != null)
+        {
+            Destroy(MarqueDeFeu);
+            fireHasBeenInstanciated = false;
+            FireMarkCount = 0;
+            TimerTickDamage = saveDamageTick;
+            StartFireCooldown = false;
+        }
+        if(MarqueDeGivre != null)
+        {
+            Destroy(MarqueDeGivre);
+            iceHasBeenInstanciated = false;
+            GivreMarkCount = 0;
+            StartGivreCooldown = false;
+        }
         enemyController.OnEnemyDie();
+    }
+
+    void DestroyAllMarkOnDead(GameObject mark, bool beenInstanciated, int count, bool coolDown)
+    {
+        Destroy(mark);
+        beenInstanciated = false;
+        count = 0;
+        coolDown = false;
     }
 }
