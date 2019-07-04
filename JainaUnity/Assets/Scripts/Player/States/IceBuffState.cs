@@ -15,6 +15,7 @@ public class IceBuffState : IState {
     }
 
     public void Enter(){
+		m_playerManager.JainaAnimator.SetTrigger("IceBuff");
 		m_stateTimer = 0;
 		m_spellIsThrow = false;
 		m_playerManager.StopPlayerMovement();

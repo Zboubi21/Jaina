@@ -15,9 +15,10 @@ public class NovaState : IState {
     }
 
     public void Enter(){
-			m_stateTimer = 0;
-			m_spellIsThrow = false;
-			m_playerManager.StopPlayerMovement();
+		m_playerManager.JainaAnimator.SetTrigger("IceNova");
+		m_stateTimer = 0;
+		m_spellIsThrow = false;
+		m_playerManager.StopPlayerMovement();
 		m_playerManager.ChangePower(false);			
     }
 

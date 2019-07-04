@@ -17,6 +17,7 @@ public class ArcaneProjectilesState : IState {
     }
 
     public void Enter(){
+		m_playerManager.JainaAnimator.SetTrigger("ArcaneProjectiles");
 		m_stateTimer = 0;
 		m_firstSpellIsThrow = false;
 		m_secondSpellIsThrow = false;
