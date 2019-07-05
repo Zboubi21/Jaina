@@ -15,6 +15,9 @@ public class EnemyStats : CharacterStats {
     public string _name;
     [Range(0,2)]
     public int m_enemyPowerLevel;
+    bool[] arcanOn;
+    bool[] fireOn;
+    bool[] iceOn;
     [Header("Debuf Var")]
     public GameObject DebufRoot;
     public GameObject MarqueArcane;
@@ -218,6 +221,45 @@ public class EnemyStats : CharacterStats {
         set
         {
             m_iceMarkPos = value;
+        }
+    }
+
+    public bool[] ArcanOn
+    {
+        get
+        {
+            return arcanOn;
+        }
+
+        set
+        {
+            arcanOn = value;
+        }
+    }
+
+    public bool[] FireOn
+    {
+        get
+        {
+            return fireOn;
+        }
+
+        set
+        {
+            fireOn = value;
+        }
+    }
+
+    public bool[] IceOn
+    {
+        get
+        {
+            return iceOn;
+        }
+
+        set
+        {
+            iceOn = value;
         }
     }
     #endregion

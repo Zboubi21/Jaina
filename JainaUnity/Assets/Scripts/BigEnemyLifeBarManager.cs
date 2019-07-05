@@ -6,26 +6,22 @@ using TMPro;
 
 public class BigEnemyLifeBarManager : MonoBehaviour {
 
-	public static BigEnemyLifeBarManager Instance;
+    public static BigEnemyLifeBarManager Instance;
 
-	[SerializeField] GameObject[] m_UnitFrame;
+    [SerializeField] GameObject[] m_UnitFrame;
     [Space]
-    [SerializeField] TextMeshProUGUI m_unitName;
-	[SerializeField] Image m_lifeBar;
-	[SerializeField] Image m_whiteLifeBar;
+    [Header("Arcan Marks")]
+    [SerializeField] GameObject[] m_arcanMark;
     [Space]
-
-    [SerializeField] Transform m_markRoot;
-    [SerializeField] Transform m_markBackGroundRoot;
+    [Header("Fire Marks")]
+    [SerializeField] GameObject[] m_fireMark;
     [Space]
-
-    [SerializeField] GameObject m_iceMark;
-    [SerializeField] GameObject m_fireMark;
-    [SerializeField] GameObject m_arcanMark;
+    [Header("Ice Marks")]
+    [SerializeField] GameObject[] m_iceMark;
 
     [Space]
     [SerializeField] float timeToShowLifeBar;
-    //[SerializeField] float timeToHideLifeBar;
+    [SerializeField] float timeToHideLifeBar;
     [Space]
 
     public float m_timeForWhiteLifeBarToDecrease;
@@ -33,7 +29,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     public float m_decreaseSpeed;
     float timeForWhiteLifeBar;
     float m_showLifeBar;
-    //float m_hidLifeBar;
+    float m_hidLifeBar;
 
     float whitefill;
     float damageRange;
@@ -89,19 +85,16 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         m_showLifeBar = timeToShowLifeBar;
         timeForWhiteLifeBar = m_timeForWhiteLifeBarToDecrease;
 
-        //m_hidLifeBar = timeToHideLifeBar;
+        m_hidLifeBar = timeToHideLifeBar;
     }
 
-    /*public void ShowLifeBar(EnemyStats enemyStat){
-		m_enemyStats = enemyStat;
-	}*/
-
+    
+    EnemyStats enemyStatsSave;
     private void Update()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         enemyStats = GetByRay<EnemyStats>(ray);
-        //m_whiteLifeBar.fillAmount -= Mathf.Lerp(0, 1f, Time.deltaTime/20);
 
         if ((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn)
         {
@@ -114,14 +107,16 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             ActivateUnitFrame(enemyStatsLocked);
             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true);
             enemyStatsLocked.m_cirlceCanvas.SetActive(true);
+            timeToShowLifeBar = m_showLifeBar;
+
         }
-        else if(enemyStats != null)
+        else if(enemyStats != null && !unitFrameOn)
         {
-            if (DescreaseTime())
+            if ((DescreaseTimeToShowLifeBar() && enemyStatsSave == null) || enemyStatsSave == enemyStats)
             {
+                enemyStatsSave = enemyStats;
                 ActivateUnitFrame(enemyStats);
                 ActivateLifeBar(enemyStats.m_enemyPowerLevel, true);
-
             }
         }
 
@@ -130,13 +125,20 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
             enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+            DestroyMarques();
+            DeactivateBool(false);
             unitFrameOn = false;
         }
-        else if(enemyStats == null && !unitFrameOn)
+        else if(enemyStats == null && !unitFrameOn && enemyStatsSave != enemyStats)
         {
-            if (DescreaseTime())
+            if (DescreaseTimeToHideLifeBar())
             {
-                ActivateLifeBar(enemyStats.m_enemyPowerLevel, false);
+                ActivateLifeBar(enemyStatsSave.m_enemyPowerLevel, false);
+                DestroyMarques();
+                DeactivateBool(false);
+                enemyStatsSave = null;
+                timeToHideLifeBar = m_hidLifeBar;
+                timeToShowLifeBar = m_showLifeBar;
             }
         }
 
@@ -145,17 +147,49 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if(enemyStatsLocked.CurrentHealth <= 0)
             {
-                if (m_whiteLifeBar.fillAmount <= m_lifeBar.fillAmount)
+                if (m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_whiteLifeBar.fillAmount <= m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_lifeBar.fillAmount)
                 {
-                    if (DescreaseTime())
+                    if (DescreaseTimeToHideLifeBar())
                     {
                         ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
+                        DestroyMarques();
+                        DeactivateBool(false);
                         enemyStatsLocked.m_cirlceCanvas.SetActive(false);
                         unitFrameOn = false;
+                        timeToHideLifeBar = m_hidLifeBar;
+                        timeToShowLifeBar = m_showLifeBar;
+
                     }
                 }
             }
         }
+    }
+
+
+    void DestroyMarques()
+    {
+
+        if(MarqueDeArcane != null)
+        {
+            Destroy(MarqueDeArcane);
+        }
+
+        if (MarqueDeFire != null)
+        {
+            Destroy(MarqueDeFire);
+        }
+
+        if (MarqueDeGivre != null)
+        {
+            Destroy(MarqueDeGivre);
+        }
+    }
+
+    void DeactivateBool(bool b)
+    {
+        arcaneOn = b;
+        fireOn = b;
+        iceOn = b;
     }
 
     void ActivateLifeBar(int i, bool b)
@@ -163,17 +197,25 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         m_UnitFrame[i].SetActive(b);
     }
 
-    bool DescreaseTime()
+    bool DescreaseTimeToShowLifeBar()
     {
         timeToShowLifeBar -= Time.deltaTime;
         if(timeToShowLifeBar <= 0)
         {
-            timeToShowLifeBar = m_showLifeBar;
             return true;
         }
         return false;
     }
 
+    bool DescreaseTimeToHideLifeBar()
+    {
+        timeToHideLifeBar -= Time.deltaTime;
+        if (timeToHideLifeBar <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
 
     bool DecreaseTimer()
     {
@@ -200,38 +242,39 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         }
     }*/
 
+
     void ActivateUnitFrame(EnemyStats m_enemyStats)
     {
-        m_lifeBar.fillAmount = Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
-        if (DecreaseTimer() && m_lifeBar.fillAmount != m_whiteLifeBar.fillAmount)
+        LifeBarArray lifeArray = m_UnitFrame[m_enemyStats.m_enemyPowerLevel].GetComponent<LifeBarArray>();
+        lifeArray.m_lifeBar.fillAmount = Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
+        if (DecreaseTimer() && lifeArray.m_lifeBar.fillAmount != lifeArray.m_whiteLifeBar.fillAmount)
         {
             //Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
             if (go)
             {
-                whitefill = m_whiteLifeBar.fillAmount;
-                damageRange = (m_whiteLifeBar.fillAmount - m_lifeBar.fillAmount);
+                whitefill = lifeArray.m_whiteLifeBar.fillAmount;
+                damageRange = (lifeArray.m_whiteLifeBar.fillAmount - lifeArray.m_lifeBar.fillAmount);
                 go = false;
             }
             time += Time.deltaTime;
             //m_whiteLifeBar.fillAmount = Mathf.InverseLerp(m_lifeBar.fillAmount, whitefill, Mathf.Lerp(0, 1, Time.deltaTime / 20));
 
-            m_whiteLifeBar.fillAmount -= Mathf.Lerp(0 , damageRange, time / m_decreaseSpeed);
+            lifeArray.m_whiteLifeBar.fillAmount -= Mathf.Lerp(0 , damageRange, time / m_decreaseSpeed);
 
-            if(m_whiteLifeBar.fillAmount <= m_lifeBar.fillAmount)
+            if(lifeArray.m_whiteLifeBar.fillAmount <= lifeArray.m_lifeBar.fillAmount)
             {
-                Debug.Log("It's over");
                 timeForWhiteLifeBar = m_timeForWhiteLifeBarToDecrease;
                 time = 0;
                 go = true;
             }
         }
-        
-        m_unitName.text = m_enemyStats._name;
+
+        lifeArray.m_unitName.text = m_enemyStats._name;
         if (m_enemyStats.ArcaneHasBeenInstanciated)
         {
             if (!arcaneOn)
             {
-                MarqueDeArcane = InstantiateMarks(m_arcanMark, m_markRoot.transform);
+                MarqueDeArcane = InstantiateMarks(m_arcanMark[m_enemyStats.m_enemyPowerLevel], lifeArray.m_markRoot.transform);
                 arcaneOn = true;
             }
             MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerArcane, m_enemyStats.TimerArcane);
@@ -248,7 +291,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if (!fireOn)
             {
-                MarqueDeFire = InstantiateMarks(m_fireMark, m_markRoot.transform);
+                MarqueDeFire = InstantiateMarks(m_fireMark[m_enemyStats.m_enemyPowerLevel], lifeArray.m_markRoot.transform);
                 fireOn = true;
             }
             MarqueDeFire.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerFire, m_enemyStats.TimerFire);
@@ -265,7 +308,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if (!iceOn)
             {
-                MarqueDeGivre = InstantiateMarks(m_iceMark, m_markRoot);
+                MarqueDeGivre = InstantiateMarks(m_iceMark[m_enemyStats.m_enemyPowerLevel], lifeArray.m_markRoot);
                 iceOn = true;
             }
             MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerGivre, m_enemyStats.TimerGivre);
