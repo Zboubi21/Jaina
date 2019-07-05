@@ -78,9 +78,12 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 		}
         for (int i = 0, l = m_UnitFrame.Length; i < l; ++i)
         {
-            if (m_UnitFrame[i].activeSelf)
+            if(m_UnitFrame[i] != null)
             {
-                m_UnitFrame[i].SetActive(false);
+                if (m_UnitFrame[i].activeSelf)
+                {
+                    m_UnitFrame[i].SetActive(false);
+                }
             }
         }
         m_showLifeBar = timeToShowLifeBar;
