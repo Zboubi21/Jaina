@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1812571678557984556}
   - component: {fileID: 1812571678557984557}
   m_Layer: 0
-  m_Name: TrailRenderer (1)
+  m_Name: TrailRendererLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,12 +24,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812571678557984555}
-  m_LocalRotation: {x: -0, y: -0.9999942, z: -0, w: -0.0034034248}
-  m_LocalPosition: {x: -11.142492, y: 25.199997, z: -6.847229}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0, y: -0.9526881, z: -0, w: -0.30394992}
+  m_LocalPosition: {x: -0.05199987, y: -0.748, z: -0.11999992}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5679004238112636738}
-  m_RootOrder: 0
+  m_Father: {fileID: 5678652637273027706}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -0.39000002, z: 0}
 --- !u!96 &1812571678557984557
 TrailRenderer:
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 1812571680115827102}
   - component: {fileID: 1812571680115827103}
   m_Layer: 0
-  m_Name: TrailRenderer
+  m_Name: TrailRendererHips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 1812571680117413448}
   - component: {fileID: 1812571680117413449}
   m_Layer: 0
-  m_Name: TrailRenderer (2)
+  m_Name: TrailRendererRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -294,12 +294,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812571680117413447}
-  m_LocalRotation: {x: -0, y: -0.9999942, z: -0, w: -0.0034034248}
-  m_LocalPosition: {x: 14.351988, y: 25.199997, z: -6.8753524}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0, y: -0.9526881, z: -0, w: -0.30394992}
+  m_LocalPosition: {x: 0.157, y: -0.748, z: 0.02600003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5679098814640525828}
-  m_RootOrder: 0
+  m_Father: {fileID: 5678652637273027706}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -0.39000002, z: 0}
 --- !u!96 &1812571680117413449
 TrailRenderer:
@@ -5334,7 +5334,6 @@ MonoBehaviour:
     m_buffCooldown: 0.125
     m_isBuff: 0
     m_actualCooldown: 0
-    m_isInBuff: 0
     m_spawnRoot: {fileID: 5679597202520697890}
     m_arcaneAttack: {fileID: 1933447009849798, guid: a20536f4726052f4a8cae547827cf029,
       type: 3}
@@ -5352,6 +5351,11 @@ MonoBehaviour:
       m_useMouseBlink: 1
       m_text: {fileID: 5713202333204862438}
       m_cooldownImage: {fileID: 5712834513254810962}
+      m_blinkFx: {fileID: 0}
+      m_rightCircleFx: {fileID: 0}
+      m_leftCircleFx: {fileID: 0}
+      m_timeToTrailRendererIsActive: 1
+      m_trailRenderer: {fileID: 0}
     m_Block:
       m_inIceBlock: 0
       m_block: {fileID: 5682156458216952960}
@@ -5567,9 +5571,9 @@ MonoBehaviour:
   m_groundLayer:
     serializedVersion: 2
     m_Bits: 512
-  m_enemyLayer:
+  m_rotatePlayerLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   m_canThrowSpell: 1
   m_leftMouseDownClick: 0
   m_leftMouseClick: 0
@@ -6945,8 +6949,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1812571678557984556}
+  m_Children: []
   m_Father: {fileID: 5679586156349228076}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10972,6 +10975,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1812571680115827102}
+  - {fileID: 1812571680117413448}
+  - {fileID: 1812571678557984556}
   - {fileID: 5678867654710828660}
   - {fileID: 5679168005473834602}
   - {fileID: 5679204732270569580}
@@ -48439,7 +48444,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 2, z: 1.5}
   m_Children: []
   m_Father: {fileID: 5678652637273027706}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -35, z: 0}
 --- !u!33 &5668271557332526422
 MeshFilter:
@@ -49681,8 +49686,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1812571680117413448}
+  m_Children: []
   m_Father: {fileID: 5679312132422639066}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -54997,7 +55001,7 @@ Transform:
   - {fileID: 5679271868915084706}
   - {fileID: 5678850930840410562}
   m_Father: {fileID: 5678652637273027706}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -35, z: 0}
 --- !u!95 &5731720632076148114
 Animator:
@@ -57357,7 +57361,7 @@ Transform:
   - {fileID: 5678569437825681258}
   - {fileID: 5679178221957550636}
   m_Father: {fileID: 5678652637273027706}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: -35, z: 0}
 --- !u!1 &5682267018233981048
 GameObject:

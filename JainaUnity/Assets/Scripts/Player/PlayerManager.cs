@@ -339,6 +339,8 @@ public class PlayerManager : MonoBehaviour {
 		public float m_fastSpeed = 15;
 		[Space]
 		public float m_timeToKeepFastSpeed = 2;
+		public TrailRenderer[] m_trailRenderers = new TrailRenderer[3];
+
 		[HideInInspector] public bool m_playerInBuff = false;
 		[HideInInspector] public float m_actualTimer = 0;
 		[HideInInspector] public bool m_iceBuffIsCast = false;
@@ -553,6 +555,7 @@ public class PlayerManager : MonoBehaviour {
 		if(m_moveSpeed.m_playerInBuff){
 			if(m_moveSpeed.m_actualTimer != m_moveSpeed.m_timeToKeepFastSpeed){
 				m_moveSpeed.m_actualTimer = m_moveSpeed.m_timeToKeepFastSpeed;
+				EnableIceBuffTrailRenderers(true);
 			}
 		}else{
 			if(m_moveSpeed.m_iceBuffIsCast){
@@ -560,9 +563,16 @@ public class PlayerManager : MonoBehaviour {
 				if(m_moveSpeed.m_actualTimer <= 0){
 					SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 					m_moveSpeed.m_iceBuffIsCast = false;
+					EnableIceBuffTrailRenderers(false);
 				}
 			}
 		}
+	}
+	void EnableIceBuffTrailRenderers(bool activate){
+		for (int i = 0, l = m_moveSpeed.m_trailRenderers.Length; i < l; ++i){
+			m_moveSpeed.m_trailRenderers[i].enabled = activate;
+		}
+		Debug.Log("activate = " + activate);
 	}
 
 	public void ChangePower(bool rightSpell){
