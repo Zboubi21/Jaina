@@ -332,6 +332,9 @@ public class PlayerManager : MonoBehaviour {
 		public float m_fastSpeed = 15;
 		[Space]
 		public float m_timeToKeepFastSpeed = 2;
+		[HideInInspector] public bool m_playerInBuff = false;
+		[HideInInspector] public float m_actualTimer = 0;
+		[HideInInspector] public bool m_iceBuffIsCast = false;
 	}
 
     #endregion Public [System.Serializable] Variables
@@ -417,7 +420,7 @@ public class PlayerManager : MonoBehaviour {
 	void Start(){
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
 		InitializeStartAutoAttackCooldown();
-		SetPlayerSPeed(m_moveSpeed.m_normalspeed);
+		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 	}
 	
 	void OnEnable(){
@@ -429,6 +432,7 @@ public class PlayerManager : MonoBehaviour {
 		UpdateInputButtons();
 		RaycastToMovePlayer();
 		DecreaseCooldown();
+		UpdatePlayerSpeed();
 	}
 
 	void FixedUpdate(){
@@ -478,16 +482,27 @@ public class PlayerManager : MonoBehaviour {
             m_playerMesh.transform.rotation = newRotation;
         }
 	}
-	public void SetPlayerSPeed(float newSpeed){
+	public void SetPlayerSpeed(float newSpeed){
 		// Debug.Log("new speed = " + newSpeed);
 		m_agent.speed = newSpeed;
 	}
-	public void StartChangePlayerSpeedCorout(float newSpeed){
-		StartCoroutine(ChangePlayerSpeed(newSpeed));
+	public void SetPlayerSpeedWithAccelerationDeceleration(float newSpeed, float timeToChangeSpeed){
+		
 	}
-	IEnumerator ChangePlayerSpeed(float newSpeed){
-		yield return new WaitForSeconds(m_moveSpeed.m_timeToKeepFastSpeed);
-		SetPlayerSPeed(m_moveSpeed.m_normalspeed);
+	void UpdatePlayerSpeed(){
+		if(m_moveSpeed.m_playerInBuff){
+			if(m_moveSpeed.m_actualTimer != m_moveSpeed.m_timeToKeepFastSpeed){
+				m_moveSpeed.m_actualTimer = m_moveSpeed.m_timeToKeepFastSpeed;
+			}
+		}else{
+			if(m_moveSpeed.m_iceBuffIsCast){
+				m_moveSpeed.m_actualTimer -= Time.deltaTime;
+				if(m_moveSpeed.m_actualTimer <= 0){
+					SetPlayerSpeed(m_moveSpeed.m_normalspeed);
+					m_moveSpeed.m_iceBuffIsCast = false;
+				}
+			}
+		}
 	}
 
 	public void ChangePower(bool rightSpell){
