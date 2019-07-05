@@ -16,6 +16,7 @@ public class IceNova : Spell {
 
 		// Le tir du player touche un enemy
 		if(col.CompareTag("Enemy")){
+			Debug.Log("Enter");
             col.gameObject.GetComponent<CharacterStats>().IceMark(MarksTime1.Ice);
             col.gameObject.GetComponent<CharacterStats>().TakeDamage(m_damage);
             col.gameObject.GetComponent<EnemyController>().Freeze();
