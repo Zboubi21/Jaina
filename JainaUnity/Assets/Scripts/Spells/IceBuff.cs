@@ -9,20 +9,31 @@ public class IceBuff : Spell {
 	[Header("Scales")]
 	[SerializeField] float m_timeToWaitBeforeScale = 1;
 	[Space]
-	[SerializeField] float m_speedToScale = 1;
-	[Space]
-	[SerializeField] float m_scaleMini;
-	[SerializeField] float m_scaleMaxi;
+	[Header("IceBuff FX scale")]
+	[SerializeField] Transform m_FxTransform;
+	[SerializeField] float m_speedToScaleFX = 1;
+	[SerializeField] float m_iceBuffFXScaleMini;
+	[SerializeField] float m_iceBuffFXScaleMaxi;
+
+	[Header("Sphere collider scale")]
+	[SerializeField] SphereCollider m_sphereCollider;
+	[SerializeField] float m_speedToScaleCollider = 1;
+	[SerializeField] float m_sphereColliderScaleMini;
+	[SerializeField] float m_sphereColliderScaleMaxi;
 
 	PlayerManager m_playerManager;
 	bool m_canModifyTheScale = false;
-	float m_actualScale;
 	Animation m_anim;
+	float m_actualFxScale;
+	float m_actualColliderScale;
 
 	void Start(){
 		m_playerManager = PlayerManager.Instance;
 		StartCoroutine(DestroyBuffCoroutine());
-		m_actualScale = m_scaleMaxi;
+
+		m_actualFxScale = m_iceBuffFXScaleMaxi;
+		m_actualColliderScale = m_sphereColliderScaleMaxi;
+
 		m_anim = GetComponent<Animation>();
 		StartCoroutine(WaitTheEndOfTheStartAnimation());
 
@@ -47,13 +58,18 @@ public class IceBuff : Spell {
 			if(!m_canModifyTheScale)
 				return;
 
-			m_actualScale -= Time.deltaTime * m_speedToScale;
-
-			if(m_actualScale < m_scaleMini){
+			m_actualFxScale -= Time.deltaTime * m_speedToScaleFX;
+			if(m_actualFxScale < m_iceBuffFXScaleMini){
 				DestroyBuff();
 			}else{
-				transform.localScale = new Vector3(m_actualScale, transform.localScale.y, m_actualScale);
+				m_FxTransform.localScale = new Vector3(m_actualFxScale, m_FxTransform.localScale.y, m_actualFxScale);
 			}
+
+			m_actualColliderScale -= Time.deltaTime * m_speedToScaleCollider;
+			if(m_actualColliderScale > m_sphereColliderScaleMini){
+				m_sphereCollider.radius = m_actualColliderScale;
+			}
+
 		}
 	}
 

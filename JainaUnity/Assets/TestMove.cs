@@ -32,8 +32,6 @@ public class TestMove : MonoBehaviour {
         // Animate the player.
         Animating(h, v);
 
-		Vector2 vivi = new Vector2(h, v);
-		Debug.Log("direction de déplacement = " + vivi);
     }
  
     void Move(float h, float v)
@@ -83,6 +81,8 @@ public class TestMove : MonoBehaviour {
         }
  
         moveDirection = transform.InverseTransformDirection(moveDirection);
+
+        // Debug.Log("moveDirection = " + moveDirection);
  
         anim.SetFloat("moveX", moveDirection.x, 0.05f, Time.deltaTime);
         anim.SetFloat("moveY", moveDirection.z, 0.05f, Time.deltaTime);

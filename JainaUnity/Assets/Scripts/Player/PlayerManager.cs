@@ -437,6 +437,58 @@ public class PlayerManager : MonoBehaviour {
 
 	void FixedUpdate(){
 		m_sM.FixedUpdate();
+
+		if(m_agent.velocity != Vector3.zero ){
+			m_jainaAnimator.SetBool("isMoving", true);
+		}else{
+			m_jainaAnimator.SetBool("isMoving", false);
+		}
+	}
+
+	void LateUpdate(){
+		MoveAnimation();
+	}
+
+	Vector3 moveDirection = Vector3.zero;
+	void MoveAnimation(){
+		// ------------------------------
+		// Try to have direction Vector
+		// ------------------------------
+		// ----- First part -----
+		Vector3 direction;
+		direction = transform.InverseTransformDirection(Vector3.forward);
+		Vector2 inputDirection;
+		inputDirection = new Vector2(-direction.x, direction.z);
+
+		if(inputDirection.x > 0){
+			inputDirection.x = 1;
+		}else{
+			inputDirection.x = -1;
+		}
+
+		if(inputDirection.y > 0){
+			inputDirection.y = 1;
+		}else{
+			inputDirection.y = -1;
+		}
+
+		// Debug.Log("direction = " + inputDirection);
+
+		// ----- Second part -----
+		moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
+ 
+        if (moveDirection.magnitude > 1.0f)
+        {
+            moveDirection = moveDirection.normalized;
+        }
+ 
+        moveDirection = transform.InverseTransformDirection(moveDirection);
+        // moveDirection = m_playerMesh.transform.InverseTransformDirection(moveDirection);
+ 
+        // Debug.Log("moveDirection = " + moveDirection);
+
+        m_jainaAnimator.SetFloat("moveX", moveDirection.x, 0.05f, Time.deltaTime);
+        m_jainaAnimator.SetFloat("moveY", moveDirection.z, 0.05f, Time.deltaTime);
 	}
 
 	public void ChangeState(PlayerState newPlayerState){
@@ -466,11 +518,12 @@ public class PlayerManager : MonoBehaviour {
 	public void MovePlayer(){
 		if(PlayerTargetPosition != Vector3.zero){
 			m_agent.SetDestination(PlayerTargetPosition);
-			// Debug.Log("Jaina direction = " + transform.TransformDirection(transform.rotation.eulerAngles));
+			// m_jainaAnimator.SetBool("isMoving", true);
 		}
 	}
 	public void StopPlayerMovement(){
 		m_agent.ResetPath();
+		// m_jainaAnimator.SetBool("isMoving", false);
 	}
 	public void RotatePlayer(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -479,7 +532,8 @@ public class PlayerManager : MonoBehaviour {
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            m_playerMesh.transform.rotation = newRotation;
+            // m_playerMesh.transform.rotation = newRotation;
+            transform.rotation = newRotation;
         }
 	}
 	public void SetPlayerSpeed(float newSpeed){
