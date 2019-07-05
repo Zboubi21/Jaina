@@ -2,18 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class BigEnemyLifeBarManager : MonoBehaviour {
 
 	public static BigEnemyLifeBarManager Instance;
 
-	[SerializeField] GameObject m_UnitFrame;
+	[SerializeField] GameObject[] m_UnitFrame;
+    [Space]
+    [SerializeField] TextMeshProUGUI m_unitName;
 	[SerializeField] Image m_lifeBar;
+	[SerializeField] Image m_whiteLifeBar;
+    [Space]
+
     [SerializeField] Transform m_markRoot;
     [SerializeField] Transform m_markBackGroundRoot;
+    [Space]
+
     [SerializeField] GameObject m_iceMark;
     [SerializeField] GameObject m_fireMark;
     [SerializeField] GameObject m_arcanMark;
+
+    [Space]
+    [SerializeField] float timeToShowLifeBar;
+    //[SerializeField] float timeToHideLifeBar;
+    [Space]
+
+    public float m_timeForWhiteLifeBarToDecrease;
+    [Range(0.1f,10f)]
+    public float m_decreaseSpeed;
+    float timeForWhiteLifeBar;
+    float m_showLifeBar;
+    //float m_hidLifeBar;
+
+    float whitefill;
+    float damageRange;
+    bool go = true;
 
     GameObject MarqueDeArcane;
     GameObject MarqueDeFire;
@@ -29,14 +53,40 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     EnemyStats enemyStatsLocked;
     Ray ray;
 
+    float time;
+
+    #region Get Set
+    public float TimeForWhiteLifeBar
+    {
+        get
+        {
+            return timeForWhiteLifeBar;
+        }
+
+        set
+        {
+            timeForWhiteLifeBar = value;
+        }
+    }
+    #endregion
+
     void Awake(){
 		if(Instance == null){
 			Instance = this;
 		}else{
 			Debug.LogError("Two instance of BigEnemyLifeBarManager");
 		}
-        m_UnitFrame.SetActive(false);
+        for (int i = 0, l = m_UnitFrame.Length; i < l; ++i)
+        {
+            if (m_UnitFrame[i].activeSelf)
+            {
+                m_UnitFrame[i].SetActive(false);
+            }
+        }
+        m_showLifeBar = timeToShowLifeBar;
+        timeForWhiteLifeBar = m_timeForWhiteLifeBarToDecrease;
 
+        //m_hidLifeBar = timeToHideLifeBar;
     }
 
     /*public void ShowLifeBar(EnemyStats enemyStat){
@@ -48,32 +98,43 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         enemyStats = GetByRay<EnemyStats>(ray);
+        //m_whiteLifeBar.fillAmount -= Mathf.Lerp(0, 1f, Time.deltaTime/20);
 
         if ((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn)
         {
             if (!unitFrameOn)
             {
                 enemyStatsLocked = enemyStats;
+                timeToShowLifeBar = m_showLifeBar;
+                unitFrameOn = true;
             }
-            unitFrameOn = true;
             ActivateUnitFrame(enemyStatsLocked);
-            m_UnitFrame.SetActive(true);
+            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true);
+            enemyStatsLocked.m_cirlceCanvas.SetActive(true);
         }
         else if(enemyStats != null)
         {
-            ActivateUnitFrame(enemyStats);
-            m_UnitFrame.SetActive(true);
+            if (DescreaseTime())
+            {
+                ActivateUnitFrame(enemyStats);
+                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true);
+
+            }
         }
 
 
         if (enemyStats == null && unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
         {
-            m_UnitFrame.SetActive(false);
+            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
+            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
             unitFrameOn = false;
         }
         else if(enemyStats == null && !unitFrameOn)
         {
-            m_UnitFrame.SetActive(false);
+            if (DescreaseTime())
+            {
+                ActivateLifeBar(enemyStats.m_enemyPowerLevel, false);
+            }
         }
 
 
@@ -81,23 +142,93 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if(enemyStatsLocked.CurrentHealth <= 0)
             {
-                m_UnitFrame.SetActive(false);
-                unitFrameOn = false;
+                if (m_whiteLifeBar.fillAmount <= m_lifeBar.fillAmount)
+                {
+                    if (DescreaseTime())
+                    {
+                        ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
+                        enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+                        unitFrameOn = false;
+                    }
+                }
             }
         }
-
-
     }
+
+    void ActivateLifeBar(int i, bool b)
+    {
+        m_UnitFrame[i].SetActive(b);
+    }
+
+    bool DescreaseTime()
+    {
+        timeToShowLifeBar -= Time.deltaTime;
+        if(timeToShowLifeBar <= 0)
+        {
+            timeToShowLifeBar = m_showLifeBar;
+            return true;
+        }
+        return false;
+    }
+
+
+    bool DecreaseTimer()
+    {
+        timeForWhiteLifeBar -= Time.deltaTime;
+        if (timeForWhiteLifeBar <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /*IEnumerator ChangeFontSize(TextMeshProUGUI textObject, float fromSize, float toSize)
+    {
+
+        float distance = Mathf.Abs(fromSize - toSize);
+        float moveFracJourney = new float();
+        float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
+
+        while (textObject.fontSize != toSize)
+        {
+            moveFracJourney += (Time.deltaTime) * vitesse / distance;
+            textObject.fontSize = Mathf.Lerp(fromSize, toSize, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
+            yield return null;
+        }
+    }*/
 
     void ActivateUnitFrame(EnemyStats m_enemyStats)
     {
         m_lifeBar.fillAmount = Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
+        if (DecreaseTimer() && m_lifeBar.fillAmount != m_whiteLifeBar.fillAmount)
+        {
+            //Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
+            if (go)
+            {
+                whitefill = m_whiteLifeBar.fillAmount;
+                damageRange = (m_whiteLifeBar.fillAmount - m_lifeBar.fillAmount);
+                go = false;
+            }
+            time += Time.deltaTime;
+            //m_whiteLifeBar.fillAmount = Mathf.InverseLerp(m_lifeBar.fillAmount, whitefill, Mathf.Lerp(0, 1, Time.deltaTime / 20));
 
+            m_whiteLifeBar.fillAmount -= Mathf.Lerp(0 , damageRange, time / m_decreaseSpeed);
+
+            if(m_whiteLifeBar.fillAmount <= m_lifeBar.fillAmount)
+            {
+                Debug.Log("It's over");
+                timeForWhiteLifeBar = m_timeForWhiteLifeBarToDecrease;
+                time = 0;
+                go = true;
+            }
+        }
+        
+        m_unitName.text = m_enemyStats._name;
         if (m_enemyStats.ArcaneHasBeenInstanciated)
         {
             if (!arcaneOn)
             {
-                MarqueDeArcane = Instantiate(m_arcanMark, m_markRoot.transform);
+                MarqueDeArcane = InstantiateMarks(m_arcanMark, m_markRoot.transform);
                 arcaneOn = true;
             }
             MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerArcane, m_enemyStats.TimerArcane);
@@ -114,7 +245,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if (!fireOn)
             {
-                MarqueDeFire = Instantiate(m_fireMark, m_markRoot.transform);
+                MarqueDeFire = InstantiateMarks(m_fireMark, m_markRoot.transform);
                 fireOn = true;
             }
             MarqueDeFire.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerFire, m_enemyStats.TimerFire);
@@ -131,7 +262,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if (!iceOn)
             {
-                MarqueDeGivre = Instantiate(m_iceMark, m_markRoot.transform);
+                MarqueDeGivre = InstantiateMarks(m_iceMark, m_markRoot);
                 iceOn = true;
             }
             MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerGivre, m_enemyStats.TimerGivre);
@@ -144,6 +275,12 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             iceOn = false;
         }
 
+    }
+
+    GameObject InstantiateMarks(GameObject mark, Transform root)
+    {
+        GameObject marksave = Instantiate(mark, root.transform);
+        return marksave;
     }
 
     public T GetByRay<T>(Ray ray) where T : class

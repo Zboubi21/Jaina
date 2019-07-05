@@ -388,7 +388,10 @@ public class EnemyController : MonoBehaviour {
             if (FreezTiming())
             {
                 IsRootByIceNova = false;
-                anim.SetTrigger("Chase");
+                if(enemystats.CurrentHealth > 0)
+                {
+                    anim.SetTrigger("Chase");
+                }
             }
         }
     }
@@ -589,7 +592,10 @@ public class EnemyController : MonoBehaviour {
         if (FreezTime <= 0)
         {
             IsRootByIceNova = false;
-            BeFreezed(IsRootByIceNova);
+            if(enemystats.CurrentHealth > 0)
+            {
+                BeFreezed(IsRootByIceNova);
+            }
             return true;
         }
         return false;

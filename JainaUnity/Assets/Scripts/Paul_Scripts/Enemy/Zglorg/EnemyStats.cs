@@ -10,7 +10,11 @@ public class EnemyStats : CharacterStats {
     Image[] lifeBar;
     Image slider;
     Canvas canvas;
-
+    [Header("Enemy Info")]
+    [TextArea(1, 20)]
+    public string _name;
+    [Range(0,2)]
+    public int m_enemyPowerLevel;
     [Header("Debuf Var")]
     public GameObject DebufRoot;
     public GameObject MarqueArcane;
@@ -27,6 +31,10 @@ public class EnemyStats : CharacterStats {
     public GameObject m_canvas;
     public float timeBeforeLifeBarOff = 5f;
     float saveTimeBeforeLifeBarOff;
+    [Space]
+    [Header("SelectionCircle")]
+    public GameObject m_cirlceCanvas;
+
     float m_timerArcane;
     float m_timerFire;
     float m_timerGivre;
@@ -173,6 +181,45 @@ public class EnemyStats : CharacterStats {
             saveTimerGivre = value;
         }
     }
+
+    public int ArcanMarkPos
+    {
+        get
+        {
+            return m_arcanMarkPos;
+        }
+
+        set
+        {
+            m_arcanMarkPos = value;
+        }
+    }
+
+    public int FireMarkPos
+    {
+        get
+        {
+            return m_fireMarkPos;
+        }
+
+        set
+        {
+            m_fireMarkPos = value;
+        }
+    }
+
+    public int IceMarkPos
+    {
+        get
+        {
+            return m_iceMarkPos;
+        }
+
+        set
+        {
+            m_iceMarkPos = value;
+        }
+    }
     #endregion
     //bool checkiIfItIsDead;
 
@@ -227,23 +274,31 @@ public class EnemyStats : CharacterStats {
 
 
     #region Mark Methods
+    int m_arcanMarkPos;
+    int m_fireMarkPos;
+    int m_iceMarkPos;
+
+
     public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
         base.ArcanMark(damage, timerDebuf, nbrMarks);
         if (!arcaneHasBeenInstanciated)
         {
-            MarqueDeArcane = Instantiate(MarqueArcane, DebufRoot.transform);
+            MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
+            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
             arcaneHasBeenInstanciated = true;
         }
         StartArcaneCooldown = true;
         m_timerArcane = saveTimerArcane = timerDebuf;
     }
+
     public override void AutoAttackFireMark(float timerDebuf)
     {
         base.AutoAttackFireMark(timerDebuf);
         if (!fireHasBeenInstanciated)
         {
-            MarqueDeFeu = Instantiate(MarqueFeu, DebufRoot.transform);
+            MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
+            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
 
             fireHasBeenInstanciated = true;
         }
@@ -255,7 +310,8 @@ public class EnemyStats : CharacterStats {
         base.FireMark(timerDebuf);
         if (!fireHasBeenInstanciated)
         {
-            MarqueDeFeu = Instantiate(MarqueFeu, DebufRoot.transform);
+            MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
+            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
 
             fireHasBeenInstanciated = true;
         }
@@ -265,6 +321,9 @@ public class EnemyStats : CharacterStats {
         {
             Destroy(MarqueDeFeu);
             fireHasBeenInstanciated = false;
+            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+
             FireMarkCount = 0;
             TimerTickDamage = saveDamageTick;
             StartFireCooldown = false;
@@ -279,7 +338,9 @@ public class EnemyStats : CharacterStats {
         base.IceMark(timerDebuf);
         if (!iceHasBeenInstanciated)
         {
-            MarqueDeGivre = Instantiate(MarqueGivre, DebufRoot.transform);
+            MarqueDeGivre = InstantiateMarks(MarqueGivre, DebufRoot);
+            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+
             iceHasBeenInstanciated = true;
         }
         StartGivreCooldown = true;
@@ -288,6 +349,7 @@ public class EnemyStats : CharacterStats {
             agent.speed = ((agent.speed) * ((100f - (iceSlow/* GivreMarkCount*/)) / 100f));
         }
         m_timerGivre = saveTimerGivre = timerDebuf;
+        #region givreMarkCount
         if (GivreMarkCount == 5)
         {
             /*Destroy(MarqueDeGivre);
@@ -304,6 +366,7 @@ public class EnemyStats : CharacterStats {
 
             //Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
         }
+        #endregion
     }
     public override void ArcaneExplosion(int damage)
     {
@@ -312,6 +375,30 @@ public class EnemyStats : CharacterStats {
         Destroy(MarqueDeArcane);
         Destroy(MarqueDeGivre);
         arcaneHasBeenInstanciated = fireHasBeenInstanciated = iceHasBeenInstanciated = StartArcaneCooldown = StartFireCooldown = StartGivreCooldown = false;
+    }
+
+    GameObject InstantiateMarks(GameObject mark, GameObject root)
+    {
+        GameObject marksave = Instantiate(mark, root.transform);
+
+        return marksave;
+    }
+
+    int CheckPosition(bool otherMark_1, bool otherMark_2)
+    {
+        if(!otherMark_1 && !otherMark_2)
+        {
+            return 0;
+        }
+        else if((otherMark_1 || otherMark_2) && (!otherMark_1 || !otherMark_2))
+        {
+            return 1;
+        }
+        else if (otherMark_1 && otherMark_2)
+        {
+            return 2;
+        }
+        return 4;
     }
 
     #endregion
@@ -379,6 +466,8 @@ public class EnemyStats : CharacterStats {
             {
                 Destroy(MarqueDeArcane);
                 arcaneHasBeenInstanciated = false;
+                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
                 ArcanMarkCount = 0;
                 StartArcaneCooldown = false;
             }
@@ -396,6 +485,8 @@ public class EnemyStats : CharacterStats {
             {
                 Destroy(MarqueDeFeu);
                 fireHasBeenInstanciated = false;
+                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 FireMarkCount = 0;
                 TimerTickDamage = saveDamageTick;
                 StartFireCooldown = false;
@@ -422,6 +513,8 @@ public class EnemyStats : CharacterStats {
                 }
                 Destroy(MarqueDeGivre);
                 iceHasBeenInstanciated = false;
+                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 GivreMarkCount = 0;
                 StartGivreCooldown = false;
             }
@@ -431,6 +524,8 @@ public class EnemyStats : CharacterStats {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+        BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
+
         slider.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
     }
     public override void Die()
