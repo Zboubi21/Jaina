@@ -41,7 +41,6 @@ public class PlayerManager : MonoBehaviour {
 		public float m_buffCooldown = 0.125f;
 		[HideInInspector] public bool m_isBuff = false;
 		[HideInInspector] public float m_actualCooldown = 0;
-		public bool m_isInBuff = false;
 
 		[Header("Prefabs")]
 		public Transform m_spawnRoot;
@@ -68,6 +67,14 @@ public class PlayerManager : MonoBehaviour {
 			[Header("UI")]
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
+
+			[Header("FX")]
+			public ParticleSystem m_blinkFx;
+			public ParticleSystem m_rightCircleFx;
+			public ParticleSystem m_leftCircleFx;
+			[Space]
+			public float m_timeToTrailRendererIsActive = 1;
+			public TrailRenderer m_trailRenderer;
 		}
 
 		public Block m_Block = new Block();
@@ -343,7 +350,7 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject m_playerMesh;
 	public GameObject m_jainaMesh;
 	public LayerMask m_groundLayer;
-	public LayerMask m_enemyLayer;
+	public LayerMask m_rotatePlayerLayer;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
 	bool m_canAutoAttack = true;
@@ -449,7 +456,6 @@ public class PlayerManager : MonoBehaviour {
 		MoveAnimation();
 	}
 
-	Vector3 moveDirection = Vector3.zero;
 	void MoveAnimation(){
 		// ------------------------------
 		// Try to have direction Vector
@@ -460,30 +466,33 @@ public class PlayerManager : MonoBehaviour {
 		Vector2 inputDirection;
 		inputDirection = new Vector2(-direction.x, direction.z);
 
-		if(inputDirection.x > 0){
+        if(inputDirection.x > 0.3f){
 			inputDirection.x = 1;
-		}else{
+		}else if(inputDirection.x < -0.3f){
 			inputDirection.x = -1;
+		}else if(inputDirection.x < 0.3f && inputDirection.x > -0.3f){
+			inputDirection.x = 0;
 		}
-
-		if(inputDirection.y > 0){
+        
+		if(inputDirection.y > 0.3f){
 			inputDirection.y = 1;
-		}else{
+		}else if(inputDirection.y < -0.3f){
 			inputDirection.y = -1;
+		}else if(inputDirection.y < 0.3f && inputDirection.y > -0.3f){
+			inputDirection.y = 0;
 		}
 
 		// Debug.Log("direction = " + inputDirection);
 
 		// ----- Second part -----
-		moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
+		Vector3 moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
  
         if (moveDirection.magnitude > 1.0f)
         {
             moveDirection = moveDirection.normalized;
         }
  
-        moveDirection = transform.InverseTransformDirection(moveDirection);
-        // moveDirection = m_playerMesh.transform.InverseTransformDirection(moveDirection);
+        moveDirection = m_playerMesh.transform.InverseTransformDirection(moveDirection);
  
         // Debug.Log("moveDirection = " + moveDirection);
 
@@ -518,22 +527,19 @@ public class PlayerManager : MonoBehaviour {
 	public void MovePlayer(){
 		if(PlayerTargetPosition != Vector3.zero){
 			m_agent.SetDestination(PlayerTargetPosition);
-			// m_jainaAnimator.SetBool("isMoving", true);
 		}
 	}
 	public void StopPlayerMovement(){
 		m_agent.ResetPath();
-		// m_jainaAnimator.SetBool("isMoving", false);
 	}
 	public void RotatePlayer(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit floorHit;
-        if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_groundLayer)){
+        if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotatePlayerLayer)){
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            // m_playerMesh.transform.rotation = newRotation;
-            transform.rotation = newRotation;
+            m_playerMesh.transform.rotation = newRotation;
         }
 	}
 	public void SetPlayerSpeed(float newSpeed){
@@ -1430,6 +1436,15 @@ public class PlayerManager : MonoBehaviour {
 
 	public void SetTpPoint(Vector3 position){
 		m_agent.Warp(position);
+	}
+
+	public void SetBlinkTrailRenderer(){
+		StartCoroutine(BlinkRendererCorout());
+	}
+	IEnumerator BlinkRendererCorout(){
+		m_powers.m_blink.m_trailRenderer.enabled = true;
+		yield return new WaitForSeconds(m_powers.m_blink.m_timeToTrailRendererIsActive);
+		m_powers.m_blink.m_trailRenderer.enabled = false;
 	}
 
 }

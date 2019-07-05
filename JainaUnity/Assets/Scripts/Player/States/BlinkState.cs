@@ -14,8 +14,13 @@ public class BlinkState : IState {
     }
 
     public void Enter(){
-		m_playerManager.m_powers.m_blink.m_startCooldown = true;
-		m_playerManager.StopPlayerMovement();	
+      m_playerManager.m_powers.m_blink.m_startCooldown = true;
+      m_playerManager.StopPlayerMovement();	
+
+    m_playerManager.SetBlinkTrailRenderer();
+      m_playerManager.m_powers.m_blink.m_blinkFx.Play(true);
+      m_playerManager.m_powers.m_blink.m_rightCircleFx.Play(true);
+      m_playerManager.m_powers.m_blink.m_leftCircleFx.Play(true);
     }
 
     public void Update(){
