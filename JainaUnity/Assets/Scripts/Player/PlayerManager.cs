@@ -43,7 +43,8 @@ public class PlayerManager : MonoBehaviour {
 		[HideInInspector] public float m_actualCooldown = 0;
 
 		[Header("Prefabs")]
-		public Transform m_spawnRoot;
+		public Transform m_positionRoot;
+		public Transform m_rotationRoot;
 		[Space]
 		public GameObject m_arcaneAttack;
 		public GameObject m_iceAttack;
@@ -81,7 +82,7 @@ public class PlayerManager : MonoBehaviour {
 		[System.Serializable] public class Block {
             [HideInInspector] public bool m_inIceBlock = false;
 
-			public GameObject m_block;
+			public ParticleSystem m_block;
 			[HideInInspector] public bool m_canSwitch = true;
 			[HideInInspector] public bool m_startCooldown = false;
 			public float m_cooldown = 5;
@@ -1417,13 +1418,13 @@ public class PlayerManager : MonoBehaviour {
 			m_canAutoAttack = false;
 			switch(m_currentElement){
 				case ElementType.Arcane:
-					Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+					Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
 				break;
 				case ElementType.Ice:
-					Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+					Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
 				break;
 				case ElementType.Fire:
-					Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_spawnRoot.position, m_autoAttacks.m_spawnRoot.rotation);
+					Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
 				break;
 			}
 		}

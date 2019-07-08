@@ -7,37 +7,39 @@ public class IceBlockState : IState {
 
 	// Constructor (CTOR)
 	PlayerManager m_playerManager;
-    public IceBlockState (PlayerManager playerManager){
-		  m_playerManager = playerManager;
-    }
+	public IceBlockState (PlayerManager playerManager){
+		m_playerManager = playerManager;
+	}
 
-    public void Enter(){
-        m_playerManager.m_powers.m_Block.m_inIceBlock = true;
+	FX m_chronoShield;
 
-        m_playerManager.StopPlayerMovement();
-
+	public void Enter(){
+		m_playerManager.JainaAnimator.SetBool("ChronoShield", true);
+		m_playerManager.m_powers.m_Block.m_inIceBlock = true;
+		m_playerManager.StopPlayerMovement();
 		m_playerManager.m_powers.m_Block.m_actualIceBlockTimer = 0;
+		m_playerManager.m_powers.m_Block.m_block.Play(true);
+	}
 
-		m_playerManager.m_powers.m_Block.m_block.SetActive(true);
-    }
-
-    public void Update(){
+	public void Update(){
 		ManageTimer();
 
 		if(m_playerManager.m_iceBlockButton){
 			m_playerManager.ChangeState(0);
 		}
-    }
+	}
 
-    public void FixedUpdate(){
+	public void FixedUpdate(){
 
-    }
+	}
 
 	public void Exit(){
-		m_playerManager.m_powers.m_Block.m_block.SetActive(false);
 		m_playerManager.m_powers.m_Block.m_startCooldown = true;
-        m_playerManager.m_powers.m_Block.m_inIceBlock = false;
-    }
+		m_playerManager.m_powers.m_Block.m_inIceBlock = false;
+		m_playerManager.JainaAnimator.SetBool("ChronoShield", false);
+		m_playerManager.m_powers.m_Block.m_block.Stop(true);
+		m_playerManager.m_powers.m_Block.m_block.Clear(true);
+	}
 
     void ManageTimer(){
 		m_playerManager.m_powers.m_Block.m_actualIceBlockTimer += Time.deltaTime;
