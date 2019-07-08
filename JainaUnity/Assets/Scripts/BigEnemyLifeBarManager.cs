@@ -105,7 +105,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 unitFrameOn = true;
             }
             ActivateUnitFrame(enemyStatsLocked);
-            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true);
+            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true, enemyStatsLocked);
             enemyStatsLocked.m_cirlceCanvas.SetActive(true);
             timeToShowLifeBar = m_showLifeBar;
 
@@ -116,14 +116,14 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             {
                 enemyStatsSave = enemyStats;
                 ActivateUnitFrame(enemyStats);
-                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true);
+                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true, enemyStats);
             }
         }
 
 
         if (enemyStats == null && unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
         {
-            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
+            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
             enemyStatsLocked.m_cirlceCanvas.SetActive(false);
             DestroyMarques();
             DeactivateBool(false);
@@ -133,7 +133,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             if (DescreaseTimeToHideLifeBar())
             {
-                ActivateLifeBar(enemyStatsSave.m_enemyPowerLevel, false);
+                ActivateLifeBar(enemyStatsSave.m_enemyPowerLevel, false, enemyStatsSave);
                 DestroyMarques();
                 DeactivateBool(false);
                 enemyStatsSave = null;
@@ -151,7 +151,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 {
                     if (DescreaseTimeToHideLifeBar())
                     {
-                        ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false);
+                        ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
                         DestroyMarques();
                         DeactivateBool(false);
                         enemyStatsLocked.m_cirlceCanvas.SetActive(false);
@@ -192,9 +192,34 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         iceOn = b;
     }
 
-    void ActivateLifeBar(int i, bool b)
+
+    void ActivateLifeBar(int i, bool b, EnemyStats stats)
     {
+        LifeBarArray lifeBar = m_UnitFrame[i].GetComponent<LifeBarArray>();
         m_UnitFrame[i].SetActive(b);
+        if(lifeBar.m_levelOfLifeBar.Length != 0)
+        {
+            switch (stats.m_enemyType)
+            {
+                case EnemyStats.EnemyType.Young:
+                    lifeBar.m_levelOfLifeBar[0].SetActive(b);
+                    lifeBar.m_levelOfLifeBar[1].SetActive(!b);
+                    lifeBar.m_levelOfLifeBar[2].SetActive(!b);
+                    break;
+                case EnemyStats.EnemyType.Fighter:
+                    lifeBar.m_levelOfLifeBar[0].SetActive(!b);
+                    lifeBar.m_levelOfLifeBar[1].SetActive(b);
+                    lifeBar.m_levelOfLifeBar[2].SetActive(!b);
+                    break;
+                case EnemyStats.EnemyType.Conqueror:
+                    lifeBar.m_levelOfLifeBar[0].SetActive(!b);
+                    lifeBar.m_levelOfLifeBar[1].SetActive(!b);
+                    lifeBar.m_levelOfLifeBar[2].SetActive(b);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     bool DescreaseTimeToShowLifeBar()
