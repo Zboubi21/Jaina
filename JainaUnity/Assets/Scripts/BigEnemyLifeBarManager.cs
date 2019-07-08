@@ -272,7 +272,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     {
         LifeBarArray lifeArray = m_UnitFrame[m_enemyStats.m_enemyPowerLevel].GetComponent<LifeBarArray>();
         lifeArray.m_lifeBar.fillAmount = Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
-        if (DecreaseTimer() && lifeArray.m_lifeBar.fillAmount != lifeArray.m_whiteLifeBar.fillAmount)
+        if (!m_enemyStats.HasTakenDamage && lifeArray.m_lifeBar.fillAmount != lifeArray.m_whiteLifeBar.fillAmount)
         {
             //Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
             if (go)

@@ -269,6 +269,19 @@ public class EnemyStats : CharacterStats {
             iceOn = value;
         }
     }
+
+    public bool HasTakenDamage
+    {
+        get
+        {
+            return hasTakenDamage;
+        }
+
+        set
+        {
+            hasTakenDamage = value;
+        }
+    }
     #endregion
     //bool checkiIfItIsDead;
 
@@ -486,6 +499,16 @@ public class EnemyStats : CharacterStats {
             m_canvas.SetActive(false);
         }
 
+        if (hasTakenDamage)
+        {
+            m_timeToDecreaseWhiteLifeBar -= Time.deltaTime;
+
+            if(m_timeToDecreaseWhiteLifeBar <= 0)
+            {
+                hasTakenDamage = false;
+            }
+        }
+
     }
     void CanvasSetActiveMethod()
     {
@@ -569,14 +592,18 @@ public class EnemyStats : CharacterStats {
             }
         }
     }
-
+    bool hasTakenDamage;
+    float m_timeToDecreaseWhiteLifeBar;
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
+        m_timeToDecreaseWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
+        hasTakenDamage = true;
+        //BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
 
         slider.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
     }
+
     public override void Die()
     {
         base.Die();
