@@ -15,6 +15,13 @@ public class EnemyStats : CharacterStats {
     public string _name;
     [Range(0,2)]
     public int m_enemyPowerLevel;
+    public EnemyType m_enemyType = EnemyType.Young;
+    public enum EnemyType
+    {
+        Young,
+        Fighter,
+        Conqueror
+    }
     bool[] arcanOn;
     bool[] fireOn;
     bool[] iceOn;

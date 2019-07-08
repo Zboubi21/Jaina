@@ -12,4 +12,6 @@ public class LifeBarArray : MonoBehaviour
     public Image m_whiteLifeBar;
     [Space]
     public Transform m_markRoot;
+    [Space]
+    public GameObject[] m_levelOfLifeBar;
 }
