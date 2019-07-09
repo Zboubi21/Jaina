@@ -12,21 +12,19 @@ public class PlayerDieState : IState {
 
 	float m_stateTimer = 0;
 	bool m_timerIsReached = false;
+    bool m_fadeTimerIsReached = false;
 
     public void Enter(){
 		m_stateTimer = 0;
 		m_timerIsReached = false;
 		m_playerManager.JainaAnimator.SetBool("Die", true);
         m_playerManager.PlayerIsDead = true;
+		m_playerManager.StopPlayerMovement();
+        m_playerManager.SaveManager.On_PlayerDie();
     }
 
     public void Update(){
-		if(m_stateTimer >= m_playerManager.m_death.m_timeToRespawn && !m_timerIsReached){
-			m_timerIsReached = true;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-		}
-
-		m_stateTimer += Time.deltaTime;
+		
     }
 
     public void FixedUpdate(){

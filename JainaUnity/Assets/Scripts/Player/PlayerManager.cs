@@ -373,12 +373,6 @@ public class PlayerManager : MonoBehaviour {
 		[HideInInspector] public bool m_iceBuffIsCast = false;
 	}
 
-	[Header("Death")]
-	public Death m_death = new Death();
-	[System.Serializable] public class Death {
-		public float m_timeToRespawn = 4;
-	}
-
     #endregion Public [System.Serializable] Variables
 
     [Space]
@@ -443,6 +437,18 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+    SaveManager m_saveManager;
+    public SaveManager SaveManager {
+        get{
+            return m_saveManager;
+        }
+        set{
+            m_saveManager = value;
+        }
+    }
+
+
+
     void Awake(){
 		if(Instance == null){
 			Instance = this;
@@ -472,6 +478,7 @@ public class PlayerManager : MonoBehaviour {
 
 	void Start(){
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
+		m_saveManager = SaveManager.Instance;
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 	}

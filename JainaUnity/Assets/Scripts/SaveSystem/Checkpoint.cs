@@ -6,6 +6,7 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour {
 
     [Header("Parameters")]
+    [SerializeField] int m_checkpointNumber = 0;
     [SerializeField] Transform m_savePosition;
     [SerializeField] BoatCheckpoint m_boat;
 
@@ -29,9 +30,9 @@ public class Checkpoint : MonoBehaviour {
 
     void OnTriggerEnter(Collider col){
         if(col.CompareTag("Player")){
-            if(!m_checkpointIsTake){
+            if(!m_checkpointIsTake && m_saveManager.ActualCheckpointNumber <= m_checkpointNumber){
                 m_checkpointIsTake = true;
-                m_saveManager.On_CheckpointIsTake(m_savePosition);
+                m_saveManager.On_CheckpointIsTake(m_savePosition, m_checkpointNumber);
                 m_boat.On_CheckpointIsTake();
             }
         }
