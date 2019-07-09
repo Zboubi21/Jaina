@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour {
 
 	public PlayerDebug m_playerDebug = new PlayerDebug();
 	[System.Serializable] public class PlayerDebug {
+		public bool m_playerCanDie = true;
 		public bool m_useSymetricalHudSpellAnim = true;
 	}
 
@@ -76,6 +77,9 @@ public class PlayerManager : MonoBehaviour {
 			[Space]
 			public float m_timeToTrailRendererIsActive = 1;
 			public TrailRenderer m_trailRenderer;
+
+			[Header("Audio")]
+			public GameObject m_spellSound;
 		}
 
 		public Block m_Block = new Block();
@@ -93,6 +97,9 @@ public class PlayerManager : MonoBehaviour {
 			[Header("UI")]
 			public TextMeshProUGUI m_text;
 			public Image m_cooldownImage;
+
+			[Header("Audio")]
+			public AudioSource m_spellSound;
 		}
 
 		public IceNova m_iceNova = new IceNova();
@@ -116,6 +123,9 @@ public class PlayerManager : MonoBehaviour {
 
             [Header("UI")]
 			public SpellUI m_uI = new SpellUI();
+
+			[Header("Audio")]
+			public GameObject m_spellSound;
 		}
 		public IceBuff m_iceBuff = new IceBuff();
 		[System.Serializable] public class IceBuff {
@@ -136,6 +146,9 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("UI")]
 			public SpellUI m_uI = new SpellUI();
+
+			[Header("Audio")]
+			public GameObject m_spellSound;
 
 			[HideInInspector] public GameObject m_actualBuff;
 		}
@@ -158,6 +171,8 @@ public class PlayerManager : MonoBehaviour {
 			[Header("UI")]
 			public SpellUI m_uI = new SpellUI();
 
+			[Header("Audio")]
+			public GameObject m_spellSound;
 		}
 		public FireTrail m_fireTrail = new FireTrail();
 		[System.Serializable] public class FireTrail {
@@ -181,6 +196,9 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("UI")]
 			public SpellUI m_uI = new SpellUI();
+
+			[Header("Audio")]
+			public GameObject m_spellSound;
 		}
 
 		public ArcaneProjectiles m_arcaneProjectiles = new ArcaneProjectiles();
@@ -205,6 +223,11 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("UI")]
 			public SpellUI m_uI = new SpellUI();
+
+			[Header("Audio")]
+			public GameObject m_firstSpellSound;
+			public GameObject m_secondSpellSound;
+			public GameObject m_thirdSpellSound;
 
 			[Header("Shake camera")]
 			public ShakeCamera m_ShakeCamera = new ShakeCamera();
@@ -256,6 +279,9 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("UI")]
 			public SpellUI m_uI = new SpellUI();
+
+			[Header("Audio")]
+			public GameObject m_spellSound;
 
 			[Header("Shake camera")]
 			public bool m_useShakeCam = true;
@@ -347,6 +373,12 @@ public class PlayerManager : MonoBehaviour {
 		[HideInInspector] public bool m_iceBuffIsCast = false;
 	}
 
+	[Header("Death")]
+	public Death m_death = new Death();
+	[System.Serializable] public class Death {
+		public float m_timeToRespawn = 4;
+	}
+
     #endregion Public [System.Serializable] Variables
 
     [Space]
@@ -401,6 +433,16 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+	bool m_playerIsDead = false;
+	public bool PlayerIsDead {
+        get{
+            return m_playerIsDead;
+        }
+		set{
+            m_playerIsDead = value;
+        }
+    }
+
     void Awake(){
 		if(Instance == null){
 			Instance = this;
@@ -417,6 +459,7 @@ public class PlayerManager : MonoBehaviour {
 			new IceBuffState(this),				// 6 - Ice Buff
 			new FireTrailState(this),			// 7 - Fire Trail
 			new ArcaneExplosionState(this),		// 8 - Arcane Explosion
+			new PlayerDieState(this),			// 8 - Die
 		});
 		string[] playerStateNames = System.Enum.GetNames (typeof(PlayerState));
 		if(m_sM.States.Count != playerStateNames.Length){
@@ -573,7 +616,6 @@ public class PlayerManager : MonoBehaviour {
 		for (int i = 0, l = m_moveSpeed.m_trailRenderers.Length; i < l; ++i){
 			m_moveSpeed.m_trailRenderers[i].enabled = activate;
 		}
-		Debug.Log("activate = " + activate);
 	}
 
 	public void ChangePower(bool rightSpell){
@@ -1416,15 +1458,25 @@ public class PlayerManager : MonoBehaviour {
 	public void AutoAttack(){
 		if(m_canAutoAttack){
 			m_canAutoAttack = false;
+			
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Vector3 hitPoint = new Vector3();
+			RaycastHit floorHit;
+			if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotatePlayerLayer)){
+				hitPoint = floorHit.point;
+			}
 			switch(m_currentElement){
 				case ElementType.Arcane:
-					Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					GameObject arcaneGo = Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					arcaneGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
 				break;
 				case ElementType.Ice:
-					Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					GameObject iceGo = Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					iceGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
 				break;
 				case ElementType.Fire:
-					Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					GameObject fireGo = Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					fireGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
 				break;
 			}
 		}
@@ -1437,8 +1489,12 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 
-	public GameObject InstantiateSpells(GameObject obj, Vector3 pos, Quaternion rot, Transform parent = null){
-		return Instantiate(obj, pos, rot, parent);
+	public GameObject InstantiateGameObject(GameObject obj, Vector3 pos, Quaternion rot, Transform parent = null){
+		if(obj != null){
+			return Instantiate(obj, pos, rot, parent);
+		}else{
+			return null;
+		}
 	}
 
 	public void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
@@ -1456,6 +1512,20 @@ public class PlayerManager : MonoBehaviour {
 		m_powers.m_blink.m_trailRenderer.enabled = true;
 		yield return new WaitForSeconds(m_powers.m_blink.m_timeToTrailRendererIsActive);
 		m_powers.m_blink.m_trailRenderer.enabled = false;
+	}
+
+	public void On_PlayerDie(){
+		if(m_playerDebug.m_playerCanDie){
+			ChangeState(PlayerState.PlayerDieState);
+		}
+	}
+
+	public void ManageSound(AudioSource audioSource, bool startSound){
+		if(startSound){
+			audioSource.Play();
+		}else{
+			audioSource.Stop();
+		}
 	}
 
 }

@@ -25,7 +25,8 @@ public class NovaState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceNova.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_iceNova.m_nova, m_playerManager.m_powers.m_iceNova.m_root.position, m_playerManager.m_powers.m_iceNova.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceNova.m_nova, m_playerManager.m_powers.m_iceNova.m_root.position, m_playerManager.m_powers.m_iceNova.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceNova.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 		}
 
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceNova.m_waitTimeToExitState + m_playerManager.m_powers.m_iceNova.m_waitTimeToThrowSpell){

@@ -20,10 +20,14 @@ public class PlayerStats : CharacterStats {
 
     public override void TakeDamage(int damage)
     {
-        if (!PlayerManager.Instance.m_powers.m_Block.m_inIceBlock)
+        if (!PlayerManager.Instance.m_powers.m_Block.m_inIceBlock && !PlayerManager.Instance.PlayerIsDead)
         {
             base.TakeDamage(damage);
             m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+
+            if(CurrentHealth <= 0){
+                GetComponent<PlayerManager>().On_PlayerDie();
+            }
         }
     }
 

@@ -11,7 +11,7 @@ public class ArcaneExplosionState : IState {
 	// Constructor (CTOR)
 	PlayerManager m_playerManager;
     public ArcaneExplosionState (PlayerManager playerManager){
-		  m_playerManager = playerManager;
+		m_playerManager = playerManager;
     }
 
     public void Enter(){
@@ -25,7 +25,8 @@ public class ArcaneExplosionState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneExplosion.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_arcaneExplosion.m_projectile, m_playerManager.m_powers.m_arcaneExplosion.m_root.position, m_playerManager.m_powers.m_arcaneExplosion.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneExplosion.m_projectile, m_playerManager.m_powers.m_arcaneExplosion.m_root.position, m_playerManager.m_powers.m_arcaneExplosion.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneExplosion.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 			
 			if(m_playerManager.m_powers.m_arcaneExplosion.m_useShakeCam){
 				m_playerManager.ShakeCamera(m_playerManager.m_powers.m_arcaneExplosion.m_magnitudeShake, m_playerManager.m_powers.m_arcaneExplosion.m_roughnessShake, m_playerManager.m_powers.m_arcaneExplosion.m_fadeInTimeShake, m_playerManager.m_powers.m_arcaneExplosion.m_fadeOutTimeShake);

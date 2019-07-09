@@ -133,4 +133,14 @@ public class Projectile : Spell {
 		Destroy(gameObject);
 	}
 
+	public void SetTargetPos(Vector3 targetPos){
+		// Debug.Log("SetTargetPos");
+		Vector3 projectileToMouse = targetPos - transform.position;
+		projectileToMouse.y = 0f;
+		Quaternion newRotation = Quaternion.LookRotation(projectileToMouse);
+		transform.rotation = newRotation;
+
+		// transform.LookAt(targetPos, Vector3.up * transform.position.y);
+	}
+
 }

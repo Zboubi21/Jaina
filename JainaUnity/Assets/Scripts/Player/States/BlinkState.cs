@@ -21,6 +21,8 @@ public class BlinkState : IState {
       m_playerManager.m_powers.m_blink.m_blinkFx.Play(true);
       m_playerManager.m_powers.m_blink.m_rightCircleFx.Play(true);
       m_playerManager.m_powers.m_blink.m_leftCircleFx.Play(true);
+
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_blink.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
     }
 
     public void Update(){

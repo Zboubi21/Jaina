@@ -25,8 +25,9 @@ public class IceBuffState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceBuff.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			GameObject go = m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_iceBuff.m_buff, m_playerManager.m_powers.m_iceBuff.m_root.position, m_playerManager.m_powers.m_iceBuff.m_root.rotation);
+			GameObject go = m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceBuff.m_buff, m_playerManager.m_powers.m_iceBuff.m_root.position, m_playerManager.m_powers.m_iceBuff.m_root.rotation);
 			m_playerManager.m_powers.m_iceBuff.m_actualBuff = go;
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceBuff.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 		}
 
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceBuff.m_waitTimeToExitState + m_playerManager.m_powers.m_iceBuff.m_waitTimeToThrowSpell){

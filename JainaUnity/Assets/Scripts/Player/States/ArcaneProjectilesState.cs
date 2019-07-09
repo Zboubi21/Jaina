@@ -30,8 +30,9 @@ public class ArcaneProjectilesState : IState {
 		//First spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell && !m_firstSpellIsThrow){
 			m_firstSpellIsThrow = true;
-			m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_arcaneProjectiles.m_firstProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
-		
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_firstProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_firstSpellSound, m_playerManager.transform.position, Quaternion.identity);
+
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_useShakeCam){
 				m_playerManager.ShakeCamera(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_magnitudeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_roughnessShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_fadeInTimeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_fadeOutTimeShake);
 			}
@@ -41,7 +42,8 @@ public class ArcaneProjectilesState : IState {
 		//Second spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell && !m_secondSpellIsThrow){
 			m_secondSpellIsThrow = true;
-			m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_arcaneProjectiles.m_secondProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_secondProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_secondSpellSound, m_playerManager.transform.position, Quaternion.identity);
 		
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_useShakeCam){
 				m_playerManager.ShakeCamera(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_magnitudeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_roughnessShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_fadeInTimeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_fadeOutTimeShake);
@@ -52,7 +54,8 @@ public class ArcaneProjectilesState : IState {
 		//Third spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowThirdSpell && !m_thirdSpellIsThrow){
 			m_thirdSpellIsThrow = true;
-			m_playerManager.InstantiateSpells(m_playerManager.m_powers.m_arcaneProjectiles.m_thirdProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_thirdProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_thirdSpellSound, m_playerManager.transform.position, Quaternion.identity);
 		
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_useShakeCam){
 				m_playerManager.ShakeCamera(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_magnitudeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_roughnessShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_fadeInTimeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_fadeOutTimeShake);

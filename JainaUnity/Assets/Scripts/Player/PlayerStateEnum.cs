@@ -9,5 +9,6 @@
 		IceBuffState,				// 6 - Ice Buff
 		FireTrailState,				// 7 - Fire Trail
 		ArcaneExplosionState,		// 8 - Arcane Explosion
+		PlayerDieState, 			// 9 - Die
 	}
 }
