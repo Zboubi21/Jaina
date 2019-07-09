@@ -121,7 +121,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         }
 
 
-        if (enemyStats == null && unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
+        if (/*enemyStats == null && */unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
         {
             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
             enemyStatsLocked.m_cirlceCanvas.SetActive(false);
