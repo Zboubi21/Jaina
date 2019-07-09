@@ -487,6 +487,14 @@ public class EnemyStats : CharacterStats {
     {
         base.Update();
 
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(100);
+        }
+#endif
+
+
         canvas.transform.LookAt(mainCamera.transform);
 
         MarksCoolDownMethods();

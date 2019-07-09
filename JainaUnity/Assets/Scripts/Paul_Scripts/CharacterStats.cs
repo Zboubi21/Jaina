@@ -103,10 +103,7 @@ public class CharacterStats : MonoBehaviour {
 
     public virtual void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            TakeDamage(10);
-        }
+        
     }
 
     #region Mark Methods
