@@ -120,6 +120,8 @@ public class EnemyController : MonoBehaviour {
     CharacterStats myStats;
     Collider Mycollider;
     Collider[] enemyController;
+    PlayerManager m_playerManager;
+    bool m_enemyIsInVictory = false;
 
     #region Get Set
     RuntimeAnimatorController rac;
@@ -332,6 +334,19 @@ public class EnemyController : MonoBehaviour {
             m_isImpatient = value;
         }
     }
+
+    public GameObject FreezedObject
+    {
+        get
+        {
+            return freezedObject;
+        }
+
+        set
+        {
+            freezedObject = value;
+        }
+    }
     #endregion
 
     public virtual void LogicWhenEnable()
@@ -378,6 +393,7 @@ public class EnemyController : MonoBehaviour {
         }
         enemystats = GetComponent<EnemyStats>();
 
+        m_playerManager = PlayerManager.Instance;
     }
 
     void Update () {
@@ -399,6 +415,11 @@ public class EnemyController : MonoBehaviour {
     private void FixedUpdate()
     {
         m_sM.FixedUpdate();
+
+        if(m_playerManager.PlayerIsDead && !m_enemyIsInVictory && !m_sM.CompareState((int)EnemyState.DieState)){
+            m_enemyIsInVictory = true;
+            ChangeState(EnemyState.VictoryState);
+        }
     }
     
 
@@ -574,9 +595,9 @@ public class EnemyController : MonoBehaviour {
             //ChangeState(EnemyState.FrozenState);
             Anim.SetTrigger("Idle");
             FreezTime = PlayerManager.Instance.m_powers.m_iceNova.m_timeFreezed;
-            if (freezedObject == null)
+            if (FreezedObject == null)
             {
-                freezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
+                FreezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
             }
             IsRootByIceNova = true;
             BeFreezed(IsRootByIceNova);
@@ -606,7 +627,7 @@ public class EnemyController : MonoBehaviour {
         StopMoving(b);
         if (!b)
         {
-            DestroyGameObject(freezedObject);
+            DestroyGameObject(FreezedObject);
         }
     }
 
@@ -649,6 +670,9 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Die()
     {
+        if(FreezedObject != null){
+            Destroy(FreezedObject);
+        }
         StartCoroutine(OnWaitForAnimToEnd());
         //Destroy(GetComponent<CapsuleCollider>());
         // Destroy(gameObject, 3f);
