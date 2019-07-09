@@ -659,6 +659,11 @@ public class EnemyController : MonoBehaviour {
     {
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
         yield return new WaitForSeconds(3f);                            //Animation time
+        Spawned_Tracker tracker = GetComponent<Spawned_Tracker>();
+        if(tracker != null)
+        {
+            tracker.CallDead();
+        }
         gameObject.SetActive(false);
     }
 
