@@ -4,7 +4,7 @@
 		Zglorg_Adulte,
         Zglorg_Conquérant,
 	}
-    [System.Serializable] public enum ObjectType {
+    [System.Serializable] public enum SpellType {
 		AutoAttack_Ice,
 		AutoAttack_Fire,
 		AutoAttack_Arcane,
@@ -16,5 +16,8 @@
         ArcaneProjectile2,
         ArcaneProjectile3,
         ArcaneExplosion,
+	}
+    [System.Serializable] public enum ObjectType {
+        
 	}
 }

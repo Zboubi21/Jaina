@@ -8,7 +8,7 @@ public class FireTrail : Spell {
 
 	[SerializeField] float m_timeToLive = 1;
 
-	void Start(){
+	void OnEnable(){
 		StartCoroutine(DestroyTrail());
 	}
 
@@ -33,7 +33,7 @@ public class FireTrail : Spell {
 
     IEnumerator DestroyTrail(){
 		yield return new WaitForSeconds(m_timeToLive);
-		Destroy(gameObject);
+		ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
 	}
 
 }

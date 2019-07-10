@@ -8,7 +8,7 @@ public class IceNova : Spell {
 
 	[SerializeField] float m_timeToLive = 1;
 
-	void Start(){
+	void OnEnable(){
 		StartCoroutine(DestroyNova());
 	}
 
@@ -25,7 +25,7 @@ public class IceNova : Spell {
 
 	IEnumerator DestroyNova(){
 		yield return new WaitForSeconds(m_timeToLive);
-		Destroy(gameObject);
+		ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
 	}
 
 }

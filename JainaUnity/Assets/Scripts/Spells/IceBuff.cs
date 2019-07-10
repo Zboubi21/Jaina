@@ -27,17 +27,23 @@ public class IceBuff : Spell {
 	float m_actualFxScale;
 	float m_actualColliderScale;
 
-	void Start(){
+	public override void Start(){
+        base.Start();
 		m_playerManager = PlayerManager.Instance;
+		m_anim = GetComponent<Animation>();
+	}
+
+	void OnEnable(){
 		StartCoroutine(DestroyBuffCoroutine());
 
 		m_actualFxScale = m_iceBuffFXScaleMaxi;
 		m_actualColliderScale = m_sphereColliderScaleMaxi;
 
-		m_anim = GetComponent<Animation>();
-		StartCoroutine(WaitTheEndOfTheStartAnimation());
+		if(m_anim != null)
+			StartCoroutine(WaitTheEndOfTheStartAnimation());
 
-		m_playerManager.m_moveSpeed.m_iceBuffIsCast = true;
+		if(m_playerManager != null)
+			m_playerManager.m_moveSpeed.m_iceBuffIsCast = true;
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -95,7 +101,7 @@ public class IceBuff : Spell {
 
 		m_playerManager.m_moveSpeed.m_playerInBuff = false;
 
-		Destroy(gameObject);
+		ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
 	}
 
 }

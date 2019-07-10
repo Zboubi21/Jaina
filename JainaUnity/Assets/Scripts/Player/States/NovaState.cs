@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerStateEnum;
+using PoolTypes;
 
 public class NovaState : IState {
 
@@ -25,7 +26,7 @@ public class NovaState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_iceNova.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceNova.m_nova, m_playerManager.m_powers.m_iceNova.m_root.position, m_playerManager.m_powers.m_iceNova.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.IceNoca, m_playerManager.m_powers.m_iceNova.m_root.position, m_playerManager.m_powers.m_iceNova.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_iceNova.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 		}
 

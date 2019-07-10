@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PoolTypes;
 
 public class Spell : MonoBehaviour {
 
@@ -11,6 +12,10 @@ public class Spell : MonoBehaviour {
 		Ice,
 		Fire
 	}
+
+    public SpellType m_spellType;
+
+    public BecameInvisible m_scripToBecameInvisible;
 
 	MarksTime m_marksTime = new MarksTime();
 
@@ -27,7 +32,15 @@ public class Spell : MonoBehaviour {
         }
     }
 
-    
+    ObjectPooler m_objectPooler;
+    public ObjectPooler ObjectPoolerInstance{
+        get{
+            return m_objectPooler;
+        }
+        set{
+            m_objectPooler = value;
+        }
+    }
 
     [System.Serializable] public class MarksTime {
 		float m_arcane = 10;
@@ -73,6 +86,8 @@ public class Spell : MonoBehaviour {
         }
     }
 
-
+    public virtual void Start(){
+        m_objectPooler = ObjectPooler.Instance;
+    }
 
 }

@@ -12,8 +12,10 @@ public class ObjectPooler : MonoBehaviour {
 	void Awake(){
 		if(Instance == null){
 			Instance = this;
+            // DontDestroyOnLoad(gameObject);
 		}else{
 			Debug.LogError("Two instance of ObjectPooler");
+            // Destroy(gameObject);
 		}
 	}
 
@@ -21,16 +23,25 @@ public class ObjectPooler : MonoBehaviour {
 
 	[Header("Enemy pools")]
 	[SerializeField] List<EnemyPool> m_enemyPools;
-	[System.Serializable] public class EnemyPool{
+	[System.Serializable] public class EnemyPool {
         public string m_name;
         public EnemyType m_enemyType;
         public GameObject m_prefab;
 		public int m_size;
     }
 
+	[Header("Spell pools")]
+	[SerializeField] List<SpellPool> m_spellPools;
+	[System.Serializable] public class SpellPool {
+        public string m_name;
+        public SpellType m_spellType;
+        public GameObject m_prefab;
+		public int m_size;
+    }
+
 	[Header("Object pools")]
 	[SerializeField] List<ObjectPool> m_objectPools;
-	[System.Serializable] public class ObjectPool{
+	[System.Serializable] public class ObjectPool {
         public string m_name;
         public ObjectType m_objectType;
         public GameObject m_prefab;
@@ -49,6 +60,7 @@ public class ObjectPooler : MonoBehaviour {
     }
 
 	Dictionary<EnemyType, Queue<GameObject>> m_enemyPoolDictionary;
+	Dictionary<SpellType, Queue<GameObject>> m_spellPoolDictionary;
 	Dictionary<ObjectType, Queue<GameObject>> m_objectPoolDictionary;
 
 	void Start(){
@@ -58,9 +70,22 @@ public class ObjectPooler : MonoBehaviour {
 			for(int i = 0, l = pool.m_size; i < l; ++i){
 				GameObject obj = Instantiate(pool.m_prefab, transform, this);
 				obj.SetActive(false);
+				obj.name = obj.name + "_" + i;
 				objectPool.Enqueue(obj);
 			}
 			m_enemyPoolDictionary.Add(pool.m_enemyType, objectPool);
+		}
+
+		m_spellPoolDictionary = new Dictionary<SpellType, Queue<GameObject>>();
+		foreach(SpellPool pool in m_spellPools){
+			Queue<GameObject> objectPool = new Queue<GameObject>();
+			for(int i = 0, l = pool.m_size; i < l; ++i){
+				GameObject obj = Instantiate(pool.m_prefab, transform, this);
+				obj.SetActive(false);
+				obj.name = obj.name + "_" + i;
+				objectPool.Enqueue(obj);
+			}
+			m_spellPoolDictionary.Add(pool.m_spellType, objectPool);
 		}
 
 		m_objectPoolDictionary = new Dictionary<ObjectType, Queue<GameObject>>();
@@ -69,6 +94,7 @@ public class ObjectPooler : MonoBehaviour {
 			for(int i = 0, l = pool.m_size; i < l; ++i){
 				GameObject obj = Instantiate(pool.m_prefab, transform, this);
 				obj.SetActive(false);
+				obj.name = obj.name + "_" + i;
 				objectPool.Enqueue(obj);
 			}
 			m_objectPoolDictionary.Add(pool.m_objectType, objectPool);
@@ -96,8 +122,8 @@ public class ObjectPooler : MonoBehaviour {
 			return null;
 		}
 
-		if(m_enemyPoolDictionary[enemyType].Peek().activeSelf){
-			Debug.LogError("All " + enemyType + " are already active!");
+		if(m_enemyPoolDictionary[enemyType].Count == 0){
+			Debug.LogError(enemyType.ToString() + " pool is empty!");
 			return null;
 		}
 
@@ -114,15 +140,42 @@ public class ObjectPooler : MonoBehaviour {
 		m_enemyPoolDictionary[enemyType].Enqueue(objectToReturn);
 	}
 
-	public GameObject SpawnObjectFromPool(ObjectType objectType, Vector3 position, Quaternion rotation){
 
-		if(!m_objectPoolDictionary.ContainsKey(objectType)){
-			Debug.LogWarning("Pool of " + objectType + " dosen't exist.");
+	public GameObject SpawnSpellFromPool(SpellType objectType, Vector3 position, Quaternion rotation){
+
+		if(!m_spellPoolDictionary.ContainsKey(objectType)){
+			Debug.LogError("Pool of " + objectType + " dosen't exist.");
 			return null;
 		}
 
-		if(m_objectPoolDictionary[objectType].Peek().activeSelf){
-			Debug.LogError("All " + objectType + " are already active!");
+		if(m_spellPoolDictionary[objectType].Count == 0){
+			Debug.LogError(objectType.ToString() + " pool is empty!");
+			return null;
+		}
+
+		GameObject objectToSpawn = m_spellPoolDictionary[objectType].Dequeue();
+
+		objectToSpawn.transform.position = position;
+		objectToSpawn.transform.rotation = rotation;
+		objectToSpawn.SetActive(true);
+
+		return objectToSpawn;
+	}
+	public void ReturnSpellToPool(SpellType objectType, GameObject objectToReturn){
+		objectToReturn.SetActive(false);
+		m_spellPoolDictionary[objectType].Enqueue(objectToReturn);
+	}
+
+
+	public GameObject SpawnObjectFromPool(ObjectType objectType, Vector3 position, Quaternion rotation){
+
+		if(!m_objectPoolDictionary.ContainsKey(objectType)){
+			Debug.LogError("Pool of " + objectType + " dosen't exist.");
+			return null;
+		}
+
+		if(m_objectPoolDictionary[objectType].Count == 0){
+			Debug.LogError(objectType.ToString() + " pool is empty!");
 			return null;
 		}
 
