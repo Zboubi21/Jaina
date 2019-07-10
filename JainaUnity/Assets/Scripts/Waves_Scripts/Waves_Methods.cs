@@ -11,8 +11,8 @@ public class Waves_Methods : MonoBehaviour
     public float timeToSpawn = 0.5f;
     public int NombreDeVague;
 
-    public UnityEvent OnLastWaveOver;
     public UnityEvent OnFirstWaveStart;
+    public UnityEvent OnLastWaveOver;
 
     Spawner_Methods[] _spawnerMethod;
     int nbrOfWave;
@@ -40,11 +40,14 @@ public class Waves_Methods : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!_playerOnTrigger)
+        if (other.CompareTag("Player"))
         {
-            Spawner(nbrOfWave);
-            _playerOnTrigger = true;
-            OnFirstWaveStart.Invoke();
+            if (!_playerOnTrigger)
+            {
+                Spawner(nbrOfWave);
+                _playerOnTrigger = true;
+                OnFirstWaveStart.Invoke();
+            }
         }
     }
 
