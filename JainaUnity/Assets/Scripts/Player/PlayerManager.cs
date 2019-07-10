@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using EZCameraShake;
 using PlayerStateEnum;
+using PoolTypes;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerManager : MonoBehaviour {
@@ -447,7 +448,15 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
-
+	ObjectPooler m_objectPooler;
+	public ObjectPooler ObjectPooler {
+        get{
+            return m_objectPooler;
+        }
+        set{
+            m_objectPooler = value;
+        }
+    }
 
     void Awake(){
 		if(Instance == null){
@@ -479,6 +488,7 @@ public class PlayerManager : MonoBehaviour {
 	void Start(){
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
 		m_saveManager = SaveManager.Instance;
+		m_objectPooler = ObjectPooler.Instance;
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 	}
@@ -1474,16 +1484,22 @@ public class PlayerManager : MonoBehaviour {
 			}
 			switch(m_currentElement){
 				case ElementType.Arcane:
-					GameObject arcaneGo = Instantiate(m_autoAttacks.m_arcaneAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
-					arcaneGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					GameObject arcaneGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Arcane, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(arcaneGo != null){
+						arcaneGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					}
 				break;
 				case ElementType.Ice:
-					GameObject iceGo = Instantiate(m_autoAttacks.m_iceAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
-					iceGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					GameObject iceGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Ice, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(iceGo != null){
+						iceGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					}
 				break;
 				case ElementType.Fire:
-					GameObject fireGo = Instantiate(m_autoAttacks.m_fireAttack, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
-					fireGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					GameObject fireGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Fire, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(fireGo != null){
+						fireGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					}
 				break;
 			}
 		}

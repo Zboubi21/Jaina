@@ -32,6 +32,7 @@ public class ZglorgController : EnemyController {
             TargetStats1.TakeDamage(MyStas.damage.GetValue());
         }
     }
+
 }
 
 

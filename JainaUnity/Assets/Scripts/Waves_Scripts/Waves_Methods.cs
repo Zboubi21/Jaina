@@ -10,8 +10,9 @@ public class Waves_Methods : MonoBehaviour
     public float[] m_timeBetweenEachWave;
     public float timeToSpawn = 0.5f;
     public int NombreDeVague;
-
+    [Space]
     public UnityEvent OnFirstWaveStart;
+    public UnityEvent OnAnyWaveStart;
     public UnityEvent OnLastWaveOver;
 
     Spawner_Methods[] _spawnerMethod;
@@ -83,7 +84,7 @@ public class Waves_Methods : MonoBehaviour
                 Spawner(nbrOfWave);
             }
         }
-        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead)
+        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
         {
             OnLastWaveOver.Invoke();
         }
@@ -97,9 +98,10 @@ public class Waves_Methods : MonoBehaviour
 
     void Spawner(int wave)
     {
-        nbrEnemyDead = 0;
-        nbrOfEnemy = 0;
-        if(wave > m_timeBetweenEachWave.Length-1)
+        //nbrEnemyDead = 0;
+        //nbrOfEnemy = 0;
+        OnAnyWaveStart.Invoke();
+        if (wave > m_timeBetweenEachWave.Length-1)
         {
             timeNextWave = m_timeBetweenEachWave[wave-1];
         }

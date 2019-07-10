@@ -28,15 +28,29 @@ public class FireProjectiles : Projectile {
 	}
 
 	float m_duration;
+	float m_timeFromStart = 0;
+	float m_anotherTimer = 0;
 	// bool m_canMove = true;
 
-	void Awake(){
+	FireFlameInstantiator ffi;
+	public FireFlameInstantiator Ffi{
+        get{
+            return ffi;
+        }
+        set{
+            ffi = value;
+        }
+    }
+
+	void OnEnable(){
 		m_dieWhenHit = false;
 		m_haveMaxLifeTime = false;
 
 		m_duration = (m_distance + (m_distance / 2)) / m_speed;
+		m_timeFromStart = 0;
+		m_anotherTimer = 0;
 
-		Invoke("DestroyProjectile", m_duration);
+		// Invoke("DestroyProjectile", m_duration);
 
 		FireFlameInstantiator ffi = GetComponentInParent<FireFlameInstantiator>();
 		if(ffi != null){
@@ -44,16 +58,26 @@ public class FireProjectiles : Projectile {
 		}
 	}
 
-	float timeFromStart;
-	public override void FixedUpdate(){
+
+    public override void FixedUpdate(){
 		// if(m_canMove){
-			float f = Mathf.Lerp(m_duration / m_duration, 0, timeFromStart += Time.deltaTime / m_duration);
+			float f = Mathf.Lerp(m_duration / m_duration, 0, m_timeFromStart += Time.deltaTime / m_duration);
 			RBody.velocity = transform.forward * m_speed * m_speedCurve.Evaluate(f);
+
+			// if(m_timeFromStart >= m_duration){
+			// 	ProjectileReturnToPool();
+			// }
 		// }else{
 		// 	RBody.velocity = Vector3.zero;
 		// }
 
 		// CheckRaycasts();
+	}
+	void Update(){
+		m_anotherTimer += Time.deltaTime;
+		if(m_anotherTimer >= m_duration){
+			ProjectileReturnToPool();
+		}
 	}
     public override void OnFireEnter(Collider col)
     {

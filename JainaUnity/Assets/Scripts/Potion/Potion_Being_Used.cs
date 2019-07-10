@@ -5,14 +5,13 @@ using UnityEngine;
 public class Potion_Being_Used : MonoBehaviour
 {
     public int heal_Amount;
-
-
+    public bool debugQueueJJ = true;
     ParticleSystem[] particle;
     Animator anim;
     void Start()
     {
         particle = GetComponentsInChildren<ParticleSystem>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
     }
 
 
@@ -24,14 +23,7 @@ public class Potion_Being_Used : MonoBehaviour
             anim.SetTrigger("Used");
             particle[0].Stop();
             particle[1].Play();
-            if (stats.CurrentHealth + heal_Amount >= stats.maxHealth)
-            {
-                stats.CurrentHealth = stats.maxHealth;
-            }
-            else
-            {
-                stats.CurrentHealth += heal_Amount;
-            }
+            stats.HealDamage(heal_Amount);
             StartCoroutine(waitendofanim());
         }
     }
@@ -39,7 +31,14 @@ public class Potion_Being_Used : MonoBehaviour
     IEnumerator waitendofanim()
     {
         yield return new WaitForSeconds(0.75f);
-        Destroy(gameObject);
+        if (debugQueueJJ)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerStateEnum;
+using PoolTypes;
 
 public class ArcaneExplosionState : IState {
 
@@ -25,7 +26,7 @@ public class ArcaneExplosionState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneExplosion.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneExplosion.m_projectile, m_playerManager.m_powers.m_arcaneExplosion.m_root.position, m_playerManager.m_powers.m_arcaneExplosion.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.ArcaneExplosion, m_playerManager.m_powers.m_arcaneExplosion.m_root.position, m_playerManager.m_powers.m_arcaneExplosion.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneExplosion.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 			
 			if(m_playerManager.m_powers.m_arcaneExplosion.m_useShakeCam){

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerStateEnum;
+using PoolTypes;
 
 public class ArcaneProjectilesState : IState {
 
@@ -30,7 +31,7 @@ public class ArcaneProjectilesState : IState {
 		//First spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell && !m_firstSpellIsThrow){
 			m_firstSpellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_firstProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.ArcaneProjectile1, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_firstSpellSound, m_playerManager.transform.position, Quaternion.identity);
 
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_firstShake.m_useShakeCam){
@@ -42,7 +43,7 @@ public class ArcaneProjectilesState : IState {
 		//Second spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell && !m_secondSpellIsThrow){
 			m_secondSpellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_secondProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.ArcaneProjectile2, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_secondSpellSound, m_playerManager.transform.position, Quaternion.identity);
 		
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_secoundShake.m_useShakeCam){
@@ -54,7 +55,7 @@ public class ArcaneProjectilesState : IState {
 		//Third spell
 		if(m_stateTimer >= m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell + m_playerManager.m_powers.m_arcaneProjectiles.m_waitTimeToThrowThirdSpell && !m_thirdSpellIsThrow){
 			m_thirdSpellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_thirdProjectile, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.ArcaneProjectile3, m_playerManager.m_powers.m_arcaneProjectiles.m_root.position, m_playerManager.m_powers.m_arcaneProjectiles.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_arcaneProjectiles.m_thirdSpellSound, m_playerManager.transform.position, Quaternion.identity);
 		
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_useShakeCam){

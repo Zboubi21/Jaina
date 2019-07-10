@@ -14,10 +14,12 @@ public class EnemyController : MonoBehaviour {
 
     public StateMachine m_sM = new StateMachine();
 
-
     public virtual void OnEnable()
     {
-        Anim = GetComponentInChildren<Animator>();
+        
+
+        if(Anim == null)
+            Anim = GetComponentInChildren<Animator>();
 
         if(!m_isInstatiate){
             ChangeState(EnemyState.IdleState);
@@ -359,8 +361,12 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void LogicAtStart()
     {
+        if (m_playerManager == null)
+        {
+            m_playerManager = PlayerManager.Instance;
+        }
         // Get Instance Of The Player and his CharacterStats
-        target = PlayerManager.Instance.gameObject.transform;
+        target = m_playerManager.gameObject.transform;
         TargetStats1 = target.GetComponent<CharacterStats>();
 
         // Get The EnnmyController's NavMeshAgent, CharacterStats and Collider
@@ -395,8 +401,6 @@ public class EnemyController : MonoBehaviour {
             LogicAtStart();
         }
         enemystats = GetComponent<EnemyStats>();
-
-        m_playerManager = PlayerManager.Instance;
     }
 
     void Update () {
@@ -545,7 +549,7 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Sprint(float speed)
     {
-        speed = speed * ((100f - (PlayerManager.Instance.m_debuffs.m_IceSlow.m_iceSlow * enemystats.GivreMarkCount)) / 100f);
+        speed = speed * ((100f - (m_playerManager.m_debuffs.m_IceSlow.m_iceSlow * enemystats.GivreMarkCount)) / 100f);
         agent.speed = speed;
     }
 
@@ -597,11 +601,12 @@ public class EnemyController : MonoBehaviour {
         {
             //ChangeState(EnemyState.FrozenState);
             Anim.SetTrigger("Idle");
-            FreezTime = PlayerManager.Instance.m_powers.m_iceNova.m_timeFreezed;
-            if (FreezedObject == null)
-            {
-                FreezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
-            }
+            FreezTime = m_playerManager.m_powers.m_iceNova.m_timeFreezed;
+            // if (FreezedObject == null)
+            // {
+                // FreezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
+                m_fxs.m_freezed.SetActive(true);
+            // }
             IsRootByIceNova = true;
             BeFreezed(IsRootByIceNova);
         }
@@ -630,7 +635,8 @@ public class EnemyController : MonoBehaviour {
         StopMoving(b);
         if (!b)
         {
-            DestroyGameObject(FreezedObject);
+            // DestroyGameObject(FreezedObject);
+            m_fxs.m_freezed.SetActive(false);
         }
     }
 
@@ -673,9 +679,11 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Die()
     {
-        if(FreezedObject != null){
-            Destroy(FreezedObject);
-        }
+        // if(FreezedObject != null){
+        //     Destroy(FreezedObject);
+        // }
+        m_fxs.m_freezed.SetActive(false);
+        
         StartCoroutine(OnWaitForAnimToEnd());
         //Destroy(GetComponent<CapsuleCollider>());
         // Destroy(gameObject, 3f);
@@ -691,7 +699,9 @@ public class EnemyController : MonoBehaviour {
         if(tracker != null)
         {
             tracker.CallDead();
+            Destroy(tracker);
         }
+
         ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerStateEnum;
+using PoolTypes;
 
 public class FireTrailState : IState {
 
@@ -25,7 +26,7 @@ public class FireTrailState : IState {
     public void Update(){
 		if(m_stateTimer >= m_playerManager.m_powers.m_fireTrail.m_waitTimeToThrowSpell && !m_spellIsThrow){
 			m_spellIsThrow = true;
-			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_fireTrail.m_trail, m_playerManager.m_powers.m_fireTrail.m_root.position, m_playerManager.m_powers.m_fireTrail.m_root.rotation);
+			m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.FireTrail, m_playerManager.m_powers.m_fireTrail.m_root.position, m_playerManager.m_powers.m_fireTrail.m_root.rotation);
 			m_playerManager.InstantiateGameObject(m_playerManager.m_powers.m_fireTrail.m_spellSound, m_playerManager.transform.position, Quaternion.identity);
 		}
 

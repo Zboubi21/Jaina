@@ -21,7 +21,7 @@ public class Projectile : Spell {
 	[HideInInspector] public bool m_haveMaxLifeTime = true;
 	[HideInInspector] public bool m_dieWhenHit = true;
 	
-	float m_maxLifeTime = 5;
+	public float m_maxLifeTime = 5;
 	Rigidbody m_rBody;
     #region Get Set
     public int Damage
@@ -51,15 +51,17 @@ public class Projectile : Spell {
     }
     #endregion
 
-    void Start(){
-		if(m_haveMaxLifeTime){
-			StartCoroutine(LifeTime());
-		}
+    public override void Start(){
+		base.Start();
 		RBody = GetComponent<Rigidbody>();
 	}
 
 	public virtual void FixedUpdate(){
 		RBody.velocity = transform.forward * m_speed;
+
+		if(m_scripToBecameInvisible.TimeToDestroy){
+			ProjectileReturnToPool();
+		}
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -121,16 +123,15 @@ public class Projectile : Spell {
         col.gameObject.GetComponent<CharacterStats>().AutoAttackFireMark(MarksTime1.Fire);
     }
 
-	IEnumerator LifeTime(){
-		yield return new WaitForSeconds(m_maxLifeTime);
-		DestroyProjectile();
-	}
-
 	void DestroyProjectile(){
 		if(m_dieFX != null){
 			Level.AddFX(m_dieFX, transform.position, transform.rotation);
 		}
-		Destroy(gameObject);
+		ProjectileReturnToPool();
+	}
+
+	public void ProjectileReturnToPool(){
+		ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
 	}
 
 	public void SetTargetPos(Vector3 targetPos){
