@@ -12,6 +12,7 @@ public class Waves_Methods : MonoBehaviour
     public int NombreDeVague;
 
     public UnityEvent OnLastWaveOver;
+    public UnityEvent OnFirstWaveStart;
 
     Spawner_Methods[] _spawnerMethod;
     int nbrOfWave;
@@ -43,6 +44,7 @@ public class Waves_Methods : MonoBehaviour
         {
             Spawner(nbrOfWave);
             _playerOnTrigger = true;
+            OnFirstWaveStart.Invoke();
         }
     }
 
