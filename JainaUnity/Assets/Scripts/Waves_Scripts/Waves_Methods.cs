@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 public class Waves_Methods : MonoBehaviour
@@ -9,6 +10,8 @@ public class Waves_Methods : MonoBehaviour
     public float[] m_timeBetweenEachWave;
     public float timeToSpawn = 0.5f;
     public int NombreDeVague;
+
+    public UnityEvent OnLastWaveOver;
 
     Spawner_Methods[] _spawnerMethod;
     int nbrOfWave;
@@ -74,6 +77,10 @@ public class Waves_Methods : MonoBehaviour
             {
                 Spawner(nbrOfWave);
             }
+        }
+        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead)
+        {
+            OnLastWaveOver.Invoke();
         }
 
     }
