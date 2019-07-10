@@ -110,7 +110,11 @@ public class CharacterStats : MonoBehaviour {
 
     public virtual void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
-        if(ArcanMarkCount < MaxArcanMarkCount)
+        if (ArcanMarkCount + nbrMarks >= MaxArcanMarkCount)
+        {
+            ArcanMarkCount = MaxArcanMarkCount;
+        }
+        else if(ArcanMarkCount < MaxArcanMarkCount)
         {
             ArcanMarkCount += nbrMarks;
         }

@@ -16,8 +16,7 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void OnEnable()
     {
-        if(m_playerManager == null)
-            m_playerManager = PlayerManager.Instance;
+        
 
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
@@ -362,6 +361,10 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void LogicAtStart()
     {
+        if (m_playerManager == null)
+        {
+            m_playerManager = PlayerManager.Instance;
+        }
         // Get Instance Of The Player and his CharacterStats
         target = m_playerManager.gameObject.transform;
         TargetStats1 = target.GetComponent<CharacterStats>();
@@ -696,7 +699,9 @@ public class EnemyController : MonoBehaviour {
         if(tracker != null)
         {
             tracker.CallDead();
+            Destroy(tracker);
         }
+
         ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
     }
 
