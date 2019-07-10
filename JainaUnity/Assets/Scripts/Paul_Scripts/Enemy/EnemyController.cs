@@ -23,9 +23,6 @@ public class EnemyController : MonoBehaviour {
         else
         {
             ChangeState(EnemyState.ChaseState);
-        }
-        if (m_isInstatiate)
-        {
             LogicAtStart();
             LogicWhenEnable();
         }
@@ -123,7 +120,7 @@ public class EnemyController : MonoBehaviour {
     PlayerManager m_playerManager;
     bool m_enemyIsInVictory = false;
 
-    #region Get Set
+#region Get Set
     RuntimeAnimatorController rac;
     public RuntimeAnimatorController Rac
     {
@@ -347,12 +344,15 @@ public class EnemyController : MonoBehaviour {
             freezedObject = value;
         }
     }
-    #endregion
+#endregion
 
     public virtual void LogicWhenEnable()
     {
         myStats = GetComponent<CharacterStats>();
         myStats.CurrentHealth = myStas.maxHealth;
+        Mycollider.enabled = true;
+        agent.enabled = true;
+        myStats.IsDead = false;
     }
 
     public virtual void LogicAtStart()
@@ -385,6 +385,7 @@ public class EnemyController : MonoBehaviour {
         //enemyController = GetComponents<EnemyController>();
     }
     EnemyStats enemystats;
+
     public virtual void Start () {
 
         if (!m_isInstatiate)
@@ -681,14 +682,16 @@ public class EnemyController : MonoBehaviour {
 
     IEnumerator OnWaitForAnimToEnd()
     {
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        Mycollider.enabled = false;
+        agent.enabled = false;
         yield return new WaitForSeconds(3f);                            //Animation time
         Spawned_Tracker tracker = GetComponent<Spawned_Tracker>();
         if(tracker != null)
         {
             tracker.CallDead();
         }
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
+        ObjectPooler.Instance.ReturnToPool("Zglorg", gameObject);
     }
 
     #endregion

@@ -18,14 +18,15 @@ public class ObjectPooler : MonoBehaviour {
 
 #endregion Singleton
 
-	[System.Serializable]
-	public class Pool{
-		public string m_name;
-		public GameObject m_prefab;
-		public int m_size;
-	}
-
 	[SerializeField] List<Pool> m_pools;
+	[System.Serializable] public class Pool{
+        public string m_name;
+        public GameObject m_prefab;
+		public int m_size;
+    }
+
+	
+
 	Dictionary<string, Queue<GameObject>> m_poolDictionary;
 
 	void Start(){
@@ -35,7 +36,7 @@ public class ObjectPooler : MonoBehaviour {
 			Queue<GameObject> objectPool = new Queue<GameObject>();
 
 			for(int i = 0, l = pool.m_size; i < l; ++i){
-				GameObject obj = Instantiate(pool.m_prefab, transform);
+				GameObject obj = Instantiate(pool.m_prefab, transform, this);
 				obj.SetActive(false);
 				objectPool.Enqueue(obj);
 			}
@@ -51,15 +52,20 @@ public class ObjectPooler : MonoBehaviour {
 			return null;
 		}
 
-		GameObject objectToSPawn = m_poolDictionary[name].Dequeue();
+		if(m_poolDictionary[name].Peek().activeSelf){
+			Debug.LogError("All " + name + " are already active!");
+			return null;
+		}
 
-		objectToSPawn.transform.position = position;
-		objectToSPawn.transform.rotation = rotation;
-		objectToSPawn.SetActive(true);
+		GameObject objectToSpawn = m_poolDictionary[name].Dequeue();
 
-		m_poolDictionary[name].Enqueue(objectToSPawn);
+		objectToSpawn.transform.position = position;
+		objectToSpawn.transform.rotation = rotation;
+		objectToSpawn.SetActive(true);
 
-		return objectToSPawn;
+		m_poolDictionary[name].Enqueue(objectToSpawn);
+
+		return objectToSpawn;
 	}
 
 	public void ReturnToPool(string name, GameObject objectToReturn){
