@@ -83,9 +83,10 @@ public class Waves_Methods : MonoBehaviour
                 Spawner(nbrOfWave);
             }
         }
-        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead)
+        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
         {
             OnLastWaveOver.Invoke();
+            Debug.Log("Aie");
         }
 
     }
@@ -97,8 +98,8 @@ public class Waves_Methods : MonoBehaviour
 
     void Spawner(int wave)
     {
-        nbrEnemyDead = 0;
-        nbrOfEnemy = 0;
+        //nbrEnemyDead = 0;
+        //nbrOfEnemy = 0;
         if(wave > m_timeBetweenEachWave.Length-1)
         {
             timeNextWave = m_timeBetweenEachWave[wave-1];

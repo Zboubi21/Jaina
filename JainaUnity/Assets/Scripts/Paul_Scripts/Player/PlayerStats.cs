@@ -31,4 +31,18 @@ public class PlayerStats : CharacterStats {
         }
     }
 
+    public override void HealDamage(int heal)
+    {
+        if (CurrentHealth + heal >= maxHealth)
+        {
+            CurrentHealth = maxHealth;
+        }
+        else
+        {
+            CurrentHealth += heal;
+        }
+        m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+
+    }
+
 }

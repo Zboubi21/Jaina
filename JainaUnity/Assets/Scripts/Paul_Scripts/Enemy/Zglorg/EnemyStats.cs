@@ -42,8 +42,11 @@ public class EnemyStats : CharacterStats {
     public float timeBeforeLifeBarOff = 5f;
     float saveTimeBeforeLifeBarOff;
     [Space]
-    [Header("SelectionCircle")]
+    [Header("Selection Circle")]
     public GameObject m_cirlceCanvas;
+    [Space]
+    [Header("Aura Sign")]
+    public GameObject m_auraSign;
 
     float m_timerArcane;
     float m_timerFire;

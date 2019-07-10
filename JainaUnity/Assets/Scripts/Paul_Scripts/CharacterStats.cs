@@ -186,6 +186,10 @@ public class CharacterStats : MonoBehaviour {
 
         CheckIfHasToDie(CurrentHealth);
     }
+    public virtual void HealDamage(int heal)
+    {
+
+    }
 
     void CheckIfHasToDie(float health)
     {
