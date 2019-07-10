@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using EnemyStateEnum;
+using PoolTypes;
 
 public class EnemyController : MonoBehaviour {
 
     [SerializeField] bool m_isInstatiate = true;
+    [SerializeField] EnemyType m_enemyType;
 
     #region State Machine
 
@@ -690,8 +692,7 @@ public class EnemyController : MonoBehaviour {
         {
             tracker.CallDead();
         }
-        // gameObject.SetActive(false);
-        ObjectPooler.Instance.ReturnToPool("Zglorg", gameObject);
+        ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
     }
 
     #endregion

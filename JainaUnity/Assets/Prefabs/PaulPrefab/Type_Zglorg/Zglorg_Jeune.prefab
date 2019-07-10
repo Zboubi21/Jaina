@@ -402,7 +402,6 @@ GameObject:
   - component: {fileID: 3179034617703483304}
   - component: {fileID: 3178673744541966790}
   - component: {fileID: 3175473332846320646}
-  - component: {fileID: 114409791780318296}
   m_Layer: 11
   m_Name: Zglorg_Jeune
   m_TagString: Enemy
@@ -494,6 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_isInstatiate: 1
+  m_enemyType: 0
   m_sM:
     m_currentStateString: 
   lookRadius: 10
@@ -576,24 +576,6 @@ MonoBehaviour:
   GreenboxPosition: {x: 0, y: 0.5, z: 1}
   GreenboxScale: {x: 0.01, y: 1, z: 1}
   drawGreenGizmos: 1
---- !u!114 &114409791780318296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3281495630888009274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 952d18255d62b4fc6856f7e80cbb403f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetPoolID: 9355
-  despawnDelayed: 0
-  delay: 0
-  despawnOnParticlesDead: 0
-  resetParticleSystem: 0
-  despawnOnAudioSourceStop: 0
 --- !u!1 &3281496184537710772
 GameObject:
   m_ObjectHideFlags: 0
