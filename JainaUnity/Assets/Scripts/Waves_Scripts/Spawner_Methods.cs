@@ -22,7 +22,7 @@ public class Spawner_Methods : MonoBehaviour
 
     public IEnumerator WaveSpawner(int i, int wave, Waves_Methods methods)
     {
-        for (int a = 0, f = _nbrOfWaves[wave].m_enemyToSummon.Length; a < f; ++a)
+        for (int a = 0, f = _nbrOfWaves[wave].m_enemyToSummon1.Length; a < f; ++a)
         {
             yield return new WaitForSeconds(methods.timeToSpawn);
             //GameObject go = Instantiate(_nbrOfWaves[wave].m_enemyToSummon[a], transform);
