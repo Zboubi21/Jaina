@@ -16,7 +16,6 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void OnEnable()
     {
-        
 
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
@@ -370,6 +369,7 @@ public class EnemyController : MonoBehaviour {
         {
             m_playerManager = PlayerManager.Instance;
         }
+        m_enemyIsInVictory = false;
         // Get Instance Of The Player and his CharacterStats
         target = m_playerManager.gameObject.transform;
         TargetStats1 = target.GetComponent<CharacterStats>();
@@ -706,7 +706,6 @@ public class EnemyController : MonoBehaviour {
                 }
             }
             m_objectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
-            
         }
         StartCoroutine(OnWaitForAnimToEnd());
         //Destroy(GetComponent<CapsuleCollider>());
@@ -719,14 +718,20 @@ public class EnemyController : MonoBehaviour {
         Mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(3f);                            //Animation time
-        Spawned_Tracker tracker = GetComponent<Spawned_Tracker>();
-        if(tracker != null)
+        Spawned_Tracker spawnTracker = GetComponent<Spawned_Tracker>();
+        if(spawnTracker != null)
         {
-            tracker.CallDead();
-            Destroy(tracker);
+            spawnTracker.CallDead();
+            Destroy(spawnTracker);
         }
-
-        ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
+        PoolTracker poolTracker = GetComponent<PoolTracker>();
+        if(poolTracker != null)
+        {
+            Destroy(poolTracker);
+        }
+        if(m_isInstatiate){
+            ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
+        }
     }
 
     #endregion

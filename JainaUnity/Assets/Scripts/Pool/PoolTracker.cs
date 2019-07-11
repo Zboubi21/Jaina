@@ -55,6 +55,7 @@ public class PoolTracker : MonoBehaviour {
         switch (m_poolType){
             case PoolType.EnemyType:
 		        m_objectPooler.ReturnEnemyToPool(m_enemyType, gameObject);
+                GetComponent<EnemyStats>().DestroyAllMarks();
             break;
             case PoolType.SpellType:
 		        m_objectPooler.ReturnSpellToPool(m_spellType, gameObject);

@@ -300,6 +300,7 @@ public class EnemyStats : CharacterStats {
         }
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
         m_canvas.SetActive(false);
+        m_cirlceCanvas.SetActive(false);
     }
 
     public override void Start()
@@ -632,6 +633,11 @@ public class EnemyStats : CharacterStats {
     {
         base.Die();
         //checkiIfItIsDead = true;
+        DestroyAllMarks();
+        enemyController.OnEnemyDie();
+    }
+
+    public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
             Destroy(MarqueDeArcane);
@@ -654,7 +660,6 @@ public class EnemyStats : CharacterStats {
             GivreMarkCount = 0;
             StartGivreCooldown = false;
         }
-        enemyController.OnEnemyDie();
     }
 
     void DestroyAllMarkOnDead(GameObject mark, bool beenInstanciated, int count, bool coolDown)
