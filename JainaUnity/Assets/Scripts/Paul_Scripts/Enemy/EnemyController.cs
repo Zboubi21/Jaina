@@ -732,6 +732,10 @@ public class EnemyController : MonoBehaviour {
         if(m_isInstatiate){
             ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     #endregion
