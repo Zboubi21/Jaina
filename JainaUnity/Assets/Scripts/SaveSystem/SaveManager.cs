@@ -44,9 +44,13 @@ public class SaveManager : MonoBehaviour {
     }
 
     Animator m_checkpointCanvasAnimator;
+    PlayerManager m_playerManager;
+    ObjectPooler m_objectPooler;
 
     void Start(){
         m_checkpointCanvasAnimator = m_checkPointCanvas.GetComponent<Animator>();
+        m_playerManager = PlayerManager.Instance;
+        m_objectPooler = ObjectPooler.Instance;
     }
 
     public void On_CheckpointIsTake(Transform newSavePosition, int newCheckpointNumber){
@@ -73,6 +77,7 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForSeconds(m_timeToStartFadeIn);
         m_dieAnimator.SetTrigger("FadeIn");
         yield return new WaitForSeconds(m_timeToRespawn);
+        m_objectPooler.On_ReturnAllPool();
         SceneManager.LoadScene(0);
         yield return new WaitForSeconds(m_timeToStartFadeOut);
         PlayerManager.Instance.SetTpPoint(m_savePosition);

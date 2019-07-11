@@ -32,8 +32,15 @@ public class BlinkState : IState {
         destination = m_playerManager.transform.position + m_playerManager.transform.forward * m_playerManager.m_powers.m_blink.m_maxDistance;
       }
       
-      // m_playerManager.transform.position = destination;  // IMPOSSIBLE de se TP avec le vide au millieu
-      m_playerManager.SetTpPoint(destination);              // POSSIBLE de se TP avec le vide au millieu
+      Vector3 origin = m_playerManager.m_powers.m_blink.m_rayCastToCanBlink.position;
+      float maxDistance = Vector3.Distance(origin, destination);
+      if(Physics.Raycast(origin, destination, maxDistance, m_playerManager.m_powers.m_blink.m_colliderToCanNotBlink)){
+        Debug.Log("Ya un mur là");
+      }else{
+        // m_playerManager.transform.position = destination;  // IMPOSSIBLE de se TP avec le vide au millieu
+        m_playerManager.SetTpPoint(destination);              // POSSIBLE de se TP avec le vide au millieu
+      }
+
       
       m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
     }

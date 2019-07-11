@@ -1,4 +1,9 @@
 ﻿namespace PoolTypes {
+    [System.Serializable] public enum PoolType {
+		EnemyType,
+		SpellType,
+        ObjectType,
+	}
 	[System.Serializable] public enum EnemyType {
 		Zglorg_Jeune,
 		Zglorg_Adulte,
@@ -18,6 +23,6 @@
         ArcaneExplosion,
 	}
     [System.Serializable] public enum ObjectType {
-        
+        LifePotion
 	}
 }

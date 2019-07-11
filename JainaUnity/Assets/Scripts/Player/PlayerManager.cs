@@ -47,10 +47,10 @@ public class PlayerManager : MonoBehaviour {
 		[Header("Prefabs")]
 		public Transform m_positionRoot;
 		public Transform m_rotationRoot;
-		[Space]
-		public GameObject m_arcaneAttack;
-		public GameObject m_iceAttack;
-		public GameObject m_fireAttack;
+		// [Space]
+		// public GameObject m_arcaneAttack;
+		// public GameObject m_iceAttack;
+		// public GameObject m_fireAttack;
 	}
 
 	[Header("Powers")]
@@ -64,8 +64,9 @@ public class PlayerManager : MonoBehaviour {
 			public float m_cooldown = 5;
 			[HideInInspector] public float m_actualCooldown = 0;
 			public float m_maxDistance = 5;
-			[Space]
 			public bool m_useMouseBlink = true;
+			public Transform m_rayCastToCanBlink;
+			public LayerMask m_colliderToCanNotBlink;
 
 			[Header("UI")]
 			public TextMeshProUGUI m_text;
@@ -106,7 +107,7 @@ public class PlayerManager : MonoBehaviour {
 		public IceNova m_iceNova = new IceNova();
 		[System.Serializable] public class IceNova {
 			[Header("Spell prefab")]
-			public GameObject m_nova;
+			// public GameObject m_nova;
 			public Transform m_root;
 
 			[Header("Cooldown")]
@@ -131,7 +132,7 @@ public class PlayerManager : MonoBehaviour {
 		public IceBuff m_iceBuff = new IceBuff();
 		[System.Serializable] public class IceBuff {
 			[Header("Spell prefab")]
-			public GameObject m_buff;
+			// public GameObject m_buff;
 			public Transform m_root;
 
 			[Header("Cooldown")]
@@ -178,7 +179,7 @@ public class PlayerManager : MonoBehaviour {
 		public FireTrail m_fireTrail = new FireTrail();
 		[System.Serializable] public class FireTrail {
 			[Header("Spell prefab")]
-			public GameObject m_trail;
+			// public GameObject m_trail;
 			public Transform m_root;
 
 			[Header("Cooldown")]
@@ -205,9 +206,9 @@ public class PlayerManager : MonoBehaviour {
 		public ArcaneProjectiles m_arcaneProjectiles = new ArcaneProjectiles();
 		[System.Serializable] public class ArcaneProjectiles {
 			[Header("Spell prefab")]
-			public GameObject m_firstProjectile;
-			public GameObject m_secondProjectile;
-			public GameObject m_thirdProjectile;
+			// public GameObject m_firstProjectile;
+			// public GameObject m_secondProjectile;
+			// public GameObject m_thirdProjectile;
 			public Transform m_root;
 
 			[Header("Cooldown")]
@@ -265,7 +266,7 @@ public class PlayerManager : MonoBehaviour {
 		public ArcaneExplosion m_arcaneExplosion = new ArcaneExplosion();
 		[System.Serializable] public class ArcaneExplosion {
 			[Header("Spell prefab")]
-			public GameObject m_projectile;
+			// public GameObject m_projectile;
 			public Transform m_root;
 
 			[Header("Cooldown")]

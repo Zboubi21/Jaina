@@ -12,10 +12,10 @@ public class ObjectPooler : MonoBehaviour {
 	void Awake(){
 		if(Instance == null){
 			Instance = this;
-            // DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
 		}else{
-			Debug.LogError("Two instance of ObjectPooler");
-            // Destroy(gameObject);
+			// Debug.LogError("Two instance of ObjectPooler");
+            Destroy(gameObject);
 		}
 	}
 
@@ -62,6 +62,8 @@ public class ObjectPooler : MonoBehaviour {
 	Dictionary<EnemyType, Queue<GameObject>> m_enemyPoolDictionary;
 	Dictionary<SpellType, Queue<GameObject>> m_spellPoolDictionary;
 	Dictionary<ObjectType, Queue<GameObject>> m_objectPoolDictionary;
+
+	Queue<PoolTracker> m_trackedObject = new Queue<PoolTracker>();
 
 	void Start(){
 		m_enemyPoolDictionary = new Dictionary<EnemyType, Queue<GameObject>>();
@@ -133,6 +135,10 @@ public class ObjectPooler : MonoBehaviour {
 		objectToSpawn.transform.rotation = rotation;
 		objectToSpawn.SetActive(true);
 
+		PoolTracker poolTracker = AddPoolTrackerComponent(objectToSpawn, PoolType.EnemyType);
+		poolTracker.EnemyType = enemyType;
+		m_trackedObject.Enqueue(poolTracker);
+
 		return objectToSpawn;
 	}
 	public void ReturnEnemyToPool(EnemyType enemyType, GameObject objectToReturn){
@@ -141,23 +147,27 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 
-	public GameObject SpawnSpellFromPool(SpellType objectType, Vector3 position, Quaternion rotation){
+	public GameObject SpawnSpellFromPool(SpellType spellType, Vector3 position, Quaternion rotation){
 
-		if(!m_spellPoolDictionary.ContainsKey(objectType)){
-			Debug.LogError("Pool of " + objectType + " dosen't exist.");
+		if(!m_spellPoolDictionary.ContainsKey(spellType)){
+			Debug.LogError("Pool of " + spellType + " dosen't exist.");
 			return null;
 		}
 
-		if(m_spellPoolDictionary[objectType].Count == 0){
-			Debug.LogError(objectType.ToString() + " pool is empty!");
+		if(m_spellPoolDictionary[spellType].Count == 0){
+			Debug.LogError(spellType.ToString() + " pool is empty!");
 			return null;
 		}
 
-		GameObject objectToSpawn = m_spellPoolDictionary[objectType].Dequeue();
+		GameObject objectToSpawn = m_spellPoolDictionary[spellType].Dequeue();
 
 		objectToSpawn.transform.position = position;
 		objectToSpawn.transform.rotation = rotation;
 		objectToSpawn.SetActive(true);
+
+		PoolTracker poolTracker = AddPoolTrackerComponent(objectToSpawn, PoolType.SpellType);
+		poolTracker.SpellType = spellType;
+		m_trackedObject.Enqueue(poolTracker);
 
 		return objectToSpawn;
 	}
@@ -185,11 +195,30 @@ public class ObjectPooler : MonoBehaviour {
 		objectToSpawn.transform.rotation = rotation;
 		objectToSpawn.SetActive(true);
 
+		PoolTracker poolTracker = AddPoolTrackerComponent(objectToSpawn, PoolType.ObjectType);
+		poolTracker.ObjectType = objectType;
+		m_trackedObject.Enqueue(poolTracker);
+
 		return objectToSpawn;
 	}
 	public void ReturnObjectToPool(ObjectType objectType, GameObject objectToReturn){
 		objectToReturn.SetActive(false);
 		m_objectPoolDictionary[objectType].Enqueue(objectToReturn);
+	}
+
+	PoolTracker AddPoolTrackerComponent(GameObject objectToSpawn, PoolType poolType){
+		PoolTracker poolTracker = objectToSpawn.AddComponent<PoolTracker>().GetComponent<PoolTracker>();
+		poolTracker.PoolType = poolType;
+		return poolTracker;
+	}
+
+	public void On_ReturnAllPool(){
+		for (int i = 0, l = m_trackedObject.Count; i < l; ++i) {
+			PoolTracker poolTracker = m_trackedObject.Dequeue();
+			if(poolTracker != null){
+				poolTracker.ResetTrackedObject();
+			}
+		}
 	}
 
 }

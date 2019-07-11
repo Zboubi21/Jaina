@@ -65529,12 +65529,6 @@ MonoBehaviour:
     m_actualCooldown: 0
     m_positionRoot: {fileID: 1027000453}
     m_rotationRoot: {fileID: 4153908591210074}
-    m_arcaneAttack: {fileID: 1933447009849798, guid: a20536f4726052f4a8cae547827cf029,
-      type: 3}
-    m_iceAttack: {fileID: 1227371853324682, guid: b3f307dd7b50cee40985d189a8f88c54,
-      type: 3}
-    m_fireAttack: {fileID: 1209068156198528, guid: f305a7bf8089feb4a87f73d518a74584,
-      type: 3}
   m_powers:
     m_blink:
       m_canSwitch: 1
@@ -65543,6 +65537,9 @@ MonoBehaviour:
       m_actualCooldown: 0
       m_maxDistance: 5
       m_useMouseBlink: 1
+      m_colliderToCanNotBlink:
+        serializedVersion: 2
+        m_Bits: 4608
       m_text: {fileID: 114390054378772382}
       m_cooldownImage: {fileID: 114607446926509866}
       m_blinkFx: {fileID: 4436563796872169924}
@@ -65565,7 +65562,6 @@ MonoBehaviour:
       m_cooldownImage: {fileID: 114624635474471574}
       m_spellSound: {fileID: 703476647818681948}
     m_iceNova:
-      m_nova: {fileID: 1974057490559102, guid: 55ad2686b29df344a98c9ba0ec8f7e11, type: 3}
       m_root: {fileID: 4424245275372622}
       m_cooldown: 3
       m_canSwitch: 1
@@ -65586,7 +65582,6 @@ MonoBehaviour:
       m_spellSound: {fileID: 2374735481477949716, guid: d9e121eaeada501429ef9bae9c0d6c7b,
         type: 3}
     m_iceBuff:
-      m_buff: {fileID: 1115905055963824, guid: aca95b1eaf98f064793fe9272be14512, type: 3}
       m_root: {fileID: 4673726749910942}
       m_cooldown: 4
       m_canSwitch: 1
@@ -65629,8 +65624,6 @@ MonoBehaviour:
       m_spellSound: {fileID: 5966256201838898636, guid: 5e2f3463946106b4a9bb0719102a8700,
         type: 3}
     m_fireTrail:
-      m_trail: {fileID: 1966586430697896, guid: 5927f9fab121091478d70d75d20ab9b2,
-        type: 3}
       m_root: {fileID: 4656470554378814}
       m_cooldown: 4
       m_canSwitch: 1
@@ -65652,12 +65645,6 @@ MonoBehaviour:
       m_spellSound: {fileID: 4303289438896487804, guid: d442b27ee4dd2ba459b81176042df164,
         type: 3}
     m_arcaneProjectiles:
-      m_firstProjectile: {fileID: 1797000630888840, guid: 8fbcbdbf3583fb742bd8e040bb88d55d,
-        type: 3}
-      m_secondProjectile: {fileID: 1789689959907560, guid: 39791638435eb3a439a64a7ab6470299,
-        type: 3}
-      m_thirdProjectile: {fileID: 1710288282700444, guid: 67fbfb4da2543a14ebf84767308cf51e,
-        type: 3}
       m_root: {fileID: 4906795326965010}
       m_cooldown: 5
       m_canSwitch: 1
@@ -65702,8 +65689,6 @@ MonoBehaviour:
           m_fadeInTimeShake: 0.1
           m_fadeOutTimeShake: 0.2
     m_arcaneExplosion:
-      m_projectile: {fileID: 1710288282700444, guid: 77a70cfe370cf8d4c9f982803423a506,
-        type: 3}
       m_root: {fileID: 4297878115995732}
       m_cooldown: 5
       m_canSwitch: 1
