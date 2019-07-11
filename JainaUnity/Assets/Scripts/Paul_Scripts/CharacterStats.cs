@@ -90,11 +90,17 @@ public class CharacterStats : MonoBehaviour {
 
     bool isDead = false;
 
+    public virtual void OnEnable()
+    {
+        if(mainCamera == null){
+    mainCamera = Camera.main;//.GetComponent<Camera>();
+        }
+    }
 
     public virtual void Start()
     {
 
-        mainCamera = Camera.main;//.GetComponent<Camera>();
+        // mainCamera = Camera.main;//.GetComponent<Camera>();
         CurrentHealth = maxHealth;
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
         MaxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;

@@ -5,10 +5,9 @@ using PoolTypes;
 
 public class AmbushPoint : MonoBehaviour {
 
-	public EnemyType m_enemyType;
 
 	[Header("Enemies to spawn")]
-	[SerializeField] GameObject[] m_spawnEnemies;
+	[SerializeField] EnemyType[] m_enemyType;
 	[SerializeField] int[] m_spawnNumbers;
 	
 	[Header("Gizmos")]
@@ -22,11 +21,11 @@ public class AmbushPoint : MonoBehaviour {
 	}
 
 	public void StartAmbush(){
-		for(int i = 0, l = m_spawnEnemies.Length; i < l; ++i){
+		for(int i = 0, l = m_enemyType.Length; i < l; ++i){
 
 			for(int i2 = 0, l2 = m_spawnNumbers[i]; i2 < l2; ++i2){
 				// Instantiate(m_spawnEnemies[i], transform.position, transform.rotation);
-				ObjectPooler.Instance.SpawnEnemyFromPool(m_enemyType, transform.position, transform.rotation);
+				ObjectPooler.Instance.SpawnEnemyFromPool(m_enemyType[i], transform.position, transform.rotation);
 			}
 		}
 		StartCoroutine(SpawnEnemies());

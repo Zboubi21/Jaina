@@ -291,18 +291,25 @@ public class EnemyStats : CharacterStats {
     #endregion
     //bool checkiIfItIsDead;
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
+        if(m_backPack != null)
+        {
         m_backPack.SetActive(_hasBackPack);
+        }
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
-
+        m_canvas.SetActive(false);
     }
 
     public override void Start()
     {
         base.Start();
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
+        if(m_backPack != null)
+        {
         m_backPack.SetActive(_hasBackPack);
+        }
         for (int i = 0, l = lifeBar.Length; i < l; ++i)
         {
             if (lifeBar[i].fillOrigin == 1)                     //Il faut bien que le "fill origin" du slider soit le SEUL a 1
@@ -314,7 +321,7 @@ public class EnemyStats : CharacterStats {
         enemyController = GetComponent<EnemyController>();
         #region Canvas Var
 
-        m_canvas.SetActive(false);
+        // m_canvas.SetActive(false);
         saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
 
         #endregion
