@@ -26,6 +26,7 @@ public class IceBuff : Spell {
 	Animation m_anim;
 	float m_actualFxScale;
 	float m_actualColliderScale;
+	float m_actualTimer = 0;
 
 	public override void Start(){
         base.Start();
@@ -39,11 +40,19 @@ public class IceBuff : Spell {
 		m_actualFxScale = m_iceBuffFXScaleMaxi;
 		m_actualColliderScale = m_sphereColliderScaleMaxi;
 
-		if(m_anim != null)
-			StartCoroutine(WaitTheEndOfTheStartAnimation());
+		m_canModifyTheScale = false;
+		m_actualTimer = 0;
 
 		if(m_playerManager != null)
 			m_playerManager.m_moveSpeed.m_iceBuffIsCast = true;
+	}
+
+	void FixedUpdate(){
+		if(m_actualTimer <= m_anim.clip.length){
+			m_actualTimer += Time.deltaTime;
+		}else{
+			m_canModifyTheScale = true;
+		}
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -84,11 +93,6 @@ public class IceBuff : Spell {
 			m_playerManager.m_moveSpeed.m_playerInBuff = false;
 			m_playerManager.m_autoAttacks.m_isBuff = false;			
 		}
-	}
-
-	IEnumerator WaitTheEndOfTheStartAnimation(){
-		yield return new WaitForSeconds(m_anim.clip.length);
-		m_canModifyTheScale = true;
 	}
 
 	IEnumerator DestroyBuffCoroutine(){
