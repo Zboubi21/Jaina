@@ -7,16 +7,21 @@ using TMPro;
 public class Waves_Methods : MonoBehaviour
 {
     public GameObject[] m_spawners;
-    public float[] m_timeBetweenEachWave;
-    public float timeToSpawn = 0.5f;
-    public int NombreDeVague;
     [Space]
+
+    public float[] m_timeBetweenEachWave;
+    [Space]
+
+    public float timeToSpawn = 0.5f;
+    [Space]
+
     public UnityEvent OnFirstWaveStart;
     public UnityEvent OnAnyWaveStart;
     public UnityEvent OnLastWaveOver;
 
     Spawner_Methods[] _spawnerMethod;
     int nbrOfWave;
+    int NombreDeVague;
     float timeNextWave;
 
     bool _playerOnTrigger;
@@ -56,14 +61,27 @@ public class Waves_Methods : MonoBehaviour
     {
         timeNextWave = m_timeBetweenEachWave[0];
         _spawnerMethod = new Spawner_Methods[m_spawners.Length];
+        for (int a = 0, f = m_spawners.Length; a < f; a++)
+        {
+            if(m_spawners != null)
+            {
+                _spawnerMethod[a] = m_spawners[a].GetComponent<Spawner_Methods>();
+            }
+        }
         for (int i = 0, l = m_spawners.Length; i < l; ++i)
         {
             if (m_spawners != null)
             {
-                _spawnerMethod[i] = m_spawners[i].GetComponent<Spawner_Methods>();
-                if(_spawnerMethod[i]._nbrOfWaves.Length > NombreDeVague)
+                if (m_spawners.Length-1 != i)
                 {
-                    Debug.LogError("Le nombre de vague sur le spawner : " + _spawnerMethod[i].name + " a plus de vague que le nombre de vague référencé sur ce script");
+                    if (_spawnerMethod[i]._nbrOfWaves.Length != _spawnerMethod[i+1]._nbrOfWaves.Length)
+                    {
+                        Debug.LogError("Le spawner " + _spawnerMethod[i] + " a un nombre de vagues différentes du spawner " + _spawnerMethod[i - 1] + ". Tous les spawners d'une arène doivent avoir le même nombre de vague");
+                    }
+                    else
+                    {
+                        NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
+                    }
                 }
             }
         }
@@ -79,7 +97,7 @@ public class Waves_Methods : MonoBehaviour
                 Spawner(nbrOfWave);
             }
 
-            if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead !=0)
+            if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0)
             {
                 Spawner(nbrOfWave);
             }

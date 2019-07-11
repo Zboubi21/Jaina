@@ -398,7 +398,8 @@ public class EnemyController : MonoBehaviour {
         //enemyController = GetComponents<EnemyController>();
     }
     EnemyStats enemystats;
-
+    ObjectPooler m_objectPooler;
+    
     public virtual void Start () {
 
         if (!m_isInstatiate)
@@ -406,6 +407,8 @@ public class EnemyController : MonoBehaviour {
             LogicAtStart();
         }
         enemystats = GetComponent<EnemyStats>();
+        m_objectPooler = ObjectPooler.Instance;
+
     }
 
     void Update () {
@@ -692,7 +695,19 @@ public class EnemyController : MonoBehaviour {
         //     Destroy(FreezedObject);
         // }
         m_fxs.m_freezed.SetActive(false);
-        
+        if (enemystats._hasBackPack)
+        {
+            MeshRenderer[] go = enemystats.m_backPack.GetComponentsInChildren<MeshRenderer>();
+            for (int i = 0; i < go.Length; i++)
+            {
+                if(go[i] != enemystats.m_backPack.GetComponent<MeshRenderer>())
+                {
+                    go[i].gameObject.SetActive(false);
+                }
+            }
+            m_objectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
+            
+        }
         StartCoroutine(OnWaitForAnimToEnd());
         //Destroy(GetComponent<CapsuleCollider>());
         // Destroy(gameObject, 3f);

@@ -94,7 +94,7 @@ public class CharacterStats : MonoBehaviour {
     public virtual void Start()
     {
 
-        mainCamera =  Camera.main.GetComponent<Camera>();
+        mainCamera = Camera.main;//.GetComponent<Camera>();
         CurrentHealth = maxHealth;
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
         MaxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
