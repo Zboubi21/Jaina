@@ -23,12 +23,14 @@ public class EnemyController : MonoBehaviour {
 
         if(!m_isInstatiate){
             ChangeState(EnemyState.IdleState);
+            m_hasBeenOnAlert = false;
         }
         else
         {
             ChangeState(EnemyState.ChaseState);
             LogicAtStart();
             LogicWhenEnable();
+            m_hasBeenOnAlert = true;
         }
     }
 
@@ -54,7 +56,7 @@ public class EnemyController : MonoBehaviour {
     float smoothRot = 5f;
 
     #region Alert Var
-    bool modeAlert;
+    bool m_hasBeenOnAlert;
     float StartlookRadius;
     float alertExpensionSpeed;
     #endregion
@@ -88,10 +90,8 @@ public class EnemyController : MonoBehaviour {
     //float saveTimeBeforeGettingStunable;
     //float saveTimerAttackedFreeze;
     [Header("Impatience Sign")]
-    public GameObject ImpatienceSign;
-    public Transform ImpatienceSignRoot;
+    public StartParticles ImpatienceSign;
     bool m_isImpatient;
-    GameObject _impatienceSign;
     float agentSpeed;
     [Header("Impatience Sprint")]
     float currentTimeBeforeGettingImpatient;
@@ -102,6 +102,11 @@ public class EnemyController : MonoBehaviour {
     bool beingStunable = true;
     bool hasBeenAttacked;
     bool isStun;
+
+    [Header("Detected FX")]
+    public float m_timeToShowDetectedFx = 2;
+    public StartParticles m_detectedFx;
+
     [Space]
     [Header("Debug AI Comportement")]
     public bool TestIAcomportement;
@@ -271,19 +276,6 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    public GameObject _signImpatience
-    {
-        get
-        {
-            return _impatienceSign;
-        }
-
-        set
-        {
-            _impatienceSign = value;
-        }
-    }
-
     public float SaveCurrentTimeBeforeGettingImpatient
     {
         get
@@ -348,7 +340,20 @@ public class EnemyController : MonoBehaviour {
             freezedObject = value;
         }
     }
-#endregion
+
+    public bool HasBeenOnAlert
+    {
+        get
+        {
+            return m_hasBeenOnAlert;
+        }
+
+        set
+        {
+            m_hasBeenOnAlert = value;
+        }
+    }
+    #endregion
 
     public virtual void LogicWhenEnable()
     {
@@ -493,7 +498,9 @@ public class EnemyController : MonoBehaviour {
         if (currentImpatience <= 0)
         {
             // _signImpatience = Instantiate(ImpatienceSign, ImpatienceSignRoot);
-            _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
+            // _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
+            ImpatienceSign.gameObject.SetActive(true);
+            ImpatienceSign.StartParticle();
             //Debug.LogError("pause");
             currentImpatience = AttackImpatience;
             return true;
@@ -529,7 +536,9 @@ public class EnemyController : MonoBehaviour {
         currentTimeBeforeGettingImpatient -= Time.deltaTime;
         if(currentTimeBeforeGettingImpatient <= 0)
         {
-            _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
+            // _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
+            ImpatienceSign.gameObject.SetActive(true);
+            ImpatienceSign.StartParticle();
             currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
             return true;
         }

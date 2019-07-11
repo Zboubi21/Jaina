@@ -6,7 +6,6 @@ using EnemyStateEnum;
 public class StunState : IState
 {
     float timeBeingStun;
-    bool HasBeenOnAlert;
     bool isStunAble = false;
 
     // CONSTRUCTOR
@@ -50,10 +49,10 @@ public class StunState : IState
     public virtual void GetOutOfState()
     {
         
-        if(!HasBeenOnAlert)
+        if(!m_enemyController.HasBeenOnAlert)
         {
             m_enemyController.ChangeState(EnemyState.AlerteState);
-            HasBeenOnAlert = true;
+            m_enemyController.HasBeenOnAlert = true;
         }
         //else if (m_enemyController.GetLastStateIndex() != 6)
         //{

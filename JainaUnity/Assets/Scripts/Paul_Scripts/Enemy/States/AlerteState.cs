@@ -51,4 +51,5 @@ public class AlerteState : IState
             m_enemyController.ChangeState(EnemyState.ChaseState); // Chase
         }
     }
+
 }

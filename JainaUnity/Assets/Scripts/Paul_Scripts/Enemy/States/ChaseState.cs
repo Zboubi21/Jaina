@@ -19,11 +19,15 @@ public class ChaseState : IState
         MakeThenBeingYelledable(hasCalledFunction);
         StateAnimation(m_enemyController.Anim);
 
-        if(m_enemyController._signImpatience != null)
-        {
-            m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
-        }
+        // if(m_enemyController._signImpatience != null)
+        // {
+        //     m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
+        // }
+        m_enemyController.ImpatienceSign.gameObject.SetActive(false);
 
+        if(m_enemyController.m_sM.IsLastStateIndex((int)EnemyState.AlerteState)){
+            m_enemyController.StartCoroutine(StartDetectedFx());
+        }
     }
 
     public void FixedUpdate()
@@ -123,4 +127,12 @@ public class ChaseState : IState
         }
     }
     #endregion
+
+    IEnumerator StartDetectedFx(){
+        m_enemyController.m_detectedFx.gameObject.SetActive(true);
+        m_enemyController.m_detectedFx.StartParticle();
+        yield return new WaitForSeconds(m_enemyController.m_timeToShowDetectedFx);
+        m_enemyController.m_detectedFx.gameObject.SetActive(false);
+    }
+
 }

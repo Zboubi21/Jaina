@@ -81,10 +81,11 @@ public class ImpatienceState : IState
 
     public virtual void DestroySign()
     {
-        if (m_enemyController._signImpatience != null)
-        {
-            m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
-        }
+        // if (m_enemyController._signImpatience != null)
+        // {
+        //     m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
+        // }
+        m_enemyController.ImpatienceSign.gameObject.SetActive(false);
     }
 
     #endregion
