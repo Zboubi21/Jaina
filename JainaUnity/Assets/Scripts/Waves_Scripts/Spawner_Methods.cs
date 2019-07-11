@@ -8,8 +8,13 @@ public class Spawner_Methods : MonoBehaviour
     [System.Serializable]
     public class WavesList
     {
-        public GameObject[] m_enemyToSummon;
-        public EnemyType[] m_enemyToSummon1;
+        [System.Serializable]
+        public class TypeOfEnemy
+        {
+            public bool _hasBackpack;
+            public EnemyType m_enemy;
+        }
+        public TypeOfEnemy[] m_enemyToSummon;
     }
     public WavesList[] _nbrOfWaves;
 
@@ -22,11 +27,11 @@ public class Spawner_Methods : MonoBehaviour
 
     public IEnumerator WaveSpawner(int i, int wave, Waves_Methods methods)
     {
-        for (int a = 0, f = _nbrOfWaves[wave].m_enemyToSummon1.Length; a < f; ++a)
+        for (int a = 0, f = _nbrOfWaves[wave].m_enemyToSummon.Length; a < f; ++a)
         {
             yield return new WaitForSeconds(methods.timeToSpawn);
             //GameObject go = Instantiate(_nbrOfWaves[wave].m_enemyToSummon[a], transform);
-            GameObject go = m_objectPooler.SpawnEnemyFromPool(_nbrOfWaves[wave].m_enemyToSummon1[i], transform.position, transform.rotation);
+            GameObject go = m_objectPooler.SpawnEnemyFromPool(_nbrOfWaves[wave].m_enemyToSummon[i].m_enemy, transform.position, transform.rotation);
             go.AddComponent<Spawned_Tracker>();
             go.GetComponent<Spawned_Tracker>().wave = methods;
             methods.NbrOfEnemy++;
