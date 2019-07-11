@@ -61,11 +61,14 @@ public class Aura_Manager : MonoBehaviour
     {
         EnemyStats stats = other.GetComponentInParent<EnemyStats>();
         EnemyController control = other.GetComponentInParent<EnemyController>();
-        if(!stats.m_auraSign.activeSelf && AuraOn || stats.m_auraSign.activeSelf && !AuraOn)
+        if(stats != null && control != null)
         {
-            stats.damage.baseValue = stats.damage.baseValue + _bonusDamage * i;
+            if(!stats.m_auraSign.activeSelf && AuraOn || stats.m_auraSign.activeSelf && !AuraOn)
+            {
+                stats.damage.baseValue = stats.damage.baseValue + _bonusDamage * i;
+            }
+            stats.m_auraSign.SetActive(AuraOn);
         }
-        stats.m_auraSign.SetActive(AuraOn);
     }
 
     #endregion
