@@ -110,16 +110,6 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             timeToShowLifeBar = m_showLifeBar;
 
         }
-        else if(enemyStats != null && !unitFrameOn)
-        {
-            if ((DescreaseTimeToShowLifeBar() && enemyStatsSave == null) || enemyStatsSave == enemyStats)
-            {
-                enemyStatsSave = enemyStats;
-                ActivateUnitFrame(enemyStats);
-                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true, enemyStats);
-            }
-        }
-
 
         if (/*enemyStats == null && */unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
         {
@@ -142,8 +132,16 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             }
         }
 
-
-        if(enemyStatsLocked != null)
+        if (enemyStats != null && !unitFrameOn)
+        {
+            if ((DescreaseTimeToShowLifeBar() && enemyStatsSave == null) || enemyStatsSave == enemyStats)
+            {
+                enemyStatsSave = enemyStats;
+                ActivateUnitFrame(enemyStats);
+                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true, enemyStats);
+            }
+        }
+        else if (enemyStatsLocked != null && unitFrameOn)
         {
             if(enemyStatsLocked.CurrentHealth <= 0)
             {

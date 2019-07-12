@@ -494,6 +494,8 @@ public class EnemyStats : CharacterStats {
         {
             // Debug.Log("FireTrailTicks");
             TakeDamage(DamageFireTrailTicks);
+            TimeBetweenFireTrailTicks = PlayerManager.Instance.m_powers.m_fireTrail.m_fireTrailTick;
+
             //Debug.Log("Boom " + DamageFireTrailTicks + " damage dans les dents");
         }
     }
