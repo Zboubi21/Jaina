@@ -24,7 +24,7 @@ public class ArcaneProjectilesState : IState {
 		m_secondSpellIsThrow = false;
 		m_thirdSpellIsThrow = false;
 		m_playerManager.StopPlayerMovement();
-		m_playerManager.ChangePower(false);			
+		// m_playerManager.ChangePower(false);			
     }	
 
     public void Update(){
@@ -61,7 +61,7 @@ public class ArcaneProjectilesState : IState {
 			if(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_useShakeCam){
 				m_playerManager.ShakeCamera(m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_magnitudeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_roughnessShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_fadeInTimeShake, m_playerManager.m_powers.m_arcaneProjectiles.m_ShakeCamera.m_thirdShake.m_fadeOutTimeShake);
 			}
-
+			m_playerManager.ChangePower(false);			
 		}
 
 		//On sort de la state
@@ -71,6 +71,7 @@ public class ArcaneProjectilesState : IState {
 
 		//Si le joueur veut ressortir de la state
 		if(m_playerManager.m_leftSpellButton){
+			m_playerManager.ChangePower(false);			
 			m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 
