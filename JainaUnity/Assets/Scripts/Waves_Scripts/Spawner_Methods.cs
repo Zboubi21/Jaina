@@ -31,9 +31,14 @@ public class Spawner_Methods : MonoBehaviour
         {
             yield return new WaitForSeconds(methods.timeToSpawn);
             //GameObject go = Instantiate(_nbrOfWaves[wave].m_enemyToSummon[a], transform);
-            GameObject go = m_objectPooler.SpawnEnemyFromPool(_nbrOfWaves[wave].m_enemyToSummon[i].m_enemy, transform.position, transform.rotation);
+            GameObject go = m_objectPooler.SpawnEnemyFromPool(_nbrOfWaves[wave].m_enemyToSummon[a].m_enemy, transform.position, transform.rotation);
             go.AddComponent<Spawned_Tracker>();
             go.GetComponent<Spawned_Tracker>().wave = methods;
+            if (_nbrOfWaves[wave].m_enemyToSummon[a]._hasBackpack)
+            {
+                Debug.Log("Bah ouai");
+                go.GetComponent<EnemyStats>()._hasBackPack = true;
+            }
             methods.NbrOfEnemy++;
         }
         StopCoroutine(WaveSpawner(i, wave, methods));

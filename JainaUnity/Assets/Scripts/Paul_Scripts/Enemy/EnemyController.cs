@@ -16,7 +16,6 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void OnEnable()
     {
-        
 
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
@@ -370,6 +369,7 @@ public class EnemyController : MonoBehaviour {
         {
             m_playerManager = PlayerManager.Instance;
         }
+        m_enemyIsInVictory = false;
         // Get Instance Of The Player and his CharacterStats
         target = m_playerManager.gameObject.transform;
         TargetStats1 = target.GetComponent<CharacterStats>();
@@ -398,7 +398,8 @@ public class EnemyController : MonoBehaviour {
         //enemyController = GetComponents<EnemyController>();
     }
     EnemyStats enemystats;
-
+    ObjectPooler m_objectPooler;
+    
     public virtual void Start () {
 
         if (!m_isInstatiate)
@@ -406,6 +407,8 @@ public class EnemyController : MonoBehaviour {
             LogicAtStart();
         }
         enemystats = GetComponent<EnemyStats>();
+        m_objectPooler = ObjectPooler.Instance;
+
     }
 
     void Update () {
@@ -692,7 +695,18 @@ public class EnemyController : MonoBehaviour {
         //     Destroy(FreezedObject);
         // }
         m_fxs.m_freezed.SetActive(false);
-        
+        if (enemystats._hasBackPack)
+        {
+            MeshRenderer[] go = enemystats.m_backPack.GetComponentsInChildren<MeshRenderer>();
+            for (int i = 0; i < go.Length; i++)
+            {
+                if(go[i] != enemystats.m_backPack.GetComponent<MeshRenderer>())
+                {
+                    go[i].gameObject.SetActive(false);
+                }
+            }
+            m_objectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
+        }
         StartCoroutine(OnWaitForAnimToEnd());
         //Destroy(GetComponent<CapsuleCollider>());
         // Destroy(gameObject, 3f);
@@ -704,14 +718,24 @@ public class EnemyController : MonoBehaviour {
         Mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(3f);                            //Animation time
-        Spawned_Tracker tracker = GetComponent<Spawned_Tracker>();
-        if(tracker != null)
+        Spawned_Tracker spawnTracker = GetComponent<Spawned_Tracker>();
+        if(spawnTracker != null)
         {
-            tracker.CallDead();
-            Destroy(tracker);
+            spawnTracker.CallDead();
+            Destroy(spawnTracker);
         }
-
-        ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
+        PoolTracker poolTracker = GetComponent<PoolTracker>();
+        if(poolTracker != null)
+        {
+            Destroy(poolTracker);
+        }
+        if(m_isInstatiate){
+            ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     #endregion

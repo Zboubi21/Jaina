@@ -17,7 +17,7 @@ public class PlayerDieState : IState {
     public void Enter(){
 		m_stateTimer = 0;
 		m_timerIsReached = false;
-		m_playerManager.JainaAnimator.SetBool("Die", true);
+		m_playerManager.JainaAnimator.SetTrigger("Die");
         m_playerManager.PlayerIsDead = true;
 		m_playerManager.StopPlayerMovement();
         m_playerManager.SaveManager.On_PlayerDie();
@@ -32,7 +32,7 @@ public class PlayerDieState : IState {
     }
 
 	public void Exit(){
-		m_playerManager.JainaAnimator.SetBool("Die", false);
+		m_playerManager.JainaAnimator.SetTrigger("Die");
         m_playerManager.PlayerIsDead = false;
 	}
 

@@ -9,7 +9,6 @@ public class EnemyStats : CharacterStats {
 
     Image[] lifeBar;
     Image slider;
-    Canvas canvas;
     [Header("Enemy Info")]
     [TextArea(1, 20)]
     public string _name;
@@ -22,6 +21,7 @@ public class EnemyStats : CharacterStats {
         Fighter,
         Conqueror
     }
+    public bool _hasBackPack;
     bool[] arcanOn;
     bool[] fireOn;
     bool[] iceOn;
@@ -47,6 +47,9 @@ public class EnemyStats : CharacterStats {
     [Space]
     [Header("Aura Sign")]
     public GameObject m_auraSign;
+    [Space]
+    [Header("BackPack")]
+    public GameObject m_backPack;
 
     float m_timerArcane;
     float m_timerFire;
@@ -288,13 +291,26 @@ public class EnemyStats : CharacterStats {
     #endregion
     //bool checkiIfItIsDead;
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if(m_backPack != null)
+        {
+        m_backPack.SetActive(_hasBackPack);
+        }
+        lifeBar = m_canvas.GetComponentsInChildren<Image>();
+        m_canvas.SetActive(false);
+        m_cirlceCanvas.SetActive(false);
+    }
 
     public override void Start()
     {
         base.Start();
-        canvas = GetComponentInChildren<Canvas>();
-        lifeBar = GetComponentsInChildren<Image>();
-
+        lifeBar = m_canvas.GetComponentsInChildren<Image>();
+        if(m_backPack != null)
+        {
+        m_backPack.SetActive(_hasBackPack);
+        }
         for (int i = 0, l = lifeBar.Length; i < l; ++i)
         {
             if (lifeBar[i].fillOrigin == 1)                     //Il faut bien que le "fill origin" du slider soit le SEUL a 1
@@ -306,7 +322,7 @@ public class EnemyStats : CharacterStats {
         enemyController = GetComponent<EnemyController>();
         #region Canvas Var
 
-        m_canvas.SetActive(false);
+        // m_canvas.SetActive(false);
         saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
 
         #endregion
@@ -496,9 +512,7 @@ public class EnemyStats : CharacterStats {
             TakeDamage(100);
         }
 #endif
-
-
-        canvas.transform.LookAt(mainCamera.transform);
+        m_canvas.transform.LookAt(mainCamera.transform);
 
         MarksCoolDownMethods();
         if (!IsDead)
@@ -619,6 +633,11 @@ public class EnemyStats : CharacterStats {
     {
         base.Die();
         //checkiIfItIsDead = true;
+        DestroyAllMarks();
+        enemyController.OnEnemyDie();
+    }
+
+    public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
             Destroy(MarqueDeArcane);
@@ -641,7 +660,6 @@ public class EnemyStats : CharacterStats {
             GivreMarkCount = 0;
             StartGivreCooldown = false;
         }
-        enemyController.OnEnemyDie();
     }
 
     void DestroyAllMarkOnDead(GameObject mark, bool beenInstanciated, int count, bool coolDown)
