@@ -1605,10 +1605,7 @@ public class PlayerManager : MonoBehaviour {
 		float moveFracJourney = new float();
 		float actualHeight = 1000000000;
 
-		Debug.Log("je commence");
-
 		while(actualHeight != toHeight){
-			Debug.Log("fromHeight = + " + fromHeight + " | toHeight " + toHeight);
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
 			actualHeight = Mathf.Lerp(fromHeight, toHeight, m_cinematic.m_curve.Evaluate(moveFracJourney));
 			m_cinematic.m_topStrip.sizeDelta = new Vector2(m_cinematic.m_topStrip.sizeDelta.x, actualHeight);

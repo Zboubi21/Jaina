@@ -113,11 +113,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
         if (/*enemyStats == null && */unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
         {
-            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
-            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
-            DestroyMarques();
-            DeactivateBool(false);
-            unitFrameOn = false;
+            HideBigLifeBar();
         }
         else if(enemyStats == null && !unitFrameOn && enemyStatsSave != enemyStats)
         {
@@ -363,4 +359,15 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
         return null;
     }
+
+    public void HideBigLifeBar(){
+        if(enemyStatsLocked != null){
+            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
+            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+        }
+        DestroyMarques();
+        DeactivateBool(false);
+        unitFrameOn = false;
+    }
+    
 }
