@@ -13,11 +13,13 @@ public class WarLord_MiseEnScene : MonoBehaviour
 
     bool fightHasStart;
     bool fightHasEnded;
+    PlayerManager m_playerManager;
 
     void Start()
     {
         controller = GetComponent<EnemyController>();
         stats = GetComponent<EnemyStats>();
+        m_playerManager = PlayerManager.Instance;
     }
 
     void Update()
@@ -31,6 +33,7 @@ public class WarLord_MiseEnScene : MonoBehaviour
         if (stats.CurrentHealth <= (stats.maxHealth/2) && !fightHasEnded)
         {
             fightHasEnded = true;
+            // m_playerManager.SwitchPlayerToCinematicState(FautMettreUnTemps);
             OnEndFight.Invoke();
         }
     }

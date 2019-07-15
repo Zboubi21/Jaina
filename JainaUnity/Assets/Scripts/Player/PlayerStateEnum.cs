@@ -10,5 +10,6 @@
 		FireTrailState,				// 7 - Fire Trail
 		ArcaneExplosionState,		// 8 - Arcane Explosion
 		PlayerDieState, 			// 9 - Die
+		PlayerCinematicState,		// 10 - Cinematic
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -14,9 +15,10 @@ public class PlayerManager : MonoBehaviour {
 	public static PlayerManager Instance;
 
 	public PlayerDebug m_playerDebug = new PlayerDebug();
-	[System.Serializable] public class PlayerDebug {
+	[Serializable] public class PlayerDebug {
 		public bool m_playerCanDie = true;
 		public bool m_useSymetricalHudSpellAnim = true;
+		public PlayerState m_playerStartState;
 	}
 
 	public StateMachine m_sM = new StateMachine();
@@ -34,11 +36,11 @@ public class PlayerManager : MonoBehaviour {
 
 #endregion Enum
 
-#region Public [System.Serializable] Variables
+#region Public [Serializable] Variables
 
 	[Header("AutoAttacks")]
 	public AutoAttacks m_autoAttacks = new AutoAttacks();
-	[System.Serializable] public class AutoAttacks {
+	[Serializable] public class AutoAttacks {
 		public float m_cooldown = 0.25f;
 		public float m_buffCooldown = 0.125f;
 		[HideInInspector] public bool m_isBuff = false;
@@ -55,10 +57,10 @@ public class PlayerManager : MonoBehaviour {
 
 	[Header("Powers")]
 	public Powers m_powers = new Powers();
-	[System.Serializable] public class Powers {
+	[Serializable] public class Powers {
 
 		public Blink m_blink = new Blink();
-		[System.Serializable] public class Blink {
+		[Serializable] public class Blink {
 			[HideInInspector] public bool m_canSwitch = true;
 			[HideInInspector] public bool m_startCooldown = false;
 			public float m_cooldown = 5;
@@ -85,7 +87,7 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		public Block m_Block = new Block();
-		[System.Serializable] public class Block {
+		[Serializable] public class Block {
             [HideInInspector] public bool m_inIceBlock = false;
 
 			public ParticleSystem m_block;
@@ -105,7 +107,7 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		public IceNova m_iceNova = new IceNova();
-		[System.Serializable] public class IceNova {
+		[Serializable] public class IceNova {
 			[Header("Spell prefab")]
 			// public GameObject m_nova;
 			public Transform m_root;
@@ -130,7 +132,7 @@ public class PlayerManager : MonoBehaviour {
 			public GameObject m_spellSound;
 		}
 		public IceBuff m_iceBuff = new IceBuff();
-		[System.Serializable] public class IceBuff {
+		[Serializable] public class IceBuff {
 			[Header("Spell prefab")]
 			// public GameObject m_buff;
 			public Transform m_root;
@@ -155,7 +157,7 @@ public class PlayerManager : MonoBehaviour {
 			[HideInInspector] public GameObject m_actualBuff;
 		}
 		public FireBalls m_fireBalls = new FireBalls();
-		[System.Serializable] public class FireBalls {
+		[Serializable] public class FireBalls {
 			[Header("Spell prefab")]
 			public GameObject m_balls;
 			public Transform m_root;
@@ -177,7 +179,7 @@ public class PlayerManager : MonoBehaviour {
 			public GameObject m_spellSound;
 		}
 		public FireTrail m_fireTrail = new FireTrail();
-		[System.Serializable] public class FireTrail {
+		[Serializable] public class FireTrail {
 			[Header("Spell prefab")]
 			// public GameObject m_trail;
 			public Transform m_root;
@@ -204,7 +206,7 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		public ArcaneProjectiles m_arcaneProjectiles = new ArcaneProjectiles();
-		[System.Serializable] public class ArcaneProjectiles {
+		[Serializable] public class ArcaneProjectiles {
 			[Header("Spell prefab")]
 			// public GameObject m_firstProjectile;
 			// public GameObject m_secondProjectile;
@@ -233,10 +235,10 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("Shake camera")]
 			public ShakeCamera m_ShakeCamera = new ShakeCamera();
-			[System.Serializable] public class ShakeCamera {
+			[Serializable] public class ShakeCamera {
 				[Header("First Shake")]
 				public FirstShake m_firstShake = new FirstShake();
-				[System.Serializable] public class FirstShake {
+				[Serializable] public class FirstShake {
 					public bool m_useShakeCam = true;
 				public float m_magnitudeShake = 4f;
 				public float m_roughnessShake = 4f;
@@ -245,7 +247,7 @@ public class PlayerManager : MonoBehaviour {
 				}
 				[Header("Second Shake")]
 				public SecoundShake m_secoundShake = new SecoundShake();
-				[System.Serializable] public class SecoundShake {
+				[Serializable] public class SecoundShake {
 				public bool m_useShakeCam = true;
 				public float m_magnitudeShake = 4f;
 				public float m_roughnessShake = 4f;
@@ -254,7 +256,7 @@ public class PlayerManager : MonoBehaviour {
 				}
 				[Header("Third Shake")]
 				public ThirdShake m_thirdShake = new ThirdShake();
-				[System.Serializable] public class ThirdShake {
+				[Serializable] public class ThirdShake {
 				public bool m_useShakeCam = true;
 				public float m_magnitudeShake = 4f;
 				public float m_roughnessShake = 4f;
@@ -264,7 +266,7 @@ public class PlayerManager : MonoBehaviour {
 			}
 		}
 		public ArcaneExplosion m_arcaneExplosion = new ArcaneExplosion();
-		[System.Serializable] public class ArcaneExplosion {
+		[Serializable] public class ArcaneExplosion {
 			[Header("Spell prefab")]
 			// public GameObject m_projectile;
 			public Transform m_root;
@@ -293,7 +295,7 @@ public class PlayerManager : MonoBehaviour {
 			public float m_fadeOutTimeShake = 0.1f;
 		}
 
-		[System.Serializable] public class SpellUI {
+		[Serializable] public class SpellUI {
 			[Header("First UI")]
 			public RectTransform m_firstUiParent;
 			public TextMeshProUGUI m_firsText;
@@ -309,7 +311,7 @@ public class PlayerManager : MonoBehaviour {
 
 		[Header("UI")]
 		public UI m_uI = new UI();
-		[System.Serializable] public class UI {
+		[Serializable] public class UI {
 			[Header("Width/Height")]
 			public Vector2 m_minScale = new Vector2(44, 44);
 			public Vector2 m_maxScale = new Vector2(58, 58);
@@ -320,7 +322,7 @@ public class PlayerManager : MonoBehaviour {
 
 			[Header("UI Animations")]
 			public UIAnimations m_uIAnimations = new UIAnimations();
-			[System.Serializable] public class UIAnimations {
+			[Serializable] public class UIAnimations {
 				public float m_timeToFinish = 0.25f;
 				public AnimationCurve m_curveAnim;
 
@@ -338,12 +340,12 @@ public class PlayerManager : MonoBehaviour {
     public float m_percentMultiplicateur = 25f;
     public int m_maxArcanMarkCount = 10;
     public Debuffs m_debuffs = new Debuffs();
-    [System.Serializable]
+    [Serializable]
     public class Debuffs
     {
         [Header("Fire Ticks")]
 		public FireTicks m_fireTicks = new FireTicks();
-		[System.Serializable]
+		[Serializable]
 		public class FireTicks
 		{
 			public float m_timerTickDamage = 0.25f;
@@ -352,7 +354,7 @@ public class PlayerManager : MonoBehaviour {
         }
 		[Header("Ice Slow")]
 		public IceSlow m_IceSlow = new IceSlow();
-		[System.Serializable]
+		[Serializable]
 		public class IceSlow
 		{
 			[Range(0,100)]
@@ -363,7 +365,7 @@ public class PlayerManager : MonoBehaviour {
 
 	[Header("Move speed")]
 	public MoveSpeed m_moveSpeed = new MoveSpeed();
-	[System.Serializable] public class MoveSpeed {
+	[Serializable] public class MoveSpeed {
 		public float m_normalspeed = 10;
 		public float m_fastSpeed = 15;
 		[Space]
@@ -375,7 +377,26 @@ public class PlayerManager : MonoBehaviour {
 		[HideInInspector] public bool m_iceBuffIsCast = false;
 	}
 
-    #endregion Public [System.Serializable] Variables
+	[Header("Cinematic animation")]
+	public Cinematic m_cinematic = new Cinematic();
+	[Serializable] public class Cinematic {
+		[Header("Strip")]
+		public RectTransform m_topStrip;
+		public RectTransform m_botStrip;
+
+		[Header("Height")]
+		public float m_startHeight = 0;
+		public float m_endHieght = 155;
+
+		[Header("Animation")]
+		public float m_timeToEndAnim = 3;
+		public AnimationCurve m_curve;
+
+		[HideInInspector] public bool m_isInCinematicState = false;
+		[HideInInspector] public float m_timeToBeInCinematic = 0;
+	}
+
+    #endregion Public [Serializable] Variables
 
     [Space]
 	public GameObject m_playerMesh;
@@ -407,6 +428,7 @@ public class PlayerManager : MonoBehaviour {
 	Vector3 m_rightRightPos;
 #endregion UI Positions
 
+#region Encapsuled
 	NavMeshAgent m_agent;
 	Vector3 m_playerTargetPosition;
     public Vector3 PlayerTargetPosition
@@ -458,6 +480,7 @@ public class PlayerManager : MonoBehaviour {
             m_objectPooler = value;
         }
     }
+#endregion Encapsuled
 
     void Awake(){
 		if(Instance == null){
@@ -466,16 +489,17 @@ public class PlayerManager : MonoBehaviour {
 			Debug.LogError("Two instance of PlayerManager");
 		}
 		m_sM.AddStates(new List<IState> {
-			new NoThrowSpellState(this),		// 0 = No Throw Spella
-			new BlinkState(this),		 		// 1 - Blink	
-			new IceBlockState(this), 			// 2 - Ice Block
-			new NovaState(this),				// 3 - Nova
-			new FireBallsState(this),			// 4 - Fire Balls
-			new ArcaneProjectilesState(this), 	// 5 - Arcane Projectiles
-			new IceBuffState(this),				// 6 - Ice Buff
-			new FireTrailState(this),			// 7 - Fire Trail
-			new ArcaneExplosionState(this),		// 8 - Arcane Explosion
-			new PlayerDieState(this),			// 8 - Die
+			new NoThrowSpellState(this),		//  0 = No Throw Spella
+			new BlinkState(this),		 		//  1 - Blink	
+			new IceBlockState(this), 			//  2 - Ice Block
+			new NovaState(this),				//  3 - Nova
+			new FireBallsState(this),			//  4 - Fire Balls
+			new ArcaneProjectilesState(this), 	//  5 - Arcane Projectiles
+			new IceBuffState(this),				//  6 - Ice Buff
+			new FireTrailState(this),			//  7 - Fire Trail
+			new ArcaneExplosionState(this),		//  8 - Arcane Explosion
+			new PlayerDieState(this),			//  9 - Die
+			new PlayerCinematicState(this),		// 10 - Cinematic
 		});
 		string[] playerStateNames = System.Enum.GetNames (typeof(PlayerState));
 		if(m_sM.States.Count != playerStateNames.Length){
@@ -495,7 +519,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 	
 	void OnEnable(){
-		ChangeState(0);
+		ChangeState(m_playerDebug.m_playerStartState);
 	}
 
 	void Update(){
@@ -509,10 +533,12 @@ public class PlayerManager : MonoBehaviour {
 	void FixedUpdate(){
 		m_sM.FixedUpdate();
 
-		if(m_agent.velocity != Vector3.zero ){
-			m_jainaAnimator.SetBool("isMoving", true);
-		}else{
-			m_jainaAnimator.SetBool("isMoving", false);
+        if(m_sM.CurrentStateIndex != ((int)PlayerState.PlayerCinematicState)){
+			if(m_agent.velocity != Vector3.zero ){
+				m_jainaAnimator.SetBool("isMoving", true);
+			}else{
+				m_jainaAnimator.SetBool("isMoving", false);
+			}
 		}
 	}
 
@@ -1551,6 +1577,43 @@ public class PlayerManager : MonoBehaviour {
 			audioSource.Play();
 		}else{
 			audioSource.Stop();
+		}
+	}
+
+	public void ChangeHudSpellAnim(){
+		m_playerDebug.m_useSymetricalHudSpellAnim =! m_playerDebug.m_useSymetricalHudSpellAnim;
+	}
+	public void ChangeJainaCanDie(){
+		m_playerDebug.m_playerCanDie =! m_playerDebug.m_playerCanDie;
+	}
+
+	public void SwitchPlayerToCinematicState(float timeToBeInCinematic){
+		m_cinematic.m_timeToBeInCinematic = timeToBeInCinematic;
+		ChangeState(PlayerState.PlayerCinematicState);
+	}
+	public void StartCinematicStringCorout(bool isShow){
+		if(isShow){
+			StartCoroutine(CinematicStringCorout(m_cinematic.m_startHeight, m_cinematic.m_endHieght));
+		}else{
+			StartCoroutine(CinematicStringCorout(m_cinematic.m_endHieght, m_cinematic.m_startHeight));
+		}
+	}
+	IEnumerator CinematicStringCorout(float fromHeight, float toHeight){
+		
+		float distance = Mathf.Abs(fromHeight - toHeight);
+		float vitesse = distance / m_cinematic.m_timeToEndAnim;
+		float moveFracJourney = new float();
+		float actualHeight = 1000000000;
+
+		Debug.Log("je commence");
+
+		while(actualHeight != toHeight){
+			Debug.Log("fromHeight = + " + fromHeight + " | toHeight " + toHeight);
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			actualHeight = Mathf.Lerp(fromHeight, toHeight, m_cinematic.m_curve.Evaluate(moveFracJourney));
+			m_cinematic.m_topStrip.sizeDelta = new Vector2(m_cinematic.m_topStrip.sizeDelta.x, actualHeight);
+			m_cinematic.m_botStrip.sizeDelta = new Vector2(m_cinematic.m_topStrip.sizeDelta.x, actualHeight);
+			yield return null;
 		}
 	}
 
