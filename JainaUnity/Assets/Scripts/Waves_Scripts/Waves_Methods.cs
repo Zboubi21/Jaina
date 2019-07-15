@@ -94,11 +94,15 @@ public class Waves_Methods : MonoBehaviour
             timeNextWave -= Time.deltaTime;
             if(timeNextWave <= 0)
             {
+                Debug.Log("On TIme : " + nbrOfWave);
+
                 Spawner(nbrOfWave);
             }
-
-            if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0)
+            else if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0)
             {
+                Debug.Log("On Kill : " + nbrOfWave);
+                nbrEnemyDead = 0;
+                nbrOfEnemy = 0;
                 Spawner(nbrOfWave);
             }
         }

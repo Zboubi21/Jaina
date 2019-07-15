@@ -36,7 +36,6 @@ public class Spawner_Methods : MonoBehaviour
             go.GetComponent<Spawned_Tracker>().wave = methods;
             if (_nbrOfWaves[wave].m_enemyToSummon[a]._hasBackpack)
             {
-                Debug.Log("Bah ouai");
                 go.GetComponent<EnemyStats>()._hasBackPack = true;
             }
             methods.NbrOfEnemy++;
