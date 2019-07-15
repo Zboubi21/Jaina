@@ -561,6 +561,7 @@ public class EnemyStats : CharacterStats {
         if (StartArcaneCooldown)
         {
             m_timerArcane -= Time.deltaTime;
+            MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
             if (m_timerArcane <= 0)
             {
                 Destroy(MarqueDeArcane);
@@ -569,10 +570,6 @@ public class EnemyStats : CharacterStats {
                 m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
                 ArcanMarkCount = 0;
                 StartArcaneCooldown = false;
-            }
-            else
-            {
-                MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
             }
         }
         if (StartFireCooldown)
@@ -642,6 +639,8 @@ public class EnemyStats : CharacterStats {
     public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
+            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
             Destroy(MarqueDeArcane);
             arcaneHasBeenInstanciated = false;
             ArcanMarkCount = 0;
@@ -649,6 +648,8 @@ public class EnemyStats : CharacterStats {
         }
         if(MarqueDeFeu != null)
         {
+            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
             Destroy(MarqueDeFeu);
             fireHasBeenInstanciated = false;
             FireMarkCount = 0;
@@ -657,6 +658,8 @@ public class EnemyStats : CharacterStats {
         }
         if(MarqueDeGivre != null)
         {
+            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
             Destroy(MarqueDeGivre);
             iceHasBeenInstanciated = false;
             GivreMarkCount = 0;
