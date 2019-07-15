@@ -560,8 +560,10 @@ public class PlayerManager : MonoBehaviour {
  
         // Debug.Log("moveDirection = " + moveDirection);
 
-        m_jainaAnimator.SetFloat("moveX", moveDirection.x, 0.05f, Time.deltaTime);
-        m_jainaAnimator.SetFloat("moveY", moveDirection.z, 0.05f, Time.deltaTime);
+        // m_jainaAnimator.SetFloat("moveX", moveDirection.x, 0.05f, Time.deltaTime);
+        // m_jainaAnimator.SetFloat("moveY", moveDirection.z, 0.05f, Time.deltaTime);
+        m_jainaAnimator.SetFloat("moveX", moveDirection.x, Time.fixedDeltaTime, Time.deltaTime);
+        m_jainaAnimator.SetFloat("moveY", moveDirection.z, Time.fixedDeltaTime, Time.deltaTime);
 	}
 
 	public void ChangeState(PlayerState newPlayerState){
