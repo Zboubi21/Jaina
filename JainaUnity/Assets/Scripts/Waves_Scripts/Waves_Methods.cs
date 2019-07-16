@@ -113,13 +113,11 @@ public class Waves_Methods : MonoBehaviour
             timeNextWave -= Time.deltaTime;
             if(timeNextWave <= 0)
             {
-                Debug.Log("On TIme : " + nbrOfWave);
 
                 Spawner(nbrOfWave);
             }
             else if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0)
             {
-                Debug.Log("On Kill : " + nbrOfWave);
                 nbrEnemyDead = 0;
                 nbrOfEnemy = 0;
                 Spawner(nbrOfWave);
@@ -128,6 +126,7 @@ public class Waves_Methods : MonoBehaviour
         else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
         {
             OnLastWaveOver.Invoke();
+            nbrOfEnemy = 0;
         }
 
     }

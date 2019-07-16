@@ -5,6 +5,51 @@ using UnityEngine.AI;
 using EnemyStateEnum_Butcher;
 public class ButcherController : EnemyController
 {
+    [Header("Warboar Impatience Variables")]
+    public int numberOfJump;
+    int nbrJump;
+    public float CoolDownGettingImpatient = 3f;
+    [Space]
+    public float rangeMinForJump;
+    public Color minRangeColor;
+    [Space]
+    public float rangeMaxForJump;
+    public Color maxRangeColor;
+    float m_cdImpatient;
+
+    #region Get Set
+    public float CdImpatient
+    {
+        get
+        {
+            return m_cdImpatient;
+        }
+
+        set
+        {
+            m_cdImpatient = value;
+        }
+    }
+
+    public int NbrJump
+    {
+        get
+        {
+            return nbrJump;
+        }
+
+        set
+        {
+            nbrJump = value;
+        }
+    }
+    #endregion
+    public override void LogicAtStart()
+    {
+        base.LogicAtStart();
+
+        m_cdImpatient = CoolDownGettingImpatient;
+    }
 
     private void Awake()
     {
@@ -26,6 +71,28 @@ public class ButcherController : EnemyController
         }
     }
 
+    public override bool TargetInImpatienceDonuts()
+    {
+        if (GetTargetDistance(TargetStats1.gameObject.transform) <= rangeMaxForJump && GetTargetDistance(TargetStats1.gameObject.transform) >= rangeMinForJump)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public override bool CoolDownImpatience()
+    {
+        m_cdImpatient -= Time.deltaTime;
+        if(m_cdImpatient <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public override void Timed()
     {
         if (CheckCollision(RedBoxScale, RedBoxPosition) != null)
@@ -37,5 +104,16 @@ public class ButcherController : EnemyController
     public override void Attack()
     {
         Anim.SetTrigger("Attack");
+    }
+
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = minRangeColor;
+        Gizmos.DrawWireSphere(transform.position, rangeMinForJump);
+
+        Gizmos.color = maxRangeColor;
+        Gizmos.DrawWireSphere(transform.position, rangeMaxForJump);
+
     }
 }

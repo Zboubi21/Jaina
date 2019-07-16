@@ -9,42 +9,30 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    ZglorgController m_zglorgController;
     public Butcher_ImpatienceState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
-        m_zglorgController = enemyController.GetComponent<ZglorgController>();
     }
 
-    /*
-
-    public void Enter()
+    public override void Enter()
     {
-        StateAnimation(m_enemyController.Anim);
-        ImpatienceEffect(m_zglorgController.speedSprint);
-        m_enemyController.IsImpatient = true;
+        
     }
 
-    public void FixedUpdate()
+    public override void FixedUpdate()
     {
-        Destination();
+
     }
 
-    public void Update()
+    public override void Update()
     {
-        FaceTarget();
-        GetOutOfState();
+       
     }
 
-    public void Exit()
+    public override void Exit()
     {
-        m_enemyController.IsImpatient = false;
-
-        ImpatienceEffect(m_enemyController.AgentSpeed);
-        DestroySign();
+        
     }
-    */
-
     #region Animation
 
     public override void StateAnimation(Animator anim)

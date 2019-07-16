@@ -17,25 +17,25 @@ public class ImpatienceState : IState
 
 
 
-    public void Enter()
+    public virtual void Enter()
     {
         StateAnimation(m_enemyController.Anim);
         ImpatienceEffect(m_zglorgController.speedSprint);
         m_enemyController.IsImpatient = true;
     }
 
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         Destination();
     }
 
-    public void Update()
+    public virtual void Update()
     {
         FaceTarget();
         GetOutOfState();
     }
 
-    public void Exit()
+    public virtual void Exit()
     {
         m_enemyController.IsImpatient = false;
 

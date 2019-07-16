@@ -606,6 +606,21 @@ public class EnemyController : MonoBehaviour {
     #endregion
 
 
+    #region Only Butcher Methods
+
+    public virtual bool TargetInImpatienceDonuts()
+    {
+        return false;
+    }
+
+    public virtual bool CoolDownImpatience()
+    {
+        return false;
+    }
+
+    #endregion
+
+
     #region StunMethods
 
     public void CheckIfStunable()
