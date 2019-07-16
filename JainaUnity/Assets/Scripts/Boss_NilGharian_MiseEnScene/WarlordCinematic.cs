@@ -10,12 +10,11 @@ public class WarlordCinematic : MonoBehaviour {
     NavMeshAgent m_agent;
     Animator m_animator;
 
-    void Start(){
+    public void On_StartCinematic(){
         m_agent = GetComponent<NavMeshAgent>();
         m_animator = GetComponentInChildren<Animator>();
-    }
 
-    void OnEnable(){
+        m_agent.ResetPath();
         m_agent.SetDestination(m_targetAgentPosition.position);
         m_animator.SetTrigger("Chase");
     }
