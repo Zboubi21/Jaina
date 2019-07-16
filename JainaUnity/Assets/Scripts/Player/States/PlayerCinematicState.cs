@@ -21,6 +21,7 @@ public class PlayerCinematicState : IState {
         // m_playerManager.JainaAnimator.SetBool("isMoving", false);
         m_playerManager.m_cinematic.m_isInCinematicState = true;
         m_playerManager.StartCinematicStringCorout(true);
+		m_playerManager.StopPlayerMovement();
     }
 
     public void Update(){
