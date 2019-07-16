@@ -7,7 +7,24 @@ public class AttackState : IState
 {
 
     // CONSTRUCTOR
+
     EnemyController m_enemyController;
+
+    #region Get Set
+    public EnemyController EnemyController
+    {
+        get
+        {
+            return m_enemyController;
+        }
+
+        set
+        {
+            m_enemyController = value;
+        }
+    }
+    #endregion
+
     public AttackState(EnemyController enemyController)
     {
         m_enemyController = enemyController;
@@ -64,7 +81,7 @@ public class AttackState : IState
             if (/*!m_enemyController.InAttackRange() &&*/ !m_enemyController.PlayerInAttackBox())
             {
 
-                m_enemyController.ChangeState(EnemyState.ChaseState); // ChaseState
+                m_enemyController.ChangeState((int)EnemyState.ChaseState); // ChaseState
             }
             /*else if (m_enemyController.InAttackRange() && !m_enemyController.PlayerInAttackBox() && m_enemyController.IsChasing())
             {
@@ -72,7 +89,7 @@ public class AttackState : IState
             }*/
             else
             {
-                m_enemyController.ChangeState(EnemyState.AttackState); // Attack
+                m_enemyController.ChangeState((int)EnemyState.AttackState); // Attack
             }
 
         }

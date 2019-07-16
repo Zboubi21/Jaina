@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnemyStateEnum;
+using EnemyStateEnum_Butcher;
 
-public class StunState : IState
+public class Butcher_StunState : StunState
 {
-    float timeBeingStun;
-    bool isStunAble = false;
+    /*float timeBeingStun;
+    bool isStunAble = false;*/
 
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    public StunState(EnemyController enemyController)
+    public Butcher_StunState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
-
+    /*
     public void Enter()
     {
         IsStunable();
@@ -29,7 +29,6 @@ public class StunState : IState
     {
         if (isStunAble)
         {
-            //Debug.Log("timeBeingStun = " + timeBeingStun);
             timeBeingStun -= Time.deltaTime;
             if(timeBeingStun <= 0)
             {
@@ -45,36 +44,34 @@ public class StunState : IState
             BeStunable(false);
         }
     }
-
-    public virtual void GetOutOfState()
+    */
+    public override void GetOutOfState()
     {
         
         if(!m_enemyController.HasBeenOnAlert)
         {
-            m_enemyController.ChangeState((int)EnemyState.AlerteState);
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AlerteState);
             m_enemyController.HasBeenOnAlert = true;
         }
-        //else if (m_enemyController.GetLastStateIndex() != 6)
-        //{
-        //    m_enemyController.ChangeState(m_enemyController.GetLastStateIndex());
-        //}
         else
         {
-            m_enemyController.ChangeState((int)EnemyState.ChaseState);
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);
         }
     }
 
-    public virtual void IsStunable()
+    public override void IsStunable()
     {
-        m_enemyController.Anim.SetTrigger("Hit");
+        base.IsStunable();
+        /*m_enemyController.Anim.SetTrigger("Hit");
         isStunAble = true;
         BeStunable(true);
-        timeBeingStun = m_enemyController.timeBeingStuned;
+        timeBeingStun = m_enemyController.timeBeingStuned;*/
     }
 
-    public virtual void BeStunable(bool b)
+    public override void BeStunable(bool b)
     {
-        m_enemyController.StopMoving(b);
+        base.BeStunable(b);
+        //m_enemyController.StopMoving(b);
     }
 
 }

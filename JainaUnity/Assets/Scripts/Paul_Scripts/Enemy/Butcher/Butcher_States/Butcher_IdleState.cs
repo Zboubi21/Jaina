@@ -1,18 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnemyStateEnum;
+using EnemyStateEnum_Butcher;
 
-public class IdleState : IState
+public class Butcher_IdleState : IdleState
 {
 
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    public IdleState(EnemyController enemyController)
+    public Butcher_IdleState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
-
+    /*
     public void Enter()
     {
         m_enemyController.Anim.SetTrigger("Idle");
@@ -32,12 +32,12 @@ public class IdleState : IState
     {
 
     }
-
-    public virtual void LookingForTarget()
+    */
+    public override void LookingForTarget()
     {
         if (m_enemyController.PlayerInLookRange())
         {
-            m_enemyController.ChangeState((int)EnemyState.ChaseState);
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);
         }
     }
 

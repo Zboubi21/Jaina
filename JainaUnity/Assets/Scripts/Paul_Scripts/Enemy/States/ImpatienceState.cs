@@ -100,7 +100,7 @@ public class ImpatienceState : IState
         {
             if (m_enemyController.CanAttackWhenImpatience() || m_enemyController.PlayerInAttackBox())
             {
-                m_enemyController.ChangeState(EnemyState.AttackState); //Attack
+                m_enemyController.ChangeState((int)EnemyState.AttackState); //Attack
             }
         }
         //else

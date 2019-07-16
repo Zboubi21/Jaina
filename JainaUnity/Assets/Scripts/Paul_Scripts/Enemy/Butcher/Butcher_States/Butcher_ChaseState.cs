@@ -1,30 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnemyStateEnum;
+using EnemyStateEnum_Butcher;
 
-public class ChaseState : IState
+
+public class Butcher_ChaseState : ChaseState
 {
     bool yell;
     bool hasCalledFunction;
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    public ChaseState(EnemyController enemyController)
+    public Butcher_ChaseState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
-
+    /*
     public void Enter()
     {
         MakeThenBeingYelledable(hasCalledFunction);
         StateAnimation(m_enemyController.Anim);
-
-        // if(m_enemyController._signImpatience != null)
-        // {
-        //     m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
-        // }
         m_enemyController.ImpatienceSign.gameObject.SetActive(false);
-
         if(m_enemyController.m_sM.IsLastStateIndex((int)EnemyState.AlerteState)){
             m_enemyController.StartCoroutine(StartDetectedFx());
         }
@@ -46,43 +41,47 @@ public class ChaseState : IState
     {
         m_enemyController.IsChasing();
     }
-
+    */
 
     #region Animation
 
-    public virtual void StateAnimation(Animator anim)
+    public override void StateAnimation(Animator anim)
     {
-        if (!m_enemyController.IsRootByIceNova)
+        base.StateAnimation(anim);
+        /*if (!m_enemyController.IsRootByIceNova)
         {
             anim.SetTrigger("Chase");
         }
         else
         {
             anim.SetTrigger("Idle");
-        }
+        }*/
     }
 
     #endregion
 
     #region AgentMotion
 
-    public virtual void Destination()
+    public override void Destination()
     {
-        m_enemyController.SetDestination();
+        base.Destination();
+        //m_enemyController.SetDestination();
     }
 
-    public virtual void FaceTarget()
+    public override void FaceTarget()
     {
-        m_enemyController.FaceTarget();
+        base.FaceTarget();
+        //m_enemyController.FaceTarget();
     }
 
     #endregion
 
     #region Yell Methods
 
-    public virtual void MakeThenBeingYelledable(bool b)
+    public override void MakeThenBeingYelledable(bool b)
     {
-        if (!b)
+        base.MakeThenBeingYelledable(b);
+        /*if (!b)
         {
             for (int i = 0, l = m_enemyController.Enemy.Count; i < l; i++)
             {
@@ -92,47 +91,36 @@ public class ChaseState : IState
                 yell = false;
             }
             hasCalledFunction = true;
-        }
+        }*/
     }
 
-    public virtual void OnYelling()
+    public override void OnYelling()
     {
-        if (!yell)
+        base.OnYelling();
+        /*if (!yell)
         {
             m_enemyController.Yell(m_enemyController.m_sM.CurrentStateIndex);
             yell = true;
-        }
+        }*/
     }
 
     #endregion
 
     #region Leaving State
-    public virtual void GetOutOfState()
+    public override void GetOutOfState()
     {
-        if (/*m_enemyController.InAttackRange()*/ /*Stopping Distance*/ /*&&*/ m_enemyController.PlayerInAttackBox()) //GreenBox
+        if (m_enemyController.PlayerInAttackBox()) //GreenBox
         {
-            m_enemyController.ChangeState((int)EnemyState.AttackState); //Attack
-        }
-        //else if (m_enemyController.InAttackRange() /*Stopping Distance*/ && !m_enemyController.PlayerInAttackBox() && m_enemyController.IsInAttackRangeForToLong())
-        //{
-        //    Debug.Log("Nop");
-        //    m_enemyController.ChangeState(EnemyState.AttackState); //Attack
-        //}
-        else if (!m_enemyController.IsRootByIceNova)
-        {
-            if (m_enemyController.IsChasing())
-            {
-                m_enemyController.ChangeState((int)EnemyState.ImpatienceState); // Impatience
-            }
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack
         }
     }
     #endregion
 
-    IEnumerator StartDetectedFx(){
+    /*IEnumerator StartDetectedFx(){
         m_enemyController.m_detectedFx.gameObject.SetActive(true);
         m_enemyController.m_detectedFx.StartParticle();
         yield return new WaitForSeconds(m_enemyController.m_timeToShowDetectedFx);
         m_enemyController.m_detectedFx.gameObject.SetActive(false);
-    }
+    }*/
 
 }

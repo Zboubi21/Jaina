@@ -53,7 +53,7 @@ public class FrozenState : IState
 
     public virtual void GetOutOfState()
     {
-        m_enemyController.ChangeState(EnemyState.ChaseState);
+        m_enemyController.ChangeState((int)EnemyState.ChaseState);
     }
 }
 

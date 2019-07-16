@@ -14683,7 +14683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4913529661653466
 Transform:
   m_ObjectHideFlags: 0
@@ -15614,13 +15614,13 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.75
-  m_Speed: 8
-  m_Acceleration: 10
+  m_Speed: 6
+  m_Acceleration: 5000
   avoidancePriority: 50
-  m_AngularSpeed: 180
-  m_StoppingDistance: 3
+  m_AngularSpeed: 5000
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 3.5
   m_BaseOffset: 0
@@ -15668,21 +15668,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b88befed5f9ee4bad90c9cabf58cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isInstatiate: 1
+  m_isInstatiate: 0
   m_enemyType: 0
   m_sM:
     m_currentStateString: 
   lookRadius: 10
   maxLookRadiusOnAlert: 50
   yellRadius: 5
-  RadiusExpansionSpeed: 1
-  RedBoxPosition: {x: 0, y: 0, z: 0}
-  RedBoxScale: {x: 0, y: 0, z: 0}
-  GreenBoxPosition: {x: 0, y: 0, z: 0}
-  GreenBoxScale: {x: 0, y: 0, z: 0}
-  attackSpeed: 1
-  timerBeforeGettingStunable: 0
-  timeBeingStuned: 0
+  RadiusExpansionSpeed: 0.2
+  RedBoxPosition: {x: 0, y: 0.5, z: 1}
+  RedBoxScale: {x: 1, y: 1, z: 1}
+  GreenBoxPosition: {x: 0, y: 0.5, z: 1}
+  GreenBoxScale: {x: 0.01, y: 1, z: 1}
+  attackSpeed: 0.75
+  timerBeforeGettingStunable: 3
+  timeBeingStuned: 0.5
   ImpatienceSign: {fileID: 95896371176075542}
   m_timeToShowDetectedFx: 2
   m_detectedFx: {fileID: 2000046598012804119}
@@ -15713,7 +15713,7 @@ MonoBehaviour:
   _name: lolo
   m_enemyPowerLevel: 0
   m_enemyType: 0
-  _hasBackPack: 0
+  _hasBackPack: 1
   DebufRoot: {fileID: 1489871552516366}
   MarqueArcane: {fileID: 1877719558448682, guid: 00b5f55e609a67649812a3c6b21b53a2,
     type: 3}
@@ -15749,8 +15749,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a059e621262339248b746bc33404e4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GreenboxPosition: {x: 0, y: 0.5, z: 1.5}
-  GreenboxScale: {x: 0.01, y: 0.01, z: 0.01}
+  GreenboxPosition: {x: 0, y: 0.5, z: 1}
+  GreenboxScale: {x: 0.01, y: 1, z: 1}
   drawGreenGizmos: 1
 --- !u!1 &1595151730112956
 GameObject:

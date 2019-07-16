@@ -14,6 +14,5 @@ public class RetrunAnimTime : MonoBehaviour {
     public void CallFunction()
     {
         controller.GetComponent<EnemyController>().Timed();
-        
     }
 }

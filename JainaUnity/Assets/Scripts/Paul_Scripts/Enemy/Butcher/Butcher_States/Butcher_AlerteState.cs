@@ -1,18 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnemyStateEnum;
+using EnemyStateEnum_Butcher;
 
-public class AlerteState : IState
+public class Butcher_AlerteState : AlerteState
 {
     bool yell;
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    public AlerteState(EnemyController enemyController)
+    public Butcher_AlerteState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
-
+    /*
     public void Enter()
     {
         m_enemyController.Anim.SetTrigger("Alerte");
@@ -38,17 +38,17 @@ public class AlerteState : IState
     {
 
     }
-
-    public virtual void Alert()
+    */
+    public override void Alert()
     {
-        m_enemyController.IsAlert();
+        base.Alert();
     }
 
-    public virtual void LookingForTarget()
+    public override void LookingForTarget()
     {
         if (m_enemyController.PlayerInLookRange())
         {
-            m_enemyController.ChangeState((int)EnemyState.ChaseState); // Chase
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState); // Chase
         }
     }
 

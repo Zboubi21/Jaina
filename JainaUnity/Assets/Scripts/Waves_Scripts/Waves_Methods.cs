@@ -6,6 +6,9 @@ using TMPro;
 
 public class Waves_Methods : MonoBehaviour
 {
+    public bool isLaunchByTrigger = true;
+
+    [Space]
     public GameObject[] m_spawners;
     [Space]
 
@@ -44,11 +47,27 @@ public class Waves_Methods : MonoBehaviour
     }
     #endregion
 
+    public void OnLaunchWave(float TimeBeforeNextWave)
+    {
+        if (!isLaunchByTrigger)
+        {
+            _playerOnTrigger = true;
+            StartCoroutine(WaitForFirstWave(TimeBeforeNextWave));
+        }
+    }
+
+    IEnumerator WaitForFirstWave(float time)
+    {
+        yield return new WaitForSeconds(time);
+        OnFirstWaveStart.Invoke();
+        Spawner(nbrOfWave);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (!_playerOnTrigger)
+            if (!_playerOnTrigger && isLaunchByTrigger)
             {
                 Spawner(nbrOfWave);
                 _playerOnTrigger = true;

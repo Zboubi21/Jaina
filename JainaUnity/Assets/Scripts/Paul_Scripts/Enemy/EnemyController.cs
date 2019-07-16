@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using EnemyStateEnum;
+using EnemyStateEnum_Butcher;
 using PoolTypes;
 
 public class EnemyController : MonoBehaviour {
@@ -21,21 +22,21 @@ public class EnemyController : MonoBehaviour {
             Anim = GetComponentInChildren<Animator>();
 
         if(!m_isInstatiate){
-            ChangeState(EnemyState.IdleState);
+            ChangeState((int)EnemyState.IdleState);
             m_hasBeenOnAlert = false;
         }
         else
         {
-            ChangeState(EnemyState.ChaseState);
+            ChangeState((int)EnemyState.ChaseState);
             LogicAtStart();
             LogicWhenEnable();
             m_hasBeenOnAlert = true;
         }
     }
 
-    public void ChangeState(EnemyState newEnemyState)
+    public void ChangeState(int i)
     {
-        m_sM.ChangeState((int)newEnemyState);
+        m_sM.ChangeState(i);
     }
 
     public int GetLastStateIndex()
@@ -494,7 +495,7 @@ public class EnemyController : MonoBehaviour {
 
         if(m_playerManager.PlayerIsDead && !m_enemyIsInVictory && !m_sM.CompareState((int)EnemyState.DieState)){
             m_enemyIsInVictory = true;
-            ChangeState(EnemyState.VictoryState);
+            ChangeState((int)EnemyState.VictoryState);
         }
     }
     
@@ -522,7 +523,10 @@ public class EnemyController : MonoBehaviour {
 
     public void StopMoving(bool b)
     {
-        agent.isStopped = b;
+        if(agent != null)
+        {
+            agent.isStopped = b;
+        }
     }
 
     public bool InAttackRange()
@@ -629,7 +633,7 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            ChangeState(EnemyState.StunState);
+            ChangeState((int)EnemyState.StunState);
         }
     }
 
@@ -689,7 +693,7 @@ public class EnemyController : MonoBehaviour {
         CanAttack = false;
         yield return new WaitForSeconds(AttackCooldown);
         CanAttack = true;
-        AttackCooldown = 1f / attackSpeed;
+        AttackCooldown = attackSpeed;
     }
     #endregion
 
@@ -700,7 +704,8 @@ public class EnemyController : MonoBehaviour {
     }
     IEnumerator AnimTime()
     {
-        yield return new WaitForSeconds(Rac.animationClips[0].length);
+        //Debug.Log(Rac.animationClips[0].length);
+        yield return new WaitForSeconds(attackSpeed);
         CheckAnimEnd1 = true;
     }
     #endregion
@@ -709,7 +714,7 @@ public class EnemyController : MonoBehaviour {
 
     public void OnEnemyDie()
     {
-        ChangeState(EnemyState.DieState); // Die
+        ChangeState((int)EnemyState.DieState); // Die
     }
 
     public virtual void Die()
@@ -770,7 +775,7 @@ public class EnemyController : MonoBehaviour {
                     Enemy.Add(hitCollider[i]);
                     if (!hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled)
                     {
-                        hitCollider[i].gameObject.GetComponent<EnemyController>().ChangeState((EnemyState)CurrentState);
+                        hitCollider[i].gameObject.GetComponent<EnemyController>().ChangeState((int)(EnemyState)CurrentState);
                     }
                 }
             }
