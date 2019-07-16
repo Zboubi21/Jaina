@@ -7,6 +7,8 @@ public class WarLord_MiseEnScene : MonoBehaviour
 {
     public UnityEvent OnStartFight;
     public UnityEvent OnEndFight;
+    [Space]
+    public float m_timeToBeInCinematicState = 5;
 
     EnemyController controller;
     EnemyStats stats;
@@ -33,7 +35,7 @@ public class WarLord_MiseEnScene : MonoBehaviour
         if (stats.CurrentHealth <= (stats.maxHealth/2) && !fightHasEnded)
         {
             fightHasEnded = true;
-            // m_playerManager.SwitchPlayerToCinematicState(FautMettreUnTemps);
+            m_playerManager.SwitchPlayerToCinematicState(m_timeToBeInCinematicState);
             OnEndFight.Invoke();
         }
     }
