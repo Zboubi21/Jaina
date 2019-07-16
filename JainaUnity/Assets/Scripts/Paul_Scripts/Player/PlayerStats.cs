@@ -44,5 +44,10 @@ public class PlayerStats : CharacterStats {
         m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
 
     }
+    public override void FullHeal()
+    {
+        CurrentHealth = maxHealth;
+        m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+    }
 
 }

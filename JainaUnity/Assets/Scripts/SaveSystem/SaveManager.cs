@@ -27,13 +27,6 @@ public class SaveManager : MonoBehaviour {
     [SerializeField] float m_timeToStartFadeIn = 0.5f;
     [SerializeField] float m_timeToRespawn = 2.25f;
     [SerializeField] float m_timeToStartFadeOut = 0.1f;
-    
-    bool m_checkpointIsTake = false;
-    public bool CheckpointIsTake{
-        get{
-            return m_checkpointIsTake;
-        }
-    }
 
     Vector3 m_savePosition;
     int m_actualCheckpointNumber = 0;
@@ -57,9 +50,9 @@ public class SaveManager : MonoBehaviour {
         m_savePosition = newSavePosition.position;
         StartCoroutine(SeeCheckpointCanvas());
 
-        if(!m_checkpointIsTake){
-            m_checkpointIsTake = true;
-        }
+        m_playerManager.GetComponent<PlayerStats>().FullHeal();
+        m_objectPooler.On_ReturnLifePotionInPool();
+
         m_actualCheckpointNumber = newCheckpointNumber;
     }
 
@@ -77,10 +70,11 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForSeconds(m_timeToStartFadeIn);
         m_dieAnimator.SetTrigger("FadeIn");
         yield return new WaitForSeconds(m_timeToRespawn);
-        m_objectPooler.On_ReturnAllPool();
-        SceneManager.LoadScene(0);
+        m_objectPooler.On_ReturnAllInPool();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         yield return new WaitForSeconds(m_timeToStartFadeOut);
-        PlayerManager.Instance.SetTpPoint(m_savePosition);
+        m_playerManager = PlayerManager.Instance;
+        m_playerManager.SetTpPoint(m_savePosition);
         m_dieAnimator.SetTrigger("FadeOut");
     }
 

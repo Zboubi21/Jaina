@@ -200,6 +200,10 @@ public class CharacterStats : MonoBehaviour {
     {
 
     }
+    public virtual void FullHeal()
+    {
+
+    }
 
     void CheckIfHasToDie(float health)
     {

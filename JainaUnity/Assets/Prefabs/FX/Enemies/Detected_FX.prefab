@@ -4742,6 +4742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 457330d983fa0d140a977dfcd5894d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_anim: {fileID: 4425959724969075154}
   m_particleSystem:
   - {fileID: 4663944190048101457}
 --- !u!1 &4663944190679318109
@@ -4753,7 +4754,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4663944190679318108}
-  - component: {fileID: 9068004314370562867}
+  - component: {fileID: 4425959724969075154}
   m_Layer: 0
   m_Name: DectedAnim
   m_TagString: Untagged
@@ -4776,22 +4777,19 @@ Transform:
   m_Father: {fileID: 4663944190377833333}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &9068004314370562867
-Animator:
-  serializedVersion: 3
+--- !u!111 &4425959724969075154
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4663944190679318109}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 89a67e9c24b2cdf48a0e4bb75fc63f92, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 6c300292f51ce86418a28e664f05e31e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6c300292f51ce86418a28e664f05e31e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0

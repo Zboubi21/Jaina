@@ -55,7 +55,8 @@ public class Checkpoint : MonoBehaviour {
         Vector3 boxCenter;
         boxCenter = new Vector3(BoxColl.center.x * transform.localScale.x, BoxColl.center.y * transform.localScale.y, BoxColl.center.z * transform.localScale.z);
 
-        Quaternion boxRotation = transform.localRotation;
+        // Quaternion boxRotation = transform.localRotation;
+        Quaternion boxRotation = transform.rotation;
 
         if(m_savePosition != null){
             Gizmos.DrawSphere(m_savePosition.position, m_gizmosRadius);

@@ -59,11 +59,18 @@ public class ObjectPooler : MonoBehaviour {
         public EnemyType m_objectToSpawn;
     }
 
+	[SerializeField] ObjectPoolTest[] m_objectPoolTest;
+	[System.Serializable] public class ObjectPoolTest{
+        public KeyCode m_input;
+        public ObjectType m_objectToSpawn;
+    }
+
 	Dictionary<EnemyType, Queue<GameObject>> m_enemyPoolDictionary;
 	Dictionary<SpellType, Queue<GameObject>> m_spellPoolDictionary;
 	Dictionary<ObjectType, Queue<GameObject>> m_objectPoolDictionary;
 
 	Queue<PoolTracker> m_trackedObject = new Queue<PoolTracker>();
+	Queue<PoolTracker> m_lifePotionTracked = new Queue<PoolTracker>();
 
 	void Start(){
 		m_enemyPoolDictionary = new Dictionary<EnemyType, Queue<GameObject>>();
@@ -111,6 +118,15 @@ public class ObjectPooler : MonoBehaviour {
 						SpawnEnemyFromPool(m_poolTest[i].m_objectToSpawn, m_spawnPool.position, m_spawnPool.rotation);
 					}else{
 						SpawnEnemyFromPool(m_poolTest[i].m_objectToSpawn, Vector3.zero, Quaternion.identity);
+					}
+				}
+			}
+			for (int i = 0, l = m_objectPoolTest.Length; i < l; ++i){
+				if(Input.GetKeyDown(m_objectPoolTest[i].m_input)){
+					if(m_spawnPool != null){
+						SpawnObjectFromPool(m_objectPoolTest[i].m_objectToSpawn, m_spawnPool.position, m_spawnPool.rotation);
+					}else{
+						SpawnObjectFromPool(m_objectPoolTest[i].m_objectToSpawn, Vector3.zero, Quaternion.identity);
 					}
 				}
 			}
@@ -212,7 +228,22 @@ public class ObjectPooler : MonoBehaviour {
 		return poolTracker;
 	}
 
-	public void On_ReturnAllPool(){
+	public void On_ReturnLifePotionInPool(){
+		for (int i = 0, l = m_trackedObject.Count; i < l; ++i) {
+
+			PoolTracker poolTracker = m_trackedObject.Dequeue();
+			if(poolTracker == null){
+				return;
+			}
+			
+			Potion_Being_Used healPotion = poolTracker.GetComponent<Potion_Being_Used>();
+			if(healPotion != null){
+				poolTracker.ResetTrackedObject();
+			}
+		}
+	}
+
+	public void On_ReturnAllInPool(){
 		for (int i = 0, l = m_trackedObject.Count; i < l; ++i) {
 			PoolTracker poolTracker = m_trackedObject.Dequeue();
 			if(poolTracker != null){

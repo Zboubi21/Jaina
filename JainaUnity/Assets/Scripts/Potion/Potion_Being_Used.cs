@@ -5,7 +5,6 @@ using UnityEngine;
 public class Potion_Being_Used : MonoBehaviour
 {
     public int heal_Amount;
-    public bool debugQueueJJ = true;
     ParticleSystem[] particle;
     Animator anim;
     void Start()
@@ -38,14 +37,7 @@ public class Potion_Being_Used : MonoBehaviour
     {
         gameObject.GetComponent<Collider>().enabled = false;
         yield return new WaitForSeconds(0.75f);
-        if (debugQueueJJ)
-        {
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        gameObject.SetActive(false);
     }
 
 }
