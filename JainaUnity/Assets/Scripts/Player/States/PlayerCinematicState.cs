@@ -6,7 +6,7 @@ public class PlayerCinematicState : IState {
 
     // Constructor (CTOR)
 	PlayerManager m_playerManager;
-    public PlayerCinematicState (PlayerManager playerManager){
+    public PlayerCinematicState (PlayerManager playerManager) {
         m_playerManager = playerManager;
     }
 
@@ -22,6 +22,7 @@ public class PlayerCinematicState : IState {
         m_playerManager.m_cinematic.m_isInCinematicState = true;
         m_playerManager.StartCinematicStringCorout(true);
 		m_playerManager.StopPlayerMovement();
+        m_playerManager.CameraManager.CanMoveCamera = false;
     }
 
     public void Update(){
@@ -38,6 +39,7 @@ public class PlayerCinematicState : IState {
 	public void Exit(){
         m_playerManager.m_cinematic.m_isInCinematicState = false;
         m_playerManager.StartCinematicStringCorout(false);
+        m_playerManager.CameraManager.CanMoveCamera = true;
 	}
 
 }

@@ -20,6 +20,7 @@ public class IceBlockState : IState {
 		m_playerManager.m_powers.m_Block.m_actualIceBlockTimer = 0;
 		m_playerManager.m_powers.m_Block.m_block.Play(true);
 		m_playerManager.ManageSound(m_playerManager.m_powers.m_Block.m_spellSound, true);
+		m_playerManager.StartDecreaseBlockTimer();
 	}
 
 	public void Update(){
@@ -41,6 +42,7 @@ public class IceBlockState : IState {
 		m_playerManager.m_powers.m_Block.m_block.Stop(true);
 		m_playerManager.m_powers.m_Block.m_block.Clear(true);
 		m_playerManager.ManageSound(m_playerManager.m_powers.m_Block.m_spellSound, false);
+		m_playerManager.StopDecreaseBlockTimer();
 	}
 
     void ManageTimer(){
