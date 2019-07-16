@@ -81,18 +81,17 @@ public class EnemyController : MonoBehaviour {
     float attackCooldown = 0f;
     bool canAttack = true;
     bool CheckAnimEnd = false;
-    float attackImpatience = 3f;
-    float currentImpatience;
+    /*float attackImpatience = 3f;
+    float currentImpatience;*/
     [Header("Stuned when attack")]
     public float timerBeforeGettingStunable;
     public float timeBeingStuned;
-    //float saveTimeBeforeGettingStunable;
-    //float saveTimerAttackedFreeze;
+    bool beingStunable = true;
     [Header("Impatience Sign")]
     public StartParticles ImpatienceSign;
     bool m_isImpatient;
     float agentSpeed;
-    [Header("Impatience Sprint")]
+    /*[Header("Impatience Sprint")]
     float currentTimeBeforeGettingImpatient;
     float currentTimeBeforeGettingImpatientWhenInAttackRange;
     public float speedSprint = 15f;
@@ -100,7 +99,7 @@ public class EnemyController : MonoBehaviour {
     bool beingAttacked;
     bool beingStunable = true;
     bool hasBeenAttacked;
-    bool isStun;
+    bool isStun;*/
 
     [Header("Detected FX")]
     public float m_timeToShowDetectedFx = 2;
@@ -184,7 +183,7 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    public float AttackImpatience
+    /*public float AttackImpatience
     {
         get
         {
@@ -195,7 +194,7 @@ public class EnemyController : MonoBehaviour {
         {
             attackImpatience = value;
         }
-    }
+    }*/
 
     public float AttackCooldown
     {
@@ -275,7 +274,7 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    public float SaveCurrentTimeBeforeGettingImpatient
+    /*public float SaveCurrentTimeBeforeGettingImpatient
     {
         get
         {
@@ -286,7 +285,7 @@ public class EnemyController : MonoBehaviour {
         {
             TimeBeforeGettingImpatient = value;
         }
-    }
+    }*/
 
     public float AgentSpeed
     {
@@ -352,6 +351,71 @@ public class EnemyController : MonoBehaviour {
             m_hasBeenOnAlert = value;
         }
     }
+
+    public PlayerManager PlayerManager
+    {
+        get
+        {
+            return m_playerManager;
+        }
+
+        set
+        {
+            m_playerManager = value;
+        }
+    }
+
+    public NavMeshAgent Agent
+    {
+        get
+        {
+            return agent;
+        }
+
+        set
+        {
+            agent = value;
+        }
+    }
+
+    /*public float CurrentTimeBeforeGettingImpatientWhenInAttackRange
+    {
+        get
+        {
+            return currentTimeBeforeGettingImpatientWhenInAttackRange;
+        }
+
+        set
+        {
+            currentTimeBeforeGettingImpatientWhenInAttackRange = value;
+        }
+    }*/
+
+    /*public float CurrentImpatience
+    {
+        get
+        {
+            return currentImpatience;
+        }
+
+        set
+        {
+            currentImpatience = value;
+        }
+    }*/
+
+    /*public float CurrentTimeBeforeGettingImpatient
+    {
+        get
+        {
+            return currentTimeBeforeGettingImpatient;
+        }
+
+        set
+        {
+            currentTimeBeforeGettingImpatient = value;
+        }
+    }*/
     #endregion
 
     public virtual void LogicWhenEnable()
@@ -388,18 +452,15 @@ public class EnemyController : MonoBehaviour {
         //Get Agent's LookRadius
         StartlookRadius = lookRadius;
 
-        currentImpatience = AttackImpatience;
-        currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
-        currentTimeBeforeGettingImpatientWhenInAttackRange = SaveCurrentTimeBeforeGettingImpatient;
+        //currentImpatience = AttackImpatience;
+        /*currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
+        currentTimeBeforeGettingImpatientWhenInAttackRange = SaveCurrentTimeBeforeGettingImpatient;*/
 
-        //saveTimeBeforeGettingStunable = timeBeingStuned;
-        //saveTimerAttackedFreeze = timerAttackedFreeze;
-        //Debug.Log(Rac.animationClips[0].length);
-        //enemyController = GetComponents<EnemyController>();
     }
     EnemyStats enemystats;
     ObjectPooler m_objectPooler;
-    
+
+
     public virtual void Start () {
 
         if (!m_isInstatiate)
@@ -437,7 +498,6 @@ public class EnemyController : MonoBehaviour {
         }
     }
     
-
     public bool PlayerInLookRange()
     {
         if ((GetTargetDistance(target) <= lookRadius))
@@ -490,85 +550,57 @@ public class EnemyController : MonoBehaviour {
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * smoothRot);
     }
 
-    public void DestroyGameObject(GameObject obj)
-    {
-        Destroy(obj);
-    }
-
-    public bool CanAttackWhenImpatience() {
-
-        currentImpatience -= Time.deltaTime;
-        if (currentImpatience <= 0)
-        {
-            // _signImpatience = Instantiate(ImpatienceSign, ImpatienceSignRoot);
-            // _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
-            ImpatienceSign.gameObject.SetActive(true);
-            ImpatienceSign.StartParticle();
-            //Debug.LogError("pause");
-            currentImpatience = AttackImpatience;
-            return true;
-        }
-        else if (!PlayerInAttackBox())
-        {
-            return false;
-        }
-        return false;
-    }
-
-
-
     public bool PlayerInAttackBox()
     {
         if (CheckCollision(GreenBoxScale, GreenBoxPosition) != null)
         {
             return true;
         }
+
         else
         {
             return false;
         }
     }
 
-    public virtual void Attack()
-    {
-        Anim.SetTrigger("Attack");
-    }
 
-    public bool IsChasing()
-    {
-        currentTimeBeforeGettingImpatient -= Time.deltaTime;
-        if(currentTimeBeforeGettingImpatient <= 0)
-        {
-            // _signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
-            ImpatienceSign.gameObject.SetActive(true);
-            ImpatienceSign.StartParticle();
-            currentTimeBeforeGettingImpatient = SaveCurrentTimeBeforeGettingImpatient;
-            return true;
-        }
+    #region Only Zglorg Methods
+    public virtual bool CanAttackWhenImpatience() {
+
         return false;
     }
-    public bool IsInAttackRangeForToLong()
+
+    public virtual void Attack()
     {
-        currentTimeBeforeGettingImpatientWhenInAttackRange -= Time.deltaTime;
-        if (currentTimeBeforeGettingImpatientWhenInAttackRange <= 0)
-        {
-            //_signImpatience = InstantiateObjects(ImpatienceSign, ImpatienceSignRoot.position, ImpatienceSignRoot.rotation, ImpatienceSignRoot);
-            currentTimeBeforeGettingImpatientWhenInAttackRange = SaveCurrentTimeBeforeGettingImpatient;
-            return true;
-        }
+
+    }
+
+    public virtual bool IsChasing()
+    {
+        return false;
+    }
+
+    public virtual bool IsInAttackRangeForToLong()
+    {
         return false;
     }
 
     public virtual void Sprint(float speed)
     {
-        speed = speed * ((100f - (m_playerManager.m_debuffs.m_IceSlow.m_iceSlow * enemystats.GivreMarkCount)) / 100f);
-        agent.speed = speed;
+
     }
 
     public virtual void Timed()
     {
         
     }
+
+    public virtual void IceSlow()
+    {
+       
+    }
+    #endregion
+
 
     #region StunMethods
 
@@ -583,9 +615,6 @@ public class EnemyController : MonoBehaviour {
         {
             OnChangeToStunState();
             StartCoroutine(CoolDownTimerBeforeGettingStunable());
-        }else
-        {
-            // Debug.Log("J'ai pas a être stun moi pd de merde ");
         }
     }
 
@@ -611,14 +640,9 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            //ChangeState(EnemyState.FrozenState);
             Anim.SetTrigger("Idle");
             FreezTime = m_playerManager.m_powers.m_iceNova.m_timeFreezed;
-            // if (FreezedObject == null)
-            // {
-                // FreezedObject = InstantiateObjects(m_fxs.m_freezed, transform.position, transform.rotation, transform);
-                m_fxs.m_freezed.SetActive(true);
-            // }
+            m_fxs.m_freezed.SetActive(true);
             IsRootByIceNova = true;
             BeFreezed(IsRootByIceNova);
         }
@@ -676,7 +700,6 @@ public class EnemyController : MonoBehaviour {
     }
     IEnumerator AnimTime()
     {
-        //CheckAnimEnd1 = false;
         yield return new WaitForSeconds(Rac.animationClips[0].length);
         CheckAnimEnd1 = true;
     }
@@ -691,9 +714,6 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void Die()
     {
-        // if(FreezedObject != null){
-        //     Destroy(FreezedObject);
-        // }
         m_fxs.m_freezed.SetActive(false);
         if (enemystats._hasBackPack)
         {
@@ -708,9 +728,6 @@ public class EnemyController : MonoBehaviour {
             m_objectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
         }
         StartCoroutine(OnWaitForAnimToEnd());
-        //Destroy(GetComponent<CapsuleCollider>());
-        // Destroy(gameObject, 3f);
-        // ObjectPooler.Instance.ReturnToPool("Zglorg", gameObject);
     }
 
     IEnumerator OnWaitForAnimToEnd()
@@ -750,7 +767,6 @@ public class EnemyController : MonoBehaviour {
             {
                 if(hitCollider[i] != Mycollider)
                 {
-                    // Debug.Log("Le collider " + i + " est : " + hitCollider[i].name + " et sont BeenYelled est à "+ hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled);
                     Enemy.Add(hitCollider[i]);
                     if (!hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled)
                     {
@@ -793,6 +809,10 @@ public class EnemyController : MonoBehaviour {
         return Instantiate(obj, pos, rot, parent);
     }
 
+    public void DestroyGameObject(GameObject obj)
+    {
+        Destroy(obj);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
