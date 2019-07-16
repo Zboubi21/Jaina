@@ -8,6 +8,7 @@ using TMPro;
 using EZCameraShake;
 using PlayerStateEnum;
 using PoolTypes;
+using DuloGames.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerManager : MonoBehaviour {
@@ -19,6 +20,10 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_playerCanDie = true;
 		public bool m_useSymetricalHudSpellAnim = true;
 		public PlayerState m_playerStartState;
+		// [Space]
+		// public Transform m_fromPos;
+		// public Transform m_toPos;
+		// public Transform m_newToPos;
 	}
 
 	public StateMachine m_sM = new StateMachine();
@@ -332,6 +337,33 @@ public class PlayerManager : MonoBehaviour {
 				public RectTransform m_rightLeftPosition;
 				public RectTransform m_rightRightPosition;
 			}
+
+			[Header("CastBar")]
+			public CastBar m_castBar = new CastBar();
+			[Serializable] public class CastBar {
+				public GameObject m_castBarCanvas;
+				public Image m_spellImg;
+				public TextMeshProUGUI m_spellName;
+				public TextMeshProUGUI m_stopChanelled;
+				public TextMeshProUGUI m_currentTimerTxt;
+				public TextMeshProUGUI m_totalTimerTxt;
+				public UIProgressBar m_progressBar;
+				[HideInInspector] public float m_currentSpellTimer = 0;
+				[HideInInspector] public float m_totalSpellTimer;
+
+				[Header("Spell")]
+				public Spell m_arcaneProjectiles;
+				public Spell m_chronoBlock;
+				[Serializable] public class Spell {
+					public Sprite m_sprite;
+					public String m_name;
+					public String m_inputToStopChanelled;
+					[HideInInspector] public bool m_startDecreaseTimer = false;
+					[HideInInspector] public bool m_decreaseTimerStarted = false;
+					[HideInInspector] public bool m_decreaseTimer = false;
+					[HideInInspector] public bool m_decreaseTimerEnded = false;
+				}
+			}
 		}
 	}
 
@@ -394,6 +426,7 @@ public class PlayerManager : MonoBehaviour {
 
 		[HideInInspector] public bool m_isInCinematicState = false;
 		[HideInInspector] public float m_timeToBeInCinematic = 0;
+
 	}
 
     #endregion Public [Serializable] Variables
@@ -405,6 +438,7 @@ public class PlayerManager : MonoBehaviour {
 	public LayerMask m_rotatePlayerLayer;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
+	NavMeshAgent m_agent;
 	bool m_canAutoAttack = true;
 	
 #region Input Buttons
@@ -429,7 +463,6 @@ public class PlayerManager : MonoBehaviour {
 #endregion UI Positions
 
 #region Encapsuled
-	NavMeshAgent m_agent;
 	Vector3 m_playerTargetPosition;
     public Vector3 PlayerTargetPosition
     {
@@ -480,6 +513,16 @@ public class PlayerManager : MonoBehaviour {
             m_objectPooler = value;
         }
     }
+
+	CameraManager m_cameraManager;
+	public CameraManager CameraManager {
+        get{
+            return m_cameraManager;
+        }
+        set{
+            m_cameraManager = value;
+        }
+    }
 #endregion Encapsuled
 
     void Awake(){
@@ -514,6 +557,7 @@ public class PlayerManager : MonoBehaviour {
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;
+		m_cameraManager = CameraManager.Instance;
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 	}
@@ -527,6 +571,7 @@ public class PlayerManager : MonoBehaviour {
 		UpdateInputButtons();
 		RaycastToMovePlayer();
 		DecreaseCooldown();
+		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
 	}
 
@@ -1253,6 +1298,87 @@ public class PlayerManager : MonoBehaviour {
 			textObject.fontSize = Mathf.Lerp(fromSize, toSize, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
 			yield return null;
 		}
+	}
+
+	public void DecreaseChanneledSpell(){
+		// Chrono block
+		if(m_powers.m_uI.m_castBar.m_chronoBlock.m_startDecreaseTimer){
+			if(m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimer){
+				if(!m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerStarted){
+					m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerStarted = true;
+					m_powers.m_uI.m_castBar.m_spellImg.sprite = m_powers.m_uI.m_castBar.m_chronoBlock.m_sprite;
+					m_powers.m_uI.m_castBar.m_spellName.text = m_powers.m_uI.m_castBar.m_chronoBlock.m_name;
+					m_powers.m_uI.m_castBar.m_stopChanelled.text = m_powers.m_uI.m_castBar.m_chronoBlock.m_inputToStopChanelled;
+					m_powers.m_uI.m_castBar.m_totalSpellTimer = m_powers.m_Block.m_timeToBeInIceBlock;
+					m_powers.m_uI.m_castBar.m_currentSpellTimer = m_powers.m_uI.m_castBar.m_totalSpellTimer;
+					m_powers.m_uI.m_castBar.m_currentTimerTxt.text = m_powers.m_uI.m_castBar.m_currentSpellTimer.ToString();
+					m_powers.m_uI.m_castBar.m_totalTimerTxt.text = m_powers.m_uI.m_castBar.m_totalSpellTimer.ToString();
+					m_powers.m_uI.m_castBar.m_castBarCanvas.SetActive(true);
+				}
+				if(m_powers.m_uI.m_castBar.m_currentSpellTimer >= 0){
+					m_powers.m_uI.m_castBar.m_currentSpellTimer -= Time.deltaTime;
+					m_powers.m_uI.m_castBar.m_currentTimerTxt.text = m_powers.m_uI.m_castBar.m_currentSpellTimer.ToString("F1");
+					float newValue = Mathf.InverseLerp(0, m_powers.m_uI.m_castBar.m_totalSpellTimer, m_powers.m_uI.m_castBar.m_currentSpellTimer);
+					m_powers.m_uI.m_castBar.m_progressBar.fillAmount = newValue;
+				}else{
+					StopDecreaseBlockTimer();
+				}
+			}else{
+				if(!m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerEnded){
+					m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerStarted = true;
+					m_powers.m_uI.m_castBar.m_castBarCanvas.SetActive(false);
+					m_powers.m_uI.m_castBar.m_chronoBlock.m_startDecreaseTimer = false;
+				}
+			}
+		}
+		// Arcane projectiles
+		if(m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_startDecreaseTimer){
+			if(m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimer){
+				if(!m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerStarted){
+					m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerStarted = true;
+					m_powers.m_uI.m_castBar.m_spellImg.sprite = m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_sprite;
+					m_powers.m_uI.m_castBar.m_spellName.text = m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_name;
+					m_powers.m_uI.m_castBar.m_stopChanelled.text = m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_inputToStopChanelled;
+					m_powers.m_uI.m_castBar.m_totalSpellTimer = m_powers.m_arcaneProjectiles.m_waitTimeToThrowFirstSpell + m_powers.m_arcaneProjectiles.m_waitTimeToThrowSecondSpell + m_powers.m_arcaneProjectiles.m_waitTimeToThrowThirdSpell + m_powers.m_arcaneProjectiles.m_waitTimeToExitState;
+					m_powers.m_uI.m_castBar.m_currentSpellTimer = m_powers.m_uI.m_castBar.m_totalSpellTimer;
+					m_powers.m_uI.m_castBar.m_currentTimerTxt.text = m_powers.m_uI.m_castBar.m_currentSpellTimer.ToString();
+					m_powers.m_uI.m_castBar.m_totalTimerTxt.text = m_powers.m_uI.m_castBar.m_totalSpellTimer.ToString();
+					m_powers.m_uI.m_castBar.m_castBarCanvas.SetActive(true);
+				}
+				if(m_powers.m_uI.m_castBar.m_currentSpellTimer > 0){
+					m_powers.m_uI.m_castBar.m_currentSpellTimer -= Time.deltaTime;
+					m_powers.m_uI.m_castBar.m_currentTimerTxt.text = m_powers.m_uI.m_castBar.m_currentSpellTimer.ToString("F1");
+					float newValue = Mathf.InverseLerp(0, m_powers.m_uI.m_castBar.m_totalSpellTimer, m_powers.m_uI.m_castBar.m_currentSpellTimer);
+					m_powers.m_uI.m_castBar.m_progressBar.fillAmount = newValue;
+				}else{
+					StopDecreaseArcaneProjectilesTimer();
+				}
+			}else{
+				if(!m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerEnded){
+					m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerStarted = true;
+					m_powers.m_uI.m_castBar.m_castBarCanvas.SetActive(false);
+					m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_startDecreaseTimer = false;
+				}
+			}
+		}
+	}
+	public void StartDecreaseBlockTimer(){
+		m_powers.m_uI.m_castBar.m_chronoBlock.m_startDecreaseTimer = true;
+		m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimer = true;
+		m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerStarted = false;
+		m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimerEnded = false;
+	}
+	public void StopDecreaseBlockTimer(){
+		m_powers.m_uI.m_castBar.m_chronoBlock.m_decreaseTimer = false;
+	}
+	public void StartDecreaseArcaneProjectilesTimer(){
+		m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_startDecreaseTimer = true;
+		m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimer = true;
+		m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerStarted = false;
+		m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimerEnded = false;
+	}
+	public void StopDecreaseArcaneProjectilesTimer(){
+		m_powers.m_uI.m_castBar.m_arcaneProjectiles.m_decreaseTimer = false;
 	}
 
 	public void DecreaseCooldown(){

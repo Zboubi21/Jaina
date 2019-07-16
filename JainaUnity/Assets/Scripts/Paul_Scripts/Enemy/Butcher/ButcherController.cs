@@ -8,7 +8,7 @@ public class ButcherController : EnemyController
     [Header("Warboar Impatience Variables")]
     public int numberOfJump;
     int nbrJump;
-    public float CoolDownGettingImpatient = 3f;
+    public float CoolDownGettingImpatient = 2f;
     [Space]
     public GameObject signImpatience;
     [Space]
@@ -18,6 +18,7 @@ public class ButcherController : EnemyController
     public float rangeMaxForJump;
     public Color maxRangeColor;
     float m_cdImpatient;
+    float m_tempsJumpAnim = 3f;
 
     #region Get Set
     public float CdImpatient
@@ -43,6 +44,19 @@ public class ButcherController : EnemyController
         set
         {
             nbrJump = value;
+        }
+    }
+
+    public float TempsJumpAnim
+    {
+        get
+        {
+            return m_tempsJumpAnim;
+        }
+
+        set
+        {
+            m_tempsJumpAnim = value;
         }
     }
     #endregion
@@ -83,6 +97,16 @@ public class ButcherController : EnemyController
         {
             return false;
         }
+    }
+
+    public override bool CheckIfAnimEnded()
+    {
+        m_tempsJumpAnim -= Time.deltaTime;
+        if (m_tempsJumpAnim <= 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public override bool CoolDownImpatience()

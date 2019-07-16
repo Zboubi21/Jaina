@@ -14,13 +14,19 @@ public class Butcher_ImpatienceState : ImpatienceState
         m_enemyController = enemyController;
     }
     GameObject sign;
+    Transform target;
+    ButcherController butcherController;
 
     public override void Enter()
     {
+        butcherController = m_enemyController.GetComponent<ButcherController>();
         StateAnimation(m_enemyController.Anim);
         Destination();
         FaceTarget();
-        sign = m_enemyController.InstantiateObjects(m_enemyController.GetComponent<ButcherController>().signImpatience, m_enemyController.Agent.destination, Quaternion.identity);
+        sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
+        target = sign.transform;
+        m_enemyController.Agent.speed += 10;
+        
     }
 
     public override void FixedUpdate()
@@ -35,7 +41,9 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void Exit()
     {
-        
+        DestroySign();
+        m_enemyController.Agent.speed -= 10;
+        butcherController.TempsJumpAnim = 3f;
     }
     #region Animation
 
@@ -83,7 +91,10 @@ public class Butcher_ImpatienceState : ImpatienceState
         {
             m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack
         }
-        //if(m_enemyController.Agent)
+        if(m_enemyController.GetTargetDistance(target) <= 2 && m_enemyController.CheckIfAnimEnded())
+        {
+            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState); //Chase
+        }
     }
 
     #endregion

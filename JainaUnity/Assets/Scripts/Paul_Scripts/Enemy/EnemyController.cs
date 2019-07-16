@@ -618,6 +618,11 @@ public class EnemyController : MonoBehaviour {
         return false;
     }
 
+    public virtual bool CheckIfAnimEnded()
+    {
+        return false;
+    }
+
     #endregion
 
 

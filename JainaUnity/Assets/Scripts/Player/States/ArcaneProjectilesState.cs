@@ -24,7 +24,8 @@ public class ArcaneProjectilesState : IState {
 		m_secondSpellIsThrow = false;
 		m_thirdSpellIsThrow = false;
 		m_playerManager.StopPlayerMovement();
-		// m_playerManager.ChangePower(false);			
+		// m_playerManager.ChangePower(false);	
+		m_playerManager.StartDecreaseArcaneProjectilesTimer();		
     }	
 
     public void Update(){
@@ -88,6 +89,7 @@ public class ArcaneProjectilesState : IState {
 		m_playerManager.m_canThrowSpell = true;
 		// m_playerManager.ChangePower(false);			
 		m_playerManager.JainaAnimator.SetBool("ArcaneProjectiles", false);
+		m_playerManager.StopDecreaseArcaneProjectilesTimer();
     }
 	
 }
