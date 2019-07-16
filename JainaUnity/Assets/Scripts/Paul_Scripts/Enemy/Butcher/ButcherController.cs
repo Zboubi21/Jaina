@@ -10,6 +10,8 @@ public class ButcherController : EnemyController
     int nbrJump;
     public float CoolDownGettingImpatient = 3f;
     [Space]
+    public GameObject signImpatience;
+    [Space]
     public float rangeMinForJump;
     public Color minRangeColor;
     [Space]

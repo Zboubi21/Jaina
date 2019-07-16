@@ -13,10 +13,14 @@ public class Butcher_ImpatienceState : ImpatienceState
     {
         m_enemyController = enemyController;
     }
+    GameObject sign;
 
     public override void Enter()
     {
-        
+        StateAnimation(m_enemyController.Anim);
+        Destination();
+        FaceTarget();
+        sign = m_enemyController.InstantiateObjects(m_enemyController.GetComponent<ButcherController>().signImpatience, m_enemyController.Agent.destination, Quaternion.identity);
     }
 
     public override void FixedUpdate()
@@ -26,7 +30,7 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void Update()
     {
-       
+        GetOutOfState();
     }
 
     public override void Exit()
@@ -37,7 +41,7 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void StateAnimation(Animator anim)
     {
-        base.StateAnimation(anim);
+        anim.SetTrigger("Impatience");
     }
 
     #endregion
@@ -65,6 +69,7 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void DestroySign()
     {
+        m_enemyController.DestroyGameObject(sign);
 
     }
 
@@ -78,6 +83,7 @@ public class Butcher_ImpatienceState : ImpatienceState
         {
             m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack
         }
+        //if(m_enemyController.Agent)
     }
 
     #endregion

@@ -296,7 +296,18 @@ public class EnemyStats : CharacterStats {
         base.OnEnable();
         if(m_backPack != null)
         {
-        m_backPack.SetActive(_hasBackPack);
+            m_backPack.SetActive(_hasBackPack);
+            MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
+            for (int i = 0; i < go.Length; i++)
+            {
+                if (go[i] != m_backPack.GetComponent<MeshRenderer>())
+                {
+                    if (!go[i].gameObject.activeSelf)
+                    {
+                        go[i].gameObject.SetActive(true);
+                    }
+                }
+            }
         }
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
         m_canvas.SetActive(false);
@@ -309,7 +320,18 @@ public class EnemyStats : CharacterStats {
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
         if(m_backPack != null)
         {
-        m_backPack.SetActive(_hasBackPack);
+            m_backPack.SetActive(_hasBackPack);
+            MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
+            for (int i = 0; i < go.Length; i++)
+            {
+                if (go[i] != m_backPack.GetComponent<MeshRenderer>())
+                {
+                    if (!go[i].gameObject.activeSelf)
+                    {
+                        go[i].gameObject.SetActive(true);
+                    }
+                }
+            }
         }
         for (int i = 0, l = lifeBar.Length; i < l; ++i)
         {
