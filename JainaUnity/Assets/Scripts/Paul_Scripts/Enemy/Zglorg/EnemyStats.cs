@@ -599,14 +599,8 @@ public class EnemyStats : CharacterStats {
             MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
             if (m_timerGivre <= 0)
             {
-                if (enemyController.IsImpatient)
-                {
-                    agent.speed = enemyController.speedSprint;
-                }
-                else
-                {
-                    agent.speed = saveSpeed;
-                }
+                
+                enemyController.IceSlow();
                 Destroy(MarqueDeGivre);
                 iceHasBeenInstanciated = false;
                 m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);

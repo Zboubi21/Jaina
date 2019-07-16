@@ -8,9 +8,11 @@ public class ImpatienceState : IState
 
     // CONSTRUCTOR
     EnemyController m_enemyController;
+    ZglorgController m_zglorgController;
     public ImpatienceState(EnemyController enemyController)
     {
         m_enemyController = enemyController;
+        m_zglorgController = enemyController.GetComponent<ZglorgController>();
     }
 
 
@@ -18,7 +20,7 @@ public class ImpatienceState : IState
     public void Enter()
     {
         StateAnimation(m_enemyController.Anim);
-        ImpatienceEffect(m_enemyController.speedSprint);
+        ImpatienceEffect(m_zglorgController.speedSprint);
         m_enemyController.IsImpatient = true;
     }
 

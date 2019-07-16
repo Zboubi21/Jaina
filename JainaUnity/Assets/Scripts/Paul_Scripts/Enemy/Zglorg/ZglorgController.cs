@@ -6,6 +6,26 @@ using EnemyStateEnum;
 
 public class ZglorgController : EnemyController {
 
+
+    [Header("Nil'Gharian Impatience Variables")]
+    public float speedSprint = 15f;
+    public float TimeBeforeGettingImpatient = 3f;
+    float currentTimeBeforeGettingImpatient;
+    float currentTimeBeforeGettingImpatientWhenInAttackRange;
+    float attackImpatience = 3f;
+    float currentImpatience;
+    /*bool beingAttacked;
+    bool hasBeenAttacked;
+    bool isStun;*/
+
+    public override void LogicAtStart()
+    {
+        base.LogicAtStart();
+        currentTimeBeforeGettingImpatient = TimeBeforeGettingImpatient;
+        currentTimeBeforeGettingImpatientWhenInAttackRange = TimeBeforeGettingImpatient;
+        currentImpatience = attackImpatience;
+    }
+
     private void Awake()
     {
         m_sM.AddStates(new List<IState> {
@@ -30,6 +50,67 @@ public class ZglorgController : EnemyController {
         if(CheckCollision(RedBoxScale,RedBoxPosition) != null)
         {
             TargetStats1.TakeDamage(MyStas.damage.GetValue());
+        }
+    }
+
+    public override void Sprint(float speed)
+    {
+        speed = speed * ((100f - (PlayerManager.m_debuffs.m_IceSlow.m_iceSlow * MyStas.GivreMarkCount)) / 100f);
+        Agent.speed = speed;
+    }
+    public override bool IsChasing()
+    {
+        currentTimeBeforeGettingImpatient -= Time.deltaTime;
+        if (currentTimeBeforeGettingImpatient <= 0)
+        {
+            ImpatienceSign.gameObject.SetActive(true);
+            ImpatienceSign.StartParticle();
+            currentTimeBeforeGettingImpatient = TimeBeforeGettingImpatient;
+            return true;
+        }
+        return false;
+    }
+    public override bool IsInAttackRangeForToLong()
+    {
+        currentTimeBeforeGettingImpatientWhenInAttackRange -= Time.deltaTime;
+        if (currentTimeBeforeGettingImpatientWhenInAttackRange <= 0)
+        {
+            currentTimeBeforeGettingImpatientWhenInAttackRange = TimeBeforeGettingImpatient;
+            return true;
+        }
+        return false;
+    }
+    public override bool CanAttackWhenImpatience()
+    {
+        currentImpatience -= Time.deltaTime;
+        if (currentImpatience <= 0)
+        {
+            ImpatienceSign.gameObject.SetActive(true);
+            ImpatienceSign.StartParticle();
+            currentImpatience = attackImpatience;
+            return true;
+        }
+        else if (!PlayerInAttackBox())
+        {
+            return false;
+        }
+        return false;
+    }
+
+    public override void Attack()
+    {
+        Anim.SetTrigger("Attack");
+    }
+
+    public override void IceSlow()
+    {
+        if (IsImpatient)
+        {
+            Agent.speed = speedSprint;
+        }
+        else
+        {
+            Agent.speed = AgentSpeed;
         }
     }
 
