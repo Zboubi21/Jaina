@@ -48,7 +48,7 @@ public class BlinkState : IState {
         Debug.DrawRay(origin, destination, Color.black, 5);
         Vector3 newDestination = hit.point;
         destination = new Vector3(newDestination.x, destination.y, newDestination.z);
-        Debug.Log("I hit:" + hit.collider.gameObject.name);
+        // Debug.Log("I hit:" + hit.collider.gameObject.name);
       }
 
       // m_playerManager.m_playerDebug.m_newToPos.position = destination; //
