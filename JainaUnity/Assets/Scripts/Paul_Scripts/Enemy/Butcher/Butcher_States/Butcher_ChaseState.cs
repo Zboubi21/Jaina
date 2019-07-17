@@ -68,7 +68,6 @@ public class Butcher_ChaseState : ChaseState
             if (m_enemyController.CoolDownImpatience())
             {
                 m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ImpatienceState); //Impatience
-                m_enemyController.NbrJump++;
             }
         }
         else

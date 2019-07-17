@@ -26,7 +26,9 @@ public class Butcher_ImpatienceState : ImpatienceState
         sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
         target = sign.transform;
         m_enemyController.Agent.speed += 10;
-        
+
+        butcherController.NbrJump++;
+
     }
 
     public override void FixedUpdate()
