@@ -8,7 +8,6 @@ using EnemyStateEnum;
 public class EnemyStats : CharacterStats {
 
     Image[] lifeBar;
-    Image slider;
     [Header("Enemy Info")]
     [TextArea(1, 20)]
     public string _name;
@@ -39,6 +38,7 @@ public class EnemyStats : CharacterStats {
     [Space]
     [Header("Canvas")]
     public GameObject m_canvas;
+    public Image slider;
     public float timeBeforeLifeBarOff = 5f;
     float saveTimeBeforeLifeBarOff;
     [Space]
@@ -312,6 +312,7 @@ public class EnemyStats : CharacterStats {
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
         m_canvas.SetActive(false);
         m_cirlceCanvas.SetActive(false);
+        slider.fillAmount = 1;
     }
 
     public override void Start()
@@ -333,14 +334,15 @@ public class EnemyStats : CharacterStats {
                 }
             }
         }
-        for (int i = 0, l = lifeBar.Length; i < l; ++i)
+        slider.fillAmount = 1;
+        /*for (int i = 0, l = lifeBar.Length; i < l; ++i)
         {
             if (lifeBar[i].fillOrigin == 1)                     //Il faut bien que le "fill origin" du slider soit le SEUL a 1
             {
                 slider = lifeBar[i];
                 break;
             }
-        }
+        }*/
         enemyController = GetComponent<EnemyController>();
         #region Canvas Var
 
@@ -657,6 +659,7 @@ public class EnemyStats : CharacterStats {
         {
             m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
             m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            m_timerArcane = 0;
             Destroy(MarqueDeArcane);
             arcaneHasBeenInstanciated = false;
             ArcanMarkCount = 0;
@@ -666,6 +669,7 @@ public class EnemyStats : CharacterStats {
         {
             m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
             m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            m_timerFire = 0;
             Destroy(MarqueDeFeu);
             fireHasBeenInstanciated = false;
             FireMarkCount = 0;
@@ -676,6 +680,7 @@ public class EnemyStats : CharacterStats {
         {
             m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
             m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            m_timerGivre = 0;
             Destroy(MarqueDeGivre);
             iceHasBeenInstanciated = false;
             GivreMarkCount = 0;

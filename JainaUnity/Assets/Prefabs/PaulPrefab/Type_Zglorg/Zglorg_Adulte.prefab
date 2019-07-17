@@ -14251,8 +14251,6 @@ MonoBehaviour:
   timerBeforeGettingStunable: 3
   timeBeingStuned: 0.5
   ImpatienceSign: {fileID: 805164607601982161}
-  speedSprint: 15
-  TimeBeforeGettingImpatient: 3
   m_timeToShowDetectedFx: 2
   m_detectedFx: {fileID: 483922110770533165}
   TestIAcomportement: 0
@@ -14261,6 +14259,8 @@ MonoBehaviour:
     m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
       type: 3}
     m_markExplosionRoot: {fileID: 5786134697076942034}
+  speedSprint: 15
+  TimeBeforeGettingImpatient: 3
 --- !u!114 &5896518889142919528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14290,6 +14290,7 @@ MonoBehaviour:
   MarqueGivre: {fileID: 1193358281785756, guid: f15c3dd996f4fe146a916b57630410d0,
     type: 3}
   m_canvas: {fileID: 5784556066602307728}
+  slider: {fileID: 5896849424926446444}
   timeBeforeLifeBarOff: 5
   m_cirlceCanvas: {fileID: 5783467601988425082}
   m_auraSign: {fileID: 4206261547528648794}
@@ -14318,8 +14319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a059e621262339248b746bc33404e4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GreenboxPosition: {x: 0, y: 0.5, z: 1}
-  GreenboxScale: {x: 0.01, y: 1, z: 1}
   drawGreenGizmos: 1
 --- !u!1 &5782807705697775058
 GameObject:
