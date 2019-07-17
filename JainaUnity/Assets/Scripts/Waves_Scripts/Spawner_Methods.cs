@@ -38,6 +38,10 @@ public class Spawner_Methods : MonoBehaviour
             {
                 go.GetComponent<EnemyStats>()._hasBackPack = true;
             }
+            else if (!_nbrOfWaves[wave].m_enemyToSummon[a]._hasBackpack)
+            {
+                go.GetComponent<EnemyStats>()._hasBackPack = false;
+            }
             methods.NbrOfEnemy++;
         }
         StopCoroutine(WaveSpawner(i, wave, methods));

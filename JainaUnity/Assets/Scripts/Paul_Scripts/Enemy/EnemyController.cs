@@ -772,6 +772,19 @@ public class EnemyController : MonoBehaviour {
             Destroy(poolTracker);
         }
         if(m_isInstatiate){
+            if (enemystats._hasBackPack)
+            {
+                MeshRenderer[] go = enemystats.m_backPack.GetComponentsInChildren<MeshRenderer>();
+                for (int i = 0; i < go.Length; i++)
+                {
+                    if (go[i] != enemystats.m_backPack.GetComponent<MeshRenderer>())
+                    {
+                        go[i].gameObject.SetActive(true);
+                    }
+                }
+                enemystats._hasBackPack = false;
+            }
+
             ObjectPooler.Instance.ReturnEnemyToPool(m_enemyType, gameObject);
         }
         else
