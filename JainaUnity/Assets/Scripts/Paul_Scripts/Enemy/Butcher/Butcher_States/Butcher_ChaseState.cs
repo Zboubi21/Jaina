@@ -14,6 +14,13 @@ public class Butcher_ChaseState : ChaseState
         m_enemyController = enemyController;
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        m_enemyController.IsImpatience = false;
+        m_enemyController.CdImpatient = m_enemyController.CoolDownGettingImpatient;
+    }
+
     #region Animation
 
     public override void StateAnimation(Animator anim)
@@ -63,7 +70,7 @@ public class Butcher_ChaseState : ChaseState
         {
             m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack
         }
-        else if (m_enemyController.TargetInImpatienceDonuts())
+        else if (m_enemyController.TargetInImpatienceDonuts() && !m_enemyController.IsRootByIceNova)
         {
             if (m_enemyController.CoolDownImpatience())
             {
@@ -74,6 +81,7 @@ public class Butcher_ChaseState : ChaseState
         {
             m_enemyController.CdImpatient = m_enemyController.CoolDownGettingImpatient;
         }
+
     }
     #endregion
 

@@ -77,6 +77,19 @@ public class CharacterStats : MonoBehaviour {
             isDead = value;
         }
     }
+
+    public int MaxArcanMarkCount
+    {
+        get
+        {
+            return maxArcanMarkCount;
+        }
+
+        set
+        {
+            maxArcanMarkCount = value;
+        }
+    }
     #endregion
     private int currentHealth;// { get; private set; }
     int arcanMarkCount;
@@ -86,7 +99,7 @@ public class CharacterStats : MonoBehaviour {
     float bonusDamage = 1f;
 
     float multiplicateur;
-    int MaxArcanMarkCount;
+    int maxArcanMarkCount;
 
     bool isDead = false;
 
@@ -103,7 +116,7 @@ public class CharacterStats : MonoBehaviour {
         // mainCamera = Camera.main;//.GetComponent<Camera>();
         CurrentHealth = maxHealth;
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
-        MaxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
+        maxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
         //Debug.Log(multiplicateur);
     }
 
@@ -116,13 +129,13 @@ public class CharacterStats : MonoBehaviour {
 
     public virtual void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
-        if (ArcanMarkCount + nbrMarks >= MaxArcanMarkCount)
-        {
-            ArcanMarkCount = MaxArcanMarkCount;
-        }
-        else if(ArcanMarkCount < MaxArcanMarkCount)
+        if(ArcanMarkCount + nbrMarks < maxArcanMarkCount)
         {
             ArcanMarkCount += nbrMarks;
+        }
+        else if (ArcanMarkCount + nbrMarks >= maxArcanMarkCount)
+        {
+            ArcanMarkCount = maxArcanMarkCount;
         }
 
         TakeDamage((int)(damage*(1 + multiplicateur * ArcanMarkCount))) /*(damage + (damage * ((ArcanMarkCount) * multiplicateur))))*/;

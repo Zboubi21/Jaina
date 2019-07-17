@@ -313,6 +313,8 @@ public class EnemyStats : CharacterStats {
         m_canvas.SetActive(false);
         m_cirlceCanvas.SetActive(false);
         slider.fillAmount = 1;
+        DestroyAllMarks();
+
     }
 
     public override void Start()
@@ -387,7 +389,7 @@ public class EnemyStats : CharacterStats {
     public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
         base.ArcanMark(damage, timerDebuf, nbrMarks);
-        if (!arcaneHasBeenInstanciated)
+        if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount && CurrentHealth - damage > 0)
         {
             MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
             m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
@@ -582,7 +584,7 @@ public class EnemyStats : CharacterStats {
 
     void MarksCoolDownMethods()
     {
-        if (StartArcaneCooldown)
+        if (StartArcaneCooldown && MarqueDeArcane != null)
         {
             m_timerArcane -= Time.deltaTime;
             MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
@@ -596,7 +598,7 @@ public class EnemyStats : CharacterStats {
                 StartArcaneCooldown = false;
             }
         }
-        if (StartFireCooldown)
+        if (StartFireCooldown && MarqueDeFeu != null)
         {
             m_timerFire -= Time.deltaTime;
             MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
@@ -617,7 +619,7 @@ public class EnemyStats : CharacterStats {
                 TakeDamage(FireTickDamage);
             }
         }
-        if (StartGivreCooldown)
+        if (StartGivreCooldown && MarqueDeGivre !=null)
         {
             m_timerGivre -= Time.deltaTime;
             MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
@@ -657,8 +659,8 @@ public class EnemyStats : CharacterStats {
     public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
-            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            m_iceMarkPos = CheckPosition(fireHasBeenInstanciated, arcaneHasBeenInstanciated);
+            m_fireMarkPos = CheckPosition(iceHasBeenInstanciated, arcaneHasBeenInstanciated);
             m_timerArcane = 0;
             Destroy(MarqueDeArcane);
             arcaneHasBeenInstanciated = false;

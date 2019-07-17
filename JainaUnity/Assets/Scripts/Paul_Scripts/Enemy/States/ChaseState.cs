@@ -14,7 +14,7 @@ public class ChaseState : IState
         m_enemyController = enemyController;
     }
 
-    public void Enter()
+    public virtual void Enter()
     {
         MakeThenBeingYelledable(hasCalledFunction);
         StateAnimation(m_enemyController.Anim);

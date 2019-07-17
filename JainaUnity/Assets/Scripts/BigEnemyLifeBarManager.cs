@@ -298,6 +298,11 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             }
             MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[2].fillAmount = Mathf.InverseLerp(0, m_enemyStats.SaveTimerArcane, m_enemyStats.TimerArcane);
             MarqueDeArcane.GetComponent<ReferenceScript>().count.text = string.Format("{0}", m_enemyStats.ArcanMarkCount);
+            if(m_enemyStats.ArcanMarkCount == 0 && MarqueDeArcane != null)
+            {
+                Destroy(MarqueDeArcane);
+                arcaneOn = false;
+            }
         }
         else if (MarqueDeArcane != null)
         {

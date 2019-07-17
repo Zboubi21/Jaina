@@ -102,6 +102,10 @@ public class Waves_Methods : MonoBehaviour
                         NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
                     }
                 }
+                else
+                {
+                    NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
+                }
             }
         }
     }
