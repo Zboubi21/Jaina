@@ -28,6 +28,14 @@ public class SaveManager : MonoBehaviour {
     [SerializeField] float m_timeToRespawn = 2.25f;
     [SerializeField] float m_timeToStartFadeOut = 0.1f;
 
+    [Header("FX")]
+    [SerializeField] CheckPointFx[] m_checkPointFxs;
+
+    [System.Serializable] public class CheckPointFx {
+		public GameObject m_fx;
+        public float m_timeToAddFx = 0;
+	}
+
     Vector3 m_savePosition;
     int m_actualCheckpointNumber = 0;
     public int ActualCheckpointNumber{
@@ -54,6 +62,15 @@ public class SaveManager : MonoBehaviour {
         m_objectPooler.On_ReturnLifePotionInPool();
 
         m_actualCheckpointNumber = newCheckpointNumber;
+
+        for (int i = 0, l = m_checkPointFxs.Length; i < l; ++i) {
+            StartCoroutine(FxCoroutines(m_checkPointFxs[i].m_fx, m_checkPointFxs[i].m_timeToAddFx));
+        }
+    }
+
+    IEnumerator FxCoroutines(GameObject fx, float timeToWait){
+        yield return new WaitForSeconds(timeToWait);
+        Level.AddFX(fx, Vector3.zero, Quaternion.identity);
     }
 
     IEnumerator SeeCheckpointCanvas(){
