@@ -101,18 +101,21 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void GetOutOfState()
     {
-        if(m_enemyController.GetTargetDistance(target) <= 2 && m_enemyController.CheckIfAnimEnded())
+        if(m_enemyController.GetTargetDistance(target) <= 2)
         {
-            if(butcherController.NbrJump == butcherController.numberOfJump)
+            if (m_enemyController.CheckIfAnimEnded())
             {
-                m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);       //Chase
-                butcherController.NbrJump = 0;
+                if(butcherController.NbrJump == butcherController.numberOfJump)
+                {
+                    m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);       //Chase
+                    butcherController.NbrJump = 0;
+                }
+                else
+                {
+                    m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ImpatienceState);  //Impatience
+                }
+                //m_enemyController.OnImpactDamage();
             }
-            else
-            {
-                m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ImpatienceState);  //Impatience
-            }
-            m_enemyController.OnImpactDamage();
         }
     }
 

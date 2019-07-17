@@ -145,6 +145,8 @@ public class ButcherController : EnemyController
         return false;
     }
 
+    
+
     public override bool CoolDownImpatience()
     {
         m_cdImpatient -= Time.deltaTime;

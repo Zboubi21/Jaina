@@ -15,4 +15,9 @@ public class RetrunAnimTime : MonoBehaviour {
     {
         controller.GetComponent<EnemyController>().Timed();
     }
+
+    public void Call_Butcher_Impact()
+    {
+        controller.GetComponent<EnemyController>().OnImpactDamage();
+    }
 }
