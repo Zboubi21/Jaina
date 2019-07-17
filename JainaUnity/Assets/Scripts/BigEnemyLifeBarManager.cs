@@ -174,6 +174,33 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 }
             }
         }
+        else
+        {
+            ActivateUnitFrame(bossStats);
+            ActivateLifeBar(bossStats.m_enemyPowerLevel, true, bossStats);
+            bossStats.m_cirlceCanvas.SetActive(true);
+        }
+    }
+
+
+    EnemyStats bossStats;
+    public void OnLoadBossGameObject(EnemyStats stats)
+    {
+        bossStats = stats;
+    }
+
+    public void OnFightBoss(bool b)
+    {
+        isFightingABoss = b;
+        if(!b)
+        {
+            ActivateLifeBar(bossStats.m_enemyPowerLevel, false, bossStats);
+            DestroyMarques();
+            DeactivateBool(false);
+            enemyStatsSave = null;
+            timeToHideLifeBar = m_hidLifeBar;
+            timeToShowLifeBar = m_showLifeBar;
+        }
     }
 
 

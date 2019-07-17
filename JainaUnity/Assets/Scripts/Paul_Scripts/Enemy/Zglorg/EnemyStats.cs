@@ -74,6 +74,7 @@ public class EnemyStats : CharacterStats {
 
     NavMeshAgent agent;
     EnemyController enemyController;
+    WarLord_MiseEnScene miseEnScene;
     int iceSlow;
     int SpeedPercent;
     float saveSpeed;
@@ -316,7 +317,10 @@ public class EnemyStats : CharacterStats {
         DestroyAllMarks();
 
     }
-
+    private void OnDisable()
+    {
+        m_canvas.SetActive(false);
+    }
     public override void Start()
     {
         base.Start();
@@ -337,18 +341,11 @@ public class EnemyStats : CharacterStats {
             }
         }
         slider.fillAmount = 1;
-        /*for (int i = 0, l = lifeBar.Length; i < l; ++i)
-        {
-            if (lifeBar[i].fillOrigin == 1)                     //Il faut bien que le "fill origin" du slider soit le SEUL a 1
-            {
-                slider = lifeBar[i];
-                break;
-            }
-        }*/
         enemyController = GetComponent<EnemyController>();
+        miseEnScene = GetComponent<WarLord_MiseEnScene>();
+
         #region Canvas Var
 
-        // m_canvas.SetActive(false);
         saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
 
         #endregion
@@ -545,6 +542,7 @@ public class EnemyStats : CharacterStats {
         MarksCoolDownMethods();
         if (!IsDead)
         {
+            
             CanvasSetActiveMethod();
         }
         else
