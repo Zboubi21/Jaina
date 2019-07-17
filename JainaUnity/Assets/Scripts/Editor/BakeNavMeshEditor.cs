@@ -19,6 +19,7 @@ public class BakeNavMeshEditor : Editor {
                 return;
             }
             NavMeshAssetManager.instance.StartBakingSurfaces(navMeshes);
+            Debug.Log("Path bake successfuly");
         }
 
         if(GUILayout.Button("Clear all NavMeshSurface path")){

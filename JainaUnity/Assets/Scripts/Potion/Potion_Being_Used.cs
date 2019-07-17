@@ -5,8 +5,12 @@ using UnityEngine;
 public class Potion_Being_Used : MonoBehaviour
 {
     public int heal_Amount;
+
+    [SerializeField] GameObject m_takingPotionFx;
+
     ParticleSystem[] particle;
     Animator anim;
+
     void Start()
     {
         particle = GetComponentsInChildren<ParticleSystem>();
@@ -29,6 +33,7 @@ public class Potion_Being_Used : MonoBehaviour
                 particle[1].Play();
                 stats.HealDamage(heal_Amount);
                 StartCoroutine(waitendofanim());
+                Level.AddFX(m_takingPotionFx, Vector3.zero, Quaternion.identity);
             }
         }
     }
