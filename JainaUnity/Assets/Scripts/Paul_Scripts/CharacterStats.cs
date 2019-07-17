@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class CharacterStats : MonoBehaviour {
 
     public int maxHealth = 100;
+    [Range(0,100)]
+    public int m_currentHealth = 100;
 
     public Stats damage;
     public Stats armor;
@@ -114,7 +116,8 @@ public class CharacterStats : MonoBehaviour {
     {
 
         // mainCamera = Camera.main;//.GetComponent<Camera>();
-        CurrentHealth = maxHealth;
+        CurrentHealth = maxHealth * (m_currentHealth/100);
+
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
         maxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
         //Debug.Log(multiplicateur);
