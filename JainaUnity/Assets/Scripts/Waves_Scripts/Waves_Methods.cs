@@ -102,12 +102,18 @@ public class Waves_Methods : MonoBehaviour
                         NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
                     }
                 }
+                else
+                {
+                    NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
+                }
             }
         }
     }
 
     private void Update()
     {
+        Debug.Log("NBR : "+NombreDeVague);
+        Debug.Log("nbr : "+ nbrOfWave);
         if (_playerOnTrigger && nbrOfWave != NombreDeVague)
         {
             timeNextWave -= Time.deltaTime;

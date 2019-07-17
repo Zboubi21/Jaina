@@ -313,6 +313,8 @@ public class EnemyStats : CharacterStats {
         m_canvas.SetActive(false);
         m_cirlceCanvas.SetActive(false);
         slider.fillAmount = 1;
+        DestroyAllMarks();
+
     }
 
     public override void Start()
@@ -387,7 +389,7 @@ public class EnemyStats : CharacterStats {
     public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
         base.ArcanMark(damage, timerDebuf, nbrMarks);
-        if (!arcaneHasBeenInstanciated)
+        if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount)
         {
             MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
             m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
@@ -484,6 +486,7 @@ public class EnemyStats : CharacterStats {
 
     GameObject InstantiateMarks(GameObject mark, GameObject root)
     {
+        Debug.Log(gameObject + " hop");
         GameObject marksave = Instantiate(mark, root.transform);
 
         return marksave;
@@ -657,8 +660,8 @@ public class EnemyStats : CharacterStats {
     public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
-            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            m_iceMarkPos = CheckPosition(fireHasBeenInstanciated, arcaneHasBeenInstanciated);
+            m_fireMarkPos = CheckPosition(iceHasBeenInstanciated, arcaneHasBeenInstanciated);
             m_timerArcane = 0;
             Destroy(MarqueDeArcane);
             arcaneHasBeenInstanciated = false;
