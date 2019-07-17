@@ -46,7 +46,7 @@ public class CameraManager : MonoBehaviour {
 		if(m_canMoveCamera){
 			Ray();
 		}else{
-			mousePoint = m_offset;
+			mousePoint = m_target.position + m_offset;
 		}
 	}
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerStateEnum;
 
 public class PlayerCinematicState : IState {
 
@@ -18,7 +19,7 @@ public class PlayerCinematicState : IState {
         m_stateTimer = 0;
         m_timeToBeInCinematic = m_playerManager.m_cinematic.m_timeToBeInCinematic;
         m_timerIsReached = false;
-        // m_playerManager.JainaAnimator.SetBool("isMoving", false);
+        m_playerManager.JainaAnimator.SetBool("isMoving", false);
         m_playerManager.m_cinematic.m_isInCinematicState = true;
         m_playerManager.StartCinematicStringCorout(true);
 		m_playerManager.StopPlayerMovement();
@@ -28,6 +29,7 @@ public class PlayerCinematicState : IState {
     public void Update(){
 		if(m_stateTimer >= m_timeToBeInCinematic && !m_timerIsReached){
 			m_timerIsReached = true;
+            m_playerManager.ChangeState(PlayerState.NoThrowSpellState);
 		}
 		m_stateTimer += Time.deltaTime;
     }

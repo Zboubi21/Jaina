@@ -23,6 +23,7 @@ AudioMixerController:
     - b1517087862018b489a6a792128a499d
     - 6e6725a0a4e63ac4696805cc290894b8
     - fe72bcbd3f7729845a98d36e17703a12
+    - be8a49a3e8341f947b4e0a4cc8ffb095
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -39,6 +40,7 @@ AudioMixerGroupController:
   - {fileID: 243889454333144028}
   - {fileID: 243396849988591894}
   - {fileID: 243809583052453190}
+  - {fileID: 243018013287274840}
   m_Volume: 01878171d0dc24648aba9c7c7d72a2c4
   m_Pitch: 00addb64aab29b34baca90f37c5fe334
   m_Effects:
@@ -73,6 +75,24 @@ AudioMixerSnapshotController:
   m_FloatValues:
     e3c2eaa1a59abec4f8c9063705620725: -10
   m_TransitionOverrides: {}
+--- !u!243 &243018013287274840
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JainVoiceLine
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: be8a49a3e8341f947b4e0a4cc8ffb095
+  m_Children: []
+  m_Volume: 7d87b1dd7c6c3e0479615b1be1b26471
+  m_Pitch: 30af4d4c3bf7f3a4bb65af69fb7ca82a
+  m_Effects:
+  - {fileID: 244618290605393218}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &243396849988591894
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -165,6 +185,20 @@ AudioMixerEffectController:
   m_EffectID: 4b6e19df0d052364ba955bc7b2c68937
   m_EffectName: Attenuation
   m_MixLevel: ff0784507bc31794e94c2967c7085bbe
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244618290605393218
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 6708a192d6dae854d857cf89e1ba59fa
+  m_EffectName: Attenuation
+  m_MixLevel: 6604ae122b641a245b2eec26d2b8f68c
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
