@@ -51,6 +51,8 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
     float time;
 
+    bool isFightingABoss;
+
     #region Get Set
     public float TimeForWhiteLifeBar
     {
@@ -62,6 +64,19 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         set
         {
             timeForWhiteLifeBar = value;
+        }
+    }
+
+    public bool IsFightingABoss
+    {
+        get
+        {
+            return isFightingABoss;
+        }
+
+        set
+        {
+            isFightingABoss = value;
         }
     }
     #endregion
@@ -95,64 +110,66 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         enemyStats = GetByRay<EnemyStats>(ray);
-
-        if ((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn)
+        if (!isFightingABoss)
         {
-            if (!unitFrameOn)
+            if ((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn)
             {
-                enemyStatsLocked = enemyStats;
-                timeToShowLifeBar = m_showLifeBar;
-                unitFrameOn = true;
-            }
-            ActivateUnitFrame(enemyStatsLocked);
-            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true, enemyStatsLocked);
-            enemyStatsLocked.m_cirlceCanvas.SetActive(true);
-            timeToShowLifeBar = m_showLifeBar;
-
-        }
-
-        if (/*enemyStats == null && */unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
-        {
-            HideBigLifeBar();
-        }
-        else if(enemyStats == null && !unitFrameOn && enemyStatsSave != enemyStats)
-        {
-            if (DescreaseTimeToHideLifeBar())
-            {
-                ActivateLifeBar(enemyStatsSave.m_enemyPowerLevel, false, enemyStatsSave);
-                DestroyMarques();
-                DeactivateBool(false);
-                enemyStatsSave = null;
-                timeToHideLifeBar = m_hidLifeBar;
-                timeToShowLifeBar = m_showLifeBar;
-            }
-        }
-
-        if (enemyStats != null && !unitFrameOn)
-        {
-            if ((DescreaseTimeToShowLifeBar() && enemyStatsSave == null) || enemyStatsSave == enemyStats)
-            {
-                enemyStatsSave = enemyStats;
-                ActivateUnitFrame(enemyStats);
-                ActivateLifeBar(enemyStats.m_enemyPowerLevel, true, enemyStats);
-            }
-        }
-        else if (enemyStatsLocked != null && unitFrameOn)
-        {
-            if(enemyStatsLocked.CurrentHealth <= 0)
-            {
-                if (m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_whiteLifeBar.fillAmount <= m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_lifeBar.fillAmount)
+                if (!unitFrameOn)
                 {
-                    if (DescreaseTimeToHideLifeBar())
-                    {
-                        ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
-                        DestroyMarques();
-                        DeactivateBool(false);
-                        enemyStatsLocked.m_cirlceCanvas.SetActive(false);
-                        unitFrameOn = false;
-                        timeToHideLifeBar = m_hidLifeBar;
-                        timeToShowLifeBar = m_showLifeBar;
+                    enemyStatsLocked = enemyStats;
+                    timeToShowLifeBar = m_showLifeBar;
+                    unitFrameOn = true;
+                }
+                ActivateUnitFrame(enemyStatsLocked);
+                ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true, enemyStatsLocked);
+                enemyStatsLocked.m_cirlceCanvas.SetActive(true);
+                timeToShowLifeBar = m_showLifeBar;
 
+            }
+
+            if (/*enemyStats == null && */unitFrameOn && Input.GetKeyDown(KeyCode.Tab))
+            {
+                HideBigLifeBar();
+            }
+            else if(enemyStats == null && !unitFrameOn && enemyStatsSave != enemyStats)
+            {
+                if (DescreaseTimeToHideLifeBar())
+                {
+                    ActivateLifeBar(enemyStatsSave.m_enemyPowerLevel, false, enemyStatsSave);
+                    DestroyMarques();
+                    DeactivateBool(false);
+                    enemyStatsSave = null;
+                    timeToHideLifeBar = m_hidLifeBar;
+                    timeToShowLifeBar = m_showLifeBar;
+                }
+            }
+
+            if (enemyStats != null && !unitFrameOn)
+            {
+                if ((DescreaseTimeToShowLifeBar() && enemyStatsSave == null) || enemyStatsSave == enemyStats)
+                {
+                    enemyStatsSave = enemyStats;
+                    ActivateUnitFrame(enemyStats);
+                    ActivateLifeBar(enemyStats.m_enemyPowerLevel, true, enemyStats);
+                }
+            }
+            else if (enemyStatsLocked != null && unitFrameOn)
+            {
+                if(enemyStatsLocked.CurrentHealth <= 0)
+                {
+                    if (m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_whiteLifeBar.fillAmount <= m_UnitFrame[enemyStatsLocked.m_enemyPowerLevel].GetComponent<LifeBarArray>().m_lifeBar.fillAmount)
+                    {
+                        if (DescreaseTimeToHideLifeBar())
+                        {
+                            ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
+                            DestroyMarques();
+                            DeactivateBool(false);
+                            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+                            unitFrameOn = false;
+                            timeToHideLifeBar = m_hidLifeBar;
+                            timeToShowLifeBar = m_showLifeBar;
+
+                        }
                     }
                 }
             }
