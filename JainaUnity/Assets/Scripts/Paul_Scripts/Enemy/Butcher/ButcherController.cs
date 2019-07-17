@@ -12,13 +12,22 @@ public class ButcherController : EnemyController
     [Space]
     public GameObject signImpatience;
     [Space]
+    [Space]
+    public int impactDamage;
+    public float rangeImpact;
+    public Color impactRangeColor;
+    [Space]
+    [Space]
     public float rangeMinForJump;
     public Color minRangeColor;
     [Space]
     public float rangeMaxForJump;
     public Color maxRangeColor;
+    [Space]
+    public float m_tempsJumpAnim = 2f;
+    float m_animTime;
     float m_cdImpatient;
-    float m_tempsJumpAnim = 3f;
+    bool isImpatience;
 
     #region Get Set
     public float CdImpatient
@@ -59,12 +68,39 @@ public class ButcherController : EnemyController
             m_tempsJumpAnim = value;
         }
     }
+
+    public bool IsImpatience
+    {
+        get
+        {
+            return isImpatience;
+        }
+
+        set
+        {
+            isImpatience = value;
+        }
+    }
+
+    public float AnimTime
+    {
+        get
+        {
+            return m_animTime;
+        }
+
+        set
+        {
+            m_animTime = value;
+        }
+    }
     #endregion
     public override void LogicAtStart()
     {
         base.LogicAtStart();
 
         m_cdImpatient = CoolDownGettingImpatient;
+        m_animTime = m_tempsJumpAnim;
     }
 
     private void Awake()
@@ -132,6 +168,45 @@ public class ButcherController : EnemyController
         Anim.SetTrigger("Attack");
     }
 
+    public override void OnImpactDamage()
+    {
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, rangeImpact);
+        for (int i = 0, l = hitCollider.Length; i < l; ++i)
+        {
+            if (hitCollider[i].CompareTag("Player"))
+            {
+                hitCollider[i].GetComponent<CharacterStats>().TakeDamage(impactDamage);
+                break;
+            }
+        }
+    }
+
+    public override void OnChangeToStunState()
+    {
+        if (!MyStas.IsDead && !isImpatience)
+        {
+            ChangeState((int)EnemyButcherState.Butcher_StunState);
+        }
+    }
+
+    public override void Freeze()
+    {
+        if (!isImpatience)
+        {
+            base.Freeze();
+        }
+    }
+
+    public override void TranslateMove(Transform target)
+    {
+        transform.Translate(target.localPosition);
+    }
+    public override void FaceTarget(Transform target)
+    {
+        Vector3 direction = (target.localPosition - transform.localPosition).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -140,6 +215,9 @@ public class ButcherController : EnemyController
 
         Gizmos.color = maxRangeColor;
         Gizmos.DrawWireSphere(transform.position, rangeMaxForJump);
+
+        Gizmos.color = impactRangeColor;
+        Gizmos.DrawWireSphere(transform.position, rangeImpact);
 
     }
 }

@@ -112,8 +112,6 @@ public class Waves_Methods : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("NBR : "+NombreDeVague);
-        Debug.Log("nbr : "+ nbrOfWave);
         if (_playerOnTrigger && nbrOfWave != NombreDeVague)
         {
             timeNextWave -= Time.deltaTime;

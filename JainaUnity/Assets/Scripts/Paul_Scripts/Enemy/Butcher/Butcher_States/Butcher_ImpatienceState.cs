@@ -19,21 +19,31 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void Enter()
     {
+
+        //m_enemyController.Agent.enabled = false;
         butcherController = m_enemyController.GetComponent<ButcherController>();
+        butcherController.IsImpatience = true;
+
         StateAnimation(m_enemyController.Anim);
+
         Destination();
         FaceTarget();
+
         sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
+
         target = sign.transform;
+
         m_enemyController.Agent.speed += 10;
 
         butcherController.NbrJump++;
+        //Debug.Log(butcherController.NbrJump);
 
     }
 
     public override void FixedUpdate()
     {
-
+        //butcherController.TranslateMove(target);
+        //butcherController.FaceTarget(target);
     }
 
     public override void Update()
@@ -45,8 +55,10 @@ public class Butcher_ImpatienceState : ImpatienceState
     {
         DestroySign();
         m_enemyController.Agent.speed -= 10;
-        butcherController.TempsJumpAnim = 3f;
+        //m_enemyController.Agent.enabled = true;
+        butcherController.TempsJumpAnim = butcherController.AnimTime;
     }
+
     #region Animation
 
     public override void StateAnimation(Animator anim)
@@ -89,13 +101,18 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void GetOutOfState()
     {
-        if (m_enemyController.PlayerInAttackBox())
-        {
-            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack
-        }
         if(m_enemyController.GetTargetDistance(target) <= 2 && m_enemyController.CheckIfAnimEnded())
         {
-            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState); //Chase
+            if(butcherController.NbrJump == butcherController.numberOfJump)
+            {
+                m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);       //Chase
+                butcherController.NbrJump = 0;
+            }
+            else
+            {
+                m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ImpatienceState);  //Impatience
+            }
+            m_enemyController.OnImpactDamage();
         }
     }
 

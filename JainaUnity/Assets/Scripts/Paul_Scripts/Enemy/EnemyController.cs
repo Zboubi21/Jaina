@@ -623,6 +623,21 @@ public class EnemyController : MonoBehaviour {
         return false;
     }
 
+    public virtual void TranslateMove(Transform target)
+    {
+
+    }
+
+    public virtual void FaceTarget(Transform target)
+    {
+
+    }
+
+    public virtual void OnImpactDamage()
+    {
+
+    }
+
     #endregion
 
 
@@ -660,7 +675,7 @@ public class EnemyController : MonoBehaviour {
     #endregion
 
     #region IceNovaMethods
-    public void Freeze()
+    public virtual void Freeze()
     {
         if (!MyStas.IsDead)
         {
