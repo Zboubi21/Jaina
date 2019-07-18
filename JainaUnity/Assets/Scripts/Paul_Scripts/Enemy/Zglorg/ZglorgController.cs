@@ -55,8 +55,8 @@ public class ZglorgController : EnemyController {
 
     public override void Sprint(float speed)
     {
-        speed = speed * ((100f - (PlayerManager.m_debuffs.m_IceSlow.m_iceSlow * MyStas.GivreMarkCount)) / 100f);
-        Agent.speed = speed;
+        float newSpeed = speed * Enemystats.Slow;
+        Agent.speed = newSpeed;
     }
     public override bool IsChasing()
     {
@@ -104,14 +104,14 @@ public class ZglorgController : EnemyController {
 
     public override void IceSlow()
     {
-        if (IsImpatient)
+        /*if (IsImpatient)
         {
             Agent.speed = speedSprint;
         }
         else
         {
             Agent.speed = AgentSpeed;
-        }
+        }*/
     }
 
 }

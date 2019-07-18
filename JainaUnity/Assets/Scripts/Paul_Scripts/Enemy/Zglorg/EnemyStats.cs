@@ -289,6 +289,19 @@ public class EnemyStats : CharacterStats {
             hasTakenDamage = value;
         }
     }
+
+    public float Slow
+    {
+        get
+        {
+            return slow;
+        }
+
+        set
+        {
+            slow = value;
+        }
+    }
     #endregion
     //bool checkiIfItIsDead;
 
@@ -388,6 +401,8 @@ public class EnemyStats : CharacterStats {
     int m_fireMarkPos;
     int m_iceMarkPos;
 
+    float speed;
+    float slow;
 
     public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
@@ -457,7 +472,7 @@ public class EnemyStats : CharacterStats {
             Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
         }
     }
-
+    
     public override void IceMark(float timerDebuf)
     {
         base.IceMark(timerDebuf);
@@ -469,36 +484,21 @@ public class EnemyStats : CharacterStats {
             iceHasBeenInstanciated = true;
         }
         StartGivreCooldown = true;
-        if(GivreMarkCount < 5)
+        if(GivreMarkCount == 1)
         {
-            agent.speed = ((agent.speed) * ((100f - (iceSlow/* GivreMarkCount*/)) / 100f));
+            speed = agent.speed;
         }
+        slow = 1-((float)(iceSlow * GivreMarkCount)/100);
+        agent.speed = speed * slow;
         m_timerGivre = saveTimerGivre = timerDebuf;
-        #region givreMarkCount
-        if (GivreMarkCount == 5)
-        {
-            /*Destroy(MarqueDeGivre);
-            iceHasBeenInstanciated = false;
-            GivreMarkCount = 0;
-            StartGivreCooldown = false;*/
-
-
-            // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
-
-            //enemyController.ChangeState(EnemyState.FrozenState); // Block In Ice
-
-           
-
-            //Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
-        }
-        #endregion
     }
     public override void ArcaneExplosion(int damage)
     {
         base.ArcaneExplosion(damage);
-        Destroy(MarqueDeFeu);
-        Destroy(MarqueDeArcane);
-        Destroy(MarqueDeGivre);
+        //Destroy(MarqueDeFeu);
+        //Destroy(MarqueDeArcane);
+        //Destroy(MarqueDeGivre);
+        DestroyAllMarks();
         arcaneHasBeenInstanciated = fireHasBeenInstanciated = iceHasBeenInstanciated = StartArcaneCooldown = StartFireCooldown = StartGivreCooldown = false;
     }
 
@@ -644,8 +644,9 @@ public class EnemyStats : CharacterStats {
             MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
             if (m_timerGivre <= 0)
             {
-                
-                enemyController.IceSlow();
+                agent.speed = agent.speed / slow;
+                slow = 1;
+                //enemyController.IceSlow();
                 Destroy(MarqueDeGivre);
                 iceHasBeenInstanciated = false;
                 m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
@@ -706,6 +707,8 @@ public class EnemyStats : CharacterStats {
             iceHasBeenInstanciated = false;
             GivreMarkCount = 0;
             StartGivreCooldown = false;
+            agent.speed = agent.speed / slow;
+            slow = 1;
         }
     }
 

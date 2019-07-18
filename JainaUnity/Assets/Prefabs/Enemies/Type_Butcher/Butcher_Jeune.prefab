@@ -15589,7 +15589,7 @@ GameObject:
   - component: {fileID: 114131494272710760}
   - component: {fileID: 114193464101513848}
   m_Layer: 11
-  m_Name: Butcher
+  m_Name: Butcher_Jeune
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15604,7 +15604,7 @@ Transform:
   m_GameObject: {fileID: 1581731634167060}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.5643282, y: 0, z: -4.1646824}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
   - {fileID: 4551965290899088}
   - {fileID: 224238576210665240}
@@ -15705,6 +15705,7 @@ MonoBehaviour:
     m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
       type: 3}
     m_markExplosionRoot: {fileID: 1915564166}
+  m_timeToWaitBeforeDespawnEnemy: 3
   numberOfJump: 1
   CoolDownGettingImpatient: 2
   signImpatience: {fileID: 2295836606457646105, guid: 15c9c74b8c7729941ad20b757741e058,

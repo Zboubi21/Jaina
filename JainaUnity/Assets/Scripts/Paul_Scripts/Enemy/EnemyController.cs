@@ -458,6 +458,19 @@ public class EnemyController : MonoBehaviour {
             m_objectPooler = value;
         }
     }
+
+    public EnemyStats Enemystats
+    {
+        get
+        {
+            return enemystats;
+        }
+
+        set
+        {
+            enemystats = value;
+        }
+    }
     #endregion
 
     public virtual void LogicWhenEnable()
