@@ -402,7 +402,7 @@ public class EnemyStats : CharacterStats {
     int m_iceMarkPos;
 
     float speed;
-    float slow;
+    float slow = 1;
 
     public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
