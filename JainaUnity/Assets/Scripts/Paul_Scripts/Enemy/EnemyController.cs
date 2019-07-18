@@ -118,12 +118,13 @@ public class EnemyController : MonoBehaviour {
         public Transform m_markExplosionRoot;
     }
 
-    Transform target;
+    [Header("Die")]
+    [SerializeField] float m_timeToWaitBeforeDespawnEnemy = 3;
+
     NavMeshAgent agent;
     Animator anim;
     CharacterStats TargetStats;
     CharacterStats myStats;
-    Collider Mycollider;
     Collider[] enemyController;
     PlayerManager m_playerManager;
     bool m_enemyIsInVictory = false;
@@ -168,6 +169,20 @@ public class EnemyController : MonoBehaviour {
         set
         {
             AnimEnd = value;
+        }
+    }
+
+    Transform target;
+    public Transform Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
         }
     }
 
@@ -417,13 +432,39 @@ public class EnemyController : MonoBehaviour {
             currentTimeBeforeGettingImpatient = value;
         }
     }*/
+    Collider m_mycollider;
+    public Collider Mycollider
+    {
+        get
+        {
+            return m_mycollider;
+        }
+
+        set
+        {
+            m_mycollider = value;
+        }
+    }
+
+    public ObjectPooler ObjectPooler
+    {
+        get
+        {
+            return m_objectPooler;
+        }
+
+        set
+        {
+            m_objectPooler = value;
+        }
+    }
     #endregion
 
     public virtual void LogicWhenEnable()
     {
         myStats = GetComponent<CharacterStats>();
         myStats.CurrentHealth = myStas.maxHealth;
-        Mycollider.enabled = true;
+        m_mycollider.enabled = true;
         agent.enabled = true;
         myStats.IsDead = false;
     }
@@ -442,7 +483,7 @@ public class EnemyController : MonoBehaviour {
         // Get The EnnmyController's NavMeshAgent, CharacterStats and Collider
         agent = GetComponent<NavMeshAgent>();
         MyStas = GetComponent<CharacterStats>();
-        Mycollider = gameObject.GetComponent<Collider>();
+        m_mycollider = gameObject.GetComponent<Collider>();
 
         //Get The Time Of The Animation Being Played
         Rac = Anim.runtimeAnimatorController;
@@ -469,7 +510,7 @@ public class EnemyController : MonoBehaviour {
             LogicAtStart();
         }
         enemystats = GetComponent<EnemyStats>();
-        m_objectPooler = ObjectPooler.Instance;
+        ObjectPooler = ObjectPooler.Instance;
 
     }
 
@@ -765,16 +806,16 @@ public class EnemyController : MonoBehaviour {
                     go[i].gameObject.SetActive(false);
                 }
             }
-            m_objectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
+            ObjectPooler.SpawnObjectFromPool(enemystats.m_backPack.GetComponent<BackPack_Inventory>()._inventory[0], transform.position, transform.rotation);
         }
         StartCoroutine(OnWaitForAnimToEnd());
     }
 
     IEnumerator OnWaitForAnimToEnd()
     {
-        Mycollider.enabled = false;
+        m_mycollider.enabled = false;
         agent.enabled = false;
-        yield return new WaitForSeconds(3f);                            //Animation time
+        yield return new WaitForSeconds(m_timeToWaitBeforeDespawnEnemy);    //Animation time
         Spawned_Tracker spawnTracker = GetComponent<Spawned_Tracker>();
         if(spawnTracker != null)
         {
@@ -818,7 +859,7 @@ public class EnemyController : MonoBehaviour {
 
             if (hitCollider[i].CompareTag("Enemy"))
             {
-                if(hitCollider[i] != Mycollider)
+                if(hitCollider[i] != m_mycollider)
                 {
                     Enemy.Add(hitCollider[i]);
                     if (!hitCollider[i].gameObject.GetComponent<EnemyController>().BeenYelled)
