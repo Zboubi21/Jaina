@@ -20,20 +20,20 @@ public class Butcher_ImpatienceState : ImpatienceState
     public override void Enter()
     {
 
-        //m_enemyController.Agent.enabled = false;
+        m_enemyController.Agent.enabled = false;
         butcherController = m_enemyController.GetComponent<ButcherController>();
         butcherController.IsImpatience = true;
 
         StateAnimation(m_enemyController.Anim);
 
-        Destination();
-        FaceTarget();
+        // Destination();
+        // FaceTarget();
 
         sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
 
         target = sign.transform;
 
-        m_enemyController.Agent.speed += 10;
+        // m_enemyController.Agent.speed += 10;
 
         butcherController.NbrJump++;
         //Debug.Log(butcherController.NbrJump);
@@ -54,7 +54,8 @@ public class Butcher_ImpatienceState : ImpatienceState
     public override void Exit()
     {
         DestroySign();
-        m_enemyController.Agent.speed -= 10;
+        m_enemyController.Agent.enabled = true;
+        // m_enemyController.Agent.speed -= 10;
         //m_enemyController.Agent.enabled = true;
         butcherController.TempsJumpAnim = butcherController.AnimTime;
     }

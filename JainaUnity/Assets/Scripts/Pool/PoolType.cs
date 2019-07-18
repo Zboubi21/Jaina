@@ -8,6 +8,9 @@
 		Zglorg_Jeune,
 		Zglorg_Adulte,
         Zglorg_Conquérant,
+        Butcher_Jeune,
+		Butcher_Adulte,
+        Butcher_Conquérant,
 	}
     [System.Serializable] public enum SpellType {
 		AutoAttack_Ice,

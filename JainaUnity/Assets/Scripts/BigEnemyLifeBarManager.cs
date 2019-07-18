@@ -8,8 +8,10 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
     public static BigEnemyLifeBarManager Instance;
 
-    [SerializeField] GameObject[] m_UnitFrame;
+    [SerializeField] LayerMask m_enemyLayer;
     [Space]
+    [SerializeField] GameObject[] m_UnitFrame;
+    
     [Header("Arcan Marks")]
     [SerializeField] GameObject[] m_arcanMark;
     [Space]
@@ -401,7 +403,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, float.PositiveInfinity))
+        if (Physics.Raycast(ray, out hit, float.PositiveInfinity, m_enemyLayer))
         {
             return hit.transform.GetComponent<T>();
         }

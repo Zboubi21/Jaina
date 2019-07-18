@@ -25,11 +25,18 @@ public class ButcherController : EnemyController
     public Color maxRangeColor;
     [Space]
     public float m_tempsJumpAnim = 2f;
+
+    public ButcherJump m_butcherJump = new ButcherJump();
+	[System.Serializable] public class ButcherJump {
+		public float m_timeToDoJump = 1;
+        public AnimationCurve m_jumpCurve;
+	}
+
     float m_animTime;
     float m_cdImpatient;
     bool isImpatience;
 
-    #region Get Set
+#region Get Set
     public float CdImpatient
     {
         get
@@ -94,7 +101,7 @@ public class ButcherController : EnemyController
             m_animTime = value;
         }
     }
-    #endregion
+#endregion
     public override void LogicAtStart()
     {
         base.LogicAtStart();
@@ -220,6 +227,22 @@ public class ButcherController : EnemyController
 
         Gizmos.color = impactRangeColor;
         Gizmos.DrawWireSphere(transform.position, rangeImpact);
-
     }
+
+    public void Jump(Vector3 fromPos, Vector3 toPos){
+        StartCoroutine(JumpCoroutine(fromPos, toPos));
+    }
+    IEnumerator JumpCoroutine(Vector3 fromPos, Vector3 toPos){
+
+        float distance = Vector3.Distance(fromPos, toPos);
+		float moveFracJourney = new float();
+		float vitesse = distance / m_butcherJump.m_timeToDoJump;
+
+		while(transform.position != toPos){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			transform.position = Vector3.Lerp(fromPos, toPos, m_butcherJump.m_jumpCurve.Evaluate(moveFracJourney));
+			yield return null;
+		}
+    }
+
 }
