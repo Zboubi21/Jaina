@@ -115,7 +115,7 @@ public class Projectile : Spell {
 
 	public virtual void OnArcanEnter(Collider col){
 
-        col.gameObject.GetComponent<CharacterStats>().ArcanMark(Damage, MarksTime1.Arcane, 1);
+        col.gameObject.GetComponent<CharacterStats>().AutoAttackArcanMark(Damage, MarksTime1.Arcane, 1);
     }
 
     public virtual void OnFireEnter(Collider col)

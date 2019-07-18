@@ -401,6 +401,21 @@ public class EnemyStats : CharacterStats {
         StartArcaneCooldown = true;
         m_timerArcane = saveTimerArcane = timerDebuf;
     }
+    public override void AutoAttackArcanMark(int damage, float timerDebuf, int nbrMarks)
+    {
+        base.AutoAttackArcanMark(damage, timerDebuf, nbrMarks);
+        if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount && CurrentHealth - damage > 0)
+        {
+            MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
+            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            arcaneHasBeenInstanciated = true;
+        }
+        if(ArcanMarkCount == 1)
+        {
+            m_timerArcane = saveTimerArcane = timerDebuf;
+        }
+        StartArcaneCooldown = true;
+    }
 
     public override void AutoAttackFireMark(float timerDebuf)
     {

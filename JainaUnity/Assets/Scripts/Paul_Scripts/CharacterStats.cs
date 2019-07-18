@@ -102,6 +102,9 @@ public class CharacterStats : MonoBehaviour {
 
     float multiplicateur;
     float arcanBlastMultiplicateur;
+
+    float previousDamage = 1;
+
     int maxArcanMarkCount;
 
     bool isDead = false;
@@ -131,7 +134,6 @@ public class CharacterStats : MonoBehaviour {
     }
 
     #region Mark Methods
-
     public virtual void ArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
         if(ArcanMarkCount + nbrMarks < maxArcanMarkCount)
@@ -142,8 +144,20 @@ public class CharacterStats : MonoBehaviour {
         {
             ArcanMarkCount = maxArcanMarkCount;
         }
-
-        TakeDamage((int)(damage*(1 + multiplicateur * ArcanMarkCount))) /*(damage + (damage * ((ArcanMarkCount) * multiplicateur))))*/;
+        //TakeDamage((int)(damage*(1 + multiplicateur * ArcanMarkCount)));
+        float dmg = (previousDamage * multiplicateur * ArcanMarkCount) + damage;
+        previousDamage = dmg;
+        TakeDamage((int)dmg);
+    }
+    public virtual void AutoAttackArcanMark(int damage, float timerDebuf, int nbrMarks)
+    {
+        if (ArcanMarkCount < maxArcanMarkCount)
+        {
+            ArcanMarkCount++;
+        }
+        float dmg = (previousDamage * multiplicateur * ArcanMarkCount) + damage;
+        previousDamage = dmg;
+        TakeDamage((int)dmg);
     }
     public virtual void AutoAttackFireMark(float timerDebuf)
     {
@@ -169,7 +183,7 @@ public class CharacterStats : MonoBehaviour {
     public virtual void ArcaneExplosion(int damage)
     {
         bonusDamage = (GivreMarkCount + FireMarkCount + ArcanMarkCount) * arcanBlastMultiplicateur;
-       // Debug.Log("YAYAYAAYYAAY" + bonusDamage);
+        //Debug.Log("YAYAYAAYYAAY" + bonusDamage);
         TakeDamage((int)(damage + (damage * bonusDamage)));
         ArcanMarkCount = FireMarkCount = GivreMarkCount = 0;
         bonusDamage = 1;

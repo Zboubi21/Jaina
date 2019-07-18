@@ -43,7 +43,7 @@ public class Spell : MonoBehaviour {
     }
 
     [System.Serializable] public class MarksTime {
-		float m_arcane = 5;
+		float m_arcane = 6;
         public float Arcane
         {
             get
