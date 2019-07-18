@@ -101,6 +101,7 @@ public class CharacterStats : MonoBehaviour {
     float bonusDamage = 1f;
 
     float multiplicateur;
+    float arcanBlastMultiplicateur;
     int maxArcanMarkCount;
 
     bool isDead = false;
@@ -119,6 +120,7 @@ public class CharacterStats : MonoBehaviour {
         CurrentHealth = maxHealth * (m_currentHealth/100);
 
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
+        arcanBlastMultiplicateur = PlayerManager.Instance.m_powers.m_arcaneExplosion.m_blastMultiplicateur / 100f;
         maxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
         //Debug.Log(multiplicateur);
     }
@@ -166,7 +168,7 @@ public class CharacterStats : MonoBehaviour {
     }
     public virtual void ArcaneExplosion(int damage)
     {
-        bonusDamage = (GivreMarkCount + FireMarkCount + ArcanMarkCount) * multiplicateur;
+        bonusDamage = (GivreMarkCount + FireMarkCount + ArcanMarkCount) * arcanBlastMultiplicateur;
        // Debug.Log("YAYAYAAYYAAY" + bonusDamage);
         TakeDamage((int)(damage + (damage * bonusDamage)));
         ArcanMarkCount = FireMarkCount = GivreMarkCount = 0;

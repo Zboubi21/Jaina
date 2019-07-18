@@ -311,6 +311,7 @@ public class EnemyStats : CharacterStats {
             }
         }
         lifeBar = m_canvas.GetComponentsInChildren<Image>();
+        enemyController = GetComponent<EnemyController>();
         m_canvas.SetActive(false);
         m_cirlceCanvas.SetActive(false);
         slider.fillAmount = 1;
@@ -320,6 +321,11 @@ public class EnemyStats : CharacterStats {
     private void OnDisable()
     {
         m_canvas.SetActive(false);
+        if(enemyController.m_fxs.m_freezed != null)
+        {
+            enemyController.m_fxs.m_freezed.SetActive(false);
+        }
+
     }
     public override void Start()
     {

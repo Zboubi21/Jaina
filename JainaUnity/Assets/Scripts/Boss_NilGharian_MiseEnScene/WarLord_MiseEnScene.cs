@@ -5,13 +5,24 @@ using UnityEngine.Events;
 
 public class WarLord_MiseEnScene : MonoBehaviour
 {
+    [Header ("Event Trigger")]
     [Range(0,100)]
     public float _percentHpBeforeEvent;
     [Space]
+    [Header("Event Animations")]
+    public Animator[] anims;
+    public string triggerOn;
+    public string triggerOff;
+    [Space]
+    [Header("Boss Life Bar")]
+    public BigEnemyLifeBarManager lifeBar;
+    [Space]
+    [Header("Cinématique var")]
+    public float m_timeToBeInCinematicState = 5;
+    [Space]
+    [Header("Event Triggering")]
     public UnityEvent OnStartFight;
     public UnityEvent OnEndFight;
-    [Space]
-    public float m_timeToBeInCinematicState = 5;
 
     EnemyController controller;
     EnemyStats stats;
@@ -64,12 +75,24 @@ public class WarLord_MiseEnScene : MonoBehaviour
         {
             fightHasStart = true;
             OnStartFight.Invoke();
+            for (int i = 0, l = anims.Length; i < l; ++i)
+            {
+                anims[i].SetTrigger(triggerOn);
+            }
+            lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
+            lifeBar.OnFightBoss(true);
         }
 
         if (stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100)) && !fightHasEnded)
         {
             fightHasEnded = true;
             fightHasStart = false;
+            for (int i = 0, l = anims.Length; i < l; ++i)
+            {
+                anims[i].SetTrigger(triggerOff);
+            }
+            lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
+            lifeBar.OnFightBoss(false);
             m_playerManager.SwitchPlayerToCinematicState(m_timeToBeInCinematicState);
             OnEndFight.Invoke();
         }

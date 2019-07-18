@@ -275,8 +275,11 @@ public class PlayerManager : MonoBehaviour {
 			[Header("Spell prefab")]
 			// public GameObject m_projectile;
 			public Transform m_root;
+            [Header("Spell multiplicateur")]
+            [Range(0,100)]
+            public float m_blastMultiplicateur = 50f;
 
-			[Header("Cooldown")]
+            [Header("Cooldown")]
 			public float m_cooldown = 5;
 			[HideInInspector] public bool m_canSwitch = true;
 			[HideInInspector] public bool m_startCooldown = false;

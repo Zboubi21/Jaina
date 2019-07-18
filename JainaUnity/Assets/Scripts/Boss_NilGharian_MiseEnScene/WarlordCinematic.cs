@@ -7,6 +7,7 @@ public class WarlordCinematic : MonoBehaviour {
     
     [SerializeField] Transform m_targetAgentPosition;
     [SerializeField] float m_timeBeforeFleeing;
+    [SerializeField] float m_timeBeforeDisapering = 2.5f;
 
     NavMeshAgent m_agent;
     Animator m_animator;
@@ -17,14 +18,17 @@ public class WarlordCinematic : MonoBehaviour {
 
         m_agent.ResetPath();
 
-        StartCoroutine(WaitBeforeFleeing(m_timeBeforeFleeing));
+        StartCoroutine(WaitBeforeFleeing(m_timeBeforeFleeing, m_timeBeforeDisapering));
     }
 
-    IEnumerator WaitBeforeFleeing(float time)
+    IEnumerator WaitBeforeFleeing(float time, float timeoff)
     {
+        m_animator.SetTrigger("Hit");
         yield return new WaitForSeconds(time);
         m_agent.SetDestination(m_targetAgentPosition.position);
-        m_animator.SetTrigger("Chase");
+        m_agent.speed += 5;
+        m_animator.SetTrigger("Impatience");
+        yield return new WaitForSeconds(timeoff);
+        gameObject.SetActive(false);
     }
-
 }
