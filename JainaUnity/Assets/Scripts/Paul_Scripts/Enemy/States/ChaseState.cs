@@ -30,16 +30,17 @@ public class ChaseState : IState
         }
     }
 
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         Destination();
-        FaceTarget();
+        // FaceTarget();
     }
 
     public void Update()
     {
         GetOutOfState();
         OnYelling();
+        FaceTarget();
     }
 
     public void Exit()

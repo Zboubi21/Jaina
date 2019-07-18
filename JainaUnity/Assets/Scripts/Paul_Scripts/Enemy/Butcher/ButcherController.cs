@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using EnemyStateEnum_Butcher;
+using PoolTypes;
 public class ButcherController : EnemyController
 {
     [Header("Warboar Impatience Variables")]
@@ -26,10 +27,32 @@ public class ButcherController : EnemyController
     [Space]
     public float m_tempsJumpAnim = 2f;
 
+    [Header("Butcher jump")]
     public ButcherJump m_butcherJump = new ButcherJump();
 	[System.Serializable] public class ButcherJump {
+        [Header("Rotate before jump")]
+		public float m_timeToDoRotation = 0.25f;
+        public AnimationCurve m_rotationCurve;
+
+        [Header("Jump")]
 		public float m_timeToDoJump = 1;
         public AnimationCurve m_jumpCurve;
+        [Range(0,1)] public float m_timeToStartEndJumpAnim = 0.75f;
+        [Range(0,1)] public float m_timeToDoDamage = 0.8f;
+        [Space]
+        public float m_timeToExitStateAfterJump = 1;
+
+        [Header("Collider")]
+        [Range(0,1)] public float m_timeToDisableCollider = 0.1f;
+        [Range(0,1)] public float m_timeToEnabelCollider = 0.9f;
+
+        [Header("Check area")]
+        public float m_maxRangeToJumpInNewArea = 0.5f;
+        public Color m_maxRangeColor = Color.black;
+        public ObjectType m_butcherCheckArea = ObjectType.ButcherCheckArea;
+        [HideInInspector] public NavMeshAgent m_butcherCheckAreaAgent;
+        [HideInInspector] public bool m_checkArea = false;
+        [HideInInspector] public Vector3 m_targetJumpPos;
 	}
 
     float m_animTime;
@@ -227,22 +250,41 @@ public class ButcherController : EnemyController
 
         Gizmos.color = impactRangeColor;
         Gizmos.DrawWireSphere(transform.position, rangeImpact);
+
+        if(m_butcherJump.m_butcherCheckAreaAgent != null){
+            Gizmos.color = m_butcherJump.m_maxRangeColor;
+            Gizmos.DrawWireSphere(m_butcherJump.m_butcherCheckAreaAgent.transform.position, m_butcherJump.m_maxRangeToJumpInNewArea);
+        }
     }
 
-    public void Jump(Vector3 fromPos, Vector3 toPos){
-        StartCoroutine(JumpCoroutine(fromPos, toPos));
+    public void StartCheckJumpArea(){
+        StartCoroutine(CheckJumpArea(TargetStats1.GetComponent<CharacterStats>().transform.position));
     }
-    IEnumerator JumpCoroutine(Vector3 fromPos, Vector3 toPos){
+    IEnumerator CheckJumpArea(Vector3 targetPos) {
+        // Debug.LogError("errorTest");
+        
+        GameObject butcherCheckArea = ObjectPooler.SpawnObjectFromPool(m_butcherJump.m_butcherCheckArea, Vector3.zero, Quaternion.identity);
+        m_butcherJump.m_butcherCheckAreaAgent = butcherCheckArea.GetComponent<NavMeshAgent>();
 
-        float distance = Vector3.Distance(fromPos, toPos);
-		float moveFracJourney = new float();
-		float vitesse = distance / m_butcherJump.m_timeToDoJump;
+        m_butcherJump.m_butcherCheckAreaAgent.Warp(targetPos);
+        yield return new WaitForSeconds(0.05f); 
+        
+        // Debug.Log("targetPos = " + targetPos);
+        // Debug.Log("m_butcherCheckAreaPos = " + m_butcherJump.m_butcherCheckArea.transform.position);
 
-		while(transform.position != toPos){
-			moveFracJourney += (Time.deltaTime) * vitesse / distance;
-			transform.position = Vector3.Lerp(fromPos, toPos, m_butcherJump.m_jumpCurve.Evaluate(moveFracJourney));
-			yield return null;
-		}
+        float distance = Vector3.Distance(targetPos, m_butcherJump.m_butcherCheckAreaAgent.transform.position);
+
+        if(distance < m_butcherJump.m_maxRangeToJumpInNewArea){
+            m_butcherJump.m_targetJumpPos = m_butcherJump.m_butcherCheckAreaAgent.transform.position;
+            ChangeState((int)EnemyButcherState.Butcher_ImpatienceState);
+        }else{
+            if(m_sM.CurrentStateIndex == (int)EnemyButcherState.Butcher_ImpatienceState){
+                ChangeState((int)EnemyButcherState.Butcher_ChaseState);
+                NbrJump = 0;
+            }
+        }
+        m_butcherJump.m_checkArea = false;
+        ObjectPooler.ReturnObjectToPool(m_butcherJump.m_butcherCheckArea, butcherCheckArea);
     }
 
 }

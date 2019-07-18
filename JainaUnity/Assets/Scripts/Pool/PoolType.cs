@@ -26,6 +26,7 @@
         ArcaneExplosion,
 	}
     [System.Serializable] public enum ObjectType {
-        LifePotion
+        LifePotion,
+        ButcherCheckArea,
 	}
 }

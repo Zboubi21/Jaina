@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EnemyStateEnum_Butcher;
 
-
 public class Butcher_ChaseState : ChaseState
 {
 
@@ -14,11 +13,16 @@ public class Butcher_ChaseState : ChaseState
         m_enemyController = enemyController;
     }
 
+    ButcherController butcherController;
+
     public override void Enter()
     {
         base.Enter();
         m_enemyController.IsImpatience = false;
         m_enemyController.CdImpatient = m_enemyController.CoolDownGettingImpatient;
+
+        if(butcherController == null)
+            butcherController = m_enemyController.GetComponent<ButcherController>();
     }
 
     #region Animation
@@ -74,7 +78,10 @@ public class Butcher_ChaseState : ChaseState
         {
             if (m_enemyController.CoolDownImpatience())
             {
-                m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ImpatienceState); //Impatience
+                if(!m_enemyController.m_butcherJump.m_checkArea){
+                    butcherController.m_butcherJump.m_checkArea = true;
+                    butcherController.StartCheckJumpArea();
+                }
             }
         }
         else
