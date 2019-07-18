@@ -1398,7 +1398,8 @@ public class PlayerManager : MonoBehaviour {
 				m_powers.m_blink.m_canSwitch = false;
 
 				m_powers.m_blink.m_text.text = m_powers.m_blink.m_actualCooldown.ToString("F1");
-				m_powers.m_blink.m_cooldownImage.fillAmount -= 1 / m_powers.m_blink.m_cooldown * Time.deltaTime;
+				// m_powers.m_blink.m_cooldownImage.fillAmount -= 1 / m_powers.m_blink.m_cooldown * Time.deltaTime; // Avant que Paul trouve le bug d'affichage du cooldown
+				m_powers.m_blink.m_cooldownImage.fillAmount = Mathf.InverseLerp(0, m_powers.m_blink.m_cooldown, m_powers.m_blink.m_actualCooldown); // Tentative de régler le bug
 			}else{
 				m_powers.m_blink.m_actualCooldown = m_powers.m_blink.m_cooldown;
 				m_powers.m_blink.m_startCooldown = false;
