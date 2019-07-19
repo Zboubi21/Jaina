@@ -28,7 +28,7 @@ public class WarlordCinematic : MonoBehaviour {
         m_agent.SetDestination(m_targetAgentPosition.position);
         m_agent.speed += 5;
         m_animator.SetTrigger("Impatience");
-        // yield return new WaitForSeconds(timeoff);
-        // gameObject.SetActive(false);
+        yield return new WaitForSeconds(timeoff);   // Disable to use EnemyBecameInvisible
+        gameObject.SetActive(false);                // Disable to use EnemyBecameInvisible
     }
 }
