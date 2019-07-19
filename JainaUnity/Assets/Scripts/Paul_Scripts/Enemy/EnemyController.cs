@@ -734,7 +734,7 @@ public class EnemyController : MonoBehaviour {
     {
         if (!MyStas.IsDead)
         {
-            Anim.SetTrigger("Idle");
+            Anim.SetTrigger("Freeze");
             FreezTime = m_playerManager.m_powers.m_iceNova.m_timeFreezed;
             m_fxs.m_freezed.SetActive(true);
             IsRootByIceNova = true;

@@ -59,7 +59,8 @@ public class ChaseState : IState
         }
         else
         {
-            anim.SetTrigger("Idle");
+            // anim.SetTrigger("Idle");
+            anim.SetTrigger("Freeze");
         }
     }
 
