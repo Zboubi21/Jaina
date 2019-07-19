@@ -1759,5 +1759,8 @@ public class PlayerManager : MonoBehaviour {
 			yield return null;
 		}
 	}
+	public void GetOutOfCinematicState(){
+		ChangeState(PlayerState.NoThrowSpellState);
+	}
 
 }
