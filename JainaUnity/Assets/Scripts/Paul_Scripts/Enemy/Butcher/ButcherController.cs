@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using EnemyStateEnum_Butcher;
 using PoolTypes;
+
 public class ButcherController : EnemyController
 {
     [Header("Warboar Impatience Variables")]
@@ -53,6 +54,17 @@ public class ButcherController : EnemyController
         [HideInInspector] public NavMeshAgent m_butcherCheckAreaAgent;
         [HideInInspector] public bool m_checkArea = false;
         [HideInInspector] public Vector3 m_targetJumpPos;
+
+        [Header("Camera shake")]
+        public Camerashake m_cameraShake = new Camerashake();
+        [System.Serializable] public class Camerashake {
+            public bool m_useShakeCam = true;
+            [Range(0,1)] public float m_timeToShake = 0.9f;
+            public float m_magnitudeShake = 2f;
+            public float m_roughnessShake = 2f;
+            public float m_fadeInTimeShake = 0.1f;
+            public float m_fadeOutTimeShake = 0.15f;
+        }
 	}
 
     float m_animTime;

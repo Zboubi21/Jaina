@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using EnemyStateEnum;
 using EnemyStateEnum_Butcher;
 using PoolTypes;
+using EZCameraShake;
 
 public class EnemyController : MonoBehaviour {
 
@@ -920,6 +921,10 @@ public class EnemyController : MonoBehaviour {
     {
         Destroy(obj);
     }
+    public void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
+		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
+	}
+    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

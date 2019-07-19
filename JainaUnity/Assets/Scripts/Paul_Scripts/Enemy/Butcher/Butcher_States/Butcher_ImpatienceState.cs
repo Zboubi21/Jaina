@@ -161,6 +161,8 @@ public class Butcher_ImpatienceState : ImpatienceState
         bool disableCollider = false;
         bool enableCollider = false;
 
+        bool doShake = false;
+
 		while(butcherController.transform.position != targetPos){
             // Debug.Log("Calcul JumpCorout");
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
@@ -183,6 +185,13 @@ public class Butcher_ImpatienceState : ImpatienceState
             if(moveFracJourney > butcherController.m_butcherJump.m_timeToEnabelCollider && !enableCollider){
                 enableCollider = true;
                 butcherController.Mycollider.enabled = true;
+            }
+
+            if(moveFracJourney > butcherController.m_butcherJump.m_cameraShake.m_timeToShake && !doShake){
+                doShake = true;
+                if(butcherController.m_butcherJump.m_cameraShake.m_useShakeCam){
+                    butcherController.ShakeCamera(butcherController.m_butcherJump.m_cameraShake.m_magnitudeShake, butcherController.m_butcherJump.m_cameraShake.m_roughnessShake, butcherController.m_butcherJump.m_cameraShake.m_fadeInTimeShake, butcherController.m_butcherJump.m_cameraShake.m_fadeOutTimeShake);
+                }
             }
 
 			yield return null;
