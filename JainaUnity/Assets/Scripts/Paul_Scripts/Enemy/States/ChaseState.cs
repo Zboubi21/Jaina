@@ -25,8 +25,10 @@ public class ChaseState : IState
         // }
         m_enemyController.ImpatienceSign.gameObject.SetActive(false);
 
-        if(m_enemyController.m_sM.IsLastStateIndex((int)EnemyState.AlerteState)){
+        if(m_enemyController.m_sM.IsLastStateIndex((int)EnemyState.AlerteState) || !m_enemyController.HasBeenOnAlert)
+        {
             m_enemyController.StartCoroutine(StartDetectedFx());
+            m_enemyController.HasBeenOnAlert = true;
         }
     }
 
