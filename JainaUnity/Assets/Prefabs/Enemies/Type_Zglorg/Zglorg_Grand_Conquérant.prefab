@@ -14776,7 +14776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d985568203765744e8b394934558e69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isInstatiate: 0
+  m_isInstatiate: 1
   m_enemyType: 0
   m_sM:
     m_currentStateString: 
@@ -14800,6 +14800,7 @@ MonoBehaviour:
     m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
       type: 3}
     m_markExplosionRoot: {fileID: 6789044220803624801}
+  m_timeToWaitBeforeDespawnEnemy: 3
   speedSprint: 15
   TimeBeforeGettingImpatient: 3
 --- !u!114 &6894828331091421915
@@ -14815,6 +14816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 15000
+  m_currentHealth: 100
   damage:
     baseValue: 10
   armor:
@@ -14873,6 +14875,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae7c74b5b05444448895da70af0c1ae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _percentHpBeforeEvent: 0
+  anims: []
+  triggerOn: 
+  triggerOff: 
+  lifeBar: {fileID: 0}
+  m_timeToBeInCinematicState: 5
   OnStartFight:
     m_PersistentCalls:
       m_Calls:
@@ -14971,7 +14979,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_timeToBeInCinematicState: 5
 --- !u!114 &1903179349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14985,6 +14992,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_targetAgentPosition: {fileID: 0}
+  m_timeBeforeFleeing: 0
+  m_timeBeforeDisapering: 2.5
 --- !u!1 &6790123765268852167
 GameObject:
   m_ObjectHideFlags: 0
