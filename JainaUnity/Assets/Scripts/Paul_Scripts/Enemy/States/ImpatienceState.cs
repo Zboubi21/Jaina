@@ -54,7 +54,8 @@ public class ImpatienceState : IState
         }
         else
         {
-            anim.SetTrigger("Idle");
+            // anim.SetTrigger("Idle");
+            anim.SetTrigger("Freeze");
         }
     }
 
