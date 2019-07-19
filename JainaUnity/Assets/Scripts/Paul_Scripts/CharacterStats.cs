@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CharacterStats : MonoBehaviour {
 
-    public int maxHealth = 100;
+    public float maxHealth = 100;
     [Range(0,100)]
-    public int m_currentHealth = 100;
+    public float m_currentHealth = 100;
 
     public Stats damage;
     public Stats armor;
@@ -15,7 +15,7 @@ public class CharacterStats : MonoBehaviour {
     public Camera mainCamera;
 
     #region Get Set
-    public int CurrentHealth
+    public float CurrentHealth
     {
         get
         {
@@ -93,7 +93,7 @@ public class CharacterStats : MonoBehaviour {
         }
     }
     #endregion
-    private int currentHealth;// { get; private set; }
+    private float currentHealth;// { get; private set; }
     int arcanMarkCount;
     int fireMarkCount;
     int givreMarkCount;
@@ -120,7 +120,7 @@ public class CharacterStats : MonoBehaviour {
     {
 
         // mainCamera = Camera.main;//.GetComponent<Camera>();
-        CurrentHealth = maxHealth * (m_currentHealth/100);
+        CurrentHealth = maxHealth * (m_currentHealth /100f);
 
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
         arcanBlastMultiplicateur = PlayerManager.Instance.m_powers.m_arcaneExplosion.m_blastMultiplicateur / 100f;
