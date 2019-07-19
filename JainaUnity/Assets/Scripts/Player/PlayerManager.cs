@@ -245,10 +245,10 @@ public class PlayerManager : MonoBehaviour {
 				public FirstShake m_firstShake = new FirstShake();
 				[Serializable] public class FirstShake {
 					public bool m_useShakeCam = true;
-				public float m_magnitudeShake = 4f;
-				public float m_roughnessShake = 4f;
-				public float m_fadeInTimeShake = 0.1f;
-				public float m_fadeOutTimeShake = 0.1f;
+					public float m_magnitudeShake = 4f;
+					public float m_roughnessShake = 4f;
+					public float m_fadeInTimeShake = 0.1f;
+					public float m_fadeOutTimeShake = 0.1f;
 				}
 				[Header("Second Shake")]
 				public SecoundShake m_secoundShake = new SecoundShake();
@@ -526,6 +526,16 @@ public class PlayerManager : MonoBehaviour {
             m_cameraManager = value;
         }
     }
+
+	bool m_isMoving;
+	public bool IsMoving {
+        get{
+            return m_isMoving;
+        }
+        set{
+            m_isMoving = value;
+        }
+    }
 #endregion Encapsuled
 
     void Awake(){
@@ -587,9 +597,11 @@ public class PlayerManager : MonoBehaviour {
 
         if(m_sM.CurrentStateIndex != ((int)PlayerState.PlayerCinematicState)){
 			if(m_agent.velocity != Vector3.zero ){
-				m_jainaAnimator.SetBool("isMoving", true);
+				m_isMoving = true;
+				m_jainaAnimator.SetBool("isMoving", m_isMoving);
 			}else{
-				m_jainaAnimator.SetBool("isMoving", false);
+				m_isMoving = false;
+				m_jainaAnimator.SetBool("isMoving", m_isMoving);
 			}
 		}
 	}

@@ -40,6 +40,11 @@ public class ButcherController : EnemyController
         public AnimationCurve m_jumpCurve;
         [Range(0,1)] public float m_timeToStartEndJumpAnim = 0.75f;
         [Range(0,1)] public float m_timeToDoDamage = 0.8f;
+
+        [Header("Additional forward")]
+        public float m_additionalForwardJainaNotMoving = 0.5f;
+        public float m_additionalForwardJainaMoving = 2;
+
         [Space]
         public float m_timeToExitStateAfterJump = 1;
 
@@ -270,21 +275,28 @@ public class ButcherController : EnemyController
     }
 
     public void StartCheckJumpArea(){
-        StartCoroutine(CheckJumpArea(TargetStats1.GetComponent<CharacterStats>().transform.position));
+        StartCoroutine(CheckJumpArea(TargetStats1.GetComponent<CharacterStats>().transform));
     }
-    IEnumerator CheckJumpArea(Vector3 targetPos) {
-        // Debug.LogError("errorTest");
+    IEnumerator CheckJumpArea(Transform targetPos) {
+        // Debug.LogError("CheckJumpArea");
         
         GameObject butcherCheckArea = ObjectPooler.SpawnObjectFromPool(m_butcherJump.m_butcherCheckArea, Vector3.zero, Quaternion.identity);
         m_butcherJump.m_butcherCheckAreaAgent = butcherCheckArea.GetComponent<NavMeshAgent>();
 
-        m_butcherJump.m_butcherCheckAreaAgent.Warp(targetPos);
+        Vector3 targetPosition;
+        if(PlayerManager.IsMoving){
+            targetPosition = targetPos.position + targetPos.forward * m_butcherJump.m_additionalForwardJainaMoving;
+        }else{
+            targetPosition = targetPos.position + targetPos.forward * m_butcherJump.m_additionalForwardJainaNotMoving;
+        }
+
+        m_butcherJump.m_butcherCheckAreaAgent.Warp(targetPosition);
         yield return new WaitForSeconds(0.05f); 
         
         // Debug.Log("targetPos = " + targetPos);
         // Debug.Log("m_butcherCheckAreaPos = " + m_butcherJump.m_butcherCheckArea.transform.position);
 
-        float distance = Vector3.Distance(targetPos, m_butcherJump.m_butcherCheckAreaAgent.transform.position);
+        float distance = Vector3.Distance(targetPosition, m_butcherJump.m_butcherCheckAreaAgent.transform.position);
 
         if(distance < m_butcherJump.m_maxRangeToJumpInNewArea){
             m_butcherJump.m_targetJumpPos = m_butcherJump.m_butcherCheckAreaAgent.transform.position;

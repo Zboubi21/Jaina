@@ -155,6 +155,12 @@ public class Butcher_ImpatienceState : ImpatienceState
 		float moveFracJourney = new float();
 		float vitesse = distance / butcherController.m_butcherJump.m_timeToDoJump;
 
+        if(distance < 1){
+            butcherController.Anim.SetTrigger("ImpatienceEnd");
+        }else{
+            butcherController.Anim.SetTrigger("ImpatienceMiddle");
+        }
+
         bool endAnim = false;
         bool doDamage = true;
 
@@ -168,7 +174,7 @@ public class Butcher_ImpatienceState : ImpatienceState
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
 			butcherController.transform.position = Vector3.Lerp(fromPos, targetPos, butcherController.m_butcherJump.m_jumpCurve.Evaluate(moveFracJourney));
 
-            if(moveFracJourney > butcherController.m_butcherJump.m_timeToStartEndJumpAnim && !endAnim){
+            if(moveFracJourney >= butcherController.m_butcherJump.m_timeToStartEndJumpAnim && !endAnim){
                 endAnim = true;
                 butcherController.Anim.SetTrigger("ImpatienceEnd");
             }
