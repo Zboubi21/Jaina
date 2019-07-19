@@ -7,8 +7,6 @@ public class WarlordCinematic : MonoBehaviour {
     
     [SerializeField] Transform m_targetAgentPosition;
     [SerializeField] float m_timeBeforeFleeing;
-
-    [SerializeField] bool m_useTimer = true;
     [SerializeField] float m_timeBeforeDisapering = 2.5f;
 
     NavMeshAgent m_agent;
@@ -30,9 +28,7 @@ public class WarlordCinematic : MonoBehaviour {
         m_agent.SetDestination(m_targetAgentPosition.position);
         m_agent.speed += 5;
         m_animator.SetTrigger("Impatience");
-        if(m_useTimer){
-            yield return new WaitForSeconds(timeoff);
-            gameObject.SetActive(false);
-        }
+        // yield return new WaitForSeconds(timeoff);
+        // gameObject.SetActive(false);
     }
 }
