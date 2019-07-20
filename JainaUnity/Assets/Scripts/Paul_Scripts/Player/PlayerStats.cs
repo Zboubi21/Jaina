@@ -102,6 +102,10 @@ public class PlayerStats : CharacterStats {
     void CheckCombatOn()
     {
         InCombatEvent.Invoke();
+        for (int i = 0, l = doors.Length; i < l; ++i)
+        {
+            doors[i].SetTrigger(closeDoor);
+        }
         isInCombat = true;
     }
 
@@ -110,6 +114,10 @@ public class PlayerStats : CharacterStats {
         enemyKillCount = 0;
         enemyInCombat = 0;
         OutOfCombatEvent.Invoke();
+        for (int i = 0, l = doors.Length; i < l; ++i)
+        {
+            doors[i].SetTrigger(openDoor);
+        }
         isInCombat = false;
     }
 

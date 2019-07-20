@@ -83,7 +83,7 @@ public class WarLord_MiseEnScene : MonoBehaviour
             lifeBar.OnFightBoss(true);
         }
 
-        if (stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded)
+        if ((stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded) || (!m_playerManager.GetComponent<PlayerStats>().IsInCombat && fightHasEnded))
         {
             fightHasEnded = true;
             fightHasStart = false;
