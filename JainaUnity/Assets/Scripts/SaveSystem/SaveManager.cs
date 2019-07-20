@@ -36,6 +36,7 @@ public class SaveManager : MonoBehaviour {
         public float m_timeToAddFx = 0;
 	}
 
+    Vector3 m_startGamePosition;
     Vector3 m_savePosition;
     int m_actualCheckpointNumber = 0;
     public int ActualCheckpointNumber{
@@ -105,6 +106,10 @@ public class SaveManager : MonoBehaviour {
     public void On_RestartFromLastCheckPoint(){
         ReloadScene();
         ResetPlayerPos();
+    }
+
+    public void On_RestartGame(){
+
     }
 
 }
