@@ -16,6 +16,7 @@ public class MoveAnimation : MonoBehaviour {
     [Header("Event")]
     public bool m_useEvents = true;
 	public Event[] m_events;
+    public UnityEvent m_eventWhenAnimIsFinished;
 	[System.Serializable] public class Event {
         [Range(0,1)] public float m_timeToDoEvent = 0.5f;
         public UnityEvent m_event;
@@ -49,6 +50,7 @@ public class MoveAnimation : MonoBehaviour {
             }
 			yield return null;
 		}
+        m_eventWhenAnimIsFinished.Invoke();
 	}
 
     void InitializeEvents(){
