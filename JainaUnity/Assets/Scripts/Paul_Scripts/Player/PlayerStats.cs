@@ -58,6 +58,10 @@ public class PlayerStats : CharacterStats {
 
             if(CurrentHealth <= 0){
                 GetComponent<PlayerManager>().On_PlayerDie();
+                enemyKillCount = 0;
+                enemyInCombat = 0;
+                isInCombat = false;
+
             }
         }
     }
