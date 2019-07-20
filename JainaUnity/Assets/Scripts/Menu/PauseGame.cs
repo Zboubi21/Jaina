@@ -63,7 +63,13 @@ public class PauseGame : MainMenu {
 	}
 
 	public void RestartLevel(){
-		SaveManager.Instance.On_RestartFromLastCheckPoint();
+		SaveManager m_saveManager = SaveManager.Instance;
+		m_saveManager.StartCoroutine(m_saveManager.On_RestartFromLastCheckPoint());
+	}
+
+	public void RestartGame(){
+		SaveManager m_saveManager = SaveManager.Instance;
+		m_saveManager.StartCoroutine(m_saveManager.On_RestartGame());
 	}
 
 }

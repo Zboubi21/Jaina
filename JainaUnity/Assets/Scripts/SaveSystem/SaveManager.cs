@@ -53,13 +53,14 @@ public class SaveManager : MonoBehaviour {
         m_checkpointCanvasAnimator = m_checkPointCanvas.GetComponent<Animator>();
         m_playerManager = PlayerManager.Instance;
         m_objectPooler = ObjectPooler.Instance;
+        m_startGamePosition = m_playerManager.transform.position;
     }
 
     public void On_CheckpointIsTake(Transform newSavePosition, int newCheckpointNumber){
         m_savePosition = newSavePosition.position;
         StartCoroutine(SeeCheckpointCanvas());
 
-        m_playerManager.GetComponent<PlayerStats>().FullHeal();
+        PlayerManager.Instance.GetComponent<PlayerStats>().FullHeal();
         m_objectPooler.On_ReturnLifePotionInPool();
 
         m_actualCheckpointNumber = newCheckpointNumber;
@@ -90,7 +91,7 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForSeconds(m_timeToRespawn);
         ReloadScene();
         yield return new WaitForSeconds(m_timeToStartFadeOut);
-        ResetPlayerPos();
+        ResetPlayerPos(m_savePosition);
         m_dieAnimator.SetTrigger("FadeOut");
     }
 
@@ -98,18 +99,21 @@ public class SaveManager : MonoBehaviour {
         m_objectPooler.On_ReturnAllInPool();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    void ResetPlayerPos(){
+    void ResetPlayerPos(Vector3 savePos){
         m_playerManager = PlayerManager.Instance;
-        m_playerManager.SetTpPoint(m_savePosition);
+        m_playerManager.SetTpPoint(savePos);
     }
 
-    public void On_RestartFromLastCheckPoint(){
+    public IEnumerator On_RestartFromLastCheckPoint(){
         ReloadScene();
-        ResetPlayerPos();
+        yield return new WaitForFixedUpdate();
+        ResetPlayerPos(m_savePosition);
     }
 
-    public void On_RestartGame(){
-
+    public IEnumerator On_RestartGame(){
+        ReloadScene();
+        yield return new WaitForFixedUpdate();
+        ResetPlayerPos(m_startGamePosition);
     }
 
 }
