@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;		// Permet d'accéder aux UI
+using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 
@@ -60,6 +60,10 @@ public class PauseGame : MainMenu {
 				m_unpausedSnapshot.TransitionTo(0.01f);
 			}
 		}
+	}
+
+	public void RestartLevel(){
+		SaveManager.Instance.On_RestartFromLastCheckPoint();
 	}
 
 }

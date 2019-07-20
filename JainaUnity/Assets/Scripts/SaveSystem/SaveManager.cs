@@ -36,6 +36,7 @@ public class SaveManager : MonoBehaviour {
         public float m_timeToAddFx = 0;
 	}
 
+    Vector3 m_startGamePosition;
     Vector3 m_savePosition;
     int m_actualCheckpointNumber = 0;
     public int ActualCheckpointNumber{
@@ -87,13 +88,28 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForSeconds(m_timeToStartFadeIn);
         m_dieAnimator.SetTrigger("FadeIn");
         yield return new WaitForSeconds(m_timeToRespawn);
-        m_objectPooler.On_ReturnAllInPool();
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ReloadScene();
         yield return new WaitForSeconds(m_timeToStartFadeOut);
-        m_playerManager = PlayerManager.Instance;
-        m_playerManager.SetTpPoint(m_savePosition);
+        ResetPlayerPos();
         m_dieAnimator.SetTrigger("FadeOut");
     }
 
+    void ReloadScene(){
+        m_objectPooler.On_ReturnAllInPool();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    void ResetPlayerPos(){
+        m_playerManager = PlayerManager.Instance;
+        m_playerManager.SetTpPoint(m_savePosition);
+    }
+
+    public void On_RestartFromLastCheckPoint(){
+        ReloadScene();
+        ResetPlayerPos();
+    }
+
+    public void On_RestartGame(){
+
+    }
 
 }
