@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 862230070680622185}
   - component: {fileID: 851245225718140489}
   - component: {fileID: 822029818421331851}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: WoodPlank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 863275477617520339}
   - component: {fileID: 727260206353868215}
   - component: {fileID: 820910123486496401}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: MiddleStairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,7 +781,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 829293605847033164}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BoatMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -817,8 +817,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 829293606497318127}
-  - component: {fileID: 829293606497318124}
-  m_Layer: 9
+  - component: {fileID: 7371593618895001820}
+  m_Layer: 0
   m_Name: BoatCheckpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +840,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &829293606497318124
+--- !u!114 &7371593618895001820
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -849,11 +849,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 829293606497318125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d974f2c25c36b4c84fc56f7bbac896, type: 3}
+  m_Script: {fileID: 11500000, guid: d85505fb6ca7372448b4811023d06e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_startYPosition: -42
-  m_endYPosition: -7
+  m_startPosition: {x: 2.5, y: -42, z: -12}
+  m_desiredPosition: {x: 2.5, y: -7, z: -12}
   m_timeToDoAnimation: 5
   m_animationCurve:
     serializedVersion: 2
@@ -879,6 +879,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_useEvents: 0
+  m_events: []
 --- !u!1 &829293606776243901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,7 +1346,7 @@ GameObject:
   - component: {fileID: 861589034463969333}
   - component: {fileID: 727091298892425249}
   - component: {fileID: 821586307957459185}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: MiddlePontoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1843,7 +1845,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 832450896231709013}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Colliders_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2487,7 +2489,7 @@ GameObject:
   - component: {fileID: 863152214990454335}
   - component: {fileID: 726277863253606035}
   - component: {fileID: 820850462986308717}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FrontStairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3509,7 +3511,7 @@ GameObject:
   - component: {fileID: 861612914789682575}
   - component: {fileID: 726575509036111735}
   - component: {fileID: 820970093957480621}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: MiddleStairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4114,7 +4116,7 @@ GameObject:
   - component: {fileID: 862385462090142841}
   - component: {fileID: 727958383001366109}
   - component: {fileID: 820851341152445933}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FrontPontoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4487,7 +4489,7 @@ GameObject:
   - component: {fileID: 863283659499081419}
   - component: {fileID: 727253871499835327}
   - component: {fileID: 821813074962090103}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BackStairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5463,7 +5465,7 @@ GameObject:
   - component: {fileID: 863144647183398325}
   - component: {fileID: 726666897260410549}
   - component: {fileID: 820213644141287983}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: VeryBackPontoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5909,7 +5911,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 832522155778754713}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6210,7 +6212,7 @@ GameObject:
   - component: {fileID: 833807133382542891}
   - component: {fileID: 863117486195159255}
   - component: {fileID: 851580945989275529}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Jaina'sBoat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6291,7 +6293,7 @@ GameObject:
   - component: {fileID: 862356547734789567}
   - component: {fileID: 726726884418399155}
   - component: {fileID: 821376511776158909}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BackStairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6664,7 +6666,7 @@ GameObject:
   - component: {fileID: 863211459244288103}
   - component: {fileID: 726404380678999117}
   - component: {fileID: 821460092275648217}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BackPontoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
