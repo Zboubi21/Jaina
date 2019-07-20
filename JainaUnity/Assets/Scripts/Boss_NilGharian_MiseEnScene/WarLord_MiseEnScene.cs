@@ -95,7 +95,7 @@ public class WarLord_MiseEnScene : MonoBehaviour
             }
             lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
             lifeBar.OnFightBoss(false);
-            m_playerManager.SwitchPlayerToCinematicState(m_timeToBeInCinematicState);
+            //m_playerManager.SwitchPlayerToCinematicState(m_timeToBeInCinematicState);
             OnEndFight.Invoke();
         }
     }
