@@ -191,6 +191,17 @@ public class CharacterStats : MonoBehaviour {
 
     #endregion
 
+    public virtual void OnEnemyInCombatCount()
+    {
+
+    }
+
+    public virtual void OnEnemyKillCount()
+    {
+
+    }
+
+
     // public virtual void ArcaneProjectil(int damage,float timerDebuf, int nbrMarks)
     // {
     //     if (ArcanMarkCount < MaxArcanMarkCount)

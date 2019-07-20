@@ -107,10 +107,6 @@ public class EnemyController : MonoBehaviour {
     public float m_timeToShowDetectedFx = 2;
     public StartParticles m_detectedFx;
 
-    [Space]
-    [Header("Debug AI Comportement")]
-    public bool TestIAcomportement;
-
     [Header("FX")]
     public FXs m_fxs = new FXs();
     [System.Serializable] public class FXs {
@@ -830,6 +826,7 @@ public class EnemyController : MonoBehaviour {
         m_mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(m_timeToWaitBeforeDespawnEnemy);    //Animation time
+        TargetStats1.OnEnemyKillCount();
         Spawned_Tracker spawnTracker = GetComponent<Spawned_Tracker>();
         if(spawnTracker != null)
         {

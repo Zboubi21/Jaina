@@ -7,6 +7,8 @@ public class ChaseState : IState
 {
     bool yell;
     bool hasCalledFunction;
+
+    bool hasBeenCounted;
     // CONSTRUCTOR
     EnemyController m_enemyController;
     public ChaseState(EnemyController enemyController)
@@ -23,6 +25,12 @@ public class ChaseState : IState
         // {
         //     m_enemyController.DestroyGameObject(m_enemyController._signImpatience);
         // }
+        if (!hasBeenCounted && m_enemyController.TargetStats1 != null)
+        {
+            m_enemyController.TargetStats1.OnEnemyInCombatCount();
+            hasBeenCounted = true;
+        }
+
         m_enemyController.ImpatienceSign.gameObject.SetActive(false);
 
         if(m_enemyController.m_sM.IsLastStateIndex((int)EnemyState.AlerteState) || !m_enemyController.HasBeenOnAlert)

@@ -23,11 +23,15 @@ public class Waves_Methods : MonoBehaviour
     public UnityEvent OnLastWaveOver;
 
     Spawner_Methods[] _spawnerMethod;
+
+    PlayerStats playerStats;
+
     int nbrOfWave;
     int NombreDeVague;
     float timeNextWave;
 
     bool _playerOnTrigger;
+
 
     int nbrOfEnemy;
     int nbrEnemyDead;
@@ -45,6 +49,7 @@ public class Waves_Methods : MonoBehaviour
             nbrOfEnemy = value;
         }
     }
+
     #endregion
 
     public void OnLaunchWave(float TimeBeforeNextWave)
@@ -59,6 +64,9 @@ public class Waves_Methods : MonoBehaviour
     IEnumerator WaitForFirstWave(float time)
     {
         yield return new WaitForSeconds(time);
+        playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
+        playerStats.OnCheckArenaStillGoing(true);
+
         OnFirstWaveStart.Invoke();
         Spawner(nbrOfWave);
     }
@@ -69,8 +77,10 @@ public class Waves_Methods : MonoBehaviour
         {
             if (!_playerOnTrigger && isLaunchByTrigger)
             {
+                playerStats = other.GetComponent<PlayerStats>();
                 Spawner(nbrOfWave);
                 _playerOnTrigger = true;
+                playerStats.OnCheckArenaStillGoing(true);
                 OnFirstWaveStart.Invoke();
             }
         }
@@ -130,6 +140,7 @@ public class Waves_Methods : MonoBehaviour
         else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
         {
             OnLastWaveOver.Invoke();
+            playerStats.OnCheckArenaStillGoing(false);
             nbrOfEnemy = 0;
         }
 

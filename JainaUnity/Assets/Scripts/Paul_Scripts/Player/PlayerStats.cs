@@ -2,10 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class PlayerStats : CharacterStats {
 
     [SerializeField] Image m_lifeBar;
+
+    int enemyInCombat;
+    int enemyKillCount;
+
+    bool isInCombat;
+    [Space]
+    [Header("Door To Open/Close When Out/In Combat")]
+    public Animator[] doors;
+    [Space]
+    public string openDoor;
+    public string closeDoor;
+    [Space]
+    [Header("Event Triggering")]
+    public UnityEvent InCombatEvent;
+    public UnityEvent OutOfCombatEvent;
+
+    #region get set
+    public bool IsInCombat
+    {
+        get
+        {
+            return isInCombat;
+        }
+
+        set
+        {
+            isInCombat = value;
+        }
+    }
+    #endregion
 
     public override void Die()
     {
@@ -50,4 +81,45 @@ public class PlayerStats : CharacterStats {
         m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
     }
 
+    public override void OnEnemyInCombatCount()
+    {
+        enemyInCombat++;
+        if((enemyInCombat > 0 || isInArena) && !isInCombat)
+        {
+            CheckCombatOn();
+        }
+    }
+
+    public override void OnEnemyKillCount()
+    {
+        enemyKillCount++;
+        if (enemyKillCount == enemyInCombat && enemyKillCount !=0 && !isInArena)
+        {
+            CheckCombatOff();
+        }
+    }
+
+    void CheckCombatOn()
+    {
+        InCombatEvent.Invoke();
+        isInCombat = true;
+    }
+
+    void CheckCombatOff()
+    {
+        enemyKillCount = 0;
+        enemyInCombat = 0;
+        OutOfCombatEvent.Invoke();
+        isInCombat = false;
+    }
+
+    bool isInArena;
+    public void OnCheckArenaStillGoing(bool b)
+    {
+        isInArena = b;
+        if (!b)
+        {
+            CheckCombatOff();
+        }
+    }
 }
