@@ -4828,43 +4828,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7339565932595491609}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &509106086
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 2DxFX/Standard/Liquid
-  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - EValue: 0.4
-    - Light: 1
-    - _Alpha: 0
-    - _ColorMask: 15
-    - _Distortion: 0.16
-    - _Speed: 0.01
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!43 &524440827
 Mesh:
   m_ObjectHideFlags: 0
@@ -7066,6 +7029,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &834682229
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 2DxFX/Standard/Liquid
+  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - EValue: 1
+    - Light: 1
+    - _Alpha: 1
+    - _ColorMask: 15
+    - _Distortion: 0
+    - _Speed: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &904095706
 GameObject:
   m_ObjectHideFlags: 0
@@ -9961,43 +9961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d568a305a5ad72458e13f077d8c4de9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &1246749946
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 2DxFX/Standard/Liquid
-  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - EValue: 1
-    - Light: 1
-    - _Alpha: 1
-    - _ColorMask: 15
-    - _Distortion: 0
-    - _Speed: 1
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1258729096
 GameObject:
   m_ObjectHideFlags: 0
@@ -12463,7 +12426,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1246749946}
+      objectReference: {fileID: 834682229}
     - target: {fileID: 2248140192099774539, guid: 20fa5fcc1a51b0147a10b7eaf3f2191f,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -14386,77 +14349,6 @@ PrefabInstance:
     - target: {fileID: 8452892143023132402, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[6].m_name
-      value: Zglorgette_Jeune
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[6].m_enemyType
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[6].m_prefab
-      value: 
-      objectReference: {fileID: 1014568333761063014, guid: 28582ea73fc40654ea4c9648785b1f01,
-        type: 3}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[6].m_size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[7].m_name
-      value: Zglorgette_Adulte
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[7].m_enemyType
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[7].m_prefab
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[7].m_size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[8].m_name
-      value: "Zglorgette_Conqu\xE9rant"
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[8].m_enemyType
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[8].m_prefab
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_enemyPools.Array.data[8].m_size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
-        type: 3}
-      propertyPath: m_usePoolTest
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,

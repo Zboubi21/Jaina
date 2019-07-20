@@ -239,12 +239,13 @@ public class ObjectPooler : MonoBehaviour {
 			Potion_Being_Used healPotion = poolTracker.GetComponent<Potion_Being_Used>();
 			if(healPotion != null){
 				poolTracker.ResetTrackedObject();
+			}else{
+				m_trackedObject.Enqueue(poolTracker);
 			}
 		}
 	}
 
 	public void On_ReturnAllInPool(){
-		// Debug.Log("On_ReturnAllInPool");
 		for (int i = 0, l = m_trackedObject.Count; i < l; ++i) {
 			PoolTracker poolTracker = m_trackedObject.Dequeue();
 			if(poolTracker != null){
