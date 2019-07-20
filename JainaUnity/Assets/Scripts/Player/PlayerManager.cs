@@ -587,9 +587,9 @@ public class PlayerManager : MonoBehaviour {
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
 
-		if(Input.GetKeyDown(KeyCode.G)){
-			SwitchPlayerToCinematicState(5);
-		}
+		// if(Input.GetKeyDown(KeyCode.G)){
+		// 	SwitchPlayerToCinematicState(5);
+		// }
 	}
 
 	void FixedUpdate(){

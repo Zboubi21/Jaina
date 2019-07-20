@@ -8,7 +8,7 @@ public class Checkpoint : MonoBehaviour {
     [Header("Parameters")]
     [SerializeField] int m_checkpointNumber = 0;
     [SerializeField] Transform m_savePosition;
-    [SerializeField] BoatCheckpoint m_boat;
+    [SerializeField] MoveAnimation m_boat;
 
     [Header("Gizmos")]
     [SerializeField] Color m_gizmosColor = Color.red;
@@ -33,7 +33,7 @@ public class Checkpoint : MonoBehaviour {
             if(!m_checkpointIsTake && m_saveManager.ActualCheckpointNumber <= m_checkpointNumber){
                 m_checkpointIsTake = true;
                 m_saveManager.On_CheckpointIsTake(m_savePosition, m_checkpointNumber);
-                m_boat.On_CheckpointIsTake();
+                m_boat.DoMoveAnimation();
             }
         }
     }
