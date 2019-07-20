@@ -158,6 +158,7 @@ public class ObjectPooler : MonoBehaviour {
 		return objectToSpawn;
 	}
 	public void ReturnEnemyToPool(EnemyType enemyType, GameObject objectToReturn){
+		Debug.Log("ugbubub");
 		objectToReturn.SetActive(false);
 		m_enemyPoolDictionary[enemyType].Enqueue(objectToReturn);
 	}
@@ -244,6 +245,7 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 	public void On_ReturnAllInPool(){
+		Debug.Log("On_ReturnAllInPool");
 		for (int i = 0, l = m_trackedObject.Count; i < l; ++i) {
 			PoolTracker poolTracker = m_trackedObject.Dequeue();
 			if(poolTracker != null){

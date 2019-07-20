@@ -26,6 +26,7 @@ public class Checkpoint : MonoBehaviour {
 
     void Start(){
         m_saveManager = SaveManager.Instance;
+        m_saveManager.AddCheckpoint(this);
     }
 
     void OnTriggerEnter(Collider col){
@@ -36,6 +37,11 @@ public class Checkpoint : MonoBehaviour {
                 m_boat.DoMoveAnimation();
             }
         }
+    }
+
+    public void ResetCheckpoint(){
+        m_checkpointIsTake = false;
+        m_boat.ResetPosition();
     }
 
     void OnDrawGizmos(){

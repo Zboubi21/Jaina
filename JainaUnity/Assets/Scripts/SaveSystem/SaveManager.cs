@@ -48,12 +48,17 @@ public class SaveManager : MonoBehaviour {
     Animator m_checkpointCanvasAnimator;
     PlayerManager m_playerManager;
     ObjectPooler m_objectPooler;
+    List<Checkpoint> m_checkpoints = new List<Checkpoint>();
 
     void Start(){
         m_checkpointCanvasAnimator = m_checkPointCanvas.GetComponent<Animator>();
         m_playerManager = PlayerManager.Instance;
         m_objectPooler = ObjectPooler.Instance;
         m_startGamePosition = m_playerManager.transform.position;
+    }
+
+    public void AddCheckpoint(Checkpoint newCheckpoint){
+        m_checkpoints.Add(newCheckpoint);
     }
 
     public void On_CheckpointIsTake(Transform newSavePosition, int newCheckpointNumber){
@@ -109,9 +114,12 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForFixedUpdate();
         ResetPlayerPos(m_savePosition);
     }
-
     public IEnumerator On_RestartGame(){
         ReloadScene();
+        for (int i = 0, l = m_checkpoints.Count; i < l; ++i) {
+            m_checkpoints[i].ResetCheckpoint();
+        }
+        m_actualCheckpointNumber = 0;
         yield return new WaitForFixedUpdate();
         ResetPlayerPos(m_startGamePosition);
     }

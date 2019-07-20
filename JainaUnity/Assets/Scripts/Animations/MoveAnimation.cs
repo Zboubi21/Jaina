@@ -24,7 +24,7 @@ public class MoveAnimation : MonoBehaviour {
     }
 
     void Start(){
-        transform.localPosition = m_startPosition;
+        ResetPosition();
     }
 
     public void DoMoveAnimation(){
@@ -63,6 +63,11 @@ public class MoveAnimation : MonoBehaviour {
                 m_events[i].m_event.Invoke();
             }
         }
+    }
+
+    public void ResetPosition(){
+        StopAllCoroutines();
+        transform.localPosition = m_startPosition;
     }
 
 }
