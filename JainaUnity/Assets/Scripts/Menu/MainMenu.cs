@@ -38,9 +38,7 @@ void Awake(){
 #endif //UNITY_5_4_OR_NEWER											// Fini
 	}
 
-	public void RestartLevel(){
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-	}
+	
 
 // ---------------------------------------------- Régler le son ----------------------------------------------
 	[SerializeField] private AudioMixer m_musicAudioMixer;
