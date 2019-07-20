@@ -50,7 +50,9 @@ public class MoveAnimation : MonoBehaviour {
             }
 			yield return null;
 		}
-        m_eventWhenAnimIsFinished.Invoke();
+        if(m_useEvents){
+            m_eventWhenAnimIsFinished.Invoke();
+        }
 	}
 
     void InitializeEvents(){
