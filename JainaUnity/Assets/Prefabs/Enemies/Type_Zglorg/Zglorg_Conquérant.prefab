@@ -182,18 +182,19 @@ MonoBehaviour:
   RedBoxScale: {x: 1, y: 1, z: 1}
   GreenBoxPosition: {x: 0, y: 0.5, z: 1}
   GreenBoxScale: {x: 0.01, y: 1, z: 1}
+  speed: 10
   attackSpeed: 0.75
   timerBeforeGettingStunable: 3
   timeBeingStuned: 0.5
   ImpatienceSign: {fileID: 3212222972773924503}
   m_timeToShowDetectedFx: 2
   m_detectedFx: {fileID: 5956597781506393405}
-  TestIAcomportement: 0
   m_fxs:
     m_freezed: {fileID: 2124591287292162363}
     m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
       type: 3}
     m_markExplosionRoot: {fileID: 2043582272474222102}
+  m_timeToWaitBeforeDespawnEnemy: 3
   speedSprint: 15
   TimeBeforeGettingImpatient: 3
 --- !u!114 &2145012316628274092
@@ -209,6 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2000
+  m_currentHealth: 100
   damage:
     baseValue: 10
   armor:
