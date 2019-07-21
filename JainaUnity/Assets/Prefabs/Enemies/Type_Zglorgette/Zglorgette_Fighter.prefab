@@ -26496,10 +26496,10 @@ GameObject:
   - component: {fileID: 7485425683921704520}
   - component: {fileID: 7255723873270787634}
   - component: {fileID: 7320242137349262162}
-  - component: {fileID: 7260254706862904790}
   - component: {fileID: 7260734350802354718}
   - component: {fileID: 7260249712272811120}
   - component: {fileID: 7263444609431771568}
+  - component: {fileID: 3899807171535539416}
   m_Layer: 11
   m_Name: Zglorgette_Fighter
   m_TagString: Enemy
@@ -26514,7 +26514,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7302387421587225484}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000058114523}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0.00000028088027}
   m_LocalPosition: {x: -6.71, y: 0, z: 3.74}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_Children:
@@ -26528,7 +26528,7 @@ Transform:
   - {fileID: 1725473092879006339}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 179.99998, z: 0}
 --- !u!195 &7485425683921704520
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26539,7 +26539,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.5
-  m_Speed: 8.5
+  m_Speed: 8
   m_Acceleration: 50000
   avoidancePriority: 50
   m_AngularSpeed: 50000
@@ -26581,46 +26581,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7260254706862904790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7302387421587225484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d985568203765744e8b394934558e69c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_isInstatiate: 1
-  m_enemyType: 6
-  m_sM:
-    m_currentStateString: 
-  lookRadius: 10
-  maxLookRadiusOnAlert: 50
-  yellRadius: 5
-  RadiusExpansionSpeed: 0.2
-  RedBoxPosition: {x: 0, y: 0.5, z: 1}
-  RedBoxScale: {x: 1, y: 1, z: 1}
-  GreenBoxPosition: {x: 0, y: 0.5, z: 1}
-  GreenBoxScale: {x: 0.01, y: 1, z: 1}
-  attackSpeed: 1
-  timerBeforeGettingStunable: 3
-  timeBeingStuned: 0.5
-  ImpatienceSign: {fileID: 95896370730635509, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-    type: 3}
-  m_timeToShowDetectedFx: 2
-  m_detectedFx: {fileID: 5515260196938113679}
-  TestIAcomportement: 0
-  m_fxs:
-    m_freezed: {fileID: 551375443922594475}
-    m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
-      type: 3}
-    m_markExplosionRoot: {fileID: 7303590674650548132}
-  m_timeToWaitBeforeDespawnEnemy: 3
-  speedSprint: 15
-  TimeBeforeGettingImpatient: 3
 --- !u!114 &7260734350802354718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26681,6 +26641,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGreenGizmos: 1
+--- !u!114 &3899807171535539416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7302387421587225484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40907ced68ff7424bbcc5e5f5c76bb5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isInstatiate: 0
+  m_enemyType: 0
+  m_sM:
+    m_currentStateString: 
+  lookRadius: 10
+  maxLookRadiusOnAlert: 50
+  yellRadius: 5
+  RadiusExpansionSpeed: 0.2
+  RedBoxPosition: {x: 0, y: 0, z: 0}
+  RedBoxScale: {x: 0, y: 0, z: 0}
+  GreenBoxPosition: {x: 0, y: 0, z: 0}
+  GreenBoxScale: {x: 0, y: 0, z: 0}
+  speed: 8
+  attackSpeed: 0.75
+  timerBeforeGettingStunable: 3
+  timeBeingStuned: 0.5
+  ImpatienceSign: {fileID: 479297262306946801}
+  m_timeToShowDetectedFx: 2
+  m_detectedFx: {fileID: 5515260196938113679}
+  m_fxs:
+    m_freezed: {fileID: 551375443922594475}
+    m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
+      type: 3}
+    m_markExplosionRoot: {fileID: 7303590674650548132}
+  m_timeToWaitBeforeDespawnEnemy: 3
 --- !u!1 &8801061369558419462
 GameObject:
   m_ObjectHideFlags: 0
@@ -26808,6 +26805,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 572660220253797892}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &479297262306946801 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 95896370730635509, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+    type: 3}
+  m_PrefabInstance: {fileID: 572660220253797892}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 457330d983fa0d140a977dfcd5894d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1479686810025331391
 PrefabInstance:
   m_ObjectHideFlags: 0

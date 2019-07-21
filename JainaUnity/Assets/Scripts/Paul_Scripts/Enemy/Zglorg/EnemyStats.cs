@@ -661,6 +661,18 @@ public class EnemyStats : CharacterStats {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+
+        m_canvas.SetActive(true);
+
+        if (m_canvas.activeSelf)
+        {
+            timeBeforeLifeBarOff -= Time.deltaTime;
+            if (timeBeforeLifeBarOff <= 0)
+            {
+                m_canvas.SetActive(false);
+                timeBeforeLifeBarOff = saveTimeBeforeLifeBarOff;
+            }
+        }
         m_timeToDecreaseWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
         hasTakenDamage = true;
         //BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;

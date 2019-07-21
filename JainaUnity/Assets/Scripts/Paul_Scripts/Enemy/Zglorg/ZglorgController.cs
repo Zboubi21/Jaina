@@ -104,14 +104,7 @@ public class ZglorgController : EnemyController {
 
     public override void IceSlow()
     {
-        /*if (IsImpatient)
-        {
-            Agent.speed = speedSprint;
-        }
-        else
-        {
-            Agent.speed = AgentSpeed;
-        }*/
+        
     }
 
 }

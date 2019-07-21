@@ -471,10 +471,10 @@ GameObject:
   - component: {fileID: 910467292539749794}
   - component: {fileID: 1149174670355660248}
   - component: {fileID: 1068913719045527736}
-  - component: {fileID: 1117641602792638012}
   - component: {fileID: 1117030429770224116}
   - component: {fileID: 1117636562191628186}
   - component: {fileID: 1121328473359813210}
+  - component: {fileID: 4114020432838377393}
   m_Layer: 11
   m_Name: Zglorgette_Jeune
   m_TagString: Enemy
@@ -514,7 +514,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.5
-  m_Speed: 8.5
+  m_Speed: 8
   m_Acceleration: 50000
   avoidancePriority: 50
   m_AngularSpeed: 50000
@@ -556,46 +556,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1117641602792638012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014568333761063014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d985568203765744e8b394934558e69c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_isInstatiate: 1
-  m_enemyType: 6
-  m_sM:
-    m_currentStateString: 
-  lookRadius: 10
-  maxLookRadiusOnAlert: 50
-  yellRadius: 5
-  RadiusExpansionSpeed: 0.2
-  RedBoxPosition: {x: 0, y: 0.5, z: 1}
-  RedBoxScale: {x: 1, y: 1, z: 1}
-  GreenBoxPosition: {x: 0, y: 0.5, z: 1}
-  GreenBoxScale: {x: 0.01, y: 1, z: 1}
-  attackSpeed: 1
-  timerBeforeGettingStunable: 3
-  timeBeingStuned: 0.5
-  ImpatienceSign: {fileID: 95896370730635509, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-    type: 3}
-  m_timeToShowDetectedFx: 2
-  m_detectedFx: {fileID: 2866842154927681893}
-  TestIAcomportement: 0
-  m_fxs:
-    m_freezed: {fileID: 7846910086951582017}
-    m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
-      type: 3}
-    m_markExplosionRoot: {fileID: 1015741110291158094}
-  m_timeToWaitBeforeDespawnEnemy: 3
-  speedSprint: 15
-  TimeBeforeGettingImpatient: 3
 --- !u!114 &1117030429770224116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,6 +616,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGreenGizmos: 1
+--- !u!114 &4114020432838377393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014568333761063014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40907ced68ff7424bbcc5e5f5c76bb5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isInstatiate: 0
+  m_enemyType: 0
+  m_sM:
+    m_currentStateString: 
+  lookRadius: 10
+  maxLookRadiusOnAlert: 50
+  yellRadius: 5
+  RadiusExpansionSpeed: 0.2
+  RedBoxPosition: {x: 0, y: 0, z: 0}
+  RedBoxScale: {x: 0, y: 0, z: 0}
+  GreenBoxPosition: {x: 0, y: 0, z: 0}
+  GreenBoxScale: {x: 0, y: 0, z: 0}
+  speed: 8
+  attackSpeed: 0.75
+  timerBeforeGettingStunable: 3
+  timeBeingStuned: 0.5
+  ImpatienceSign: {fileID: 7843552495166825534}
+  m_timeToShowDetectedFx: 2
+  m_detectedFx: {fileID: 2866842154927681893}
+  m_fxs:
+    m_freezed: {fileID: 7846910086951582017}
+    m_markExplosion: {fileID: 1824010770675008, guid: f839e38d7328d2644be9bd14d8f23034,
+      type: 3}
+    m_markExplosionRoot: {fileID: 1015741110291158094}
+  m_timeToWaitBeforeDespawnEnemy: 3
 --- !u!1 &1015518654019923178
 GameObject:
   m_ObjectHideFlags: 0
@@ -81099,6 +81096,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7894058434141238475}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7843552495166825534 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 95896370730635509, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+    type: 3}
+  m_PrefabInstance: {fileID: 7894058434141238475}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 457330d983fa0d140a977dfcd5894d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9215147149589569010
 PrefabInstance:
   m_ObjectHideFlags: 0
