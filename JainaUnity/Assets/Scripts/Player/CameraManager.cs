@@ -16,6 +16,7 @@ public class CameraManager : MonoBehaviour {
 	}
 #endregion Singleton
 
+	[SerializeField] Vector3 m_offset = new Vector3(0, 20, -20);
     [SerializeField] float m_smoothing = 5f;
     [SerializeField] float m_clampedValue = 1f;
 	[SerializeField, Range(0, 1)] float m_posBetweenTargetAndMouse = 0.5f;
@@ -34,12 +35,13 @@ public class CameraManager : MonoBehaviour {
     }
 
 	Transform m_target;
-    Vector3 m_offset;
+    // Vector3 m_offset;
 	Vector3 mousePoint;
 
     void Start (){
 		m_target = PlayerManager.Instance.transform;
         m_offset = transform.position - m_target.position;
+		transform.position = m_target.position + m_offset;
     }
 
 	void Update(){
