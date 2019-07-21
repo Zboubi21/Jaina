@@ -33,7 +33,7 @@ public class Butcher_ImpatienceState : ImpatienceState
         // FaceTarget();
 
         // sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
-        sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, butcherController.m_butcherJump.m_targetJumpPos, Quaternion.identity);
+        sign = m_enemyController.InstantiateObjects(butcherController.m_signImpatienceFx, butcherController.m_butcherJump.m_targetJumpPos, butcherController.m_signImpatienceFx.transform.rotation);
 
         target = sign.transform;
 
@@ -182,6 +182,7 @@ public class Butcher_ImpatienceState : ImpatienceState
             if(moveFracJourney > butcherController.m_butcherJump.m_timeToDoDamage && doDamage){
                 doDamage = false;
                 butcherController.OnImpactDamage();
+                m_enemyController.InstantiateObjects(butcherController.m_impactJumpFx, butcherController.m_butcherJump.m_targetJumpPos, butcherController.m_impactJumpFx.transform.rotation);
             }
 
             if(moveFracJourney > butcherController.m_butcherJump.m_timeToDisableCollider && !disableCollider){

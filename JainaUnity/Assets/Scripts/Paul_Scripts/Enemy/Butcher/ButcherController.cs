@@ -12,7 +12,8 @@ public class ButcherController : EnemyController
     int nbrJump;
     public float CoolDownGettingImpatient = 2f;
     [Space]
-    public GameObject signImpatience;
+    public GameObject m_signImpatienceFx;
+    public GameObject m_impactJumpFx;
     [Space]
     [Space]
     public int impactDamage;
