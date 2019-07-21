@@ -75,7 +75,9 @@ public class EnemyController : MonoBehaviour {
     public Vector3 GreenBoxPosition;
     public Vector3 GreenBoxScale;
 
-    
+    [Space]
+    [Header("Speed Variable")]
+    public float speed;
 
     [Space]
     [Header("Attack Variable")]
@@ -499,6 +501,7 @@ public class EnemyController : MonoBehaviour {
         Rac = Anim.runtimeAnimatorController;
 
         //Get Agent's Speed
+        agent.speed = speed;
         AgentSpeed = agent.speed;
 
         //Get Agent's LookRadius
