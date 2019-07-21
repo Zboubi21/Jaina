@@ -104,6 +104,7 @@ public class SaveManager : MonoBehaviour {
         ReloadScene();
         yield return new WaitForSeconds(m_timeToStartFadeOut);
         ResetPlayerPos(m_savePosition);
+        SetCameraPos();
         m_dieAnimator.SetTrigger("FadeOut");
     }
 
@@ -120,6 +121,7 @@ public class SaveManager : MonoBehaviour {
         ReloadScene();
         yield return new WaitForFixedUpdate();
         ResetPlayerPos(m_savePosition);
+        SetCameraPos();
     }
     public IEnumerator On_RestartGame(){
         ReloadScene();
@@ -132,6 +134,10 @@ public class SaveManager : MonoBehaviour {
         m_savePosition = m_startGamePosition;
         yield return new WaitForFixedUpdate();
         ResetPlayerPos(m_startGamePosition);
+    }
+
+    void SetCameraPos(){
+        CameraManager.Instance.ResetPosition();
     }
 
 }
