@@ -24,12 +24,16 @@ public class MoveAnimation : MonoBehaviour {
         [HideInInspector] public bool m_eventIsInvoke = false;
     }
 
+    IEnumerator m_moveCoroutine;
+
     void Start(){
         ResetPosition();
     }
 
     public void DoMoveAnimation(){
-        StartCoroutine(MovePositionCorout());
+        // StartCoroutine(MovePositionCorout());
+        m_moveCoroutine = MovePositionCorout();
+        StartCoroutine(m_moveCoroutine);
     }
 
     IEnumerator MovePositionCorout(){
@@ -70,7 +74,10 @@ public class MoveAnimation : MonoBehaviour {
     }
 
     public void ResetPosition(){
-        StopAllCoroutines();
+        // StopAllCoroutines();
+        if(m_moveCoroutine != null){
+            StopCoroutine(m_moveCoroutine);
+        }
         transform.localPosition = m_startPosition;
     }
 

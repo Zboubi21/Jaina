@@ -15,6 +15,7 @@ public class ObjectPooler : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
 		}else{
 			// Debug.LogError("Two instance of ObjectPooler");
+			gameObject.SetActive(false);
             Destroy(gameObject);
 		}
 	}

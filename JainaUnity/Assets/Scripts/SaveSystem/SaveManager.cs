@@ -13,6 +13,7 @@ public class SaveManager : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
 		}else{
 			// Debug.LogError("Two instance of SaveManager");
+            gameObject.SetActive(false);
             Destroy(gameObject);
 		}
 	}
@@ -55,6 +56,12 @@ public class SaveManager : MonoBehaviour {
         m_playerManager = PlayerManager.Instance;
         m_objectPooler = ObjectPooler.Instance;
         m_startGamePosition = m_playerManager.transform.position;
+    }
+
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.P)){
+            m_checkpoints.Clear();
+        }
     }
 
     public void AddCheckpoint(Checkpoint newCheckpoint){
@@ -117,9 +124,12 @@ public class SaveManager : MonoBehaviour {
     public IEnumerator On_RestartGame(){
         ReloadScene();
         for (int i = 0, l = m_checkpoints.Count; i < l; ++i) {
-            m_checkpoints[i].ResetCheckpoint();
+            if(m_checkpoints[i] != null){
+                m_checkpoints[i].ResetCheckpoint();
+            }
         }
         m_actualCheckpointNumber = 0;
+        m_savePosition = m_startGamePosition;
         yield return new WaitForFixedUpdate();
         ResetPlayerPos(m_startGamePosition);
     }
