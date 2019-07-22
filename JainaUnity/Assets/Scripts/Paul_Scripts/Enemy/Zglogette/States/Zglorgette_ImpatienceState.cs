@@ -20,7 +20,6 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     {
         StateAnimation(m_enemyController.Anim);
         m_enemyController.StartCoroutine(CastImpatience());
-        Debug.Log("ImpatienceEnter");
     }
 
     public override void FixedUpdate()

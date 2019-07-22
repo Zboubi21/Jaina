@@ -108,8 +108,11 @@ public class PlayerStats : CharacterStats {
         InCombatEvent.Invoke();
         for (int i = 0, l = doors.Length; i < l; ++i)
         {
-            Debug.Log("closeDoor");
-            doors[i].SetTrigger(closeDoor);
+            if(doors[i] != null)
+            {
+                Debug.Log("closeDi]oor");
+                doors[i].SetTrigger(closeDoor);
+            }
         }
         isInCombat = true;
     }
@@ -121,8 +124,11 @@ public class PlayerStats : CharacterStats {
         OutOfCombatEvent.Invoke();
         for (int i = 0, l = doors.Length; i < l; ++i)
         {
-            Debug.Log("openDoor");
-            doors[i].SetTrigger(openDoor);
+            if(doors[i] != null)
+            {
+                Debug.Log("openDoor");
+                doors[i].SetTrigger(openDoor);
+            }
         }
         isInCombat = false;
     }

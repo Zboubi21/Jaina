@@ -26626,16 +26626,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69dce9c02a676ca40940b86386706e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 300
   m_currentHealth: 100
   damage:
     baseValue: 10
   armor:
     baseValue: 0
   mainCamera: {fileID: 0}
-  _name: Young Nil'Gharian
+  _name: Nil'Gharian sorceress
   m_enemyPowerLevel: 0
-  m_enemyType: 0
+  m_enemyType: 1
   _hasBackPack: 0
   DebufRoot: {fileID: 7300351106607060898}
   MarqueArcane: {fileID: 1877719558448682, guid: 00b5f55e609a67649812a3c6b21b53a2,
@@ -26703,7 +26703,7 @@ MonoBehaviour:
   GreenBoxPosition: {x: 0, y: 0, z: 0}
   GreenBoxScale: {x: 0, y: 0, z: 0}
   speed: 8
-  attackSpeed: 0.75
+  attackSpeed: 1.5
   timerBeforeGettingStunable: 3
   timeBeingStuned: 0.5
   ImpatienceSign: {fileID: 479297262306946801}
@@ -26723,7 +26723,7 @@ MonoBehaviour:
     m_Bits: 431104
   projectil: 11
   projectilRoot: {fileID: 5459353007596249149}
-  nombreDeGrandeAttack: 1
+  nombreDeGrandeAttack: 2
   timeBetweenImpatiencePorjectil: 0.5
   impatience_Projectil: 12
   impatienceProjectilRoot: {fileID: 9002769578401423965}
@@ -26768,6 +26768,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6636903135568841513}
   - component: {fileID: 3431497560280514770}
+  - component: {fileID: 1629378444}
   m_Layer: 0
   m_Name: Zglogette_Animator
   m_TagString: Untagged
@@ -26810,6 +26811,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1629378444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801061369558419462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678d086af6241694591f4cd5226a9d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &572660220253797892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26879,12 +26892,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eccb21de60ab9e643999f8a8e4c2dca2, type: 3}
---- !u!4 &2802809939831061323 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2384633625806701903, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-    type: 3}
-  m_PrefabInstance: {fileID: 572660220253797892}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &479297262306946801 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 95896370730635509, guid: eccb21de60ab9e643999f8a8e4c2dca2,
@@ -26897,6 +26904,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 457330d983fa0d140a977dfcd5894d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2802809939831061323 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2384633625806701903, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+    type: 3}
+  m_PrefabInstance: {fileID: 572660220253797892}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1479686810025331391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27223,15 +27236,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49ddf09a2c5dffb40ad9e03b835d22e2, type: 3}
---- !u!1 &3143831838579808692 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8343920951428497183, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
-    type: 3}
-  m_PrefabInstance: {fileID: 6371095401890145963}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3146865641303494896 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8341022906042529371, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
+    type: 3}
+  m_PrefabInstance: {fileID: 6371095401890145963}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3143831838579808692 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8343920951428497183, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
     type: 3}
   m_PrefabInstance: {fileID: 6371095401890145963}
   m_PrefabAsset: {fileID: 0}

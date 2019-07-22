@@ -17,8 +17,6 @@ public class Zglorgette_AttackState : AttackState
     {
         base.Enter();
         m_enemyController.StopMoving(true);
-        Debug.Log("OnEnterAttack");
-
     }
     public override void Update()
     {

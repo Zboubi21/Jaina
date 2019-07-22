@@ -87,7 +87,7 @@ public class ZglorgetteController : EnemyController
     public int OnRayCast()
     {
         Vector3 rayTarget = TargetStats1.transform.position - transform.position;
-        if (Physics.Linecast(transform.position, TargetStats1.transform.position, out hit, layers))
+        if (/*Physics.SphereCast(transform.position, 1.1f , rayTarget, out hit, range+2f, layers)*/ Physics.Linecast(transform.position, TargetStats1.transform.position,out hit, layers))
         {
             float targetDistance = Vector3.Distance(transform.position, TargetStats1.transform.position);
             if (targetDistance > range)
@@ -102,11 +102,21 @@ public class ZglorgetteController : EnemyController
             }
             else
             {
-                Debug.DrawRay(transform.position, rayTarget, Color.green);
-                return 2;
+                Collider[] hitcol = Physics.OverlapSphere(transform.position, 1f,layers);
+                if(hitcol.Length == 0)
+                {
+                    Debug.DrawRay(transform.position, rayTarget, Color.green);
+                    return 2;
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, rayTarget, Color.yellow);
+                    return 3;
+                }
             }
         }
-        return 3;
+        Debug.DrawRay(transform.position, rayTarget, Color.magenta);
+        return 4;
     }
 
     public override bool CoolDownWitchImpatience()
