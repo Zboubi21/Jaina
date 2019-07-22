@@ -258,7 +258,7 @@ public class ButcherController : EnemyController
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    private void OnDrawGizmosSelected()
+    public override void OnDrawGizmosSelected()
     {
         Gizmos.color = minRangeColor;
         Gizmos.DrawWireSphere(transform.position, rangeMinForJump);

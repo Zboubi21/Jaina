@@ -19,7 +19,7 @@ public class Zglorgette_ChaseState : ChaseState
     {
         base.Enter();
         m_enemyController.StopMoving(false);
-        Debug.Log("OnEnterChase");
+        m_enemyController.TimeBeforeGettingImpatient = m_enemyController.CurrentTimeBeforeGettingImpatient;
         //m_enemyController.IsImpatience = false;
         //m_enemyController.CdImpatient = m_enemyController.CoolDownGettingImpatient;
 

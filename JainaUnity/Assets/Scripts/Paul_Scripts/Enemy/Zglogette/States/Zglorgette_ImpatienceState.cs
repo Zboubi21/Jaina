@@ -7,17 +7,20 @@ public class Zglorgette_ImpatienceState : ImpatienceState
 {
 
     // CONSTRUCTOR
-    EnemyController m_enemyController;
-    public Zglorgette_ImpatienceState(EnemyController enemyController) : base(enemyController)
+    ZglorgetteController m_enemyController;
+    public Zglorgette_ImpatienceState(ZglorgetteController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
     GameObject sign;
-    Transform target;
+
+    int nbrOfProjectilThrown;
 
     public override void Enter()
     {
-
+        StateAnimation(m_enemyController.Anim);
+        m_enemyController.StartCoroutine(CastImpatience());
+        Debug.Log("ImpatienceEnter");
     }
 
     public override void FixedUpdate()
@@ -27,6 +30,7 @@ public class Zglorgette_ImpatienceState : ImpatienceState
 
     public override void Update()
     {
+        FaceTarget();
     }
 
     public override void Exit()
@@ -59,11 +63,6 @@ public class Zglorgette_ImpatienceState : ImpatienceState
 
     #region Impatience Effect
 
-    public override void ImpatienceEffect(float speed)
-    {
-
-    }
-
     public override void DestroySign()
     {
         m_enemyController.DestroyGameObject(sign);
@@ -71,6 +70,27 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     }
 
     #endregion
+
+    IEnumerator CastImpatience()
+    {
+        yield return new WaitForSeconds(0.5f);
+        while (nbrOfProjectilThrown < m_enemyController.nombreDeGrandeAttack)
+        {
+            m_enemyController.OnCastImpatienceProjectil();
+            nbrOfProjectilThrown++;
+            yield return new WaitForSeconds(m_enemyController.timeBetweenImpatiencePorjectil);
+        }
+        nbrOfProjectilThrown = 0;
+        yield return new WaitForSeconds(0.5f);
+        if (m_enemyController.OnRayCast() == 2)
+        {
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
+        }
+        else
+        {
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState); //Chase
+        }
+    }
 
 
 }

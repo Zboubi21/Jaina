@@ -72,16 +72,25 @@ public class Zglorgette_AttackState : AttackState
 
     public override void OnOutState()
     {
-        if (m_enemyController.CheckAnimEnd1)
+        if (!m_enemyController.CoolDownWitchImpatience())
         {
-            if(m_enemyController.OnRayCast() == 2)
+            if (m_enemyController.CheckAnimEnd1)
             {
-                m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
+                if(m_enemyController.OnRayCast() == 2)
+                {
+                    m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
+                }
+                else
+                {
+                    m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState); //Chase
+                }
             }
-            else
-            {
-                m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState); //Chase
-            }
+        }
+        else
+        {
+            m_enemyController.TimeBeforeGettingImpatient = m_enemyController.CurrentTimeBeforeGettingImpatient;
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ImpatienceState); //Impatience
+
         }
     }
 

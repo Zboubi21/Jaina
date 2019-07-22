@@ -5,20 +5,40 @@ using EnemyStateEnum_Zglorgette;
 
 public class ZglorgetteController : EnemyController
 {
-
+    [Space]
     [Header("Nil'Gharian Witch attack variables")]
     public float range;
+    public Color rangeColor = Color.cyan;
     public LayerMask layers;
     public GameObject projectil;
+    public Transform projectilRoot;
+    [Space]
     [Header("Nil'Gharian Witch Impatience Variables")]
     public int nombreDeGrandeAttack;
-    public GameObject impatiencte_Projectil;
+    public float timeBetweenImpatiencePorjectil=0.5f;
+    public GameObject impatience_Projectil;
+    public Transform impatienceProjectilRoot;
     public float TimeBeforeGettingImpatient = 3f;
     float currentTimeBeforeGettingImpatient;
-    float currentTimeBeforeGettingImpatientWhenInAttackRange;
     Ray ray;
 
     RaycastHit hit;
+
+    #region get set
+    public float CurrentTimeBeforeGettingImpatient
+    {
+        get
+        {
+            return currentTimeBeforeGettingImpatient;
+        }
+
+        set
+        {
+            currentTimeBeforeGettingImpatient = value;
+        }
+    }
+    #endregion
+
     private void Awake()
     {
         m_sM.AddStates(new List<IState> {
@@ -38,9 +58,27 @@ public class ZglorgetteController : EnemyController
             Debug.LogError("You need to have the same number of State in ZglorgController and EnemyStateEnum");
         }
     }
+
+    public override void LogicAtStart()
+    {
+        base.LogicAtStart();
+
+        currentTimeBeforeGettingImpatient = TimeBeforeGettingImpatient;
+    }
+
     public override void Attack()
     {
         Anim.SetTrigger("Attack");
+    }
+
+    public override void OnCastProjectil()
+    {
+        Instantiate(projectil, projectilRoot);
+    }
+
+    public override void OnCastImpatienceProjectil()
+    {
+        Instantiate(impatience_Projectil, impatienceProjectilRoot);
     }
 
     public int OnRayCast()
@@ -58,7 +96,6 @@ public class ZglorgetteController : EnemyController
             {
                 Debug.DrawRay(transform.position, rayTarget, Color.yellow);
                 return 1;
-
             }
             else
             {
@@ -67,5 +104,22 @@ public class ZglorgetteController : EnemyController
             }
         }
         return 3;
+    }
+
+    public override bool CoolDownWitchImpatience()
+    {
+        TimeBeforeGettingImpatient -= Time.deltaTime;
+        if(TimeBeforeGettingImpatient <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+        Gizmos.color = rangeColor;
+        Gizmos.DrawWireSphere(transform.position, range);
     }
 }
