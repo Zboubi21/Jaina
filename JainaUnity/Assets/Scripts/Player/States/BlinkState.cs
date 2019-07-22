@@ -45,7 +45,7 @@ public class BlinkState : IState {
 
       RaycastHit hit;
       if(Physics.Linecast(origin, destination, out hit, m_playerManager.m_powers.m_blink.m_colliderToCanNotBlink)){
-        Debug.DrawRay(origin, destination, Color.black, 5);
+        // Debug.DrawRay(origin, destination, Color.black, 5);
         Vector3 newDestination = hit.point;
         destination = new Vector3(newDestination.x, destination.y, newDestination.z);
         // Debug.Log("I hit:" + hit.collider.gameObject.name);
