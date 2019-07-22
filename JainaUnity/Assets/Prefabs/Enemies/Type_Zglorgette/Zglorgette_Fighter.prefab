@@ -25671,6 +25671,36 @@ Transform:
   m_Father: {fileID: 1912593264800779510}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5827182404709538121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5459353007596249149}
+  m_Layer: 11
+  m_Name: Projectil_Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5459353007596249149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5827182404709538121}
+  m_LocalRotation: {x: 0.0000029779899, y: 0.000000029802322, z: 1, w: -8.697466e-14}
+  m_LocalPosition: {x: -0.002, y: 1.497916, z: 1.158}
+  m_LocalScale: {x: 0.014000013, y: 0.014000013, z: 0.014}
+  m_Children: []
+  m_Father: {fileID: 7297200923207617736}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -180, y: -180, z: 0}
 --- !u!1 &7300351106607060898
 GameObject:
   m_ObjectHideFlags: 0
@@ -25759,6 +25789,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7303590674650548132}
+  - {fileID: 5459353007596249149}
+  - {fileID: 9002769578401423965}
   m_Father: {fileID: 7297513361175398866}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26684,18 +26716,48 @@ MonoBehaviour:
       type: 3}
     m_markExplosionRoot: {fileID: 7303590674650548132}
   m_timeToWaitBeforeDespawnEnemy: 3
-  range: 0
+  range: 15
   rangeColor: {r: 0, g: 1, b: 1, a: 1}
   layers:
     serializedVersion: 2
-    m_Bits: 0
-  projectil: {fileID: 0}
-  projectilRoot: {fileID: 0}
-  nombreDeGrandeAttack: 0
+    m_Bits: 431104
+  projectil: 11
+  projectilRoot: {fileID: 5459353007596249149}
+  nombreDeGrandeAttack: 1
   timeBetweenImpatiencePorjectil: 0.5
-  impatience_Projectil: {fileID: 0}
-  impatienceProjectilRoot: {fileID: 0}
+  impatience_Projectil: 12
+  impatienceProjectilRoot: {fileID: 9002769578401423965}
   TimeBeforeGettingImpatient: 3
+--- !u!1 &8619608683804661985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9002769578401423965}
+  m_Layer: 11
+  m_Name: Impatience_Projectil_Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9002769578401423965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8619608683804661985}
+  m_LocalRotation: {x: 0.0000029779899, y: 0.000000029802322, z: 1, w: -8.697466e-14}
+  m_LocalPosition: {x: -0.002, y: 1.497916, z: 1.158}
+  m_LocalScale: {x: 0.014000013, y: 0.014000013, z: 0.014}
+  m_Children: []
+  m_Father: {fileID: 7297200923207617736}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: -180, y: -180, z: 0}
 --- !u!1 &8801061369558419462
 GameObject:
   m_ObjectHideFlags: 0
@@ -27161,15 +27223,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49ddf09a2c5dffb40ad9e03b835d22e2, type: 3}
---- !u!4 &3146865641303494896 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8341022906042529371, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
-    type: 3}
-  m_PrefabInstance: {fileID: 6371095401890145963}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3143831838579808692 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8343920951428497183, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
+    type: 3}
+  m_PrefabInstance: {fileID: 6371095401890145963}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3146865641303494896 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8341022906042529371, guid: 49ddf09a2c5dffb40ad9e03b835d22e2,
     type: 3}
   m_PrefabInstance: {fileID: 6371095401890145963}
   m_PrefabAsset: {fileID: 0}
