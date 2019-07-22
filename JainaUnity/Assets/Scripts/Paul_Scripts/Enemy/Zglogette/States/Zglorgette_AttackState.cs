@@ -8,10 +8,22 @@ public class Zglorgette_AttackState : AttackState
 {
 
     // CONSTRUCTOR
-    EnemyController m_enemyController;
-    public Zglorgette_AttackState(EnemyController enemyController) : base (enemyController)
+    ZglorgetteController m_enemyController;
+    public Zglorgette_AttackState(ZglorgetteController enemyController) : base (enemyController)
     {
         m_enemyController = enemyController;
+    }
+    public override void Enter()
+    {
+        base.Enter();
+        m_enemyController.StopMoving(true);
+        Debug.Log("OnEnterAttack");
+
+    }
+    public override void Update()
+    {
+        base.Update();
+        m_enemyController.FaceTarget();
     }
     /*
     public void Enter()
@@ -54,7 +66,7 @@ public class Zglorgette_AttackState : AttackState
 
     #endregion
 
-    
+
 
     #region Leaving State
 
@@ -62,7 +74,14 @@ public class Zglorgette_AttackState : AttackState
     {
         if (m_enemyController.CheckAnimEnd1)
         {
-            
+            if(m_enemyController.OnRayCast() == 2)
+            {
+                m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
+            }
+            else
+            {
+                m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState); //Chase
+            }
         }
     }
 

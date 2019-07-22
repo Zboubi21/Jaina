@@ -30,7 +30,7 @@ public class AttackState : IState
         m_enemyController = enemyController;
     }
 
-    public void Enter()
+    public virtual void Enter()
     {
         m_enemyController.CheckAnimEnd1 = false;
     }
@@ -40,7 +40,7 @@ public class AttackState : IState
 
     }
 
-    public void Update()
+    public virtual void Update()
     {
         OnOutState();
         Attack();
