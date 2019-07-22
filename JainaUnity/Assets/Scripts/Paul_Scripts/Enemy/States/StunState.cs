@@ -18,6 +18,7 @@ public class StunState : IState
     public void Enter()
     {
         IsStunable();
+        m_enemyController.m_stunFx.SetActive(true);
     }
 
     public void FixedUpdate()
@@ -44,6 +45,7 @@ public class StunState : IState
         {
             BeStunable(false);
         }
+        m_enemyController.m_stunFx.SetActive(false);
     }
 
     public virtual void GetOutOfState()
@@ -53,7 +55,7 @@ public class StunState : IState
         {
             m_enemyController.ChangeState((int)EnemyState.AlerteState);
             m_enemyController.HasBeenOnAlert = true;
-            Debug.Log(m_enemyController.name);
+            // Debug.Log(m_enemyController.name);
         }
         //else if (m_enemyController.GetLastStateIndex() != 6)
         //{

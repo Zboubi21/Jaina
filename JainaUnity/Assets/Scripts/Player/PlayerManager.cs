@@ -577,6 +577,8 @@ public class PlayerManager : MonoBehaviour {
 
 	void Start(){
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
+
+
 		SetUIElements();
 
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
@@ -713,8 +715,11 @@ public class PlayerManager : MonoBehaviour {
 			RaycastHit hit;
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
-			if(!m_actualClickOnGroundFx.gameObject.activeSelf){
-				m_actualClickOnGroundFx.gameObject.SetActive(true);
+			
+			if(m_actualClickOnGroundFx != null){
+				if(!m_actualClickOnGroundFx.gameObject.activeSelf){
+					m_actualClickOnGroundFx.gameObject.SetActive(true);
+				}
 			}
 			if(m_agent.destination != transform.position){
 				m_actualClickOnGroundFx.transform.position = m_agent.destination;
@@ -815,7 +820,10 @@ public class PlayerManager : MonoBehaviour {
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0);
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0);
 
-		ChangeUIElements();
+		// Si le joueur ne commence pas avec le même élément que dans l'HUD
+		if(m_currentElement != ElementType.Ice){
+			ChangeUIElements();
+		}
 	}
 
 	void ChangeUIElements(bool rightSpell = true){

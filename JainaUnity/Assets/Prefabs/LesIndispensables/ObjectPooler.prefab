@@ -71,6 +71,21 @@ MonoBehaviour:
     m_enemyType: 5
     m_prefab: {fileID: 1581731634167060, guid: e5ddeec5549369146ba5acad544f5af0, type: 3}
     m_size: 3
+  - m_name: Zglorgette_Jeune
+    m_enemyType: 6
+    m_prefab: {fileID: 1014568333761063014, guid: 95e6f5adb79d83644a2b1bbdde5ff410,
+      type: 3}
+    m_size: 3
+  - m_name: Zglorgette_Adulte
+    m_enemyType: 7
+    m_prefab: {fileID: 7302387421587225484, guid: 2d029573a1c868f4fae08f2d84e81468,
+      type: 3}
+    m_size: 3
+  - m_name: "Zglorgette_Conqu\xE9rant"
+    m_enemyType: 8
+    m_prefab: {fileID: 1014568333761063014, guid: 28582ea73fc40654ea4c9648785b1f01,
+      type: 3}
+    m_size: 3
   m_spellPools:
   - m_name: AutoAttack_Ice
     m_spellType: 0
@@ -116,6 +131,16 @@ MonoBehaviour:
     m_spellType: 10
     m_prefab: {fileID: 1710288282700444, guid: 77a70cfe370cf8d4c9f982803423a506, type: 3}
     m_size: 2
+  - m_name: AutoAttack_Zglorgette
+    m_spellType: 11
+    m_prefab: {fileID: 2175073581386142910, guid: a97ca353935589d41a06051e6004a4f7,
+      type: 3}
+    m_size: 10
+  - m_name: Spell_Zglorgette
+    m_spellType: 12
+    m_prefab: {fileID: 7906869711107369314, guid: 157c87fa66afb7d4cb2455ad92065aac,
+      type: 3}
+    m_size: 5
   m_objectPools:
   - m_name: LifePotion
     m_objectType: 0
@@ -126,7 +151,7 @@ MonoBehaviour:
     m_objectType: 1
     m_prefab: {fileID: 1304364764819343481, guid: f9485e711207cc54fad5bc343da17e92,
       type: 3}
-    m_size: 2
+    m_size: 10
   m_usePoolTest: 1
   m_spawnPool: {fileID: 0}
   m_poolTest:
