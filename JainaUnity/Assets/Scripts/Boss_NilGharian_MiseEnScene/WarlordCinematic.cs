@@ -9,6 +9,20 @@ public class WarlordCinematic : MonoBehaviour {
     [SerializeField] float m_timeBeforeFleeing;
     [SerializeField] float m_timeBeforeDisapering = 2.5f;
 
+    public Animation AnimationToPlayeAtEndOfCinematique = Animation.Impatience;
+    [System.Serializable]
+    public enum Animation
+    {
+        Idle,
+        Chase,
+        Attack,
+        Impatience,
+        Hit,
+        Die,
+        Alerte,
+        Victory,
+    }
+
     NavMeshAgent m_agent;
     Animator m_animator;
 
@@ -27,7 +41,35 @@ public class WarlordCinematic : MonoBehaviour {
         yield return new WaitForSeconds(time);
         m_agent.SetDestination(m_targetAgentPosition.position);
         m_agent.speed += 5;
-        m_animator.SetTrigger("Impatience");
+        switch (AnimationToPlayeAtEndOfCinematique)
+        {
+            case Animation.Idle:
+                m_animator.SetTrigger("Idle");
+                break;
+            case Animation.Chase:
+                m_animator.SetTrigger("Chase");
+                break;
+            case Animation.Attack:
+                m_animator.SetTrigger("Attack");
+                break;
+            case Animation.Impatience:
+                m_animator.SetTrigger("Impatience");
+                break;
+            case Animation.Hit:
+                m_animator.SetTrigger("Hit");
+                break;
+            case Animation.Die:
+                m_animator.SetTrigger("Die");
+                break;
+            case Animation.Alerte:
+                m_animator.SetTrigger("Alerte");
+                break;
+            case Animation.Victory:
+                m_animator.SetTrigger("Victory");
+                break;
+            default:
+                break;
+        }
         yield return new WaitForSeconds(timeoff);   // Disable to use EnemyBecameInvisible
         gameObject.SetActive(false);                // Disable to use EnemyBecameInvisible
     }
