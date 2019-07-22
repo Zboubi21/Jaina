@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 1121328473359813210}
   - component: {fileID: 4114020432838377393}
   m_Layer: 11
-  m_Name: Zglorgette_Jeune
+  m_Name: Zglorgette_jeune
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -581,15 +581,14 @@ MonoBehaviour:
   m_hit:
     m_timeToSeeHit: 0.1
     m_timeToRecovery: 0.1
-    m_colorSkin: []
     m_whiteSkin:
     - {fileID: 2653898305101415237}
     - {fileID: 1871831448493409792}
     - {fileID: 2529060853096070336}
-  _name: Young Nil'Gharian
+  _name: Nil'Gharian witch
   m_enemyPowerLevel: 0
   m_enemyType: 0
-  _hasBackPack: 1
+  _hasBackPack: 0
   DebufRoot: {fileID: 1014220907465213000}
   MarqueArcane: {fileID: 1877719558448682, guid: 00b5f55e609a67649812a3c6b21b53a2,
     type: 3}
@@ -20992,21 +20991,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 1930501813538262099, guid: eccb21de60ab9e643999f8a8e4c2dca2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21018,6 +21002,21 @@ PrefabInstance:
       value: 1.21
       objectReference: {fileID: 0}
     - target: {fileID: 1930501813538262099, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0
