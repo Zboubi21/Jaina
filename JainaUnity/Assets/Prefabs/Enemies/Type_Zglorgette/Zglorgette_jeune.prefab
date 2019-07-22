@@ -481,7 +481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1010718991251561016
 Transform:
   m_ObjectHideFlags: 0
@@ -578,7 +578,7 @@ MonoBehaviour:
   _name: Young Nil'Gharian
   m_enemyPowerLevel: 0
   m_enemyType: 0
-  _hasBackPack: 0
+  _hasBackPack: 1
   DebufRoot: {fileID: 1014220907465213000}
   MarqueArcane: {fileID: 1877719558448682, guid: 00b5f55e609a67649812a3c6b21b53a2,
     type: 3}
@@ -628,7 +628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40907ced68ff7424bbcc5e5f5c76bb5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isInstatiate: 0
+  m_isInstatiate: 1
   m_enemyType: 0
   m_sM:
     m_currentStateString: 
@@ -653,6 +653,8 @@ MonoBehaviour:
       type: 3}
     m_markExplosionRoot: {fileID: 1015741110291158094}
   m_timeToWaitBeforeDespawnEnemy: 3
+  nombreDeGrandeAttack: 0
+  TimeBeforeGettingImpatient: 3
 --- !u!1 &1015518654019923178
 GameObject:
   m_ObjectHideFlags: 0

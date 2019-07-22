@@ -5,8 +5,14 @@ using EnemyStateEnum_Zglorgette;
 
 public class ZglorgetteController : EnemyController
 {
+
+    [Header("Nil'Gharian Witch attack variables")]
+    public float range;
+    public LayerMask layers;
+    public GameObject projectil;
     [Header("Nil'Gharian Witch Impatience Variables")]
     public int nombreDeGrandeAttack;
+    public GameObject impatiencte_Projectil;
     public float TimeBeforeGettingImpatient = 3f;
     float currentTimeBeforeGettingImpatient;
     float currentTimeBeforeGettingImpatientWhenInAttackRange;
