@@ -20,4 +20,14 @@ public class RetrunAnimTime : MonoBehaviour {
     {
         controller.GetComponent<EnemyController>().OnImpactDamage();
     }
+
+    public void Call_ZglorgetteAttack()
+    {
+        controller.GetComponent<EnemyController>().OnCastProjectil();
+    }
+
+    public void Call_ZglorgetteAttack_Impatience()
+    {
+        controller.GetComponent<EnemyController>().OnCastImpatienceProjectil();
+    }
 }

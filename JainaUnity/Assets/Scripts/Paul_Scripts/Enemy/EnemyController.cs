@@ -703,6 +703,24 @@ public class EnemyController : MonoBehaviour {
 
     #endregion
 
+    #region Zglorgette Methods
+
+    public virtual void OnCastProjectil()
+    {
+
+    }
+    public virtual void OnCastImpatienceProjectil()
+    {
+
+    }
+
+    public virtual bool CoolDownWitchImpatience()
+    {
+        return false;
+    }
+
+    #endregion
+
 
     #region StunMethods
 
@@ -910,7 +928,7 @@ public class EnemyController : MonoBehaviour {
         return null;
     }
 
-    private void OnDrawGizmosSelected()
+    public virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lookRadius);
