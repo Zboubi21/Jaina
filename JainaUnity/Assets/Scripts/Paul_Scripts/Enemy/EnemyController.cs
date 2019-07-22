@@ -118,6 +118,9 @@ public class EnemyController : MonoBehaviour {
     public float m_timeToShowDetectedFx = 2;
     public StartParticles m_detectedFx;
 
+    [Header("Stun FX")]
+    public GameObject m_stunFx;
+
     [Header("FX")]
     public FXs m_fxs = new FXs();
     [System.Serializable] public class FXs {

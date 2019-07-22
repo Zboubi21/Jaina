@@ -577,6 +577,8 @@ public class PlayerManager : MonoBehaviour {
 
 	void Start(){
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
+
+
 		SetUIElements();
 
 		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
@@ -815,7 +817,10 @@ public class PlayerManager : MonoBehaviour {
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0);
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0);
 
-		ChangeUIElements();
+		// Si le joueur ne commence pas avec le même élément que dans l'HUD
+		if(m_currentElement != ElementType.Ice){
+			ChangeUIElements();
+		}
 	}
 
 	void ChangeUIElements(bool rightSpell = true){
