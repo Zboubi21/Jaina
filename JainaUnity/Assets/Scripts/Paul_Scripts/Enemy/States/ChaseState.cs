@@ -141,6 +141,7 @@ public class ChaseState : IState
     #endregion
 
     IEnumerator StartDetectedFx(){
+        m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_detectionFx);
         m_enemyController.m_detectedFx.gameObject.SetActive(true);
         m_enemyController.m_detectedFx.StartParticle();
         yield return new WaitForSeconds(m_enemyController.m_timeToShowDetectedFx);

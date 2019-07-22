@@ -71,7 +71,7 @@ public class ButcherController : EnemyController
             public float m_fadeInTimeShake = 0.1f;
             public float m_fadeOutTimeShake = 0.15f;
         }
-	}
+	}    
 
     float m_animTime;
     float m_cdImpatient;
