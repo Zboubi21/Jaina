@@ -56,7 +56,7 @@ public class PlayerStats : CharacterStats {
             base.TakeDamage(damage);
             m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
 
-            if(CurrentHealth <= 0){
+            if(CurrentHealth <= 0 && PlayerManager.Instance.m_playerDebug.m_playerCanDie){
                 GetComponent<PlayerManager>().On_PlayerDie();
                 enemyKillCount = 0;
                 enemyInCombat = 0;
@@ -108,6 +108,7 @@ public class PlayerStats : CharacterStats {
         InCombatEvent.Invoke();
         for (int i = 0, l = doors.Length; i < l; ++i)
         {
+            Debug.Log("closeDoor");
             doors[i].SetTrigger(closeDoor);
         }
         isInCombat = true;
@@ -120,6 +121,7 @@ public class PlayerStats : CharacterStats {
         OutOfCombatEvent.Invoke();
         for (int i = 0, l = doors.Length; i < l; ++i)
         {
+            Debug.Log("openDoor");
             doors[i].SetTrigger(openDoor);
         }
         isInCombat = false;
