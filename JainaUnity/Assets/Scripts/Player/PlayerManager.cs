@@ -435,11 +435,16 @@ public class PlayerManager : MonoBehaviour {
 
 	}
 
+	[Header("Mesh")]
+	public Mesh m_mesh = new Mesh();
+	[Serializable] public class Mesh {
+		public GameObject m_playerMesh;
+		public GameObject m_jainaMesh;
+	}
+
     #endregion Public [Serializable] Variables
 
     [Space]
-	public GameObject m_playerMesh;
-	public GameObject m_jainaMesh;
 	public GameObject m_clickOnGroundFx;
 	public LayerMask m_groundLayer;
 	public LayerMask m_rotatePlayerLayer;
@@ -450,7 +455,6 @@ public class PlayerManager : MonoBehaviour {
 	PlayerUiAnimationCorout m_playerUiCorout;
 	GameObject m_lastAutoAttackSound;
 	ClickOnGround m_actualClickOnGroundFx;
-	ClickOnGround m_actualClickOnGroundStartDestroyedFx;
 	
 #region Input Buttons
 
@@ -458,7 +462,6 @@ public class PlayerManager : MonoBehaviour {
 	[HideInInspector] public bool m_leftMouseClick;
 	[HideInInspector] public bool m_rightMouseClickDown;
 	[HideInInspector] public bool m_rightMouseClick;
-	[HideInInspector] public bool m_rightMouseClickUp;
 	[HideInInspector] public bool m_blinkButton;
 	[HideInInspector] public bool m_iceBlockButton;
 	[HideInInspector] public bool m_leftSpellButton;
@@ -546,6 +549,16 @@ public class PlayerManager : MonoBehaviour {
             m_isMoving = value;
         }
     }
+
+	CapsuleCollider m_capsuleColl;
+	public CapsuleCollider CapsuleColl {
+        get{
+            return m_capsuleColl;
+        }
+        set{
+            m_capsuleColl = value;
+        }
+    }
 #endregion Encapsuled
 
     void Awake(){
@@ -581,7 +594,8 @@ public class PlayerManager : MonoBehaviour {
 
 		SetUIElements();
 
-		m_jainaAnimator = m_jainaMesh.GetComponent<Animator>();
+		m_jainaAnimator = m_mesh.m_jainaMesh.GetComponent<Animator>();
+		CapsuleColl = GetComponent<CapsuleCollider>();
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;
 		m_cameraManager = CameraManager.Instance;
@@ -661,7 +675,7 @@ public class PlayerManager : MonoBehaviour {
             moveDirection = moveDirection.normalized;
         }
  
-        moveDirection = m_playerMesh.transform.InverseTransformDirection(moveDirection);
+        moveDirection = m_mesh.m_playerMesh.transform.InverseTransformDirection(moveDirection);
  
         // Debug.Log("moveDirection = " + moveDirection);
 
@@ -681,7 +695,6 @@ public class PlayerManager : MonoBehaviour {
 
 		m_rightMouseClickDown = Input.GetButtonDown("RightClick");
 		m_rightMouseClick = Input.GetButton("RightClick");
-		m_rightMouseClickUp = Input.GetButtonUp("RightClick");
 
 		m_blinkButton = Input.GetButtonDown("Blink");
 		m_iceBlockButton = Input.GetButtonDown("IceBlock");
@@ -695,44 +708,20 @@ public class PlayerManager : MonoBehaviour {
 			RaycastHit hit;
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
-			if(m_actualClickOnGroundStartDestroyedFx != null){
-				m_actualClickOnGroundStartDestroyedFx.DestroyFx();
+
+			if(m_actualClickOnGroundFx != null){
+				m_actualClickOnGroundFx.DestroyFx();
 			}
 			m_actualClickOnGroundFx = Instantiate(m_clickOnGroundFx, hit.point, m_clickOnGroundFx.transform.rotation).GetComponent<ClickOnGround>();
+			m_actualClickOnGroundFx.StartBeDestroyed();
 
-			if(m_agent.destination != m_lastDestination){
-				m_actualClickOnGroundFx.transform.position = m_agent.destination;
-				// m_actualClickOnGroundFx.transform.position = hit.point;
-			}else{
-				m_actualClickOnGroundFx.gameObject.SetActive(false);
-			}
-
-			// if(m_agent.destination != transform.position){
-			// 	m_actualClickOnGroundFx.transform.position = m_agent.destination;
-			// }
+			m_actualClickOnGroundFx.gameObject.SetActive(false);
+			// m_actualClickOnGroundFx.transform.position = m_agent.destination;
 		}
 		if(m_rightMouseClick){
 			RaycastHit hit;
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
-			
-			if(m_actualClickOnGroundFx != null){
-				if(!m_actualClickOnGroundFx.gameObject.activeSelf){
-					m_actualClickOnGroundFx.gameObject.SetActive(true);
-				}
-			}
-			if(m_agent.destination != transform.position){
-				m_actualClickOnGroundFx.transform.position = m_agent.destination;
-				// m_actualClickOnGroundFx.transform.position = hit.point;
-			}
-			m_lastDestination = m_agent.destination;
-		}
-		if(m_rightMouseClickUp){
-			if(m_actualClickOnGroundFx != null){
-				m_actualClickOnGroundFx.StartBeDestroyed();
-				m_actualClickOnGroundStartDestroyedFx = m_actualClickOnGroundFx;
-				m_actualClickOnGroundFx = null;
-			}
 		}
 	}
 	RaycastHit GroundRaycast(){
@@ -744,6 +733,13 @@ public class PlayerManager : MonoBehaviour {
 	public void MovePlayer(){
 		if(PlayerTargetPosition != Vector3.zero){
 			m_agent.SetDestination(PlayerTargetPosition);
+
+			if(m_actualClickOnGroundFx != null){
+				if(!m_actualClickOnGroundFx.gameObject.activeSelf){
+					m_actualClickOnGroundFx.gameObject.SetActive(true);
+					m_actualClickOnGroundFx.transform.position = m_agent.destination;
+				}
+			}
 		}
 	}
 	public void StopPlayerMovement(){
@@ -756,7 +752,7 @@ public class PlayerManager : MonoBehaviour {
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            m_playerMesh.transform.rotation = newRotation;
+            m_mesh.m_playerMesh.transform.rotation = newRotation;
         }
 	}
 	public void SetPlayerSpeed(float newSpeed){
@@ -839,7 +835,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- ICE ----------
 				if(!rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiIsInAnimation, m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -848,18 +844,18 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiIsInAnimation, m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
 									m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 
 									m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0));
 					// -------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiIsInAnimation, m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
 
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				}
 
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
@@ -867,7 +863,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- FIRE ----------
 				if(rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -876,12 +872,12 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
 									m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 
 									m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0));
 					// --------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
 				
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -897,7 +893,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -906,12 +902,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
 						
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
 										m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
 						// --------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -919,7 +915,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -928,19 +924,19 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
 						
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
 										m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
 						// --------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				}
 				}
 				
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 				
@@ -949,7 +945,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -958,12 +954,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
 										m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
 						// -------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -971,7 +967,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -980,12 +976,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
 										m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
 						// -------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1001,7 +997,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- FIRE ----------
 				if(!rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1010,18 +1006,18 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_secondUiParent, m_powers.m_fireBalls.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
 									m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstSpellImage, m_powers.m_fireBalls.m_uI.m_firstCooldownImage, m_powers.m_fireBalls.m_uI.m_firsText, 1, 
 									m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0));
 					// -------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
 
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				}
 				
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiIsInAnimation, m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
@@ -1029,7 +1025,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- ARCANE ----------
 				if(rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1038,12 +1034,12 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
 									m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 
 									m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0));
 					// ----------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
 				
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1059,7 +1055,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1068,12 +1064,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
 										m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
 						// ----------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1081,7 +1077,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1090,19 +1086,19 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
 										m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
 						// ----------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 					}
 				}
 
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
@@ -1111,7 +1107,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1120,12 +1116,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
 										m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
 						// --------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1133,7 +1129,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1142,12 +1138,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0, 1));
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_secondUiParent, m_powers.m_fireTrail.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstSpellImage, m_powers.m_fireTrail.m_uI.m_firstCooldownImage, m_powers.m_fireTrail.m_uI.m_firsText, 1, 
 										m_powers.m_fireTrail.m_uI.m_secondSpellImage, m_powers.m_fireTrail.m_uI.m_secondCooldownImage, m_powers.m_fireTrail.m_uI.m_secondText, 0));
 						// --------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1164,7 +1160,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- ARCANE ----------
 				if(!rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1173,18 +1169,18 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent, m_powers.m_arcaneProjectiles.m_uI.m_secondUiParent.localPosition, m_leftLeftPos, 
 									m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_firstCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_firsText, 1, 
 									m_powers.m_arcaneProjectiles.m_uI.m_secondSpellImage, m_powers.m_arcaneProjectiles.m_uI.m_secondCooldownImage, m_powers.m_arcaneProjectiles.m_uI.m_secondText, 0));
 					// -------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition, m_leftLeftPos));
 				
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent, m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneProjectiles.m_uI.m_firsText, m_powers.m_arcaneProjectiles.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 				}
 
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiIsInAnimation, m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.localPosition, m_leftMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireBalls.m_uI.m_firstUiParent, m_powers.m_fireBalls.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireBalls.m_uI.m_firsText, m_powers.m_fireBalls.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
@@ -1192,7 +1188,7 @@ public class PlayerManager : MonoBehaviour {
 				// ---------- ICE ----------
 				if(rightSpell){
 					// First
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiIsInAnimation, m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_leftLeftPosition.localPosition));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 0));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1201,12 +1197,12 @@ public class PlayerManager : MonoBehaviour {
 					m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_leftRightPosition.localPosition;
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0, 1));
 
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiIsInAnimation, m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_secondUiParent, m_powers.m_iceNova.m_uI.m_secondUiParent.localPosition, m_leftRightPos, 
 									m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstSpellImage, m_powers.m_iceNova.m_uI.m_firstCooldownImage, m_powers.m_iceNova.m_uI.m_firsText, 1, 
 									m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0));
 					// -------------------------
 				}else{
-					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiIsInAnimation, m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
+					m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition, m_leftRightPos));
 					
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceNova.m_uI.m_firstUiParent, m_powers.m_iceNova.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 					m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceNova.m_uI.m_firsText, m_powers.m_iceNova.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1222,7 +1218,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1231,12 +1227,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
 										m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
 						// -------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1244,7 +1240,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 0));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1253,19 +1249,19 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0, 1));
 
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_secondUiParent, m_powers.m_iceBuff.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstSpellImage, m_powers.m_iceBuff.m_uI.m_firstCooldownImage, m_powers.m_iceBuff.m_uI.m_firsText, 1, 
 										m_powers.m_iceBuff.m_uI.m_secondSpellImage, m_powers.m_iceBuff.m_uI.m_secondCooldownImage, m_powers.m_iceBuff.m_uI.m_secondText, 0));
 						// -------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiIsInAnimation, m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_iceBuff.m_uI.m_firsText, m_powers.m_iceBuff.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
 					}
 				}
 
-				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiIsInAnimation, m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
+				m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_rightMiddlePos));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_maxScale));
 				m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_fireTrail.m_uI.m_firsText, m_powers.m_fireTrail.m_uI.m_firsText.fontSize, m_powers.m_uI.m_maxSize));
 
@@ -1274,7 +1270,7 @@ public class PlayerManager : MonoBehaviour {
 				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1283,12 +1279,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition;
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightRightPos, 
 										m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
 										m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
 						// ----------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightRightPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));
@@ -1296,7 +1292,7 @@ public class PlayerManager : MonoBehaviour {
 				}else{
 					if(!rightSpell){
 						// First
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 0));
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
@@ -1305,12 +1301,12 @@ public class PlayerManager : MonoBehaviour {
 						m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition = m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition;
 						
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpellAlphaCorout(m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0, 1));
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_secondUiParent, m_powers.m_arcaneExplosion.m_uI.m_secondUiParent.localPosition, m_rightLeftPos, 
 										m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstSpellImage, m_powers.m_arcaneExplosion.m_uI.m_firstCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_firsText, 1, 
 										m_powers.m_arcaneExplosion.m_uI.m_secondSpellImage, m_powers.m_arcaneExplosion.m_uI.m_secondCooldownImage, m_powers.m_arcaneExplosion.m_uI.m_secondText, 0));
 						// ----------------------------
 					}else{
-						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiIsInAnimation, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
+						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_rightLeftPos));
 
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeSpriteSize(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.sizeDelta, m_powers.m_uI.m_minScale));
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.ChangeFontSize(m_powers.m_arcaneExplosion.m_uI.m_firsText, m_powers.m_arcaneExplosion.m_uI.m_firsText.fontSize, m_powers.m_uI.m_minSize));

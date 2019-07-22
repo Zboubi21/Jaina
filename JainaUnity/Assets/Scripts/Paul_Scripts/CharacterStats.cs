@@ -14,6 +14,13 @@ public class CharacterStats : MonoBehaviour {
     [HideInInspector]
     public Camera mainCamera;
 
+	public Hit m_hit = new Hit();
+	[System.Serializable] public class Hit {
+        public float m_timeToSeeHit = 0.1f;
+        public float m_timeToRecovery = 0.1f;
+		public GameObject[] m_whiteSkin;
+	}
+
     #region Get Set
     public float CurrentHealth
     {
@@ -108,6 +115,7 @@ public class CharacterStats : MonoBehaviour {
     int maxArcanMarkCount;
 
     bool isDead = false;
+    bool m_canShowHitFx = true;
 
     public virtual void OnEnable()
     {
@@ -223,11 +231,9 @@ public class CharacterStats : MonoBehaviour {
     }
 
     public virtual void TakeDamage (int damage)
-    {
-        
+    {   
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
-
 
         // Debug.Log(transform.name + " takes " + damage + " damages.");
         //Debug.Log(transform.name + "n'a plus que :" + CurrentHealth + " point de vie.");
@@ -265,6 +271,27 @@ public class CharacterStats : MonoBehaviour {
         // Debug.Log(transform.name + " died.");
     }
 
-    
+    public void StartHitFxCorout(){
+        StartCoroutine(HitFxCorout());
+    }
+    IEnumerator HitFxCorout(){
+        if(m_hit.m_whiteSkin == null || !m_canShowHitFx){
+            yield break;
+        }
+        m_canShowHitFx = false;
+        SetActiveGameObject(m_hit.m_whiteSkin, true);
+        yield return new WaitForSeconds(m_hit.m_timeToSeeHit);
+        SetActiveGameObject(m_hit.m_whiteSkin, false);
+        StartCoroutine(RecoveryHit());
+    }
+    void SetActiveGameObject(GameObject[] objects ,bool enable){
+        for (int i = 0, l = objects.Length; i < l; ++i){
+            objects[i].SetActive(enable);
+        }
+    }
+    IEnumerator RecoveryHit(){
+        yield return new WaitForSeconds(m_hit.m_timeToRecovery);
+        m_canShowHitFx = true;
+    }
 
 }

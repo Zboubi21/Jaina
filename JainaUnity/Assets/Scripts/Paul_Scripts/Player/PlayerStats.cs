@@ -54,6 +54,7 @@ public class PlayerStats : CharacterStats {
         if (!PlayerManager.Instance.m_powers.m_Block.m_inIceBlock && !PlayerManager.Instance.PlayerIsDead)
         {
             base.TakeDamage(damage);
+            StartHitFxCorout();
             m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
 
             if(CurrentHealth <= 0 && PlayerManager.Instance.m_playerDebug.m_playerCanDie){

@@ -5,7 +5,6 @@ using UnityEngine;
 public class FireTrail : Spell {
 
 	[SerializeField] int m_damage = 10;
-
 	[SerializeField] float m_timeToLive = 1;
 
 	void OnEnable(){
@@ -16,18 +15,20 @@ public class FireTrail : Spell {
 
 		// Le tir du player touche un enemy
 		if(col.CompareTag("Enemy")){
-            col.gameObject.GetComponent<CharacterStats>().FireMark(MarksTime1.Fire);
-            col.gameObject.GetComponent<CharacterStats>().TakeDamage(m_damage);
+            CharacterStats = col.gameObject.GetComponent<CharacterStats>();
+            CharacterStats.FireMark(MarksTime1.Fire);
+            CharacterStats.TakeDamage(m_damage);
+            CharacterStats.StartHitFxCorout();
         }
 
 	}
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider col)
     {
-        if (other.CompareTag("Enemy"))
+        if (col.CompareTag("Enemy"))
         {
-
-            // print("feu");
-            other.gameObject.GetComponent<CharacterStats>().FireTrail();
+            CharacterStats = col.gameObject.GetComponent<CharacterStats>();
+            CharacterStats.FireTrail();
+            CharacterStats.StartHitFxCorout();
         }
     }
 
