@@ -715,8 +715,11 @@ public class PlayerManager : MonoBehaviour {
 			RaycastHit hit;
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
-			if(!m_actualClickOnGroundFx.gameObject.activeSelf){
-				m_actualClickOnGroundFx.gameObject.SetActive(true);
+			
+			if(m_actualClickOnGroundFx != null){
+				if(!m_actualClickOnGroundFx.gameObject.activeSelf){
+					m_actualClickOnGroundFx.gameObject.SetActive(true);
+				}
 			}
 			if(m_agent.destination != transform.position){
 				m_actualClickOnGroundFx.transform.position = m_agent.destination;

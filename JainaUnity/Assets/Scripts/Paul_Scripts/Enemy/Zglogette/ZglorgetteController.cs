@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EnemyStateEnum_Zglorgette;
+using PoolTypes;
 
 public class ZglorgetteController : EnemyController
 {
@@ -10,13 +11,13 @@ public class ZglorgetteController : EnemyController
     public float range;
     public Color rangeColor = Color.cyan;
     public LayerMask layers;
-    public GameObject projectil;
+    public SpellType projectil = SpellType.AutoAttack_Zglorgette;
     public Transform projectilRoot;
     [Space]
     [Header("Nil'Gharian Witch Impatience Variables")]
     public int nombreDeGrandeAttack;
     public float timeBetweenImpatiencePorjectil=0.5f;
-    public GameObject impatience_Projectil;
+    public SpellType impatience_Projectil = SpellType.Spell_Zglorgette;
     public Transform impatienceProjectilRoot;
     public float TimeBeforeGettingImpatient = 3f;
     float currentTimeBeforeGettingImpatient;
@@ -73,12 +74,14 @@ public class ZglorgetteController : EnemyController
 
     public override void OnCastProjectil()
     {
-        Instantiate(projectil, projectilRoot);
+        // Instantiate(projectil, projectilRoot);
+        ObjectPooler.SpawnSpellFromPool(projectil, projectilRoot.position, projectilRoot.rotation);
     }
 
     public override void OnCastImpatienceProjectil()
     {
-        Instantiate(impatience_Projectil, impatienceProjectilRoot);
+        // Instantiate(impatience_Projectil, impatienceProjectilRoot);
+        ObjectPooler.SpawnSpellFromPool(impatience_Projectil, impatienceProjectilRoot.position, impatienceProjectilRoot.rotation);
     }
 
     public int OnRayCast()

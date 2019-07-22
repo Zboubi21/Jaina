@@ -29,6 +29,8 @@
         ArcaneProjectile2,
         ArcaneProjectile3,
         ArcaneExplosion,
+        AutoAttack_Zglorgette,
+        Spell_Zglorgette,
 	}
     [System.Serializable] public enum ObjectType {
         LifePotion,
