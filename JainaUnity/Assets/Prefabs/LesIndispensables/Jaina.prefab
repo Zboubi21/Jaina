@@ -19320,6 +19320,11 @@ MonoBehaviour:
     m_actualCooldown: 0
     m_positionRoot: {fileID: 1027000453}
     m_rotationRoot: {fileID: 4153908591210074}
+    m_autoAttacksSounds:
+    - {fileID: 8475890379936908356, guid: 5800722bfe61a774a880c30561d47968, type: 3}
+    - {fileID: 3576914908972170963, guid: 833088824dea6e84c8bee4948125e920, type: 3}
+    - {fileID: 91351096559422327, guid: 9c06fd2e63fc9784799a7280b850f5b2, type: 3}
+    - {fileID: 3003551070597956774, guid: b996022042a60f84a868dfec5ebe12b8, type: 3}
   m_powers:
     m_blink:
       m_canSwitch: 1
@@ -19633,16 +19638,20 @@ MonoBehaviour:
     m_timeToBeInCinematic: 0
   m_playerMesh: {fileID: 1802688898866892}
   m_jainaMesh: {fileID: 1237398796937988}
+  m_clickOnGroundFx: {fileID: 5119363300941175238, guid: 0c99b5fae4fca99489303451f6414649,
+    type: 3}
   m_groundLayer:
     serializedVersion: 2
-    m_Bits: 16896
+    m_Bits: 16384
   m_rotatePlayerLayer:
     serializedVersion: 2
-    m_Bits: 16384
+    m_Bits: 524288
   m_canThrowSpell: 1
   m_leftMouseDownClick: 0
   m_leftMouseClick: 0
+  m_rightMouseClickDown: 0
   m_rightMouseClick: 0
+  m_rightMouseClickUp: 0
   m_blinkButton: 0
   m_iceBlockButton: 0
   m_leftSpellButton: 0
@@ -64897,7 +64906,7 @@ AudioSource:
   m_GameObject: {fileID: 8548015022530534351}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243889454333144028, guid: dcf8093c344ee8445bd48c6d8863a281,
+  OutputAudioMixerGroup: {fileID: 243405333648242718, guid: e086750cd77c17741b04950d6097675f,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 319acc0101c7ea2448197bb3e8acc538, type: 3}
   m_PlayOnAwake: 0

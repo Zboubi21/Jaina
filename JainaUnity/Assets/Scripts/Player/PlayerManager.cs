@@ -54,10 +54,9 @@ public class PlayerManager : MonoBehaviour {
 		[Header("Prefabs")]
 		public Transform m_positionRoot;
 		public Transform m_rotationRoot;
-		// [Space]
-		// public GameObject m_arcaneAttack;
-		// public GameObject m_iceAttack;
-		// public GameObject m_fireAttack;
+		
+		[Header("Sounds")]
+		public GameObject[] m_autoAttacksSounds;
 	}
 
 	[Header("Powers")]
@@ -441,6 +440,7 @@ public class PlayerManager : MonoBehaviour {
     [Space]
 	public GameObject m_playerMesh;
 	public GameObject m_jainaMesh;
+	public GameObject m_clickOnGroundFx;
 	public LayerMask m_groundLayer;
 	public LayerMask m_rotatePlayerLayer;
 
@@ -448,12 +448,17 @@ public class PlayerManager : MonoBehaviour {
 	NavMeshAgent m_agent;
 	bool m_canAutoAttack = true;
 	PlayerUiAnimationCorout m_playerUiCorout;
+	GameObject m_lastAutoAttackSound;
+	ClickOnGround m_actualClickOnGroundFx;
+	ClickOnGround m_actualClickOnGroundStartDestroyedFx;
 	
 #region Input Buttons
 
 	[HideInInspector] public bool m_leftMouseDownClick;
 	[HideInInspector] public bool m_leftMouseClick;
+	[HideInInspector] public bool m_rightMouseClickDown;
 	[HideInInspector] public bool m_rightMouseClick;
+	[HideInInspector] public bool m_rightMouseClickUp;
 	[HideInInspector] public bool m_blinkButton;
 	[HideInInspector] public bool m_iceBlockButton;
 	[HideInInspector] public bool m_leftSpellButton;
@@ -672,21 +677,64 @@ public class PlayerManager : MonoBehaviour {
 		m_leftMouseClick = Input.GetButton("LeftClick");
 		m_leftMouseDownClick = Input.GetButtonDown("LeftClick");
 
+		m_rightMouseClickDown = Input.GetButtonDown("RightClick");
 		m_rightMouseClick = Input.GetButton("RightClick");
+		m_rightMouseClickUp = Input.GetButtonUp("RightClick");
+
 		m_blinkButton = Input.GetButtonDown("Blink");
 		m_iceBlockButton = Input.GetButtonDown("IceBlock");
 		m_leftSpellButton = Input.GetButtonDown("LeftSpell");
 		m_rightSpellButton = Input.GetButtonDown("RightSpell");
 	}
 
+	Vector3 m_lastDestination;
 	void RaycastToMovePlayer(){
+		if(m_rightMouseClickDown){
+			RaycastHit hit;
+			hit = GroundRaycast();
+			PlayerTargetPosition = hit.point;
+			if(m_actualClickOnGroundStartDestroyedFx != null){
+				m_actualClickOnGroundStartDestroyedFx.DestroyFx();
+			}
+			m_actualClickOnGroundFx = Instantiate(m_clickOnGroundFx, hit.point, m_clickOnGroundFx.transform.rotation).GetComponent<ClickOnGround>();
+
+			if(m_agent.destination != m_lastDestination){
+				m_actualClickOnGroundFx.transform.position = m_agent.destination;
+				// m_actualClickOnGroundFx.transform.position = hit.point;
+			}else{
+				m_actualClickOnGroundFx.gameObject.SetActive(false);
+			}
+
+			// if(m_agent.destination != transform.position){
+			// 	m_actualClickOnGroundFx.transform.position = m_agent.destination;
+			// }
+		}
 		if(m_rightMouseClick){
 			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if(Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, m_groundLayer)){
-				PlayerTargetPosition = hit.point;
+			hit = GroundRaycast();
+			PlayerTargetPosition = hit.point;
+			if(!m_actualClickOnGroundFx.gameObject.activeSelf){
+				m_actualClickOnGroundFx.gameObject.SetActive(true);
+			}
+			if(m_agent.destination != transform.position){
+				m_actualClickOnGroundFx.transform.position = m_agent.destination;
+				// m_actualClickOnGroundFx.transform.position = hit.point;
+			}
+			m_lastDestination = m_agent.destination;
+		}
+		if(m_rightMouseClickUp){
+			if(m_actualClickOnGroundFx != null){
+				m_actualClickOnGroundFx.StartBeDestroyed();
+				m_actualClickOnGroundStartDestroyedFx = m_actualClickOnGroundFx;
+				m_actualClickOnGroundFx = null;
 			}
 		}
+	}
+	RaycastHit GroundRaycast(){
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, m_groundLayer);
+		return hit;
 	}
 	public void MovePlayer(){
 		if(PlayerTargetPosition != Vector3.zero){
@@ -1264,78 +1312,6 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 
-	// void ChangeSpellAlpha(Image spellImg, Image cdImg, TextMeshProUGUI text, float newAlpha){
-	// 	spellImg.color = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, newAlpha);
-	// 	cdImg.color = new Color(cdImg.color.r, cdImg.color.g, cdImg.color.b, newAlpha);
-	// 	text.color = new Color(text.color.r, text.color.g, text.color.b, newAlpha);
-	// }
-
-	// IEnumerator m_playerUiCorout.ChangeSpellAlphaCorout(Image spellImg, Image cdImg, TextMeshProUGUI text, float fromAlpha, float toAlpha){
-		
-	// 	float distance = Mathf.Abs(fromAlpha - toAlpha);
-	// 	float moveFracJourney = new float();
-	// 	float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
-	// 	Color desiredColor = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, toAlpha);
-
-	// 	while(spellImg.color != desiredColor){
-	// 		moveFracJourney += (Time.deltaTime) * vitesse / distance;
-	// 		float alphaValue = Mathf.Lerp(fromAlpha, toAlpha, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
-	// 		spellImg.color = new Color(spellImg.color.r, spellImg.color.g, spellImg.color.b, alphaValue);
-	// 		cdImg.color = new Color(cdImg.color.r, cdImg.color.g, cdImg.color.b, alphaValue);
-	// 		text.color = new Color(text.color.r, text.color.g, text.color.b, alphaValue);
-	// 		yield return null;
-	// 	}
-	// }
-
-	// IEnumerator m_playerUiCorout.MoveToYourNextPosition(bool debugCorout, RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition, RectTransform firstSpellToTp = null, Image firstSpellImg = null, Image firstCdImg = null, TextMeshProUGUI firstText = null, float firstNewAlpha = 0, Image secondSpellImg = null, Image secondCdImg = null, TextMeshProUGUI secondText = null, float secondNewAlpha = 0){
-		
-	// 	float distance = Vector3.Distance(fromPosition, toPosition);
-	// 	float moveFracJourney = new float();
-	// 	float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
-
-	// 	// debugCorout =! debugCorout; 
-	// 	// bool trueOrFalse = debugCorout;
-
-	// 	while(transformObject.localPosition != toPosition) {
-	// 	// while(moveFracJourney < 1) {
-	// 		// Debug.Log("MoveToYourNextPosition | moveFracJourney = " + moveFracJourney);
-	// 		moveFracJourney += (Time.deltaTime) * vitesse / distance;
-	// 		transformObject.localPosition = Vector3.Lerp(fromPosition, toPosition, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
-
-	// 		yield return null;
-	// 	}
-	// 	if(firstSpellToTp != null){
-	// 		firstSpellToTp.localPosition = transformObject.localPosition;				// On TP le spell principal
-	// 		ChangeSpellAlpha(firstSpellImg, firstCdImg, firstText, firstNewAlpha);		// On enlève sa transparence
-	// 		ChangeSpellAlpha(secondSpellImg, secondCdImg, secondText, secondNewAlpha);	// On met transparent le spell secondaire
-	// 	}
-	// }
-
-	// IEnumerator m_playerUiCorout.ChangeSpriteSizeRectTransform transformObject, Vector2 fromScale, Vector2 toScale){
-		
-	// 	float distance = Vector3.Distance(fromScale, toScale);
-	// 	float moveFracJourney = new float();
-	// 	float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
-
-	// 	while(transformObject.sizeDelta != toScale){
-	// 		moveFracJourney += (Time.deltaTime) * vitesse / distance;
-	// 		transformObject.sizeDelta = Vector3.Lerp(fromScale, toScale, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
-	// 		yield return null;
-	// 	}
-	// }
-	// IEnumerator m_playerUiCorout.ChangeFontSize(TextMeshProUGUI textObject, float fromSize, float toSize){
-		
-	// 	float distance = Mathf.Abs(fromSize - toSize);
-	// 	float moveFracJourney = new float();
-	// 	float vitesse = distance / m_powers.m_uI.m_uIAnimations.m_timeToFinish;
-
-	// 	while(textObject.fontSize != toSize){
-	// 		moveFracJourney += (Time.deltaTime) * vitesse / distance;
-	// 		textObject.fontSize = Mathf.Lerp(fromSize, toSize, m_powers.m_uI.m_uIAnimations.m_curveAnim.Evaluate(moveFracJourney));
-	// 		yield return null;
-	// 	}
-	// }
-
 	public void DecreaseChanneledSpell(){
 		// Chrono block
 		if(m_powers.m_uI.m_castBar.m_chronoBlock.m_startDecreaseTimer){
@@ -1694,6 +1670,10 @@ public class PlayerManager : MonoBehaviour {
 					}
 				break;
 			}
+			if(m_lastAutoAttackSound != null){
+				Destroy(m_lastAutoAttackSound);
+			}
+			m_lastAutoAttackSound = SpawnRandomGameObject(m_autoAttacks.m_autoAttacksSounds);
 		}
 	}
 	public void On_AutoAttackBuffChange(bool isBuff){
@@ -1779,5 +1759,16 @@ public class PlayerManager : MonoBehaviour {
 	public void GetOutOfCinematicState(){
 		ChangeState(PlayerState.NoThrowSpellState);
 	}
+
+	public GameObject SpawnRandomGameObject(GameObject[] objects){
+        if(objects.Length > 0){
+            int alea = UnityEngine.Random.Range(0, objects.Length - 1);
+            if(objects[alea] != null){
+                // return Instantiate(objects[alea], Vector3.zero, Quaternion.identity);
+                return Level.AddFX(objects[alea], Vector3.zero, Quaternion.identity).gameObject;
+            }
+        }
+		return null;
+    }
 
 }

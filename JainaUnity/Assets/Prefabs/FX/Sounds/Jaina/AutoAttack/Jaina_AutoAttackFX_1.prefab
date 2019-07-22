@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3112238728505404222
+--- !u!1 &8475890379936908356
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3112238728505404221}
-  - component: {fileID: 3112238728505404220}
-  - component: {fileID: 3112238728505404223}
+  - component: {fileID: 8475890379936908358}
+  - component: {fileID: 8475890379936908357}
+  - component: {fileID: 4285664136897372244}
   m_Layer: 0
-  m_Name: ChronoBlink_FX
+  m_Name: Jaina_AutoAttackFX_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3112238728505404221
+--- !u!4 &8475890379936908358
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3112238728505404222}
+  m_GameObject: {fileID: 8475890379936908356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,18 +32,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &3112238728505404220
+--- !u!82 &8475890379936908357
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3112238728505404222}
+  m_GameObject: {fileID: 8475890379936908356}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243889454333144028, guid: dcf8093c344ee8445bd48c6d8863a281,
+  OutputAudioMixerGroup: {fileID: 243930340041148000, guid: e086750cd77c17741b04950d6097675f,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 1591421060ba751418d06b835fdd555e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 392dc5a300d65b744ba2e8daff8a655a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -129,13 +129,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3112238728505404223
+--- !u!114 &4285664136897372244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3112238728505404222}
+  m_GameObject: {fileID: 8475890379936908356}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca276f100dc423f42b4ad8b1728cd535, type: 3}
