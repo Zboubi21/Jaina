@@ -15,11 +15,15 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     GameObject sign;
 
     int nbrOfProjectilThrown;
+    IEnumerator m_castImpatienceCorout;
 
     public override void Enter()
     {
         StateAnimation(m_enemyController.Anim);
-        m_enemyController.StartCoroutine(CastImpatience());
+        // m_enemyController.StartCoroutine(CastImpatience());
+        m_castImpatienceCorout = CastImpatience();
+        m_enemyController.StartCoroutine(m_castImpatienceCorout);
+        Debug.Log("ImpatienceEnter");
     }
 
     public override void FixedUpdate()
@@ -35,6 +39,9 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     public override void Exit()
     {
         DestroySign();
+        if(m_castImpatienceCorout != null){
+            m_enemyController.StopCoroutine(m_castImpatienceCorout);
+        }
     }
 
     #region Animation

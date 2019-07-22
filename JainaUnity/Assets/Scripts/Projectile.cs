@@ -80,6 +80,8 @@ public class Projectile : Spell {
 		// Le tir du player touche un enemy
 		if(col.CompareTag("Enemy")){
 
+			CharacterStats = col.gameObject.GetComponent<CharacterStats>();
+
 			if(m_projectileType == ProjectileType.Player){
 				switch(m_currentElement){
 					case ElementType.None:
@@ -90,14 +92,15 @@ public class Projectile : Spell {
                         OnArcanEnter(col);
                         break;
 					case ElementType.Ice:
-                        col.gameObject.GetComponent<CharacterStats>().IceMark(MarksTime1.Ice);
-                        col.gameObject.GetComponent<CharacterStats>().TakeDamage(Damage);
+                        CharacterStats.IceMark(MarksTime1.Ice);
+                        CharacterStats.TakeDamage(Damage);
                         break;
 					case ElementType.Fire:
                         OnFireEnter(col);
-                        col.gameObject.GetComponent<CharacterStats>().TakeDamage(Damage);
+                        CharacterStats.TakeDamage(Damage);
                         break;
 				}
+            	CharacterStats.StartHitFxCorout();
                 col.gameObject.GetComponent<EnemyController>().CheckIfStunable();
                 if (m_dieWhenHit){
 					DestroyProjectile();

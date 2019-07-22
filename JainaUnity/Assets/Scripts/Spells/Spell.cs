@@ -18,7 +18,6 @@ public class Spell : MonoBehaviour {
     public BecameInvisible m_scripToBecameInvisible;
 
 	MarksTime m_marksTime = new MarksTime();
-
     public MarksTime MarksTime1
     {
         get
@@ -39,6 +38,16 @@ public class Spell : MonoBehaviour {
         }
         set{
             m_objectPooler = value;
+        }
+    }
+
+    CharacterStats m_characterStats;
+    public CharacterStats CharacterStats{
+        get{
+            return m_characterStats;
+        }
+        set{
+            m_characterStats = value;
         }
     }
 

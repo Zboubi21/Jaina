@@ -17,7 +17,7 @@ public class FireFlameInstantiator : MonoBehaviour {
 		m_rotationDivise = m_rotation / m_objectNb;
 
 		for(int i = 0; i < m_objectNb; ++i){
-			FireProjectiles projectile = m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.FireBalls, transform.position, m_playerManager.m_playerMesh.transform.rotation * Quaternion.Euler(0, m_rotationDivise * i, 0)).GetComponent<FireProjectiles>();
+			FireProjectiles projectile = m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.FireBalls, transform.position, m_playerManager.m_mesh.m_playerMesh.transform.rotation * Quaternion.Euler(0, m_rotationDivise * i, 0)).GetComponent<FireProjectiles>();
 			if(projectile != null){
 				projectile.Ffi = this;
 			}

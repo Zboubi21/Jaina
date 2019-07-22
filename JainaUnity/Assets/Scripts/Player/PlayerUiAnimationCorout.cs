@@ -27,14 +27,11 @@ public class PlayerUiAnimationCorout : MonoBehaviour {
 			yield return null;
 		}
 	}
-	public IEnumerator MoveToYourNextPosition(bool debugCorout, RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition, RectTransform firstSpellToTp = null, Image firstSpellImg = null, Image firstCdImg = null, TextMeshProUGUI firstText = null, float firstNewAlpha = 0, Image secondSpellImg = null, Image secondCdImg = null, TextMeshProUGUI secondText = null, float secondNewAlpha = 0){
+	public IEnumerator MoveToYourNextPosition(RectTransform transformObject, Vector3 fromPosition, Vector3 toPosition, RectTransform firstSpellToTp = null, Image firstSpellImg = null, Image firstCdImg = null, TextMeshProUGUI firstText = null, float firstNewAlpha = 0, Image secondSpellImg = null, Image secondCdImg = null, TextMeshProUGUI secondText = null, float secondNewAlpha = 0){
 		
 		float distance = Vector3.Distance(fromPosition, toPosition);
 		float moveFracJourney = new float();
 		float vitesse = distance / m_playerManager.m_powers.m_uI.m_uIAnimations.m_timeToFinish;
-
-		// debugCorout =! debugCorout; 
-		// bool trueOrFalse = debugCorout;
 
 		while(transformObject.localPosition != toPosition) {
 		// while(moveFracJourney < 1) {

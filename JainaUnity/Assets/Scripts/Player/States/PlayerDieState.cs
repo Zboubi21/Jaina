@@ -21,6 +21,7 @@ public class PlayerDieState : IState {
         m_playerManager.PlayerIsDead = true;
 		m_playerManager.StopPlayerMovement();
         m_playerManager.SaveManager.On_PlayerDie();
+        m_playerManager.CapsuleColl.enabled = false;
     }
 
     public void Update(){
