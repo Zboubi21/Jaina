@@ -13,6 +13,7 @@ public class Butcher_ImpatienceState : ImpatienceState
     {
         m_enemyController = enemyController;
     }
+
     GameObject sign;
     Transform target;
     ButcherController butcherController;
@@ -65,7 +66,6 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void Exit()
     {
-        DestroySign();
         m_enemyController.Agent.enabled = true;
         // m_enemyController.Agent.speed -= 10;
         //m_enemyController.Agent.enabled = true;
@@ -106,7 +106,6 @@ public class Butcher_ImpatienceState : ImpatienceState
     public override void DestroySign()
     {
         m_enemyController.DestroyGameObject(sign);
-
     }
 
     #endregion
@@ -133,6 +132,7 @@ public class Butcher_ImpatienceState : ImpatienceState
 		while(!isArrive){
             // Debug.Log("Calcul RotateCorout");
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+            // Debug.Log("moveFracJourney = " + moveFracJourney);
 			Quaternion qua = Quaternion.Lerp(fromRot, lookRotation, butcherController.m_butcherJump.m_rotationCurve.Evaluate(moveFracJourney));
             // Debug.Log("qua = " + qua);
 			butcherController.transform.rotation = qua;
@@ -164,15 +164,16 @@ public class Butcher_ImpatienceState : ImpatienceState
         }
 
         bool endAnim = false;
-        bool doDamage = true;
+        bool damageDone = false;
 
         bool disableCollider = false;
         bool enableCollider = false;
 
+        bool destroyJumpSign = false;
+
         bool doShake = false;
 
 		while(butcherController.transform.position != targetPos){
-            // Debug.Log("Calcul JumpCorout");
 			moveFracJourney += (Time.deltaTime) * vitesse / distance;
 			butcherController.transform.position = Vector3.Lerp(fromPos, targetPos, butcherController.m_butcherJump.m_jumpCurve.Evaluate(moveFracJourney));
 
@@ -181,8 +182,8 @@ public class Butcher_ImpatienceState : ImpatienceState
                 butcherController.Anim.SetTrigger("ImpatienceEnd");
             }
 
-            if(moveFracJourney > butcherController.m_butcherJump.m_timeToDoDamage && doDamage){
-                doDamage = false;
+            if(moveFracJourney > butcherController.m_butcherJump.m_timeToDoDamage && !damageDone){
+                damageDone = true;
                 butcherController.OnImpactDamage();
                 m_enemyController.InstantiateObjects(butcherController.m_impactJumpFx, butcherController.m_butcherJump.m_targetJumpPos, butcherController.m_impactJumpFx.transform.rotation);
             }
@@ -196,15 +197,24 @@ public class Butcher_ImpatienceState : ImpatienceState
                 butcherController.Mycollider.enabled = true;
             }
 
+            if(moveFracJourney > butcherController.m_butcherJump.m_timeToDestroyJumpSign && !destroyJumpSign){
+                destroyJumpSign = true;
+                DestroySign();
+            }
+
             if(moveFracJourney > butcherController.m_butcherJump.m_cameraShake.m_timeToShake && !doShake){
                 doShake = true;
                 if(butcherController.m_butcherJump.m_cameraShake.m_useShakeCam){
                     butcherController.ShakeCamera(butcherController.m_butcherJump.m_cameraShake.m_magnitudeShake, butcherController.m_butcherJump.m_cameraShake.m_roughnessShake, butcherController.m_butcherJump.m_cameraShake.m_fadeInTimeShake, butcherController.m_butcherJump.m_cameraShake.m_fadeOutTimeShake);
                 }
             }
-
 			yield return null;
 		}
+        if(!damageDone){
+            damageDone = true;
+            butcherController.OnImpactDamage();
+            m_enemyController.InstantiateObjects(butcherController.m_impactJumpFx, butcherController.m_butcherJump.m_targetJumpPos, butcherController.m_impactJumpFx.transform.rotation);
+        }
         // Debug.Log("End JumpCorout");
         butcherController.StartCoroutine(EndStateCorout());
     }

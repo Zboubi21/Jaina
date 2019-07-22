@@ -53,6 +53,9 @@ public class ButcherController : EnemyController
         [Range(0,1)] public float m_timeToDisableCollider = 0.1f;
         [Range(0,1)] public float m_timeToEnabelCollider = 0.9f;
 
+        [Header("FX")]
+        [Range(0,1)] public float m_timeToDestroyJumpSign = 0.75f;
+
         [Header("Check area")]
         public float m_maxRangeToJumpInNewArea = 0.5f;
         public Color m_maxRangeColor = Color.black;
