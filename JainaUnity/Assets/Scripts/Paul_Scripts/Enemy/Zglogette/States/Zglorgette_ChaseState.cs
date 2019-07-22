@@ -6,9 +6,7 @@ using EnemyStateEnum_Zglorgette;
 
 public class Zglorgette_ChaseState : ChaseState
 {
-    Ray ray;
-
-    RaycastHit hit;
+    
     // CONSTRUCTOR
     ZglorgetteController m_enemyController;
     public Zglorgette_ChaseState(ZglorgetteController enemyController) : base(enemyController)
@@ -16,16 +14,17 @@ public class Zglorgette_ChaseState : ChaseState
         m_enemyController = enemyController;
     }
 
-    ButcherController butcherController;
 
     public override void Enter()
     {
         base.Enter();
+        m_enemyController.StopMoving(false);
+        Debug.Log("OnEnterChase");
         //m_enemyController.IsImpatience = false;
         //m_enemyController.CdImpatient = m_enemyController.CoolDownGettingImpatient;
 
         //if(butcherController == null)
-            //butcherController = m_enemyController.GetComponent<ButcherController>();
+        //butcherController = m_enemyController.GetComponent<ButcherController>();
     }
 
     #region Animation
@@ -73,24 +72,11 @@ public class Zglorgette_ChaseState : ChaseState
     #region Leaving State
     public override void GetOutOfState()
     {
-        Vector3 rayTarget = m_enemyController.TargetStats1.transform.position - m_enemyController.transform.position;
-        if (Physics.Linecast(m_enemyController.transform.position, m_enemyController.TargetStats1.transform.position, out hit, m_enemyController.layers))
+        if(m_enemyController.OnRayCast() == 2)
         {
-            float targetDistance = Vector3.Distance(m_enemyController.transform.position, m_enemyController.TargetStats1.transform.position);
-            if(targetDistance > m_enemyController.range)
-            {
-                Debug.DrawRay(m_enemyController.transform.position, rayTarget, Color.red);
-            }
-            else if (hit.collider != m_enemyController.TargetStats1.GetComponent<Collider>())
-            {
-                Debug.DrawRay(m_enemyController.transform.position, rayTarget, Color.yellow);
-            }
-            else
-            {
-                Debug.DrawRay(m_enemyController.transform.position, rayTarget, Color.green);
-                m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attacks
-            }
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attacks
         }
+
         //if (m_enemyController.PlayerInAttackBox()) //GreenBox
         //{
         //    m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState); //Attack

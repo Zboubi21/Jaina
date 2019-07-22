@@ -12,6 +12,14 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] bool m_isInstatiate = true;
     [SerializeField] EnemyType m_enemyType;
 
+    [Header("Sounds")]
+    public Sounds m_sounds = new Sounds();
+	[System.Serializable] public class Sounds {
+        public GameObject[] m_impatienceFx;
+        public GameObject[] m_detectionFx;
+        public GameObject[] m_dieFx;
+	}
+
     #region State Machine
 
     public StateMachine m_sM = new StateMachine();
@@ -28,6 +36,7 @@ public class EnemyController : MonoBehaviour {
         }
         else
         {
+            HasBeenOnAlert = true;
             ChangeState((int)EnemyState.ChaseState);
             LogicAtStart();
             LogicWhenEnable();
@@ -826,6 +835,7 @@ public class EnemyController : MonoBehaviour {
 
     IEnumerator OnWaitForAnimToEnd()
     {
+        SpawnRandomGameObject(m_sounds.m_dieFx);
         m_mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(m_timeToWaitBeforeDespawnEnemy);    //Animation time
@@ -924,6 +934,15 @@ public class EnemyController : MonoBehaviour {
     public void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
 		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
 	}
+
+    public void SpawnRandomGameObject(GameObject[] objects){
+        if(objects.Length > 0){
+            int alea = Random.Range(0, objects.Length - 1);
+            if(objects[alea] != null){
+                Instantiate(objects[alea], Vector3.zero, Quaternion.identity);
+            }
+        }
+    }
     
 }
 

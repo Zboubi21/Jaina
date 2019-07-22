@@ -16,7 +16,9 @@ public class ZglorgetteController : EnemyController
     public float TimeBeforeGettingImpatient = 3f;
     float currentTimeBeforeGettingImpatient;
     float currentTimeBeforeGettingImpatientWhenInAttackRange;
+    Ray ray;
 
+    RaycastHit hit;
     private void Awake()
     {
         m_sM.AddStates(new List<IState> {
@@ -35,5 +37,35 @@ public class ZglorgetteController : EnemyController
         {
             Debug.LogError("You need to have the same number of State in ZglorgController and EnemyStateEnum");
         }
+    }
+    public override void Attack()
+    {
+        Anim.SetTrigger("Attack");
+    }
+
+    public int OnRayCast()
+    {
+        Vector3 rayTarget = TargetStats1.transform.position - transform.position;
+        if (Physics.Linecast(transform.position, TargetStats1.transform.position, out hit, layers))
+        {
+            float targetDistance = Vector3.Distance(transform.position, TargetStats1.transform.position);
+            if (targetDistance > range)
+            {
+                Debug.DrawRay(transform.position, rayTarget, Color.red);
+                return 0;
+            }
+            else if (hit.collider != TargetStats1.GetComponent<Collider>())
+            {
+                Debug.DrawRay(transform.position, rayTarget, Color.yellow);
+                return 1;
+
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, rayTarget, Color.green);
+                return 2;
+            }
+        }
+        return 3;
     }
 }

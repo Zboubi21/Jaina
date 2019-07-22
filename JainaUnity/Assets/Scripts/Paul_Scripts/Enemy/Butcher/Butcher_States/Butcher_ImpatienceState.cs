@@ -35,6 +35,8 @@ public class Butcher_ImpatienceState : ImpatienceState
         // sign = m_enemyController.InstantiateObjects(butcherController.signImpatience, m_enemyController.TargetStats1.GetComponent<CharacterStats>().transform.position, Quaternion.identity);
         sign = m_enemyController.InstantiateObjects(butcherController.m_signImpatienceFx, butcherController.m_butcherJump.m_targetJumpPos, butcherController.m_signImpatienceFx.transform.rotation);
 
+        m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
+
         target = sign.transform;
 
         // butcherController.StartCoroutine(CheckJumpArea(target.position));
