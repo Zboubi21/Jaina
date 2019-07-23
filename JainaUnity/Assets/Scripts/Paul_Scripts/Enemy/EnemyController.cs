@@ -964,6 +964,10 @@ public class EnemyController : MonoBehaviour {
             }
         }
     }
+
+    public void ChangeEnemyToCinematicState(){
+        ChangeState((int)EnemyState.CinematicState);
+    }
     
 }
 
