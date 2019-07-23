@@ -432,7 +432,7 @@ public class ButcherController : EnemyController
             // butcherController.Anim.SetTrigger("ImpatienceEnd");
             Anim.SetTrigger("ImpatienceEndSlow");
             yield return new WaitForSeconds(0.75f);
-            DestroyButcherJumpSIgn();
+            DestroyButcherJumpSign();
         }else{
             Anim.SetTrigger("ImpatienceMiddle");
         }
@@ -473,7 +473,7 @@ public class ButcherController : EnemyController
 
             if(moveFracJourney > m_butcherJump.m_timeToDestroyJumpSign && !destroyJumpSign){
                 destroyJumpSign = true;
-                DestroyButcherJumpSIgn();
+                DestroyButcherJumpSign();
             }
 
             if(moveFracJourney > m_butcherJump.m_cameraShake.m_timeToShake && !doShake){
@@ -486,7 +486,7 @@ public class ButcherController : EnemyController
 		}
         if(!destroyJumpSign){
             destroyJumpSign = true;
-            DestroyButcherJumpSIgn();
+            DestroyButcherJumpSign();
         }
         if(!damageDone){
             damageDone = true;
@@ -511,7 +511,7 @@ public class ButcherController : EnemyController
         }
     }
 
-    void DestroyButcherJumpSIgn(){
+    public void DestroyButcherJumpSign(){
         if(m_jumpSign != null){
             DestroyGameObject(m_jumpSign);
         }
