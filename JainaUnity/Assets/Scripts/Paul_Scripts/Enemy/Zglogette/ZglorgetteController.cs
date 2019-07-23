@@ -19,23 +19,23 @@ public class ZglorgetteController : EnemyController
     public float timeBetweenImpatiencePorjectil=0.5f;
     public SpellType impatience_Projectil = SpellType.Spell_Zglorgette;
     public Transform impatienceProjectilRoot;
-    public float TimeBeforeGettingImpatient = 3f;
-    float currentTimeBeforeGettingImpatient;
+    public float TimeBeforeZglorgetteGettingImpatient = 3f;
+    float currentTimeBeforeZglorgetteGettingImpatient;
     Ray ray;
 
     RaycastHit hit;
 
     #region get set
-    public float CurrentTimeBeforeGettingImpatient
+    public float CurrentTimeBeforeZglorgetteGettingImpatient
     {
         get
         {
-            return currentTimeBeforeGettingImpatient;
+            return currentTimeBeforeZglorgetteGettingImpatient;
         }
 
         set
         {
-            currentTimeBeforeGettingImpatient = value;
+            currentTimeBeforeZglorgetteGettingImpatient = value;
         }
     }
     #endregion
@@ -44,7 +44,7 @@ public class ZglorgetteController : EnemyController
     {
         m_sM.AddStates(new List<IState> {
             new IdleState(this),                        // Numéro 0
-            new StunState(this),                        // Numéro 1
+            new Zglorgette_StunState(this),             // Numéro 1
             new AlerteState(this),                      // Numéro 2
             new Zglorgette_ChaseState(this),            // Numéro 3
             new Zglorgette_ImpatienceState(this),       // Numéro 4
@@ -63,8 +63,8 @@ public class ZglorgetteController : EnemyController
     public override void LogicAtStart()
     {
         base.LogicAtStart();
-
-        currentTimeBeforeGettingImpatient = TimeBeforeGettingImpatient;
+        Debug.Log("nonononono");
+        currentTimeBeforeZglorgetteGettingImpatient = TimeBeforeZglorgetteGettingImpatient;
     }
 
     public override void Attack()
@@ -121,8 +121,8 @@ public class ZglorgetteController : EnemyController
 
     public override bool CoolDownWitchImpatience()
     {
-        TimeBeforeGettingImpatient -= Time.deltaTime;
-        if(TimeBeforeGettingImpatient <= 0)
+        TimeBeforeZglorgetteGettingImpatient -= Time.deltaTime;
+        if(TimeBeforeZglorgetteGettingImpatient <= 0)
         {
             return true;
         }

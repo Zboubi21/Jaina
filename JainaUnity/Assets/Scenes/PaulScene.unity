@@ -1500,7 +1500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &609328859
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1543,8 +1543,10 @@ MonoBehaviour:
   isLaunchByTrigger: 1
   m_spawners:
   - {fileID: 636592870}
+  - {fileID: 1313461534}
   m_timeBetweenEachWave:
-  - 5000
+  - 60
+  - 60
   timeToSpawn: 0.5
   OnFirstWaveStart:
     m_PersistentCalls:
@@ -1606,11 +1608,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nbrOfWaves:
   - m_enemyToSummon:
-    - _hasBackpack: 1
-      m_enemy: 0
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
   - m_enemyToSummon:
     - _hasBackpack: 0
-      m_enemy: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+  - m_enemyToSummon:
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
 --- !u!1 &691369833
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,6 +1860,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zglorgette_Jeune
       objectReference: {fileID: 0}
+    - target: {fileID: 1014568333761063014, guid: 95e6f5adb79d83644a2b1bbdde5ff410,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1010718991251561016, guid: 95e6f5adb79d83644a2b1bbdde5ff410,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1859,7 +1923,7 @@ PrefabInstance:
     - target: {fileID: 4114020432838377393, guid: 95e6f5adb79d83644a2b1bbdde5ff410,
         type: 3}
       propertyPath: m_isInstatiate
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95e6f5adb79d83644a2b1bbdde5ff410, type: 3}
@@ -2313,17 +2377,17 @@ PrefabInstance:
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[2].m_size
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[1].m_size
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
@@ -2349,13 +2413,14 @@ PrefabInstance:
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[1].m_enemyType
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[1].m_prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1014568333761063014, guid: 95e6f5adb79d83644a2b1bbdde5ff410,
+        type: 3}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[2].m_name
@@ -2364,13 +2429,14 @@ PrefabInstance:
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[2].m_enemyType
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[2].m_prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7302387421587225484, guid: 2d029573a1c868f4fae08f2d84e81468,
+        type: 3}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_objectPools.Array.data[0].m_size
@@ -2382,45 +2448,51 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3952834224191860859, guid: 0db5882ba8d50664f9f3bcc9a57aa4f9,
         type: 3}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_enemyPools.Array.data[3].m_name
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_enemyPools.Array.data[3].m_enemyType
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_enemyPools.Array.data[3].m_prefab
+      value: 
+      objectReference: {fileID: 1014568333761063014, guid: 28582ea73fc40654ea4c9648785b1f01,
+        type: 3}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_enemyPools.Array.data[3].m_size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_spellPools.Array.data[12].m_size
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_spellPools.Array.data[11].m_size
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_spellPools.Array.data[11].m_prefab
+      value: 
+      objectReference: {fileID: 2175073581386142910, guid: a97ca353935589d41a06051e6004a4f7,
+        type: 3}
+    - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
+        type: 3}
+      propertyPath: m_spellPools.Array.data[12].m_prefab
+      value: 
+      objectReference: {fileID: 7906869711107369314, guid: 157c87fa66afb7d4cb2455ad92065aac,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 722380f59c774b04db0299b55ee487f6, type: 3}
---- !u!21 &1176116211
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 2DxFX/Standard/Liquid
-  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - EValue: 0.4
-    - Light: 1
-    - _Alpha: 0
-    - _ColorMask: 15
-    - _Distortion: 0.16
-    - _Speed: 0.01
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1272374162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2543,7 +2615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1313461535
 Transform:
   m_ObjectHideFlags: 0
@@ -2572,14 +2644,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nbrOfWaves:
   - m_enemyToSummon:
-    - _hasBackpack: 1
-      m_enemy: 0
     - _hasBackpack: 0
-      m_enemy: 0
+      m_enemy: 8
     - _hasBackpack: 0
-      m_enemy: 0
+      m_enemy: 8
     - _hasBackpack: 0
-      m_enemy: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+    - _hasBackpack: 0
+      m_enemy: 8
+  - m_enemyToSummon:
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+    - _hasBackpack: 0
+      m_enemy: 7
+  - m_enemyToSummon:
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
+    - _hasBackpack: 0
+      m_enemy: 6
 --- !u!1001 &1513732550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2937,7 +3063,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1176116211}
+      objectReference: {fileID: 1726234003}
     - target: {fileID: 6948350026436048121, guid: 20fa5fcc1a51b0147a10b7eaf3f2191f,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -3252,6 +3378,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11646cfabc7c8c346a0696c0106ee53e, type: 3}
+--- !u!21 &1726234003
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 2DxFX/Standard/Liquid
+  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - EValue: 1
+    - Light: 1
+    - _Alpha: 1
+    - _ColorMask: 15
+    - _Distortion: 0
+    - _Speed: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!43 &1777031377
 Mesh:
   m_ObjectHideFlags: 0

@@ -86,7 +86,7 @@ public class Zglorgette_AttackState : AttackState
         }
         else
         {
-            m_enemyController.TimeBeforeGettingImpatient = m_enemyController.CurrentTimeBeforeGettingImpatient;
+            m_enemyController.TimeBeforeZglorgetteGettingImpatient = m_enemyController.CurrentTimeBeforeZglorgetteGettingImpatient;
             m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ImpatienceState); //Impatience
 
         }

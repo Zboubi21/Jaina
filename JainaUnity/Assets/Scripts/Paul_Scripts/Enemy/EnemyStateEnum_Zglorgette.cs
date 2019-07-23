@@ -2,7 +2,7 @@
 {
 	[System.Serializable] public enum EnemyZglorgetteState {
         IdleState,                          // Numéro 0
-        StunState,                          // Numéro 1
+        Zglorgette_StunState,               // Numéro 1
         AlerteState,                        // Numéro 2
         Zglorgette_ChaseState,              // Numéro 3
         Zglorgette_ImpatienceState,         // Numéro 4

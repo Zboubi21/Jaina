@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnemyStateEnum_Butcher;
+using EnemyStateEnum_Zglorgette;
 
-public class Butcher_StunState : StunState
+public class Zglorgette_StunState : StunState
 {
     /*float timeBeingStun;
     bool isStunAble = false;*/
 
     // CONSTRUCTOR
     EnemyController m_enemyController;
-    public Butcher_StunState(EnemyController enemyController) : base(enemyController)
+    public Zglorgette_StunState(EnemyController enemyController) : base(enemyController)
     {
         m_enemyController = enemyController;
     }
@@ -47,19 +47,18 @@ public class Butcher_StunState : StunState
     */
     public override void GetOutOfState()
     {
-        
         if(!m_enemyController.HasBeenOnAlert)
         {
-            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AlerteState);
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.AlerteState);
             m_enemyController.HasBeenOnAlert = true;
         }
-        else if (m_enemyController.PlayerInAttackBox())
+        else if (m_enemyController.GetComponent<ZglorgetteController>().OnRayCast() == 2)
         {
-            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_AttackState);
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState);
         }
         else
         {
-            m_enemyController.ChangeState((int)EnemyButcherState.Butcher_ChaseState);
+            m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState);
         }
     }
 
