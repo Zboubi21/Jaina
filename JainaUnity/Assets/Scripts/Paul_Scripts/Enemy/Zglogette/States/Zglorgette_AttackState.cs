@@ -13,6 +13,10 @@ public class Zglorgette_AttackState : AttackState
     {
         m_enemyController = enemyController;
     }
+    int rayCastReturn;
+    int rayCastFowardReturn;
+
+
     public override void Enter()
     {
         base.Enter();
@@ -70,11 +74,13 @@ public class Zglorgette_AttackState : AttackState
 
     public override void OnOutState()
     {
+        rayCastReturn = m_enemyController.OnRayCastSide();
+        rayCastFowardReturn = m_enemyController.OnRayCast();
         if (!m_enemyController.CoolDownWitchImpatience())
         {
             if (m_enemyController.CheckAnimEnd1)
             {
-                if(m_enemyController.OnRayCast() == 2)
+                if (rayCastReturn == 2 && rayCastFowardReturn == 2/* && m_enemyController.OnRayRightCast() == 2 && m_enemyController.OnRayLeftCast() == 2*/)
                 {
                     m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
                 }

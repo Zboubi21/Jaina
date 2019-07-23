@@ -14,6 +14,9 @@ public class Zglorgette_StunState : StunState
     {
         m_enemyController = enemyController;
     }
+    int rayCastReturn;
+    int rayCastFowardReturn;
+
     /*
     public void Enter()
     {
@@ -47,12 +50,14 @@ public class Zglorgette_StunState : StunState
     */
     public override void GetOutOfState()
     {
-        if(!m_enemyController.HasBeenOnAlert)
+        rayCastReturn = m_enemyController.GetComponent<ZglorgetteController>().OnRayCastSide();
+        rayCastFowardReturn = m_enemyController.GetComponent<ZglorgetteController>().OnRayCast();
+        if (!m_enemyController.HasBeenOnAlert)
         {
             m_enemyController.ChangeState((int)EnemyZglorgetteState.AlerteState);
             m_enemyController.HasBeenOnAlert = true;
         }
-        else if (m_enemyController.GetComponent<ZglorgetteController>().OnRayCast() == 2)
+        else if (rayCastReturn == 2 && rayCastFowardReturn == 2/* && m_enemyController.GetComponent<ZglorgetteController>().OnRayRightCast() == 2 && m_enemyController.GetComponent<ZglorgetteController>().OnRayLeftCast() == 2*/)
         {
             m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState);
         }

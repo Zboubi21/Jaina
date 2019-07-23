@@ -582,9 +582,9 @@ public class EnemyController : MonoBehaviour {
         return Vector3.Distance(target.position, transform.position);
     }
 
-    public void SetDestination()
+    public void SetDestination(Vector3 target)
     {
-        agent.SetDestination(target.position);
+        agent.SetDestination(target);
     }
 
     public void StopMoving(bool b)

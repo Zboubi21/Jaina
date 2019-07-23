@@ -14,6 +14,9 @@ public class Zglorgette_ChaseState : ChaseState
         m_enemyController = enemyController;
     }
 
+    int rayCastReturn;
+    int rayCastFowardReturn;
+
 
     public override void Enter()
     {
@@ -43,7 +46,35 @@ public class Zglorgette_ChaseState : ChaseState
 
     public override void Destination()
     {
-        base.Destination();
+
+        Debug.Log("Foward " + rayCastFowardReturn);
+        Debug.Log("Sides " + rayCastReturn);
+
+        if ((rayCastFowardReturn != 2 || rayCastReturn == 0 || rayCastReturn == 1)) 
+        {
+            base.Destination();
+        }
+        else if(rayCastReturn == 3 && (rayCastFowardReturn != 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
+        {
+            m_enemyController.SetDestination(-m_enemyController.transform.right);
+        }
+        else if (rayCastReturn == 4 && (rayCastFowardReturn != 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
+        {
+            m_enemyController.SetDestination(m_enemyController.transform.right);
+        }
+
+
+
+
+        /*if ((rayCastReturn == 3 && (rayCastFowardReturn != 3 || rayCastFowardReturn != 1)) && rayCastReturn != 4 && rayCastReturn != 0 && rayCastReturn != 0)
+        {
+        }
+        else if(rayCastReturn == 4 && rayCastReturn != 3 && rayCastReturn != 0 && rayCastReturn != 0 && (rayCastFowardReturn != 3 || rayCastFowardReturn != 1))
+        {
+        }
+        else if(rayCastReturn == 1 || rayCastFowardReturn != 2 || rayCastReturn == 0 || rayCastReturn == 0 || rayCastFowardReturn == 3)
+        {
+        }*/
     }
 
     public override void FaceTarget()
@@ -75,7 +106,9 @@ public class Zglorgette_ChaseState : ChaseState
     #region Leaving State
     public override void GetOutOfState()
     {
-        if(m_enemyController.OnRayCast() == 2)
+        rayCastReturn = m_enemyController.OnRayCastSide();
+        rayCastFowardReturn = m_enemyController.OnRayCast();
+        if (rayCastReturn == 2 && rayCastFowardReturn == 2)
         {
             m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attacks
         }

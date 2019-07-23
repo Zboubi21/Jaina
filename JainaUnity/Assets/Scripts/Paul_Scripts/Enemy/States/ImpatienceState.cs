@@ -65,7 +65,7 @@ public class ImpatienceState : IState
 
     public virtual void Destination()
     {
-        m_enemyController.SetDestination();
+        m_enemyController.SetDestination(m_enemyController.Target.transform.position);
     }
 
     public virtual void FaceTarget()

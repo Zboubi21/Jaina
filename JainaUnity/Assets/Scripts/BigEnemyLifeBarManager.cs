@@ -413,6 +413,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
     public void HideBigLifeBar(){
         if(enemyStatsLocked != null){
+
             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
             enemyStatsLocked.m_cirlceCanvas.SetActive(false);
         }

@@ -14,6 +14,9 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     }
     GameObject sign;
 
+    int rayCastReturn;
+    int rayCastFowardReturn;
+
     int nbrOfProjectilThrown;
     IEnumerator m_castImpatienceCorout;
 
@@ -23,7 +26,6 @@ public class Zglorgette_ImpatienceState : ImpatienceState
         // m_enemyController.StartCoroutine(CastImpatience());
         m_castImpatienceCorout = CastImpatience();
         m_enemyController.StartCoroutine(m_castImpatienceCorout);
-        Debug.Log("ImpatienceEnter");
     }
 
     public override void FixedUpdate()
@@ -34,6 +36,8 @@ public class Zglorgette_ImpatienceState : ImpatienceState
     public override void Update()
     {
         FaceTarget();
+        rayCastReturn = m_enemyController.OnRayCastSide();
+        rayCastFowardReturn = m_enemyController.OnRayCast();
     }
 
     public override void Exit()
@@ -88,7 +92,7 @@ public class Zglorgette_ImpatienceState : ImpatienceState
         }
         nbrOfProjectilThrown = 0;
         yield return new WaitForSeconds(0.5f);
-        if (m_enemyController.OnRayCast() == 2)
+        if (rayCastReturn == 2 && rayCastFowardReturn == 2/*&& m_enemyController.OnRayRightCast() == 2 && m_enemyController.OnRayLeftCast() == 2*/)
         {
             m_enemyController.ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
         }

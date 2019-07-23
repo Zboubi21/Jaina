@@ -24,6 +24,8 @@ public class ZglorgetteController : EnemyController
     Ray ray;
 
     RaycastHit hit;
+    RaycastHit hitD;
+    RaycastHit hitG;
 
     #region get set
     public float CurrentTimeBeforeZglorgetteGettingImpatient
@@ -63,7 +65,6 @@ public class ZglorgetteController : EnemyController
     public override void LogicAtStart()
     {
         base.LogicAtStart();
-        Debug.Log("nonononono");
         currentTimeBeforeZglorgetteGettingImpatient = TimeBeforeZglorgetteGettingImpatient;
     }
 
@@ -84,40 +85,151 @@ public class ZglorgetteController : EnemyController
         ObjectPooler.SpawnSpellFromPool(impatience_Projectil, impatienceProjectilRoot.position, impatienceProjectilRoot.rotation);
     }
 
-    public int OnRayCast()
+    public int OnRayCastSide()
     {
-        Vector3 rayTarget = TargetStats1.transform.position - transform.position;
-        if (/*Physics.SphereCast(transform.position, 1.1f , rayTarget, out hit, range+2f, layers)*/ Physics.Linecast(transform.position, TargetStats1.transform.position,out hit, layers))
+        if (GetTargetDistance(Target.transform) > Agent.stoppingDistance)
         {
             float targetDistance = Vector3.Distance(transform.position, TargetStats1.transform.position);
-            if (targetDistance > range)
+
+            if (Physics.Raycast((transform.forward + transform.right) + transform.position, transform.forward * range, out hitD, range, layers) || Physics.Raycast((transform.forward - transform.right) + transform.position, transform.forward * range, out hitG, range, layers))
             {
-                Debug.DrawRay(transform.position, rayTarget, Color.red);
+
+                if (targetDistance > range)
+                {
+                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
+                    return 0;
+                }
+                else if (hitD.collider != null && hitG.collider == null)
+                {
+                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    return 3;
+
+                }
+                else if (hitG.collider != null && hitD.collider == null)
+                {
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    return 4;
+
+                }
+                else if(hitG.collider != null && hitD.collider != null)
+                {
+                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    return 1;
+                }
                 return 0;
             }
-            else if (hit.collider != TargetStats1.GetComponent<Collider>())
+            else 
             {
-                Debug.DrawRay(transform.position, rayTarget, Color.yellow);
-                return 1;
-            }
-            else
-            {
-                Collider[] hitcol = Physics.OverlapSphere(transform.position, 1f,layers);
-                if(hitcol.Length == 0)
+                if (targetDistance < range)
                 {
-                    Debug.DrawRay(transform.position, rayTarget, Color.green);
+                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
                     return 2;
                 }
                 else
                 {
-                    Debug.DrawRay(transform.position, rayTarget, Color.yellow);
-                    return 3;
+                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
+                    return 0;
                 }
             }
         }
-        Debug.DrawRay(transform.position, rayTarget, Color.magenta);
-        return 4;
+        else
+        {
+            Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
+            Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
+            return 2;
+        }
     }
+    public int OnRayCast()
+    {
+        Vector3 rayTarget = TargetStats1.transform.position - transform.position;
+
+        if (GetTargetDistance(Target.transform) > Agent.stoppingDistance)
+        {
+            if (Physics.Linecast(transform.position, TargetStats1.transform.position, out hit, layers))
+            {
+                float targetDistance = Vector3.Distance(transform.position, TargetStats1.transform.position);
+                if (targetDistance > range)
+                {
+                    Debug.DrawRay(transform.position, rayTarget, Color.red);
+
+                    return 0;
+                }
+                else if (hit.collider != TargetStats1.GetComponent<Collider>())
+                {
+
+                    Debug.DrawRay(transform.position, rayTarget, Color.yellow);
+
+                    return 1;
+
+                }
+                else
+                {
+                    Collider[] hitcol = Physics.OverlapSphere(transform.position, 2f, layers);
+                    if (hitcol.Length == 0)
+                    {
+                        Debug.DrawRay(transform.position, rayTarget, Color.green);
+                        return 2;
+                    }
+                    else
+                    {
+                        Debug.DrawRay(transform.position, rayTarget, Color.white);
+                        return 3;
+                    }
+                }
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, rayTarget, Color.magenta);
+                return 0;
+            }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, rayTarget, Color.green);
+            return 2;
+        }
+    }
+    public int OnRayLeftCast()
+    {
+        if (GetTargetDistance(Target.transform) > Agent.stoppingDistance)
+        {
+            if (Physics.Raycast((transform.forward - transform.right) + transform.position, transform.forward * range, out hitG, range, layers))
+            {
+                Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
+
+                Debug.Log(hitG.collider);
+                return 1;
+            }
+            else
+            {
+                float targetDistance = Vector3.Distance(transform.position, TargetStats1.transform.position);
+
+                if (targetDistance > range)
+                {
+
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
+
+                    return 0;
+                }
+                else
+                {
+                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
+                    return 2;
+                }
+            }
+        }
+        else
+        {
+            Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
+
+            return 2;
+        }
+    }
+
 
     public override bool CoolDownWitchImpatience()
     {
