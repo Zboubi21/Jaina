@@ -189,6 +189,10 @@ public class ObjectPooler : MonoBehaviour {
 		return objectToSpawn;
 	}
 	public void ReturnSpellToPool(SpellType objectType, GameObject objectToReturn){
+		PoolTracker poolTracker = objectToReturn.GetComponent<PoolTracker>();
+        if(poolTracker != null){
+            Destroy(poolTracker);
+        }
 		objectToReturn.SetActive(false);
 		m_spellPoolDictionary[objectType].Enqueue(objectToReturn);
 	}

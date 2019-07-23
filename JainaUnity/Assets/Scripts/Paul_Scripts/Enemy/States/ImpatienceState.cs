@@ -22,6 +22,7 @@ public class ImpatienceState : IState
         StateAnimation(m_enemyController.Anim);
         ImpatienceEffect(m_zglorgController.speedSprint);
         m_enemyController.IsImpatient = true;
+        m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
     }
 
     public virtual void FixedUpdate()

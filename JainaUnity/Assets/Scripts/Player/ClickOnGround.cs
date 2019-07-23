@@ -6,27 +6,22 @@ public class ClickOnGround : MonoBehaviour {
     
     [SerializeField] float m_timeToBeVisible = 1;
 
-    bool m_startBeDestroy = false;
-    float m_timer;
-
-    void Start(){
-        m_timer = m_timeToBeVisible;
-    }
-
-    void Update(){
-        if(m_startBeDestroy){
-            m_timer -= Time.deltaTime;
-            if(m_timer <= 0){
-                DestroyFx();
-            }
-        }
-    }
+    IEnumerator corout;
 
     public void StartBeDestroyed(){
-        m_startBeDestroy = true;
+        corout = LifeTime();
+        StartCoroutine(corout);
     } 
 
+    IEnumerator LifeTime(){
+        yield return new WaitForSeconds(m_timeToBeVisible);
+        DestroyFx();
+    }
+
     public void DestroyFx(){
+        if(corout != null){
+            StopCoroutine(corout);
+        }
         Destroy(gameObject);
     }
 

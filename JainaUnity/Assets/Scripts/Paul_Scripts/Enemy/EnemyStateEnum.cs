@@ -9,6 +9,6 @@
         FrozenState,		        // Numéro 6
 		DieState,			        // Numéro 7
 		VictoryState,		        // Numéro 8
-
+		CinematicState,				// Numéro 9
     }
 }

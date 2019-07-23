@@ -14909,9 +14909,12 @@ MonoBehaviour:
   m_isInstatiate: 1
   m_enemyType: 0
   m_sounds:
-    m_impatienceFx: []
-    m_detectionFx: []
-    m_dieFx: []
+    m_impatienceFx:
+    - {fileID: 7234169076135870180, guid: 0ff38b114eba02d478c3399146434e04, type: 3}
+    m_detectionFx:
+    - {fileID: 6774134045119871622, guid: 9993797c5ca0ab0489576b13797b3d0b, type: 3}
+    m_dieFx:
+    - {fileID: 4450601985551780383, guid: 6feb7fb02222ea5458554c2df17eedef, type: 3}
   m_sM:
     m_currentStateString: 
   lookRadius: 15.41
@@ -14960,7 +14963,6 @@ MonoBehaviour:
   m_hit:
     m_timeToSeeHit: 0.1
     m_timeToRecovery: 0.1
-    m_colorSkin: []
     m_whiteSkin:
     - {fileID: 257275720708097290}
     - {fileID: 8627751418735163782}

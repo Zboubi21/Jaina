@@ -709,9 +709,9 @@ public class PlayerManager : MonoBehaviour {
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
 
-			if(m_actualClickOnGroundFx != null){
-				m_actualClickOnGroundFx.DestroyFx();
-			}
+			// if(m_actualClickOnGroundFx != null){
+			// 	m_actualClickOnGroundFx.DestroyFx();
+			// }
 			m_actualClickOnGroundFx = Instantiate(m_clickOnGroundFx, hit.point, m_clickOnGroundFx.transform.rotation).GetComponent<ClickOnGround>();
 			m_actualClickOnGroundFx.StartBeDestroyed();
 

@@ -174,9 +174,12 @@ MonoBehaviour:
   m_isInstatiate: 1
   m_enemyType: 2
   m_sounds:
-    m_impatienceFx: []
-    m_detectionFx: []
-    m_dieFx: []
+    m_impatienceFx:
+    - {fileID: 7234169076135870180, guid: 0ff38b114eba02d478c3399146434e04, type: 3}
+    m_detectionFx:
+    - {fileID: 6774134045119871622, guid: 9993797c5ca0ab0489576b13797b3d0b, type: 3}
+    m_dieFx:
+    - {fileID: 4450601985551780383, guid: 6feb7fb02222ea5458554c2df17eedef, type: 3}
   m_sM:
     m_currentStateString: 
   lookRadius: 10
@@ -225,7 +228,6 @@ MonoBehaviour:
   m_hit:
     m_timeToSeeHit: 0.1
     m_timeToRecovery: 0.1
-    m_colorSkin: []
     m_whiteSkin:
     - {fileID: 8016358316579021338}
     - {fileID: 2649668545614025207}
@@ -19202,6 +19204,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23285975198106562, guid: fb4a6414d1438fd4f90881f058a974eb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 046b05422404dcf45b9e4cb46222333b, type: 2}
     - target: {fileID: 4002361524114396, guid: fb4a6414d1438fd4f90881f058a974eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.024
@@ -19246,11 +19253,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23285975198106562, guid: fb4a6414d1438fd4f90881f058a974eb,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 046b05422404dcf45b9e4cb46222333b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb4a6414d1438fd4f90881f058a974eb, type: 3}
 --- !u!4 &2652384537447395597 stripped

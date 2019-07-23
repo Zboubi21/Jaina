@@ -130,6 +130,12 @@ public class Projectile : Spell {
 		if(m_dieFX != null){
 			Level.AddFX(m_dieFX, transform.position, transform.rotation);
 		}
+		
+		PoolTracker poolTracker = GetComponent<PoolTracker>();
+        if(poolTracker != null){
+            Destroy(poolTracker);
+        }
+
 		ProjectileReturnToPool();
 	}
 
