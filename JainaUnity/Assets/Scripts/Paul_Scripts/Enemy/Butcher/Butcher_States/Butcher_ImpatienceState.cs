@@ -70,7 +70,7 @@ public class Butcher_ImpatienceState : ImpatienceState
         m_enemyController.Agent.enabled = true;
         butcherController.TempsJumpAnim = butcherController.AnimTime;
         butcherController.ImpatienceSign.gameObject.SetActive(false);
-        butcherController.StopAllCoroutines();
+        butcherController.StopAllButcherCoroutines();
         butcherController.DestroyButcherJumpSign();
     }
 
