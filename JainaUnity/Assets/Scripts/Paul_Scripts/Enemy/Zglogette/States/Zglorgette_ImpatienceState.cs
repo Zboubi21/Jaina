@@ -26,6 +26,7 @@ public class Zglorgette_ImpatienceState : ImpatienceState
         // m_enemyController.StartCoroutine(CastImpatience());
         m_castImpatienceCorout = CastImpatience();
         m_enemyController.StartCoroutine(m_castImpatienceCorout);
+        m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
     }
 
     public override void FixedUpdate()

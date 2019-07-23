@@ -16,6 +16,9 @@
         Zglorgette_Jeune,
 		Zglorgette_Adulte,
         Zglorgette_Conquérant,
+
+        Zglorg_GrandConquérant,
+        Butcher_GrandConquérant,
 	}
     [System.Serializable] public enum SpellType {
 		AutoAttack_Ice,
