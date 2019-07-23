@@ -61,6 +61,10 @@ public class StunState : IState
         //{
         //    m_enemyController.ChangeState(m_enemyController.GetLastStateIndex());
         //}
+        else if (m_enemyController.PlayerInAttackBox())
+        {
+            m_enemyController.ChangeState((int)EnemyState.AttackState);
+        }
         else
         {
             m_enemyController.ChangeState((int)EnemyState.ChaseState);
