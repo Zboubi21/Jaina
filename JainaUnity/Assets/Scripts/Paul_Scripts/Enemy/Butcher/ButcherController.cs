@@ -38,6 +38,7 @@ public class ButcherController : EnemyController
 
         [Header("Jump")]
 		public float m_timeToDoJump = 1;
+        public float m_miniJumpDistance = 1;
         public AnimationCurve m_jumpCurve;
         [Range(0,1)] public float m_timeToStartEndJumpAnim = 0.75f;
         [Range(0,1)] public float m_timeToDoDamage = 0.8f;
