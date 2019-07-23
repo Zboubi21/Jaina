@@ -54,6 +54,8 @@ public class ZglorgetteController : EnemyController
             new FrozenState(this),                      // Numéro 6
             new DieState(this),                         // Numéro 7
             new VictoryState(this),                     // Numéro 8
+            new CinematicState(this),                   // Numéro 9
+
 		});
         string[] enemyStateNames = System.Enum.GetNames(typeof(EnemyZglorgetteState));
         if (m_sM.States.Count != enemyStateNames.Length)
