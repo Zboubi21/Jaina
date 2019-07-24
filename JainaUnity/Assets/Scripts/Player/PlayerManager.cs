@@ -15,19 +15,18 @@ public class PlayerManager : MonoBehaviour {
 
 	public static PlayerManager Instance;
 
-	public PlayerDebug m_playerDebug = new PlayerDebug();
-	[Serializable] public class PlayerDebug {
-		public bool m_playerCanDie = true;
-		public bool m_useSymetricalHudSpellAnim = true;
-		public PlayerState m_playerStartState;
-		[Space]
-		public bool m_startInMenuMode = false;
-		public GameObject m_UiCanvas;
-		// [Space]
-		// public Transform m_fromPos;
-		// public Transform m_toPos;
-		// public Transform m_newToPos;
-	}
+	// public PlayerDebug m_playerDebug = new PlayerDebug();
+	// [Serializable] public class PlayerDebug {
+	// 	public bool m_playerCanDie = true;
+	// 	public bool m_useSymetricalHudSpellAnim = true;
+	// 	public PlayerState m_playerStartState;
+	// 	[Space]
+	// 	public bool m_startInMenuMode = false;
+	// 	// [Space]
+	// 	// public Transform m_fromPos;
+	// 	// public Transform m_toPos;
+	// 	// public Transform m_newToPos;
+	// }
 
 	public StateMachine m_sM = new StateMachine();
 
@@ -451,6 +450,8 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject m_clickOnGroundFx;
 	public LayerMask m_groundLayer;
 	public LayerMask m_rotateLayer;
+	public GameObject m_UiCanvas;
+	[SerializeField] Animator m_arcadeModeAnimator;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
 	NavMeshAgent m_agent;
@@ -460,11 +461,14 @@ public class PlayerManager : MonoBehaviour {
 	ClickOnGround m_actualClickOnGroundFx;
 	bool m_inMenuMode;
 	PauseGame m_pauseGame;
+	GameManager m_gameManager;
 	
 #region Input Buttons
 
 	[HideInInspector] public bool m_leftMouseDownClick;
 	[HideInInspector] public bool m_leftMouseClick;
+	[HideInInspector] public bool m_leftMouseUpClick;
+	
 	[HideInInspector] public bool m_rightMouseClickDown;
 	[HideInInspector] public bool m_rightMouseClick;
 	[HideInInspector] public bool m_blinkButton;
@@ -564,6 +568,36 @@ public class PlayerManager : MonoBehaviour {
             m_capsuleColl = value;
         }
     }
+
+	bool m_inPauseGame;
+	public bool InPauseGame {
+        get{
+            return m_inPauseGame;
+        }
+        set{
+            m_inPauseGame = value;
+        }
+    }
+
+	bool m_inAutoAttack;
+	public bool InAutoAttack {
+        get{
+            return m_inAutoAttack;
+        }
+        set{
+            m_inAutoAttack = value;
+        }
+    }
+	bool m_canAutoAttackBecauseUi;
+	public bool CanAutoAttackBecauseUi {
+        get{
+            return m_canAutoAttackBecauseUi;
+        }
+        set{
+            m_canAutoAttackBecauseUi = value;
+        }
+    }
+	
 #endregion Encapsuled
 
     void Awake(){
@@ -590,10 +624,13 @@ public class PlayerManager : MonoBehaviour {
 			Debug.LogError("You need to have the same number of State in PlayerManager and PlayerStateEnum");
 		}
 		m_agent = GetComponent<NavMeshAgent>();
-		m_inMenuMode = m_playerDebug.m_startInMenuMode;
 	}
 
 	void Start(){
+		m_gameManager = GameManager.Instance;
+		m_inMenuMode = m_gameManager.m_playerSettings.m_startInMenuMode;
+		ChangeState(m_gameManager.m_playerSettings.m_playerStartState);
+
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
 
 		SetUIElements();
@@ -601,9 +638,11 @@ public class PlayerManager : MonoBehaviour {
 		m_jainaAnimator = m_mesh.m_jainaMesh.GetComponent<Animator>();
 		CapsuleColl = GetComponent<CapsuleCollider>();
 		m_pauseGame = GetComponent<PauseGame>();
+
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;
 		m_cameraManager = CameraManager.Instance;
+
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 
@@ -611,11 +650,11 @@ public class PlayerManager : MonoBehaviour {
 	}
 	
 	void OnEnable(){
-		ChangeState(m_playerDebug.m_playerStartState);
+		// ChangeState(m_gameManager.m_playerSettings.m_playerStartState);
 	}
 
 	void Update(){
-		if(m_inMenuMode){
+		if(m_inMenuMode || InPauseGame){
 			return;
 		}
 		m_sM.Update();
@@ -624,14 +663,13 @@ public class PlayerManager : MonoBehaviour {
 		DecreaseCooldown();
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
+
+		if(Input.GetKeyDown(KeyCode.Q)){
+			On_ArcadeModeIsEnabled();
+		}
 	}
 
 	void FixedUpdate(){
-		if(m_inMenuMode){
-			return;
-		}
-		m_sM.FixedUpdate();
-
         if(m_sM.CurrentStateIndex != ((int)PlayerState.PlayerCinematicState)){
 			if(m_agent.velocity != Vector3.zero ){
 				m_isMoving = true;
@@ -641,10 +679,15 @@ public class PlayerManager : MonoBehaviour {
 				m_jainaAnimator.SetBool("isMoving", m_isMoving);
 			}
 		}
+
+		if(m_inMenuMode || InPauseGame){
+			return;
+		}
+		m_sM.FixedUpdate();
 	}
 
 	void LateUpdate(){
-		if(m_inMenuMode){
+		if(m_inMenuMode || InPauseGame){
 			return;
 		}
 		MoveAnimation();
@@ -703,6 +746,7 @@ public class PlayerManager : MonoBehaviour {
 	void UpdateInputButtons(){
 		m_leftMouseClick = Input.GetButton("LeftClick");
 		m_leftMouseDownClick = Input.GetButtonDown("LeftClick");
+		m_leftMouseUpClick = Input.GetButtonUp("LeftClick");
 
 		m_rightMouseClickDown = Input.GetButtonDown("RightClick");
 		m_rightMouseClick = Input.GetButton("RightClick");
@@ -816,9 +860,9 @@ public class PlayerManager : MonoBehaviour {
 		m_leftMiddlePos = m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition;
 		m_leftRightPos = m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition;
 
-		m_rightLeftPos = m_playerDebug.m_useSymetricalHudSpellAnim ? m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition : m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition;
+		m_rightLeftPos = m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim ? m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition : m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition;
 		m_rightMiddlePos = m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition;
-		m_rightRightPos = m_playerDebug.m_useSymetricalHudSpellAnim ? m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition : m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
+		m_rightRightPos = m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim ? m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition : m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
 
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0);
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0);
@@ -901,7 +945,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// --------------------------
 				// ---------- FIRE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -953,7 +997,7 @@ public class PlayerManager : MonoBehaviour {
 				
 				// -------------------------
 				// ---------- ICE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1063,7 +1107,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// ----------------------------
 				// ---------- ARCANE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -1115,7 +1159,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// --------------------------
 				// ---------- FIRE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1226,7 +1270,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// -------------------------
 				// ---------- ICE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -1278,7 +1322,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// ----------------------------
 				// ---------- ARCANE ----------
-				if(m_playerDebug.m_useSymetricalHudSpellAnim){
+				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1656,6 +1700,9 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 	public void AutoAttack(){
+		if(!m_canAutoAttackBecauseUi){
+			return;
+		}
 		if(m_canAutoAttack){
 			m_canAutoAttack = false;
 			
@@ -1725,7 +1772,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public void On_PlayerDie(){
-		if(m_playerDebug.m_playerCanDie){
+		if(m_gameManager.m_playerSettings.m_playerCanDie){
 			ChangeState(PlayerState.PlayerDieState);
 		}
 	}
@@ -1739,10 +1786,10 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public void ChangeHudSpellAnim(){
-		m_playerDebug.m_useSymetricalHudSpellAnim =! m_playerDebug.m_useSymetricalHudSpellAnim;
+		m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim =! m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim;
 	}
 	public void ChangeJainaCanDie(){
-		m_playerDebug.m_playerCanDie =! m_playerDebug.m_playerCanDie;
+		m_gameManager.m_playerSettings.m_playerCanDie =! m_gameManager.m_playerSettings.m_playerCanDie;
 	}
 
 	public void SwitchPlayerToCinematicState(float timeToBeInCinematic){
@@ -1787,7 +1834,7 @@ public class PlayerManager : MonoBehaviour {
     }
 
 	void SetUiModeParameters(){
-		m_playerDebug.m_UiCanvas.SetActive(!m_inMenuMode);
+		m_UiCanvas.SetActive(!m_inMenuMode);
 		m_pauseGame.enabled = !m_inMenuMode;
 	}
 
@@ -1801,6 +1848,18 @@ public class PlayerManager : MonoBehaviour {
 				SetTpPoint(newPos.position);
 			}
 		}
+	}
+
+	public void On_ArcadeModeIsEnabled(){
+		m_inMenuMode = true;
+		m_cameraManager.CanMoveCamera = false;
+		SetPlayerMenuMode(true);
+        On_AnimateArcadeModeAnimator();
+		m_gameManager.SetArcadeModeBtn(true);
+	}
+
+	public void On_AnimateArcadeModeAnimator(){
+        m_arcadeModeAnimator.SetTrigger("Enabled");
 	}
 
 }

@@ -13,11 +13,13 @@ public class JainaUI : UI, IPointerEnterHandler, IPointerExitHandler {
         // Debug.Log("Mouse enter");
         base.OnPointerEnter(eventData);
 
-        UiController.On_UiPointerOver(this);
-        m_selectedSpell.SetActive(MouseInUI);
-        m_spellDescription.SetActive(MouseInUI);
-        if(m_markDescription != null)
-            m_markDescription.SetActive(false);
+        if(UiController.CanShowSpell()){
+            UiController.On_UiPointerOver(this);
+            m_selectedSpell.SetActive(MouseInUI);
+            m_spellDescription.SetActive(MouseInUI);
+            if(m_markDescription != null)
+                m_markDescription.SetActive(false);
+        }
     }
 
     public override void OnPointerExit(PointerEventData eventData) {

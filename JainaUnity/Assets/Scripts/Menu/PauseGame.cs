@@ -17,15 +17,28 @@ public class PauseGame : MainMenu {
 	[SerializeField] AudioMixerSnapshot m_unpausedSnapshot;
 
 	bool m_canPaused = true;
+	public bool CanPaused{
+        get{
+            return m_canPaused;
+        }
+        set{
+            m_canPaused = value;
+        }
+    }
+
 	bool m_pause = false;
 	bool m_pauseKey = false;
+	PlayerManager m_playerManager;
 
-	void OnEnable(){
+    
+
+    void OnEnable(){
 		m_canPaused = true;
 	}
 
 	void Start(){
 		m_pause = false;
+		m_playerManager = GetComponent<PlayerManager>();
 		
 		if(m_pausedCanvas != null){
 			m_pausedCanvas.gameObject.SetActive(false);	
@@ -46,6 +59,8 @@ public class PauseGame : MainMenu {
 	public void Resume(){
 		
 		m_pause = !m_pause;
+
+		m_playerManager.InPauseGame = m_pause;
 
 		if(m_pause){
 			Time.timeScale = 0;
@@ -80,8 +95,19 @@ public class PauseGame : MainMenu {
 	public void ReturnToMainMenu(){
 		m_canPaused = false;
 		Resume();
-		Time.timeScale = 1;
 		GameManager.Instance.ReturnToMainMenu();
+	}
+
+	public void ReturnToMainMenuWithArcadeModeAnimator(){
+		m_playerManager.On_AnimateArcadeModeAnimator();
+		m_canPaused = false;
+		GameManager.Instance.ReturnToMainMenu();
+	}
+
+	public override void Quit(){
+		m_canPaused = false;
+		Resume();
+		base.Quit();
 	}
 
 }
