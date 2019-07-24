@@ -13,6 +13,7 @@ public class Waves_Methods : MonoBehaviour
 
     public GameObject waveUI;
     public GameObject victoryScreen;
+    public Waves_Methods PreviousWaveMethods;
     UI_Wave_Identifier wave_Identifier;
 
     [Header("Spawner Var")]
@@ -385,7 +386,11 @@ public class Waves_Methods : MonoBehaviour
 
         //nbrEnemyDead = 0;
         //nbrOfEnemy = 0;
-        OnShowTimeOnThisWave();
+        if (useArenaUI)
+        {
+            OnShowTimeOnThisWave();
+        }
+        
 
         OnAnyWaveStart.Invoke();
         if (wave > m_timeBetweenEachWave.Length-1)
