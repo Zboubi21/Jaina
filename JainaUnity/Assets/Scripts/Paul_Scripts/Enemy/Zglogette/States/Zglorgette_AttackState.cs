@@ -25,7 +25,7 @@ public class Zglorgette_AttackState : AttackState
     public override void Update()
     {
         base.Update();
-        m_enemyController.FaceTarget();
+        m_enemyController.FaceTarget(m_enemyController.Target.transform.position);
     }
     /*
     public void Enter()

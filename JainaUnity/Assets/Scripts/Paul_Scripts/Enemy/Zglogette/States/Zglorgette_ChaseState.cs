@@ -47,39 +47,43 @@ public class Zglorgette_ChaseState : ChaseState
     public override void Destination()
     {
 
-        Debug.Log("Foward " + rayCastFowardReturn);
-        Debug.Log("Sides " + rayCastReturn);
 
         if ((rayCastFowardReturn != 2 || rayCastReturn == 0 || rayCastReturn == 1)) 
         {
             base.Destination();
         }
-        else if(rayCastReturn == 3 && (rayCastFowardReturn != 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
+        else if(rayCastReturn == 3 && (rayCastFowardReturn == 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
         {
-            m_enemyController.SetDestination(-m_enemyController.transform.right);
-        }
-        else if (rayCastReturn == 4 && (rayCastFowardReturn != 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
-        {
+            Debug.Log("SidesD " + rayCastReturn);
+
             m_enemyController.SetDestination(m_enemyController.transform.right);
         }
-
-
-
-
-        /*if ((rayCastReturn == 3 && (rayCastFowardReturn != 3 || rayCastFowardReturn != 1)) && rayCastReturn != 4 && rayCastReturn != 0 && rayCastReturn != 0)
+        else if (rayCastReturn == 4 && (rayCastFowardReturn == 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
         {
+            Debug.Log("SidesL " + rayCastReturn);
+
+            m_enemyController.SetDestination(-m_enemyController.transform.right);
         }
-        else if(rayCastReturn == 4 && rayCastReturn != 3 && rayCastReturn != 0 && rayCastReturn != 0 && (rayCastFowardReturn != 3 || rayCastFowardReturn != 1))
-        {
-        }
-        else if(rayCastReturn == 1 || rayCastFowardReturn != 2 || rayCastReturn == 0 || rayCastReturn == 0 || rayCastFowardReturn == 3)
-        {
-        }*/
     }
 
     public override void FaceTarget()
     {
-        base.FaceTarget();
+
+        if ((rayCastFowardReturn != 2 || rayCastReturn == 0 || rayCastReturn == 1))
+        {
+            base.FaceTarget();
+        }
+        else if (rayCastReturn == 3 && (rayCastFowardReturn == 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
+        {
+
+            m_enemyController.FaceTarget(m_enemyController.transform.right);
+        }
+        else if (rayCastReturn == 4 && (rayCastFowardReturn == 2 && rayCastFowardReturn != 3 && rayCastFowardReturn != 1))
+        {
+
+            m_enemyController.FaceTarget(-m_enemyController.transform.right);
+        }
+        
     }
 
     #endregion

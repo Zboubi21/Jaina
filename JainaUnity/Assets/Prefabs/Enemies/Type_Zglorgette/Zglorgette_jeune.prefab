@@ -571,7 +571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69dce9c02a676ca40940b86386706e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 100
   m_currentHealth: 100
   damage:
     baseValue: 10
@@ -671,7 +671,7 @@ MonoBehaviour:
       type: 3}
     m_markExplosionRoot: {fileID: 1015741110291158094}
   m_timeToWaitBeforeDespawnEnemy: 3
-  range: 15
+  range: 20
   rangeColor: {r: 0, g: 1, b: 1, a: 1}
   layers:
     serializedVersion: 2
@@ -682,7 +682,7 @@ MonoBehaviour:
   timeBetweenImpatiencePorjectil: 0.5
   impatience_Projectil: 12
   impatienceProjectilRoot: {fileID: 5819414973155938862}
-  TimeBeforeZglorgetteGettingImpatient: 3
+  TimeBeforeZglorgetteGettingImpatient: 10
 --- !u!1 &1015518654019923178
 GameObject:
   m_ObjectHideFlags: 0
@@ -20994,21 +20994,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 1930501813538262099, guid: eccb21de60ab9e643999f8a8e4c2dca2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21020,6 +21005,21 @@ PrefabInstance:
       value: 1.21
       objectReference: {fileID: 0}
     - target: {fileID: 1930501813538262099, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629532457245287737, guid: eccb21de60ab9e643999f8a8e4c2dca2,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0

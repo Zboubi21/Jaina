@@ -85,7 +85,7 @@ public class ChaseState : IState
 
     public virtual void FaceTarget()
     {
-        m_enemyController.FaceTarget();
+        m_enemyController.FaceTarget(m_enemyController.Target.transform.position);
     }
 
     #endregion

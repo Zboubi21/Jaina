@@ -652,7 +652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69dce9c02a676ca40940b86386706e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 250
   m_currentHealth: 100
   damage:
     baseValue: 10
@@ -752,7 +752,7 @@ MonoBehaviour:
       type: 3}
     m_markExplosionRoot: {fileID: 1015741110291158094}
   m_timeToWaitBeforeDespawnEnemy: 3
-  range: 15
+  range: 30
   rangeColor: {r: 0, g: 1, b: 1, a: 1}
   layers:
     serializedVersion: 2
@@ -763,7 +763,7 @@ MonoBehaviour:
   timeBetweenImpatiencePorjectil: 0.5
   impatience_Projectil: 12
   impatienceProjectilRoot: {fileID: 3078392995309039848}
-  TimeBeforeZglorgetteGettingImpatient: 3
+  TimeBeforeZglorgetteGettingImpatient: 5
 --- !u!1 &1015518654019923178
 GameObject:
   m_ObjectHideFlags: 0
