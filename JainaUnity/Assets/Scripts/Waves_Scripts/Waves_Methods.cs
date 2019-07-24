@@ -14,6 +14,7 @@ public class Waves_Methods : MonoBehaviour
     public GameObject waveUI;
     public GameObject victoryScreen;
     public Waves_Methods PreviousWaveMethods;
+    public Waves_Methods NextWaveMethods;
     public int maximumDeVague;
     UI_Wave_Identifier wave_Identifier;
 
@@ -67,12 +68,12 @@ public class Waves_Methods : MonoBehaviour
     {
         get
         {
-            return minutes;
+            return minute;
         }
 
         set
         {
-            minutes = value;
+            minute = value;
         }
     }
 
@@ -80,12 +81,12 @@ public class Waves_Methods : MonoBehaviour
     {
         get
         {
-            return second;
+            return seconds;
         }
 
         set
         {
-            second = value;
+            seconds = value;
         }
     }
 
@@ -102,6 +103,32 @@ public class Waves_Methods : MonoBehaviour
         }
     }
 
+    public float MinutesWave
+    {
+        get
+        {
+            return minutesWave;
+        }
+
+        set
+        {
+            minutesWave = value;
+        }
+    }
+
+    public float SecondWave
+    {
+        get
+        {
+            return secondWave;
+        }
+
+        set
+        {
+            secondWave = value;
+        }
+    }
+
     #endregion
 
     public void OnLaunchWave(float TimeBeforeNextWave)
@@ -109,6 +136,10 @@ public class Waves_Methods : MonoBehaviour
         if (!isLaunchByTrigger)
         {
             _playerOnTrigger = true;
+            if (PreviousWaveMethods != null)
+            {
+                maximumDeVague = PreviousWaveMethods.maximumDeVague;
+            }
             StartCoroutine(WaitForFirstWave(TimeBeforeNextWave));
         }
     }
@@ -157,6 +188,15 @@ public class Waves_Methods : MonoBehaviour
         {
             wave_Identifier.maxWave.text = string.Format("{0}", maximumDeVague);
         }
+        else
+        {
+            seconds = PreviousWaveMethods.Second;
+            /*if (seconds > 60f)
+            {
+                seconds = 0;
+            }*/
+            minute = PreviousWaveMethods.Minutes;
+        }
         wave_Identifier.timerWave.fontSize = 45;
         waveUI.SetActive(b);
     }
@@ -196,12 +236,15 @@ public class Waves_Methods : MonoBehaviour
         if (useArenaUI)
         {
             OnUsingAreanUI(false);
+            
+            
         }
+
     }
     float minutesWave;
     float secondWave;
-    float minutes;
-    float second;
+    float minute;
+    float seconds;
     bool b = false;
 
     private void Update()
@@ -240,20 +283,47 @@ public class Waves_Methods : MonoBehaviour
         {
             if(nbrOfWave != 0)
             {
-                if(PreviousWaveMethods == null)
+                OnChronoMethods();
+
+                /*if (PreviousWaveMethods == null)
                 {
-                    OnChronoMethods(second,minutes);
+                    OnChronoMethods(seconds);
                 }
                 else
                 {
-                    OnChronoMethods(PreviousWaveMethods.Second, PreviousWaveMethods.Minutes);
-                }
+                    OnChronoMethods(PreviousWaveMethods.Second);
+                }*/
+                TimeToNextWaveMethods(minutesWave, secondWave);
             }
-            TimeToNextWaveMethods();
+            if(NextWaveMethods != null && nbrOfWave == nombreDeVague && nbrOfWave != 0)
+            {
+                if (!saveNextWaveTimer)
+                {
+                    timeForNextWave = m_timeBetweenEachWave[nbrOfWave-1];
+                    saveNextWaveTimer = true;
+                }
+                timeForNextWave -= Time.deltaTime;
+                minutesNextWave = timeForNextWave / 60f;
+                secondsNextWave = timeForNextWave % 60f;
+                TimeToNextWaveMethods(minutesNextWave, secondsNextWave);
+            }
+            else
+            {
+                saveNextWaveTimer = false;
+            }
         }
     }
+    bool saveNextWaveTimer;
+    float timeForNextWave;
+    float minutesNextWave;
+    float secondsNextWave;
 
-    void TimeToNextWaveMethods()
+
+    float timed;
+    float timedMinutes;
+    float timedSeconds;
+
+    void TimeToNextWaveMethods(float minutesWave, float secondWave)
     {
         if (nbrOfWave != nombreDeVague && nbrOfWave != 0)
         {
@@ -284,10 +354,36 @@ public class Waves_Methods : MonoBehaviour
 
             OnRedCloudChangeColor();
         }
-        else
+        else if(totalOfWave == maximumDeVague && PreviousWaveMethods != null && maximumDeVague !=0 && totalOfWave!=0)
         {
             wave_Identifier.timerWave.fontSize = 35;
             wave_Identifier.timerWave.text = "Last Wave";
+        }
+        else
+        {
+            if (secondWave < 10)
+            {
+                if (minutesWave < 10)
+                {
+                    wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
+                }
+                else
+                {
+                    wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
+                }
+
+            }
+            else
+            {
+                if (minutesWave < 10)
+                {
+                    wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
+                }
+                else
+                {
+                    wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
+                }
+            }
         }
     }
 
@@ -295,9 +391,9 @@ public class Waves_Methods : MonoBehaviour
     {
         if(nbrOfWave - 1 >= 0)
         {
-            float timed = m_timeBetweenEachWave[nbrOfWave - 1] - timeNextWave;
-            float timedMinutes = timed / 60;
-            float timedSeconds = timed % 60;
+            timed = m_timeBetweenEachWave[nbrOfWave - 1] - timeNextWave;
+            timedMinutes = timed / 60;
+            timedSeconds = timed % 60;
             if (timedSeconds < 10)
             {
                 if (timedMinutes < 10)
@@ -322,41 +418,67 @@ public class Waves_Methods : MonoBehaviour
                 }
             }
         }
+        else if(PreviousWaveMethods != null)
+        {
+            if (PreviousWaveMethods.timedSeconds < 10)
+            {
+                if (PreviousWaveMethods.timedMinutes < 10)
+                {
+                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+                }
+                else
+                {
+                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+                }
+
+            }
+            else
+            {
+                if (PreviousWaveMethods.timedMinutes < 10)
+                {
+                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+                }
+                else
+                {
+                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+                }
+            }
+        }
         else
         {
-            wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", 0,0);
+            wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", 0, 0);
         }
     }
 
-    void OnChronoMethods(float second,float minutes)
+    void OnChronoMethods()
     {
-        second += Time.deltaTime;
-        if ((int)second >= 60)
+        seconds += Time.deltaTime;
+        if ((int)seconds >= 60)
         {
-            second = 0;
-            minutes++;
+            seconds = 0;
+            minute++;
         }
-        if (second < 10)
+        if (seconds < 10)
         {
-            if (minutes < 10)
+            if (minute < 10)
             {
-                wave_Identifier.Chrono.text = string.Format("0{0}:0{1}", (int)minutes, (int)second);
+                wave_Identifier.Chrono.text = string.Format("0{0}:0{1}", (int)minute, (int)seconds);
             }
             else
             {
-                wave_Identifier.Chrono.text = string.Format("{0}:0{1}", (int)minutes, (int)second);
+                wave_Identifier.Chrono.text = string.Format("{0}:0{1}", (int)minute, (int)seconds);
             }
 
         }
         else
         {
-            if (minutes < 10)
+            if (minute < 10)
             {
-                wave_Identifier.Chrono.text = string.Format("0{0}:{1}", (int)minutes, (int)second);
+                wave_Identifier.Chrono.text = string.Format("0{0}:{1}", (int)minute, (int)seconds);
             }
             else
             {
-                wave_Identifier.Chrono.text = string.Format("{0}:{1}", (int)minutes, (int)second);
+                wave_Identifier.Chrono.text = string.Format("{0}:{1}", (int)minute, (int)seconds);
             }
         }
     }
@@ -404,7 +526,7 @@ public class Waves_Methods : MonoBehaviour
     {
         nbrEnemyDead++;
     }
-
+    int totalOfWave;
     void Spawner(int wave)
     {
 
@@ -438,10 +560,12 @@ public class Waves_Methods : MonoBehaviour
             if(PreviousWaveMethods == null)
             {
                 wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave);
+                totalOfWave = NombreDeVague;
             }
             else
             {
-                wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave + PreviousWaveMethods.NombreDeVague);
+                totalOfWave = nbrOfWave + PreviousWaveMethods.totalOfWave;
+                wave_Identifier.waveCounter.text = string.Format("{0}", totalOfWave);
             }
         }
     }

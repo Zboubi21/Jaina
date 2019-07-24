@@ -98,26 +98,26 @@ public class ZglorgetteController : EnemyController
 
                 if (targetDistance > range)
                 {
-                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
-                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
+                    //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
+                    //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
                     return 0;
                 }
                 else if (hitD.collider != null && hitG.collider == null)
                 {
-                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
                     return 3;
 
                 }
                 else if (hitG.collider != null && hitD.collider == null)
                 {
-                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
                     return 4;
 
                 }
                 else if(hitG.collider != null && hitD.collider != null)
                 {
-                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
-                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.yellow);
+                    //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.yellow);
                     return 1;
                 }
                 return 0;
@@ -126,22 +126,22 @@ public class ZglorgetteController : EnemyController
             {
                 if (targetDistance < range)
                 {
-                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
-                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
+                    //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
+                    //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
                     return 2;
                 }
                 else
                 {
-                    Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
-                    Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
+                    //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.red);
+                    //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.red);
                     return 0;
                 }
             }
         }
         else
         {
-            Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
-            Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
+            //Debug.DrawRay((transform.forward + transform.right) + transform.position, transform.forward * range, Color.green);
+            //Debug.DrawRay((transform.forward - transform.right) + transform.position, transform.forward * range, Color.green);
             return 2;
         }
     }
