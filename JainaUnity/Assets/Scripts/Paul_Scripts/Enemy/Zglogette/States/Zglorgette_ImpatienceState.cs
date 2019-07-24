@@ -84,7 +84,7 @@ public class Zglorgette_ImpatienceState : ImpatienceState
 
     IEnumerator CastImpatience()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.15f);
         while (nbrOfProjectilThrown < m_enemyController.nombreDeGrandeAttack)
         {
             m_enemyController.OnCastImpatienceProjectil();

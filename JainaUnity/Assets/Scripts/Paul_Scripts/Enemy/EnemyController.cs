@@ -613,9 +613,9 @@ public class EnemyController : MonoBehaviour {
         lookRadius = Mathf.Lerp(StartlookRadius, maxLookRadiusOnAlert, /*Mathf.PingPong(*/alertExpensionSpeed/*, 1)*/);
     }
 
-    public void FaceTarget()
+    public void FaceTarget(Vector3 target)
     {
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (target - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * smoothRot);
     }
