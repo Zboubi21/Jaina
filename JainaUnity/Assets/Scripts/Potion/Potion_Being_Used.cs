@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PoolTypes;
 
 public class Potion_Being_Used : MonoBehaviour
 {
@@ -10,9 +11,11 @@ public class Potion_Being_Used : MonoBehaviour
 
     ParticleSystem[] particle;
     Animator anim;
+    ObjectPooler m_objectPooler;
 
     void Start()
     {
+        m_objectPooler = ObjectPooler.Instance;
         particle = GetComponentsInChildren<ParticleSystem>();
         anim = GetComponentInChildren<Animator>();
     }
@@ -42,7 +45,8 @@ public class Potion_Being_Used : MonoBehaviour
     {
         gameObject.GetComponent<Collider>().enabled = false;
         yield return new WaitForSeconds(0.75f);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
+        m_objectPooler.ReturnObjectToPool(ObjectType.LifePotion, gameObject);
     }
 
 }

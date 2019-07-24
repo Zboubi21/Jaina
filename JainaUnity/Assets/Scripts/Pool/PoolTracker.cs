@@ -52,6 +52,9 @@ public class PoolTracker : MonoBehaviour {
     }
 
     public void ResetTrackedObject(){
+        if(m_objectPooler == null){
+            m_objectPooler = ObjectPooler.Instance;
+        }
         switch (m_poolType){
             case PoolType.EnemyType:
 		        m_objectPooler.ReturnEnemyToPool(m_enemyType, gameObject);
