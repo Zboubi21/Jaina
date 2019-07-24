@@ -467,6 +467,8 @@ public class PlayerManager : MonoBehaviour {
 
 	[HideInInspector] public bool m_leftMouseDownClick;
 	[HideInInspector] public bool m_leftMouseClick;
+	[HideInInspector] public bool m_leftMouseUpClick;
+	
 	[HideInInspector] public bool m_rightMouseClickDown;
 	[HideInInspector] public bool m_rightMouseClick;
 	[HideInInspector] public bool m_blinkButton;
@@ -574,6 +576,25 @@ public class PlayerManager : MonoBehaviour {
         }
         set{
             m_inPauseGame = value;
+        }
+    }
+
+	bool m_inAutoAttack;
+	public bool InAutoAttack {
+        get{
+            return m_inAutoAttack;
+        }
+        set{
+            m_inAutoAttack = value;
+        }
+    }
+	bool m_canAutoAttackBecauseUi;
+	public bool CanAutoAttackBecauseUi {
+        get{
+            return m_canAutoAttackBecauseUi;
+        }
+        set{
+            m_canAutoAttackBecauseUi = value;
         }
     }
 	
@@ -725,6 +746,7 @@ public class PlayerManager : MonoBehaviour {
 	void UpdateInputButtons(){
 		m_leftMouseClick = Input.GetButton("LeftClick");
 		m_leftMouseDownClick = Input.GetButtonDown("LeftClick");
+		m_leftMouseUpClick = Input.GetButtonUp("LeftClick");
 
 		m_rightMouseClickDown = Input.GetButtonDown("RightClick");
 		m_rightMouseClick = Input.GetButton("RightClick");
@@ -1678,6 +1700,9 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 	public void AutoAttack(){
+		if(!m_canAutoAttackBecauseUi){
+			return;
+		}
 		if(m_canAutoAttack){
 			m_canAutoAttack = false;
 			
