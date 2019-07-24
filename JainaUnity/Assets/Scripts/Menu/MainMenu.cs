@@ -16,7 +16,7 @@ void Awake(){
 }
 
 // ---------------------------------------------- Quitter ----------------------------------------------
-	public void Quit(){											// Fonction pour quitter le jeu
+	public virtual void Quit(){											// Fonction pour quitter le jeu
 		StartCoroutine(WaitTimeToQuit());
 	}
 

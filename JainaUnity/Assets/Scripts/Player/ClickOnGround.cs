@@ -28,7 +28,6 @@ public class ClickOnGround : MonoBehaviour {
             StopCoroutine(corout);
         }
         Destroy(gameObject);
-        Debug.Log("DestroyFx");
     }
 
 }
