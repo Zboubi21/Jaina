@@ -447,7 +447,6 @@ public class PlayerManager : MonoBehaviour {
     #endregion Public [Serializable] Variables
 
     [Space]
-	public GameObject m_clickOnGroundFx;
 	public LayerMask m_groundLayer;
 	public LayerMask m_rotateLayer;
 	public GameObject m_UiCanvas;
@@ -462,6 +461,7 @@ public class PlayerManager : MonoBehaviour {
 	bool m_inMenuMode;
 	PauseGame m_pauseGame;
 	GameManager m_gameManager;
+	ObjectType m_clickOnGround = ObjectType.ClickOnGround;
 	
 #region Input Buttons
 
@@ -775,14 +775,8 @@ public class PlayerManager : MonoBehaviour {
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
 
-			// if(m_actualClickOnGroundFx != null){
-			// 	m_actualClickOnGroundFx.DestroyFx();
-			// }
-			m_actualClickOnGroundFx = Instantiate(m_clickOnGroundFx, hit.point, m_clickOnGroundFx.transform.rotation).GetComponent<ClickOnGround>();
-			// m_actualClickOnGroundFx.StartBeDestroyed();
-
+			m_actualClickOnGroundFx = m_objectPooler.SpawnObjectFromPool(m_clickOnGround,  hit.point, Quaternion.identity).GetComponent<ClickOnGround>();
 			m_actualClickOnGroundFx.gameObject.SetActive(false);
-			// m_actualClickOnGroundFx.transform.position = m_agent.destination;
 		}
 		if(m_rightMouseClick){
 			RaycastHit hit;
