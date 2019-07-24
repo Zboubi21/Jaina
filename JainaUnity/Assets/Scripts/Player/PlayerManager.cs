@@ -588,13 +588,23 @@ public class PlayerManager : MonoBehaviour {
             m_inAutoAttack = value;
         }
     }
-	bool m_canAutoAttackBecauseUi;
+	bool m_canAutoAttackBecauseUi = true;
 	public bool CanAutoAttackBecauseUi {
         get{
             return m_canAutoAttackBecauseUi;
         }
         set{
             m_canAutoAttackBecauseUi = value;
+        }
+    }
+
+	JainaUiController m_jainaUiController;
+    public JainaUiController JainaUiController{
+        get{
+            return m_jainaUiController;
+        }
+        set{
+            m_jainaUiController = value;
         }
     }
 	
@@ -638,6 +648,7 @@ public class PlayerManager : MonoBehaviour {
 		m_jainaAnimator = m_mesh.m_jainaMesh.GetComponent<Animator>();
 		CapsuleColl = GetComponent<CapsuleCollider>();
 		m_pauseGame = GetComponent<PauseGame>();
+		m_jainaUiController = GetComponent<JainaUiController>();
 
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;

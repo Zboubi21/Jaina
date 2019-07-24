@@ -17,6 +17,16 @@ public class JainaUiController : MonoBehaviour {
         }
     }
 
+    JainaUI m_jainUiOver = null;
+    public JainaUI JainUiOver{
+        get{
+            return m_jainUiOver;
+        }
+        set{
+            m_jainUiOver = value;
+        }
+    }
+
     PlayerManager m_playerManager;
     bool m_playerInAutoAttack;
 
@@ -47,18 +57,7 @@ public class JainaUiController : MonoBehaviour {
 
     IEnumerator WaitToExit(){
         yield return new WaitForEndOfFrame();
-        bool isIn = false;
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            if(m_uiImage[i].MouseInUI){
-                isIn = true;
-            }
-        }
-        for (int i = 0, l = m_ui.Length; i < l; ++i) {
-            if(m_ui[i].MouseInUI){
-                isIn = true;
-            }
-        }
-        if(!isIn){
+        if(!IsOverUi()){
             for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
                 m_uiImage[i].CloseUI();
             }
@@ -76,6 +75,32 @@ public class JainaUiController : MonoBehaviour {
 
     public bool CanShowSpell(){
         return !m_playerInAutoAttack;
+    }
+
+    public void On_PlayerLeftMouseUpClick(){
+        if(IsOverUi()){
+            m_playerManager.InAutoAttack = false;
+            m_playerInAutoAttack = false;
+            if(m_jainUiOver != null){
+                m_jainUiOver.ShowUi();
+            }
+            m_playerManager.CanAutoAttackBecauseUi = false;
+        }
+    }
+
+    bool IsOverUi(){
+        bool isIn = false;
+        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
+            if(m_uiImage[i].MouseInUI){
+                isIn = true;
+            }
+        }
+        for (int i = 0, l = m_ui.Length; i < l; ++i) {
+            if(m_ui[i].MouseInUI){
+                isIn = true;
+            }
+        }
+        return isIn;
     }
 
 }
