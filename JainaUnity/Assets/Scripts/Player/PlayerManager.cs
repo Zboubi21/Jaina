@@ -668,9 +668,9 @@ public class PlayerManager : MonoBehaviour {
 		if(m_inMenuMode || InPauseGame){
 			return;
 		}
-		m_sM.Update();
 		UpdateInputButtons();
 		RaycastToMovePlayer();
+		m_sM.Update();
 		DecreaseCooldown();
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
@@ -775,8 +775,10 @@ public class PlayerManager : MonoBehaviour {
 			hit = GroundRaycast();
 			PlayerTargetPosition = hit.point;
 
-			m_actualClickOnGroundFx = m_objectPooler.SpawnObjectFromPool(m_clickOnGround,  hit.point, Quaternion.identity).GetComponent<ClickOnGround>();
-			m_actualClickOnGroundFx.gameObject.SetActive(false);
+			if(m_actualClickOnGroundFx == null){
+				m_actualClickOnGroundFx = m_objectPooler.SpawnObjectFromPool(m_clickOnGround,  hit.point, Quaternion.identity).GetComponent<ClickOnGround>();
+				m_actualClickOnGroundFx.gameObject.SetActive(false);
+			}
 		}
 		if(m_rightMouseClick){
 			RaycastHit hit;
@@ -798,6 +800,7 @@ public class PlayerManager : MonoBehaviour {
 				if(!m_actualClickOnGroundFx.gameObject.activeSelf){
 					m_actualClickOnGroundFx.gameObject.SetActive(true);
 					m_actualClickOnGroundFx.transform.position = m_agent.destination;
+					m_actualClickOnGroundFx = null;
 				}
 			}
 		}

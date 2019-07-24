@@ -227,7 +227,10 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 	PoolTracker AddPoolTrackerComponent(GameObject objectToSpawn, PoolType poolType){
-		PoolTracker poolTracker = objectToSpawn.AddComponent<PoolTracker>().GetComponent<PoolTracker>();
+		// PoolTracker poolTracker = objectToSpawn.GetComponent<PoolTracker>();
+		// if(poolTracker == null){
+			PoolTracker poolTracker = objectToSpawn.AddComponent<PoolTracker>().GetComponent<PoolTracker>();
+		// }
 		poolTracker.PoolType = poolType;
 		return poolTracker;
 	}
