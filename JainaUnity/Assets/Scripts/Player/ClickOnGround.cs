@@ -8,10 +8,15 @@ public class ClickOnGround : MonoBehaviour {
 
     IEnumerator corout;
 
-    public void StartBeDestroyed(){
+    void Start(){
         corout = LifeTime();
         StartCoroutine(corout);
-    } 
+    }
+
+    // public void StartBeDestroyed(){
+    //     corout = LifeTime();
+    //     StartCoroutine(corout);
+    // } 
 
     IEnumerator LifeTime(){
         yield return new WaitForSeconds(m_timeToBeVisible);
@@ -23,6 +28,7 @@ public class ClickOnGround : MonoBehaviour {
             StopCoroutine(corout);
         }
         Destroy(gameObject);
+        Debug.Log("DestroyFx");
     }
 
 }

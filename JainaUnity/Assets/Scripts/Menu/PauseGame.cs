@@ -6,9 +6,9 @@ using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 
 public class PauseGame : MainMenu {
+	
+	[Space]
 	//[SerializeField] private EventSystem m_optionsEventSystem;
-
-	public bool m_canPaused = true;
 
 	[SerializeField] Transform m_pausedCanvas;
 	[SerializeField] Transform m_optionsCanvas;
@@ -16,8 +16,13 @@ public class PauseGame : MainMenu {
 	[SerializeField] AudioMixerSnapshot m_pausedSnapshot;
 	[SerializeField] AudioMixerSnapshot m_unpausedSnapshot;
 
+	bool m_canPaused = true;
 	bool m_pause = false;
 	bool m_pauseKey = false;
+
+	void OnEnable(){
+		m_canPaused = true;
+	}
 
 	void Start(){
 		m_pause = false;
@@ -70,6 +75,13 @@ public class PauseGame : MainMenu {
 	public void RestartGame(){
 		SaveManager m_saveManager = SaveManager.Instance;
 		m_saveManager.StartCoroutine(m_saveManager.On_RestartGame());
+	}
+
+	public void ReturnToMainMenu(){
+		m_canPaused = false;
+		Resume();
+		Time.timeScale = 1;
+		GameManager.Instance.ReturnToMainMenu();
 	}
 
 }

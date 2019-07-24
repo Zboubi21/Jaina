@@ -890,7 +890,8 @@ public class EnemyController : MonoBehaviour {
         }
         else
         {
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 

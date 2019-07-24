@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 public class MainMenu : MonoBehaviour {
 
-[SerializeField] float m_waitTimeToQuit = 0.175f;
+	[SerializeField] float m_waitTimeToQuit = 0.175f;
+	[SerializeField] Animator m_blackScreenAnimator;
 
 void Awake(){
 	SetResolution();
@@ -19,6 +21,7 @@ void Awake(){
 	}
 
 	IEnumerator WaitTimeToQuit(){
+		m_blackScreenAnimator.SetTrigger("BlackScreen");
 		yield return new WaitForSeconds(m_waitTimeToQuit);
 #if UNITY_EDITOR												// Si on est sur Unity Editor alors :
 		if(Application.isPlaying){								// Si on est en mode "play" dans l'éditeur d'Unity
@@ -32,13 +35,11 @@ void Awake(){
 // ---------------------------------------------- StartLevel ----------------------------------------------
 	public void StartLevel(int numLevel){							// Fonction pour commencer le jeu
 #if UNITY_5_4_OR_NEWER												// Si on est sur une version de Unity >= à la 5.4 alors :
-	SceneManager.LoadScene(numLevel);	// Lance le numéro du level
+	SceneManager.LoadScene(numLevel);								// Lance le numéro du level
 #else //UNITY_5_4_OR_NEWER											// Si on est sur une version de Unity <= à la 5.4 alors :
 	Application.LoadLevel(numLevel);								// Lance le numéro du level
 #endif //UNITY_5_4_OR_NEWER											// Fini
 	}
-
-	
 
 // ---------------------------------------------- Régler le son ----------------------------------------------
 	[SerializeField] private AudioMixer m_musicAudioMixer;

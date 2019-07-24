@@ -20,6 +20,9 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_playerCanDie = true;
 		public bool m_useSymetricalHudSpellAnim = true;
 		public PlayerState m_playerStartState;
+		[Space]
+		public bool m_startInMenuMode = false;
+		public GameObject m_UiCanvas;
 		// [Space]
 		// public Transform m_fromPos;
 		// public Transform m_toPos;
@@ -447,7 +450,7 @@ public class PlayerManager : MonoBehaviour {
     [Space]
 	public GameObject m_clickOnGroundFx;
 	public LayerMask m_groundLayer;
-	public LayerMask m_rotatePlayerLayer;
+	public LayerMask m_rotateLayer;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
 	NavMeshAgent m_agent;
@@ -455,6 +458,8 @@ public class PlayerManager : MonoBehaviour {
 	PlayerUiAnimationCorout m_playerUiCorout;
 	GameObject m_lastAutoAttackSound;
 	ClickOnGround m_actualClickOnGroundFx;
+	bool m_inMenuMode;
+	PauseGame m_pauseGame;
 	
 #region Input Buttons
 
@@ -584,23 +589,25 @@ public class PlayerManager : MonoBehaviour {
 		if(m_sM.States.Count != playerStateNames.Length){
 			Debug.LogError("You need to have the same number of State in PlayerManager and PlayerStateEnum");
 		}
-
 		m_agent = GetComponent<NavMeshAgent>();
+		m_inMenuMode = m_playerDebug.m_startInMenuMode;
 	}
 
 	void Start(){
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
 
-
 		SetUIElements();
 
 		m_jainaAnimator = m_mesh.m_jainaMesh.GetComponent<Animator>();
 		CapsuleColl = GetComponent<CapsuleCollider>();
+		m_pauseGame = GetComponent<PauseGame>();
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;
 		m_cameraManager = CameraManager.Instance;
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
+
+		SetUiModeParameters();
 	}
 	
 	void OnEnable(){
@@ -608,20 +615,21 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void Update(){
+		if(m_inMenuMode){
+			return;
+		}
 		m_sM.Update();
 		UpdateInputButtons();
 		RaycastToMovePlayer();
 		DecreaseCooldown();
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
-
-		if(Input.GetKeyDown(KeyCode.G)){
-			// SwitchPlayerToCinematicState(5);
-			StartCoroutine(CinematicStringCorout(0, 100));
-		}
 	}
 
 	void FixedUpdate(){
+		if(m_inMenuMode){
+			return;
+		}
 		m_sM.FixedUpdate();
 
         if(m_sM.CurrentStateIndex != ((int)PlayerState.PlayerCinematicState)){
@@ -636,6 +644,9 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void LateUpdate(){
+		if(m_inMenuMode){
+			return;
+		}
 		MoveAnimation();
 	}
 
@@ -713,7 +724,7 @@ public class PlayerManager : MonoBehaviour {
 			// 	m_actualClickOnGroundFx.DestroyFx();
 			// }
 			m_actualClickOnGroundFx = Instantiate(m_clickOnGroundFx, hit.point, m_clickOnGroundFx.transform.rotation).GetComponent<ClickOnGround>();
-			m_actualClickOnGroundFx.StartBeDestroyed();
+			// m_actualClickOnGroundFx.StartBeDestroyed();
 
 			m_actualClickOnGroundFx.gameObject.SetActive(false);
 			// m_actualClickOnGroundFx.transform.position = m_agent.destination;
@@ -748,7 +759,7 @@ public class PlayerManager : MonoBehaviour {
 	public void RotatePlayer(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit floorHit;
-        if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotatePlayerLayer)){
+        if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotateLayer)){
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
@@ -1651,7 +1662,7 @@ public class PlayerManager : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Vector3 hitPoint = new Vector3();
 			RaycastHit floorHit;
-			if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotatePlayerLayer)){
+			if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotateLayer)){
 				hitPoint = floorHit.point;
 			}
 			switch(m_currentElement){
@@ -1774,5 +1785,22 @@ public class PlayerManager : MonoBehaviour {
         }
 		return null;
     }
+
+	void SetUiModeParameters(){
+		m_playerDebug.m_UiCanvas.SetActive(!m_inMenuMode);
+		m_pauseGame.enabled = !m_inMenuMode;
+	}
+
+	public void SetPlayerMenuMode(bool inMenu, Transform newPos = null){
+		m_inMenuMode = inMenu;
+		SetUiModeParameters();
+		if(inMenu){
+
+		}else{
+			if(newPos != null){
+				SetTpPoint(newPos.position);
+			}
+		}
+	}
 
 }
