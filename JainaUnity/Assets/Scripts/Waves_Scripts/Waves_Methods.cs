@@ -10,7 +10,9 @@ public class Waves_Methods : MonoBehaviour
     [Space]
     [Tooltip("Is This Arena Using The Arena UI ?")]
     public bool useArenaUI;
+
     public GameObject waveUI;
+    public GameObject victoryScreen;
     UI_Wave_Identifier wave_Identifier;
 
     [Header("Spawner Var")]
@@ -56,6 +58,32 @@ public class Waves_Methods : MonoBehaviour
         set
         {
             nbrOfEnemy = value;
+        }
+    }
+
+    public float Minutes
+    {
+        get
+        {
+            return minutes;
+        }
+
+        set
+        {
+            minutes = value;
+        }
+    }
+
+    public float Second
+    {
+        get
+        {
+            return second;
+        }
+
+        set
+        {
+            second = value;
         }
     }
 
@@ -111,6 +139,7 @@ public class Waves_Methods : MonoBehaviour
         color.r = 1f;
         wave_Identifier.redCloud.color = color;
         wave_Identifier.maxWave.text = string.Format("{0}", NombreDeVague);
+        wave_Identifier.timerWave.fontSize = 45;
         waveUI.SetActive(b);
     }
     private void Start()
@@ -184,6 +213,7 @@ public class Waves_Methods : MonoBehaviour
             if (useArenaUI)
             {
                 nbrOfWave = 0;
+                victoryScreen.SetActive(true);
                 waveUI.SetActive(false);
                 wave_Identifier.timerWave.fontSize = 45;
             }
@@ -194,44 +224,49 @@ public class Waves_Methods : MonoBehaviour
             {
                 OnChronoMethods();
             }
-            if (nbrOfWave != NombreDeVague && nbrOfWave !=0)
-            {
-
-                if (secondWave < 10)
-                {
-                    if (minutesWave < 10)
-                    {
-                        wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
-                    }
-                    else
-                    {
-                        wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
-                    }
-
-                }
-                else
-                {
-                    if (minutesWave < 10)
-                    {
-                        wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
-                    }
-                    else
-                    {
-                        wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
-                    }
-                }
-
-                OnRedCloudChangeColor();
-            }
-            else
-            {
-                wave_Identifier.timerWave.fontSize = 35;
-                wave_Identifier.timerWave.text = "Last Wave";
-            }
+            TimeToNextWaveMethods();
         }
     }
 
-    /*void OnShowTimeOnThisWave()
+    void TimeToNextWaveMethods()
+    {
+        if (nbrOfWave != NombreDeVague && nbrOfWave != 0)
+        {
+
+            if (secondWave < 10)
+            {
+                if (minutesWave < 10)
+                {
+                    wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
+                }
+                else
+                {
+                    wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
+                }
+
+            }
+            else
+            {
+                if (minutesWave < 10)
+                {
+                    wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
+                }
+                else
+                {
+                    wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
+                }
+            }
+
+            OnRedCloudChangeColor();
+        }
+        else
+        {
+            wave_Identifier.timerWave.fontSize = 35;
+            wave_Identifier.timerWave.text = "Last Wave";
+        }
+    }
+
+    void OnShowTimeOnThisWave()
     {
         if(nbrOfWave - 1 >= 0)
         {
@@ -266,7 +301,7 @@ public class Waves_Methods : MonoBehaviour
         {
             wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", 0,0);
         }
-    }*/
+    }
 
     void OnChronoMethods()
     {
@@ -350,7 +385,7 @@ public class Waves_Methods : MonoBehaviour
 
         //nbrEnemyDead = 0;
         //nbrOfEnemy = 0;
-        //OnShowTimeOnThisWave();
+        OnShowTimeOnThisWave();
 
         OnAnyWaveStart.Invoke();
         if (wave > m_timeBetweenEachWave.Length-1)
