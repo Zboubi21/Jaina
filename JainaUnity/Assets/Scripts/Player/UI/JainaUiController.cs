@@ -7,6 +7,29 @@ public class JainaUiController : MonoBehaviour {
     [SerializeField] JainaUI[] m_uiImage;
     [SerializeField] UI[] m_ui;
 
+    bool m_inUi = false;
+    public bool InUi{
+        get{
+            return m_inUi;
+        }
+        set{
+            m_inUi = value;
+        }
+    }
+
+    JainaUI m_jainUiOver = null;
+    public JainaUI JainUiOver{
+        get{
+            return m_jainUiOver;
+        }
+        set{
+            m_jainUiOver = value;
+        }
+    }
+
+    PlayerManager m_playerManager;
+    bool m_playerInAutoAttack;
+
     void Awake(){
         for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
             m_uiImage[i].UiController = this;
@@ -14,6 +37,10 @@ public class JainaUiController : MonoBehaviour {
         for (int i = 0, l = m_ui.Length; i < l; ++i) {
             m_ui[i].UiController = this;
         }
+    }
+
+    void Start(){
+        m_playerManager = GetComponent<PlayerManager>();
     }
 
     public void On_UiPointerOver(JainaUI clickedUI){
@@ -26,29 +53,42 @@ public class JainaUiController : MonoBehaviour {
 
     public void On_UiPointerExit(){
         StartCoroutine(WaitToExit());
-        // bool isIn = false;
-        // Debug.Log("bool isIn = " + isIn);
-        // for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-        //     if(m_uiImage[i].MouseInUI){
-        //         isIn = true;
-        //         Debug.Log("m_uiImage isIn = " + isIn);
-        //     }
-        // }
-        // for (int i = 0, l = m_ui.Length; i < l; ++i) {
-        //     if(m_ui[i].MouseInUI){
-        //         isIn = true;
-        //         Debug.Log("m_ui isIn = " + isIn);
-        //     }
-        // }
-        // Debug.Log("FINAL isIn = " + isIn);
-        
-        // if(!isIn){
-        //     Debug.Log("Tata");
-        // }
     }
 
     IEnumerator WaitToExit(){
         yield return new WaitForEndOfFrame();
+        if(!IsOverUi()){
+            for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
+                m_uiImage[i].CloseUI();
+            }
+            m_inUi = false;
+            m_playerManager.CanAutoAttackBecauseUi = true;
+        }
+    }
+    
+    public void CheckPlayerMode(){
+        m_playerInAutoAttack = m_playerManager.InAutoAttack;
+        if(!m_playerInAutoAttack){
+            m_playerManager.CanAutoAttackBecauseUi = false;
+        }
+    }
+
+    public bool CanShowSpell(){
+        return !m_playerInAutoAttack;
+    }
+
+    public void On_PlayerLeftMouseUpClick(){
+        if(IsOverUi()){
+            m_playerManager.InAutoAttack = false;
+            m_playerInAutoAttack = false;
+            if(m_jainUiOver != null){
+                m_jainUiOver.ShowUi();
+            }
+            m_playerManager.CanAutoAttackBecauseUi = false;
+        }
+    }
+
+    bool IsOverUi(){
         bool isIn = false;
         for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
             if(m_uiImage[i].MouseInUI){
@@ -60,13 +100,9 @@ public class JainaUiController : MonoBehaviour {
                 isIn = true;
             }
         }
-        if(!isIn){
-            for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-                m_uiImage[i].CloseUI();
-            }
-        }
+        return isIn;
     }
-    
+
 }
 
 // Before just use PointerOver

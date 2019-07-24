@@ -24,6 +24,13 @@ public class NoThrowSpellState : IState
 
 		m_playerManager.RotatePlayer();
 
+		if(m_playerManager.m_leftMouseClick){
+			m_playerManager.InAutoAttack = true;
+		}
+		if(m_playerManager.m_leftMouseUpClick){
+			m_playerManager.InAutoAttack = false;
+			m_playerManager.JainaUiController.On_PlayerLeftMouseUpClick();
+		}
 		if(m_playerManager.m_leftMouseClick || m_playerManager.m_leftMouseDownClick){
 			m_playerManager.AutoAttack();
 		}

@@ -31,6 +31,10 @@ public class UI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
     public virtual void OnPointerEnter(PointerEventData eventData) {
         // Debug.Log("Mouse enter");
+        if(!m_uiController.InUi){
+            m_uiController.CheckPlayerMode();
+        }
+        m_uiController.InUi = true;
         m_mouseInUI = true;
     }
 

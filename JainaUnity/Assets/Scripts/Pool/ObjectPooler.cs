@@ -159,6 +159,7 @@ public class ObjectPooler : MonoBehaviour {
 		return objectToSpawn;
 	}
 	public void ReturnEnemyToPool(EnemyType enemyType, GameObject objectToReturn){
+		CheckPoolTrackerOnResetObject(objectToReturn);
 		objectToReturn.SetActive(false);
 		m_enemyPoolDictionary[enemyType].Enqueue(objectToReturn);
 	}
@@ -189,10 +190,7 @@ public class ObjectPooler : MonoBehaviour {
 		return objectToSpawn;
 	}
 	public void ReturnSpellToPool(SpellType objectType, GameObject objectToReturn){
-		PoolTracker poolTracker = objectToReturn.GetComponent<PoolTracker>();
-        if(poolTracker != null){
-            Destroy(poolTracker);
-        }
+		CheckPoolTrackerOnResetObject(objectToReturn);
 		objectToReturn.SetActive(false);
 		m_spellPoolDictionary[objectType].Enqueue(objectToReturn);
 	}
@@ -223,6 +221,7 @@ public class ObjectPooler : MonoBehaviour {
 		return objectToSpawn;
 	}
 	public void ReturnObjectToPool(ObjectType objectType, GameObject objectToReturn){
+		CheckPoolTrackerOnResetObject(objectToReturn);
 		objectToReturn.SetActive(false);
 		m_objectPoolDictionary[objectType].Enqueue(objectToReturn);
 	}
@@ -257,6 +256,13 @@ public class ObjectPooler : MonoBehaviour {
 				poolTracker.ResetTrackedObject();
 			}
 		}
+	}
+
+	void CheckPoolTrackerOnResetObject(GameObject objectToReturn){
+		PoolTracker poolTracker = objectToReturn.GetComponent<PoolTracker>();
+        if(poolTracker != null){
+            Destroy(poolTracker);
+        }
 	}
 
 }

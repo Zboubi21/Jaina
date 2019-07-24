@@ -13,22 +13,35 @@ public class JainaUI : UI, IPointerEnterHandler, IPointerExitHandler {
         // Debug.Log("Mouse enter");
         base.OnPointerEnter(eventData);
 
-        UiController.On_UiPointerOver(this);
-        m_selectedSpell.SetActive(MouseInUI);
-        m_spellDescription.SetActive(MouseInUI);
-        if(m_markDescription != null)
-            m_markDescription.SetActive(false);
+        if(UiController.CanShowSpell()){
+            // UiController.On_UiPointerOver(this);
+            // m_selectedSpell.SetActive(MouseInUI);
+            // m_spellDescription.SetActive(MouseInUI);
+            // if(m_markDescription != null)
+            //     m_markDescription.SetActive(false);
+            ShowUi();
+        }
+        UiController.JainUiOver = this;
     }
 
     public override void OnPointerExit(PointerEventData eventData) {
         // Debug.Log("Mouse exit");
         base.OnPointerExit(eventData);
         // CloseUI();
+        UiController.JainUiOver = null;
     }
 
     public void CloseUI(){
         m_selectedSpell.SetActive(false);
         m_spellDescription.SetActive(false);
+        if(m_markDescription != null)
+            m_markDescription.SetActive(false);
+    }
+
+    public void ShowUi(){
+        UiController.On_UiPointerOver(this);
+        m_selectedSpell.SetActive(MouseInUI);
+        m_spellDescription.SetActive(MouseInUI);
         if(m_markDescription != null)
             m_markDescription.SetActive(false);
     }
