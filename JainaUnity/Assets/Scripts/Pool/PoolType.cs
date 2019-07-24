@@ -39,5 +39,6 @@
     [System.Serializable] public enum ObjectType {
         LifePotion,
         ButcherCheckArea,
+        ClickOnGround,
 	}
 }
