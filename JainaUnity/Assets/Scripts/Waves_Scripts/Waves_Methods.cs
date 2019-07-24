@@ -14,6 +14,7 @@ public class Waves_Methods : MonoBehaviour
     public GameObject waveUI;
     public GameObject victoryScreen;
     public Waves_Methods PreviousWaveMethods;
+    public int maximumDeVague;
     UI_Wave_Identifier wave_Identifier;
 
     [Header("Spawner Var")]
@@ -39,7 +40,7 @@ public class Waves_Methods : MonoBehaviour
     PlayerStats playerStats;
 
     int nbrOfWave;
-    int NombreDeVague;
+    int nombreDeVague;
     float timeNextWave;
 
     bool _playerOnTrigger;
@@ -85,6 +86,19 @@ public class Waves_Methods : MonoBehaviour
         set
         {
             second = value;
+        }
+    }
+
+    public int NombreDeVague
+    {
+        get
+        {
+            return nombreDeVague;
+        }
+
+        set
+        {
+            nombreDeVague = value;
         }
     }
 
@@ -139,7 +153,10 @@ public class Waves_Methods : MonoBehaviour
         color.g = 1f;
         color.r = 1f;
         wave_Identifier.redCloud.color = color;
-        wave_Identifier.maxWave.text = string.Format("{0}", NombreDeVague);
+        if(PreviousWaveMethods == null)
+        {
+            wave_Identifier.maxWave.text = string.Format("{0}", maximumDeVague);
+        }
         wave_Identifier.timerWave.fontSize = 45;
         waveUI.SetActive(b);
     }
@@ -167,12 +184,12 @@ public class Waves_Methods : MonoBehaviour
                     }
                     else
                     {
-                        NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
+                        nombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
                     }
                 }
                 else
                 {
-                    NombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
+                    nombreDeVague = _spawnerMethod[i]._nbrOfWaves.Length;
                 }
             }
         }
@@ -189,7 +206,7 @@ public class Waves_Methods : MonoBehaviour
 
     private void Update()
     {
-        if (_playerOnTrigger && nbrOfWave != NombreDeVague)
+        if (_playerOnTrigger && nbrOfWave != nombreDeVague)
         {
             minutesWave = timeNextWave / 60f;
             secondWave = timeNextWave % 60f;
@@ -206,7 +223,7 @@ public class Waves_Methods : MonoBehaviour
                 Spawner(nbrOfWave);
             }
         }
-        else if (nbrOfWave == NombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
+        else if (nbrOfWave == nombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
         {
             OnLastWaveOver.Invoke();
             playerStats.OnCheckArenaStillGoing(false);
@@ -223,7 +240,14 @@ public class Waves_Methods : MonoBehaviour
         {
             if(nbrOfWave != 0)
             {
-                OnChronoMethods();
+                if(PreviousWaveMethods == null)
+                {
+                    OnChronoMethods(second,minutes);
+                }
+                else
+                {
+                    OnChronoMethods(PreviousWaveMethods.Second, PreviousWaveMethods.Minutes);
+                }
             }
             TimeToNextWaveMethods();
         }
@@ -231,7 +255,7 @@ public class Waves_Methods : MonoBehaviour
 
     void TimeToNextWaveMethods()
     {
-        if (nbrOfWave != NombreDeVague && nbrOfWave != 0)
+        if (nbrOfWave != nombreDeVague && nbrOfWave != 0)
         {
 
             if (secondWave < 10)
@@ -304,7 +328,7 @@ public class Waves_Methods : MonoBehaviour
         }
     }
 
-    void OnChronoMethods()
+    void OnChronoMethods(float second,float minutes)
     {
         second += Time.deltaTime;
         if ((int)second >= 60)
@@ -411,7 +435,14 @@ public class Waves_Methods : MonoBehaviour
         nbrOfWave++;
         if (useArenaUI)
         {
-            wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave);
+            if(PreviousWaveMethods == null)
+            {
+                wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave);
+            }
+            else
+            {
+                wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave + PreviousWaveMethods.NombreDeVague);
+            }
         }
     }
 }
