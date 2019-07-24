@@ -11,6 +11,9 @@ public class ClickOnGround : MonoBehaviour {
     IEnumerator corout;
 
     void OnEnable(){
+        if(corout != null){
+            StopCoroutine(corout);
+        }
         corout = LifeTime();
         StartCoroutine(corout);
     }
