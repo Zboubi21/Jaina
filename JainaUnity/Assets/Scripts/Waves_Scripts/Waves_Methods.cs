@@ -49,7 +49,7 @@ public class Waves_Methods : MonoBehaviour
 
     int nbrOfEnemy;
     int nbrEnemyDead;
-
+    float timeToWave;
     #region Get Set
     public int NbrOfEnemy
     {
@@ -144,7 +144,7 @@ public class Waves_Methods : MonoBehaviour
 
     #endregion
 
-    public void OnLaunchWave()
+    public void OnLaunchWave(float timeAdd)
     {
         if (!isLaunchByTrigger)
         {
@@ -153,35 +153,71 @@ public class Waves_Methods : MonoBehaviour
             {
                 maximumDeVague = PreviousWaveMethods.maximumDeVague;
             }
-            float timeToWave = m_timeBetweenEachWave[0];
-            StartCoroutine(WaitForFirstWave(timeToWave));
+            timeToWave = m_timeBetweenEachWave[0];
+            StartCoroutine(WaitForFirstWave(timeToWave, timeAdd));
         }
     }
 
-    IEnumerator WaitForFirstWave(float time)
+    IEnumerator WaitForFirstWave(float time, float timeadd)
     {
-        while (true)
+        yield return new WaitForSeconds(timeadd);
+        if(timeadd != 0)
         {
-            yield return new WaitForSeconds(0.02f);
-            time -= Time.deltaTime;
-            Debug.Log(this.name +" this is the time : " + time);
-            Debug.Log(this.name +" previous dead : " + PreviousWaveMethods.nbrEnemyDead);
-            Debug.Log(this.name +" previous enemy : " + PreviousWaveMethods.nbrOfEnemy);
-            if (time <= 0 || PreviousWaveMethods.nbrEnemyDead == PreviousWaveMethods.nbrOfEnemy || PreviousWaveMethods.nbrEnemyDead == 0 || PreviousWaveMethods.nbrOfEnemy == 0)
-            {
-                playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
-                playerStats.OnCheckArenaStillGoing(true);
+            playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
+            playerStats.OnCheckArenaStillGoing(true);
 
-                OnFirstWaveStart.Invoke();
-                if (useArenaUI)
-                {
-                    OnUsingAreanUI(useArenaUI);
-                }
-                Debug.Log("this is the nbrOfWave :" + nbrOfWave);
-                Spawner(nbrOfWave);
-                StopCoroutine(WaitForFirstWave(time));
-                break;
+            OnFirstWaveStart.Invoke();
+            if (useArenaUI)
+            {
+                OnUsingAreanUI(useArenaUI);
             }
+            Spawner(nbrOfWave);
+            StopCoroutine(WaitForFirstWave(time, timeadd));
+        }
+        else
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.02f);
+                time -= Time.deltaTime;
+                Debug.Log(time);
+                if(timeadd == 0)
+                {
+                    if (time <= 0 || PreviousWaveMethods.nbrEnemyDead == PreviousWaveMethods.nbrOfEnemy || PreviousWaveMethods.nbrEnemyDead == 0 || PreviousWaveMethods.nbrOfEnemy == 0)
+                    {
+                        playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
+                        playerStats.OnCheckArenaStillGoing(true);
+
+                        OnFirstWaveStart.Invoke();
+                        if (useArenaUI)
+                        {
+                            OnUsingAreanUI(useArenaUI);
+                        }
+                        Debug.Log("this is the nbrOfWave :" + nbrOfWave);
+                        Spawner(nbrOfWave);
+                        StopCoroutine(WaitForFirstWave(time,timeadd));
+                        break;
+                    }
+                }
+                else
+                {
+                    if (time <= 0)
+                    {
+                        playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
+                        playerStats.OnCheckArenaStillGoing(true);
+
+                        OnFirstWaveStart.Invoke();
+                        if (useArenaUI)
+                        {
+                            OnUsingAreanUI(useArenaUI);
+                        }
+                        Debug.Log("this is the nbrOfWave :" + nbrOfWave);
+                        Spawner(nbrOfWave);
+                        StopCoroutine(WaitForFirstWave(time, timeadd));
+                        break;
+                    }
+                }
+        }
         }
     }
 
@@ -595,11 +631,11 @@ public class Waves_Methods : MonoBehaviour
     int totalOfWave;
     void Spawner(int wave)
     {
-        wave_Identifier.timerWave.fontSize = 45;
         //nbrEnemyDead = 0;
         //nbrOfEnemy = 0;
         if (useArenaUI)
         {
+            wave_Identifier.timerWave.fontSize = 45;
             OnShowTimeOnThisWave();
         }
         
