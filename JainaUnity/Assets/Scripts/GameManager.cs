@@ -25,9 +25,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] Animator m_blackScreenAnimator;
 
     [Header("Game mode")]
-    [SerializeField] GameObject m_levelDesignObjects;
+    [SerializeField] Transform m_mainMenuPosition;
     [SerializeField] Transform m_levelDesignPosition;
-    [SerializeField] GameObject m_arenaObjects;
     [SerializeField] Transform m_arenaPosition;
 
     [Header("Player settings")]
@@ -47,6 +46,13 @@ public class GameManager : MonoBehaviour {
 
     int m_canArcadeModeNb = 0; // 0 = FALSE, 1 = TRUE
     string m_canArcade = "CanArcade";
+
+    GameObject[] m_levelDesignObjects;
+    string m_levelDesignObjectsName = "LevelDesignObjects";
+    GameObject[] m_arenaObjects;
+    string m_arenaObjectsName = "ArenaObjects";
+    GameObject[] m_mainMenuObjects;
+    string m_mainMenuObjectsName = "MainMenuObjects";
 
     void Start(){
         m_mainMenuCamera = GetComponentInChildren<Camera>();
@@ -72,22 +78,49 @@ public class GameManager : MonoBehaviour {
         //     PlayerPrefs.DeleteKey(m_canArcade);
         //     SetArcadeModeBtn(false);
         // }
+        if(Input.GetKeyDown(KeyCode.K)){
+            FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, true);
+        }
     }
 
 	public void StartStory(){
-        if(m_levelDesignObjects != null && m_arenaObjects != null){
-            m_levelDesignObjects.SetActive(true);
-            m_arenaObjects.SetActive(false);
-        }
+        FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, true);
+        FindAndSetObjects(m_arenaObjects, m_arenaObjectsName, false);
         StartCoroutine(WaitTimeToStartGame(m_levelDesignPosition));
 	}
     public void StartArena(){
-        if(m_levelDesignObjects != null && m_arenaObjects != null){
-            m_levelDesignObjects.SetActive(false);
-            m_arenaObjects.SetActive(true);
-        }
+        FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, false);
+        FindAndSetObjects(m_arenaObjects, m_arenaObjectsName, true);
         StartCoroutine(WaitTimeToStartGame(m_arenaPosition));
 	}
+    void FindAndSetObjects(GameObject[] objects, string tagName, bool setActive){
+
+        // if(tagName == "LevelDesignObjects"){
+        //     if(m_levelDesignObjects == null){
+        //         objects = GameObject.FindGameObjectsWithTag(tagName);
+        //     }
+        // }else if(tagName == "ArenaObjects"){
+        //     if(m_arenaObjects == null){
+        //         objects = GameObject.FindGameObjectsWithTag(tagName);
+        //     }
+        // }else if(tagName == "MainMenuObjects"){
+        //     if(m_mainMenuObjects == null){
+        //         objects = GameObject.FindGameObjectsWithTag(tagName);
+        //     }
+        // }
+        objects = GameObject.FindGameObjectsWithTag(tagName);
+        for (int i = 0, l = objects.Length; i < l; ++i){
+            objects[i].SetActive(setActive);
+        }
+
+        if(tagName == "LevelDesignObjects"){
+            m_levelDesignObjects = objects;
+        }else if(tagName == "ArenaObjects"){
+            m_arenaObjects = objects;
+        }else if(tagName == "MainMenuObjects"){
+            m_mainMenuObjects = objects;
+        }
+    }
     IEnumerator WaitTimeToStartGame(Transform newPos){
         m_blackScreenAnimator.SetTrigger("BlackScreen");
 		yield return new WaitForSeconds(m_waitTimeTp);
@@ -96,17 +129,23 @@ public class GameManager : MonoBehaviour {
 		CameraManager.Instance.ResetPosition();
         CameraManager.Instance.CanMoveCamera = true;
 		m_mainMenuCamera.enabled = false;
+        FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, false);
 	}
 
     public void ReturnToMainMenu(){
-        StartCoroutine(WaitTimeToMainMenu());
+        FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, true);
+        StartCoroutine(WaitTimeToMainMenu(m_mainMenuPosition));
     }
-    IEnumerator WaitTimeToMainMenu(){
+    IEnumerator WaitTimeToMainMenu(Transform newPos){
         m_blackScreenAnimator.SetTrigger("BlackScreen");
 		yield return new WaitForSeconds(m_waitTimeTp);
+        SaveManager.Instance.ReloadScene();
+        yield return new WaitForFixedUpdate();
         m_mainMenuCanvas.SetActive(true);
-		PlayerManager.Instance.SetPlayerMenuMode(true);
+		PlayerManager.Instance.SetPlayerMenuMode(true, newPos);
 		m_mainMenuCamera.enabled = true;
+        FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, false);
+        FindAndSetObjects(m_arenaObjects, m_arenaObjectsName, false);
 	}
 
     public void SetArcadeModeBtn(bool inArcadeMode){

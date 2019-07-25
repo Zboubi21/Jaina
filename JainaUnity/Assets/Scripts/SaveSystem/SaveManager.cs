@@ -109,7 +109,7 @@ public class SaveManager : MonoBehaviour {
         m_dieAnimator.SetTrigger("FadeOut");
     }
 
-    void ReloadScene(){
+    public void ReloadScene(){
         m_objectPooler.On_ReturnAllInPool();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

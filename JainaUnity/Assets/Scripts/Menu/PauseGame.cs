@@ -96,12 +96,14 @@ public class PauseGame : MainMenu {
 		m_canPaused = false;
 		Resume();
 		GameManager.Instance.ReturnToMainMenu();
+        ObjectPooler.Instance.On_ReturnAllInPool();
 	}
 
 	public void ReturnToMainMenuWithArcadeModeAnimator(){
 		m_playerManager.On_AnimateArcadeModeAnimator();
 		m_canPaused = false;
 		GameManager.Instance.ReturnToMainMenu();
+        // ObjectPooler.Instance.On_ReturnAllInPool();
 	}
 
 	public override void Quit(){
