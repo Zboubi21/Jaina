@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PauseGame : MainMenu {
 	
@@ -87,6 +88,11 @@ public class PauseGame : MainMenu {
 		m_saveManager.StartCoroutine(m_saveManager.On_RestartFromLastCheckPoint());
 	}
 
+	public void RestartArena(){
+		ObjectPooler.Instance.On_ReturnAllInPool();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
+
 	public void RestartGame(){
 		SaveManager m_saveManager = SaveManager.Instance;
 		m_saveManager.StartCoroutine(m_saveManager.On_RestartGame());
@@ -103,8 +109,9 @@ public class PauseGame : MainMenu {
 	public void ReturnToMainMenuWithArcadeModeAnimator(){
 		m_playerManager.On_AnimateArcadeModeAnimator();
 		m_canPaused = false;
-		GameManager.Instance.ReturnToMainMenu();
-        // ObjectPooler.Instance.On_ReturnAllInPool();
+		StartLevel(0); //
+		// GameManager.Instance.ReturnToMainMenu();
+        ObjectPooler.Instance.On_ReturnAllInPool();
 	}
 
 	public override void Quit(){
