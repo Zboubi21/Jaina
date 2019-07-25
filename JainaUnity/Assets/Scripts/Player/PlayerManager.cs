@@ -1849,12 +1849,8 @@ public class PlayerManager : MonoBehaviour {
 	public void SetPlayerMenuMode(bool inMenu, Transform newPos = null){
 		m_inMenuMode = inMenu;
 		SetUiModeParameters();
-		if(inMenu){
-
-		}else{
-			if(newPos != null){
-				SetTpPoint(newPos.position);
-			}
+		if(newPos != null){
+			SetTpPoint(newPos.position);
 		}
 	}
 

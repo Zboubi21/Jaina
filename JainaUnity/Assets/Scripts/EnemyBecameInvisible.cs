@@ -20,7 +20,7 @@ public class EnemyBecameInvisible : MonoBehaviour {
     // }
 
     void OnBecameInvisible() {
-        Debug.Log(gameObject.name + " deviens invisible");
+        // Debug.Log(gameObject.name + " deviens invisible");
         if(m_isActive){
             // StartCoroutine(WaitDeleteTime());
             m_onBecameInvisible.Invoke();
