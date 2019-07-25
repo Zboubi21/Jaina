@@ -129,9 +129,22 @@ public class Waves_Methods : MonoBehaviour
         }
     }
 
+    public int TotalOfWave
+    {
+        get
+        {
+            return totalOfWave;
+        }
+
+        set
+        {
+            totalOfWave = value;
+        }
+    }
+
     #endregion
 
-    public void OnLaunchWave(float TimeBeforeNextWave)
+    public void OnLaunchWave()
     {
         if (!isLaunchByTrigger)
         {
@@ -140,22 +153,36 @@ public class Waves_Methods : MonoBehaviour
             {
                 maximumDeVague = PreviousWaveMethods.maximumDeVague;
             }
-            StartCoroutine(WaitForFirstWave(TimeBeforeNextWave));
+            float timeToWave = m_timeBetweenEachWave[0];
+            StartCoroutine(WaitForFirstWave(timeToWave));
         }
     }
 
     IEnumerator WaitForFirstWave(float time)
     {
-        yield return new WaitForSeconds(time);
-        playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
-        playerStats.OnCheckArenaStillGoing(true);
-
-        OnFirstWaveStart.Invoke();
-        if (useArenaUI)
+        while (true)
         {
-            OnUsingAreanUI(useArenaUI);
+            yield return new WaitForSeconds(0.02f);
+            time -= Time.deltaTime;
+            Debug.Log(this.name +" this is the time : " + time);
+            Debug.Log(this.name +" previous dead : " + PreviousWaveMethods.nbrEnemyDead);
+            Debug.Log(this.name +" previous enemy : " + PreviousWaveMethods.nbrOfEnemy);
+            if (time <= 0 || PreviousWaveMethods.nbrEnemyDead == PreviousWaveMethods.nbrOfEnemy || PreviousWaveMethods.nbrEnemyDead == 0 || PreviousWaveMethods.nbrOfEnemy == 0)
+            {
+                playerStats = PlayerManager.Instance.GetComponent<PlayerStats>();
+                playerStats.OnCheckArenaStillGoing(true);
+
+                OnFirstWaveStart.Invoke();
+                if (useArenaUI)
+                {
+                    OnUsingAreanUI(useArenaUI);
+                }
+                Debug.Log("this is the nbrOfWave :" + nbrOfWave);
+                Spawner(nbrOfWave);
+                StopCoroutine(WaitForFirstWave(time));
+                break;
+            }
         }
-        Spawner(nbrOfWave);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -236,8 +263,6 @@ public class Waves_Methods : MonoBehaviour
         if (useArenaUI)
         {
             OnUsingAreanUI(false);
-            
-            
         }
 
     }
@@ -246,42 +271,68 @@ public class Waves_Methods : MonoBehaviour
     float minute;
     float seconds;
     bool b = false;
-
+    bool thisIsDone;
     private void Update()
     {
-        if (_playerOnTrigger && nbrOfWave != nombreDeVague)
+        if (_playerOnTrigger && nbrOfWave != nombreDeVague && !thisIsDone)
         {
             minutesWave = timeNextWave / 60f;
             secondWave = timeNextWave % 60f;
             timeNextWave -= Time.deltaTime;
-            if(timeNextWave <= 0)
+            if(timeNextWave <= 0f && nbrOfEnemy != nbrEnemyDead)
             {
 
                 Spawner(nbrOfWave);
             }
-            else if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0)
+            else if(nbrOfEnemy == nbrEnemyDead && nbrEnemyDead != 0 && timeNextWave > 0f)
             {
                 nbrEnemyDead = 0;
                 nbrOfEnemy = 0;
                 Spawner(nbrOfWave);
             }
         }
-        else if (nbrOfWave == nombreDeVague && nbrOfEnemy == nbrEnemyDead && nbrOfEnemy !=0)
+        else
         {
-            OnLastWaveOver.Invoke();
-            playerStats.OnCheckArenaStillGoing(false);
-            nbrOfEnemy = 0;
-            if (useArenaUI)
+            if(NextWaveMethods == null)
             {
-                nbrOfWave = 0;
-                victoryScreen.SetActive(true);
-                waveUI.SetActive(false);
-                wave_Identifier.timerWave.fontSize = 45;
+                if(nbrOfWave == nombreDeVague && ((nbrOfEnemy == nbrEnemyDead && nbrOfEnemy != 0)/* || (timeNextWave <= 0f)*/) && !thisIsDone)
+                {
+                    OnLastWaveOver.Invoke();
+                    playerStats.OnCheckArenaStillGoing(false);
+                    nbrOfEnemy = 0;
+                    if (useArenaUI)
+                    {
+                        nbrOfWave = 0;
+                        victoryScreen.SetActive(true);
+                        waveUI.SetActive(false);
+                        wave_Identifier.timerWave.fontSize = 45;
+                    }
+                    thisIsDone = true;
+                }
+            }
+            else
+            {
+                if (nbrOfWave == nombreDeVague && ((nbrOfEnemy == nbrEnemyDead && nbrOfEnemy != 0) || (timeNextWave <= 0f)) && !thisIsDone)
+                {
+                    OnLastWaveOver.Invoke();
+                    timeNextWave = NextWaveMethods.m_timeBetweenEachWave[0];
+                    playerStats.OnCheckArenaStillGoing(false);
+                    nbrOfEnemy = 0;
+                    if (useArenaUI)
+                    {
+                        nbrOfWave = 0;
+                        victoryScreen.SetActive(true);
+                        waveUI.SetActive(false);
+                        wave_Identifier.timerWave.fontSize = 45;
+                    }
+                    thisIsDone = true;
+                }
             }
         }
-        if (useArenaUI)
+
+        if (useArenaUI && !thisIsDone)
         {
-            if(nbrOfWave != 0)
+            if(totalOfWave != 0)
             {
                 OnChronoMethods();
 
@@ -541,7 +592,7 @@ public class Waves_Methods : MonoBehaviour
     int totalOfWave;
     void Spawner(int wave)
     {
-
+        wave_Identifier.timerWave.fontSize = 45;
         //nbrEnemyDead = 0;
         //nbrOfEnemy = 0;
         if (useArenaUI)
@@ -567,16 +618,33 @@ public class Waves_Methods : MonoBehaviour
             }
         }
         nbrOfWave++;
+        
+        /*if (nbrOfWave == nombreDeVague && NextWaveMethods != null && !thisIsDone)
+        {
+            OnLastWaveOver.Invoke();
+            playerStats.OnCheckArenaStillGoing(false);
+            nbrOfEnemy = 0;
+            if (useArenaUI)
+            {
+                nbrOfWave = 0;
+                victoryScreen.SetActive(true);
+                waveUI.SetActive(false);
+                wave_Identifier.timerWave.fontSize = 45;
+            }
+            thisIsDone = true;
+        }*/
         if (useArenaUI)
         {
             if(PreviousWaveMethods == null)
             {
-                wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave);
+                //Debug.Log(this.name + " called ?? wtf");
                 totalOfWave = NombreDeVague;
+                wave_Identifier.waveCounter.text = string.Format("{0}", nbrOfWave);
             }
             else
             {
-                totalOfWave = nbrOfWave + PreviousWaveMethods.totalOfWave;
+                //Debug.Log(this.name + " I'm wave 6");
+                totalOfWave = nbrOfWave + PreviousWaveMethods.TotalOfWave;
                 wave_Identifier.waveCounter.text = string.Format("{0}", totalOfWave);
             }
         }
