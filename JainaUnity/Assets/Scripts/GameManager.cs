@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour {
         //     PlayerPrefs.DeleteKey(m_canArcade);
         //     SetArcadeModeBtn(false);
         // }
+        
         if(Input.GetKeyDown(KeyCode.K)){
             FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, true);
         }
