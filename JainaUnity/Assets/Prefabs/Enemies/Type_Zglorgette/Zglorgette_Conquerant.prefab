@@ -666,7 +666,7 @@ MonoBehaviour:
     - {fileID: 2733506235860090948}
     - {fileID: 2321353509753089341}
     - {fileID: 5997009173999029533}
-  _name: Nil'Gharian high sorceress
+  _name: Narhl'Gharian high sorceress
   m_enemyPowerLevel: 0
   m_enemyType: 2
   _hasBackPack: 0
@@ -21032,6 +21032,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1010718991251561016}
     m_Modifications:
+    - target: {fileID: 6618596594164793017, guid: faa0f8969748a8f49a984f5e1fee1c41,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyFreezed_FX
+      objectReference: {fileID: 0}
     - target: {fileID: 6618596594164793016, guid: faa0f8969748a8f49a984f5e1fee1c41,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21087,11 +21092,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6618596594164793017, guid: faa0f8969748a8f49a984f5e1fee1c41,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyFreezed_FX
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faa0f8969748a8f49a984f5e1fee1c41, type: 3}
 --- !u!1 &7846910086951582017 stripped
@@ -21113,6 +21113,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1010718991251561016}
     m_Modifications:
+    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
+        type: 3}
+      propertyPath: m_Name
+      value: Detected_FX
+      objectReference: {fileID: 0}
+    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4663944190377833333, guid: dac4daa72512ee24ab92d08db21ec301,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21166,16 +21176,6 @@ PrefabInstance:
     - target: {fileID: 4663944190377833333, guid: dac4daa72512ee24ab92d08db21ec301,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
-        type: 3}
-      propertyPath: m_Name
-      value: Detected_FX
-      objectReference: {fileID: 0}
-    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
