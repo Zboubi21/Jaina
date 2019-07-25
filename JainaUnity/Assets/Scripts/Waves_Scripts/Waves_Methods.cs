@@ -295,7 +295,7 @@ public class Waves_Methods : MonoBehaviour
         {
             if(NextWaveMethods == null)
             {
-                if(nbrOfWave == nombreDeVague && ((nbrOfEnemy == nbrEnemyDead && nbrOfEnemy != 0)/* || (timeNextWave <= 0f)*/) && !thisIsDone)
+                if(nbrOfWave == nombreDeVague && ((nbrOfEnemy == nbrEnemyDead && nbrOfEnemy != 0) /*|| (timeNextWave <= 0f)*/) && !thisIsDone)
                 {
                     OnLastWaveOver.Invoke();
                     playerStats.OnCheckArenaStillGoing(false);
@@ -312,6 +312,9 @@ public class Waves_Methods : MonoBehaviour
             }
             else
             {
+                minutesWave = timeNextWave / 60f;
+                secondWave = timeNextWave % 60f;
+                timeNextWave -= Time.deltaTime;
                 if (nbrOfWave == nombreDeVague && ((nbrOfEnemy == nbrEnemyDead && nbrOfEnemy != 0) || (timeNextWave <= 0f)) && !thisIsDone)
                 {
                     OnLastWaveOver.Invoke();
