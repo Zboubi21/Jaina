@@ -15,9 +15,7 @@ public class BakeNavMeshEditor : Editor {
         // NavMeshSurface[] navMeshes = BakeNavMesh.gameObject.GetComponents<NavMeshSurface>();
         BakeNavMesh.NavMeshes = BakeNavMesh.gameObject.GetComponents<NavMeshSurface>();
 
-        
-
-        // NavMeshBuilder.UpdateNavMeshData(m_NavMesh, defaultBuildSettings, m_Sources, bounds);
+        // NavMeshAssetManager.instance.
 
         if(GUILayout.Button("Bake all NavMeshSurface")){
             if(BakeNavMesh.NavMeshes.Length == 0){
