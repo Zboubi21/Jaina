@@ -15,6 +15,8 @@ void Awake(){
 	SetResolution();
 }
 
+    
+
 // ---------------------------------------------- Quitter ----------------------------------------------
 	public virtual void Quit(){											// Fonction pour quitter le jeu
 		StartCoroutine(WaitTimeToQuit());
@@ -96,4 +98,10 @@ void Awake(){
 		}
 	}
 
+// ---------------------------------------------- Afficher/Cacher les credits ----------------------------------------------
+
+    public void Credits(GameObject obj)
+    {
+        obj.SetActive(!obj.activeSelf);
+    }
 }
