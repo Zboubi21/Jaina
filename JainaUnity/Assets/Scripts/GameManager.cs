@@ -12,11 +12,11 @@ public class GameManager : MonoBehaviour {
     void Awake(){
 		if(Instance == null){
 			Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
 		}else{
-			// Debug.LogError("Two instance of GameManager");
-            gameObject.SetActive(false);
-            Destroy(gameObject);
+			Debug.LogError("Two instance of GameManager");
+            // gameObject.SetActive(false);
+            // Destroy(gameObject);
 		}
 	}
 #endregion Singleton
@@ -172,6 +172,7 @@ public class GameManager : MonoBehaviour {
     IEnumerator WaitTimeToLoadScene(int sceneNbr){
         m_blackScreenAnimator.SetTrigger("BlackScreen");
 		yield return new WaitForSeconds(m_waitTimeTp);
+        // m_mainMenuCanvas.SetActive(false);  
         m_mainMenu.StartLevel(sceneNbr);
         // m_mainMenuCanvas.SetActive(false);
 		// PlayerManager.Instance.SetPlayerMenuMode(false, newPos);

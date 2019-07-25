@@ -95,7 +95,8 @@ public class PauseGame : MainMenu {
 	public void ReturnToMainMenu(){
 		m_canPaused = false;
 		Resume();
-		GameManager.Instance.ReturnToMainMenu();
+		StartLevel(0); //
+		// GameManager.Instance.ReturnToMainMenu();
         ObjectPooler.Instance.On_ReturnAllInPool();
 	}
 

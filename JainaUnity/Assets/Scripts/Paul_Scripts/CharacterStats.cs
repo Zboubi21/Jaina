@@ -120,14 +120,14 @@ public class CharacterStats : MonoBehaviour {
     public virtual void OnEnable()
     {
         if(mainCamera == null){
-    mainCamera = Camera.main;//.GetComponent<Camera>();
+            mainCamera = Camera.main;//.GetComponent<Camera>();
         }
     }
 
     public virtual void Start()
     {
 
-        // mainCamera = Camera.main;//.GetComponent<Camera>();
+        mainCamera = Camera.main;//.GetComponent<Camera>();
         CurrentHealth = maxHealth * (m_currentHealth /100f);
 
         multiplicateur = PlayerManager.Instance.m_percentMultiplicateur / 100f;
