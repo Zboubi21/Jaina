@@ -555,7 +555,7 @@ public class EnemyStats : CharacterStats {
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(100);
+            TakeDamage(1000);
         }
 #endif
         m_canvas.transform.LookAt(mainCamera.transform);

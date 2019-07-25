@@ -327,30 +327,31 @@ public class Waves_Methods : MonoBehaviour
     {
         if (nbrOfWave != nombreDeVague && nbrOfWave != 0)
         {
+            DisplayTime(wave_Identifier.timerWave, minutesWave, secondWave);
 
-            if (secondWave < 10)
-            {
-                if (minutesWave < 10)
-                {
-                    wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
-                }
-                else
-                {
-                    wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
-                }
+            //if (secondWave < 10)
+            //{
+            //    if (minutesWave < 10)
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
+            //    }
 
-            }
-            else
-            {
-                if (minutesWave < 10)
-                {
-                    wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
-                }
-                else
-                {
-                    wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
-                }
-            }
+            //}
+            //else
+            //{
+            //    if (minutesWave < 10)
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //}
 
             OnRedCloudChangeColor();
         }
@@ -361,29 +362,31 @@ public class Waves_Methods : MonoBehaviour
         }
         else
         {
-            if (secondWave < 10)
-            {
-                if (minutesWave < 10)
-                {
-                    wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
-                }
-                else
-                {
-                    wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
-                }
+            DisplayTime(wave_Identifier.timerWave, minutesWave, secondWave);
 
-            }
-            else
-            {
-                if (minutesWave < 10)
-                {
-                    wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
-                }
-                else
-                {
-                    wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
-                }
-            }
+            //if (secondWave < 10)
+            //{
+            //    if (minutesWave < 10)
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("0{0}:0{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("{0}:0{1}", (int)minutesWave, (int)secondWave);
+            //    }
+
+            //}
+            //else
+            //{
+            //    if (minutesWave < 10)
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("0{0}:{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.timerWave.text = string.Format("{0}:{1}", (int)minutesWave, (int)secondWave);
+            //    }
+            //}
         }
     }
 
@@ -394,59 +397,63 @@ public class Waves_Methods : MonoBehaviour
             timed = m_timeBetweenEachWave[nbrOfWave - 1] - timeNextWave;
             timedMinutes = timed / 60;
             timedSeconds = timed % 60;
-            if (timedSeconds < 10)
-            {
-                if (timedMinutes < 10)
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", (int)timedMinutes, (int)timedSeconds);
-                }
-                else
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:0{1}", (int)timedMinutes, (int)timedSeconds);
-                }
+            DisplayTime(wave_Identifier.TimeToEndWave, timedMinutes, timedSeconds);
 
-            }
-            else
-            {
-                if (timedMinutes < 10)
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:{1}", (int)timedMinutes, (int)timedSeconds);
-                }
-                else
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", (int)timedMinutes, (int)timedSeconds);
-                }
-            }
+            //if (timedSeconds < 10)
+            //{
+            //    if (timedMinutes < 10)
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", (int)timedMinutes, (int)timedSeconds);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("{0}:0{1}", (int)timedMinutes, (int)timedSeconds);
+            //    }
+
+            //}
+            //else
+            //{
+            //    if (timedMinutes < 10)
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("0{0}:{1}", (int)timedMinutes, (int)timedSeconds);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", (int)timedMinutes, (int)timedSeconds);
+            //    }
+            //}
         }
         else if(PreviousWaveMethods != null)
         {
-            if (PreviousWaveMethods.timedSeconds < 10)
-            {
-                if (PreviousWaveMethods.timedMinutes < 10)
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
-                }
-                else
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
-                }
+            DisplayTime(wave_Identifier.TimeToEndWave, PreviousWaveMethods.timedMinutes, PreviousWaveMethods.timedSeconds);
 
-            }
-            else
-            {
-                if (PreviousWaveMethods.timedMinutes < 10)
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("0{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
-                }
-                else
-                {
-                    wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
-                }
-            }
+            //if (PreviousWaveMethods.timedSeconds < 10)
+            //{
+            //    if (PreviousWaveMethods.timedMinutes < 10)
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("{0}:0{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+            //    }
+
+            //}
+            //else
+            //{
+            //    if (PreviousWaveMethods.timedMinutes < 10)
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("0{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+            //    }
+            //    else
+            //    {
+            //        wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", (int)PreviousWaveMethods.timedMinutes, (int)PreviousWaveMethods.timedSeconds);
+            //    }
+            //}
         }
         else
         {
-            wave_Identifier.TimeToEndWave.text = string.Format("{0}:{1}", 0, 0);
+            wave_Identifier.TimeToEndWave.text = string.Format("0{0}:0{1}", 0, 0);
         }
     }
 
@@ -458,15 +465,20 @@ public class Waves_Methods : MonoBehaviour
             seconds = 0;
             minute++;
         }
+        DisplayTime(wave_Identifier.Chrono, minute, seconds);
+    }
+
+    void DisplayTime(TMP_Text text,float minute,float seconds)
+    {
         if (seconds < 10)
         {
             if (minute < 10)
             {
-                wave_Identifier.Chrono.text = string.Format("0{0}:0{1}", (int)minute, (int)seconds);
+                text.text = string.Format("0{0}:0{1}", (int)minute, (int)seconds);
             }
             else
             {
-                wave_Identifier.Chrono.text = string.Format("{0}:0{1}", (int)minute, (int)seconds);
+                text.text = string.Format("{0}:0{1}", (int)minute, (int)seconds);
             }
 
         }
@@ -474,11 +486,11 @@ public class Waves_Methods : MonoBehaviour
         {
             if (minute < 10)
             {
-                wave_Identifier.Chrono.text = string.Format("0{0}:{1}", (int)minute, (int)seconds);
+                text.text = string.Format("0{0}:{1}", (int)minute, (int)seconds);
             }
             else
             {
-                wave_Identifier.Chrono.text = string.Format("{0}:{1}", (int)minute, (int)seconds);
+                text.text = string.Format("{0}:{1}", (int)minute, (int)seconds);
             }
         }
     }
