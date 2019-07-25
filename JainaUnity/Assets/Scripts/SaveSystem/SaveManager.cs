@@ -56,6 +56,7 @@ public class SaveManager : MonoBehaviour {
         m_playerManager = PlayerManager.Instance;
         m_objectPooler = ObjectPooler.Instance;
         m_startGamePosition = m_playerManager.transform.position;
+        m_savePosition = m_startGamePosition;
     }
 
     void Update(){

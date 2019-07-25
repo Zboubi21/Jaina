@@ -20,12 +20,9 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_playerCanDie = true;
 		public bool m_useSymetricalHudSpellAnim = true;
 		public PlayerState m_playerStartState;
-	// 	[Space]
-	// 	public bool m_startInMenuMode = false;
-	// 	// [Space]
-	// 	// public Transform m_fromPos;
-	// 	// public Transform m_toPos;
-	// 	// public Transform m_newToPos;
+		public bool m_startInMenuMode = false;
+		public bool m_isStoryJaina = false;
+		public bool m_isArcadeJaina = false;
 	}
 
 	public StateMachine m_sM = new StateMachine();
@@ -444,13 +441,21 @@ public class PlayerManager : MonoBehaviour {
 		public GameObject m_jainaMesh;
 	}
 
-    #endregion Public [Serializable] Variables
+	[Header("UI")]
+	public UI m_ui = new UI();
+	[Serializable] public class UI {
+		public GameObject m_UiCanvas;
+		public Animator m_arcadeModeAnimator;
+		[Space]
+		public GameObject m_historyButton;
+		public GameObject m_arcadeButton;
+	}
+
+#endregion Public [Serializable] Variables
 
     [Space]
 	public LayerMask m_groundLayer;
 	public LayerMask m_rotateLayer;
-	public GameObject m_UiCanvas;
-	[SerializeField] Animator m_arcadeModeAnimator;
 
 	[HideInInspector] public bool m_canThrowSpell = true;
 	NavMeshAgent m_agent;
@@ -458,8 +463,10 @@ public class PlayerManager : MonoBehaviour {
 	PlayerUiAnimationCorout m_playerUiCorout;
 	GameObject m_lastAutoAttackSound;
 	ClickOnGround m_actualClickOnGroundFx;
-	bool m_inMenuMode = false;
+	bool m_inMenuMode;
 	PauseGame m_pauseGame;
+	BigEnemyLifeBarManager m_bigEnemyLifeBarManager;
+	AudioListener m_audioListener;
 	GameManager m_gameManager;
 	ObjectType m_clickOnGround = ObjectType.ClickOnGround;
 	
@@ -638,7 +645,7 @@ public class PlayerManager : MonoBehaviour {
 
 	void Start(){
 		m_gameManager = GameManager.Instance;
-		// m_inMenuMode = m_gameManager.m_playerSettings.m_startInMenuMode;
+		m_inMenuMode = m_playerDebug.m_startInMenuMode;
 		ChangeState(m_playerDebug.m_playerStartState);
 
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
@@ -648,6 +655,8 @@ public class PlayerManager : MonoBehaviour {
 		m_jainaAnimator = m_mesh.m_jainaMesh.GetComponent<Animator>();
 		CapsuleColl = GetComponent<CapsuleCollider>();
 		m_pauseGame = GetComponent<PauseGame>();
+		m_audioListener = GetComponent<AudioListener>();
+		m_bigEnemyLifeBarManager = GetComponent<BigEnemyLifeBarManager>();
 		m_jainaUiController = GetComponent<JainaUiController>();
 
 		m_saveManager = SaveManager.Instance;
@@ -658,6 +667,8 @@ public class PlayerManager : MonoBehaviour {
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
 
 		SetUiModeParameters();
+
+		SetUiButtons();
 	}
 	
 	void OnEnable(){
@@ -1842,8 +1853,10 @@ public class PlayerManager : MonoBehaviour {
     }
 
 	void SetUiModeParameters(){
-		m_UiCanvas.SetActive(!m_inMenuMode);
+		m_ui.m_UiCanvas.SetActive(!m_inMenuMode);
 		m_pauseGame.enabled = !m_inMenuMode;
+		m_bigEnemyLifeBarManager.enabled = !m_inMenuMode;
+		m_audioListener.enabled = !m_inMenuMode;
 	}
 
 	public void SetPlayerMenuMode(bool inMenu, Transform newPos = null){
@@ -1859,11 +1872,23 @@ public class PlayerManager : MonoBehaviour {
 		m_cameraManager.CanMoveCamera = false;
 		SetPlayerMenuMode(true);
         On_AnimateArcadeModeAnimator();
-		m_gameManager.SetArcadeModeBtn(true);
+		// m_gameManager.SetArcadeModeBtn(true);
+		PlayerPrefs.SetInt("CanArcade", 1); // 1 = TRUE //
 	}
 
 	public void On_AnimateArcadeModeAnimator(){
-        m_arcadeModeAnimator.SetTrigger("Enabled");
+        m_ui.m_arcadeModeAnimator.SetTrigger("Enabled");
+	}
+
+	void SetUiButtons(){
+		if(m_playerDebug.m_isStoryJaina){
+			m_ui.m_historyButton.SetActive(true);
+			m_ui.m_arcadeButton.SetActive(false);
+		}
+		if(m_playerDebug.m_isArcadeJaina){
+			m_ui.m_historyButton.SetActive(false);
+			m_ui.m_arcadeButton.SetActive(true);
+		}
 	}
 
 }
