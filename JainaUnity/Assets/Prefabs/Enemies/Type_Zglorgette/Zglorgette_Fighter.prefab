@@ -20411,7 +20411,7 @@ MonoBehaviour:
   rangeColor: {r: 0, g: 1, b: 1, a: 1}
   layers:
     serializedVersion: 2
-    m_Bits: 431104
+    m_Bits: 398336
   projectil: 11
   projectilRoot: {fileID: 5459353007596249149}
   nombreDeGrandeAttack: 2
@@ -21223,16 +21223,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7297513361175398866}
     m_Modifications:
-    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
-        type: 3}
-      propertyPath: m_Name
-      value: Detected_FX
-      objectReference: {fileID: 0}
-    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4663944190377833333, guid: dac4daa72512ee24ab92d08db21ec301,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21286,6 +21276,16 @@ PrefabInstance:
     - target: {fileID: 4663944190377833333, guid: dac4daa72512ee24ab92d08db21ec301,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
+        type: 3}
+      propertyPath: m_Name
+      value: Detected_FX
+      objectReference: {fileID: 0}
+    - target: {fileID: 4663944190377833330, guid: dac4daa72512ee24ab92d08db21ec301,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -21411,11 +21411,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7297513361175398866}
     m_Modifications:
-    - target: {fileID: 6618596594164793017, guid: faa0f8969748a8f49a984f5e1fee1c41,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyFreezed_FX
-      objectReference: {fileID: 0}
     - target: {fileID: 6618596594164793016, guid: faa0f8969748a8f49a984f5e1fee1c41,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21470,6 +21465,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6618596594164793017, guid: faa0f8969748a8f49a984f5e1fee1c41,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyFreezed_FX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faa0f8969748a8f49a984f5e1fee1c41, type: 3}

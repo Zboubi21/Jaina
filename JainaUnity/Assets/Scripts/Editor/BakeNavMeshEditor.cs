@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine.AI;
 using UnityEditor.AI;
 using UnityEditor.SceneManagement;
+using NavMeshBuilder = UnityEngine.AI.NavMeshBuilder;
 
 [CustomEditor(typeof(BakeNavMesh))]
 public class BakeNavMeshEditor : Editor {
@@ -11,23 +12,26 @@ public class BakeNavMeshEditor : Editor {
 
         BakeNavMesh BakeNavMesh = (BakeNavMesh)target;
 
-        NavMeshSurface[] navMeshes = BakeNavMesh.gameObject.GetComponents<NavMeshSurface>();
+        // NavMeshSurface[] navMeshes = BakeNavMesh.gameObject.GetComponents<NavMeshSurface>();
+        BakeNavMesh.NavMeshes = BakeNavMesh.gameObject.GetComponents<NavMeshSurface>();
+
+        // NavMeshAssetManager.instance.
 
         if(GUILayout.Button("Bake all NavMeshSurface")){
-            if(navMeshes.Length == 0){
+            if(BakeNavMesh.NavMeshes.Length == 0){
                 Debug.LogError("No NavMeshSurface to bake!");
                 return;
             }
-            NavMeshAssetManager.instance.StartBakingSurfaces(navMeshes);
+            NavMeshAssetManager.instance.StartBakingSurfaces(BakeNavMesh.NavMeshes);
             Debug.Log("Path bake successfuly");
         }
 
         if(GUILayout.Button("Clear all NavMeshSurface path")){
-            if(navMeshes.Length == 0){
+            if(BakeNavMesh.NavMeshes.Length == 0){
                 Debug.LogError("No NavMeshSurface to clear!");
                 return;
             }
-            NavMeshAssetManager.instance.ClearSurfaces(navMeshes);
+            NavMeshAssetManager.instance.ClearSurfaces(BakeNavMesh.NavMeshes);
             SceneView.RepaintAll();
             Debug.Log("Path clear successfuly");
         }
