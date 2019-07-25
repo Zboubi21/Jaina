@@ -57,7 +57,7 @@ public class PlayerStats : CharacterStats {
             StartHitFxCorout();
             m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
 
-            if(CurrentHealth <= 0 && GameManager.Instance.m_playerSettings.m_playerCanDie){
+            if(CurrentHealth <= 0 && PlayerManager.Instance.m_playerDebug.m_playerCanDie){
                 GetComponent<PlayerManager>().On_PlayerDie();
                 enemyKillCount = 0;
                 enemyInCombat = 0;

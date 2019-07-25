@@ -15,18 +15,18 @@ public class PlayerManager : MonoBehaviour {
 
 	public static PlayerManager Instance;
 
-	// public PlayerDebug m_playerDebug = new PlayerDebug();
-	// [Serializable] public class PlayerDebug {
-	// 	public bool m_playerCanDie = true;
-	// 	public bool m_useSymetricalHudSpellAnim = true;
-	// 	public PlayerState m_playerStartState;
+	public PlayerDebug m_playerDebug = new PlayerDebug();
+	[Serializable] public class PlayerDebug {
+		public bool m_playerCanDie = true;
+		public bool m_useSymetricalHudSpellAnim = true;
+		public PlayerState m_playerStartState;
 	// 	[Space]
 	// 	public bool m_startInMenuMode = false;
 	// 	// [Space]
 	// 	// public Transform m_fromPos;
 	// 	// public Transform m_toPos;
 	// 	// public Transform m_newToPos;
-	// }
+	}
 
 	public StateMachine m_sM = new StateMachine();
 
@@ -458,7 +458,7 @@ public class PlayerManager : MonoBehaviour {
 	PlayerUiAnimationCorout m_playerUiCorout;
 	GameObject m_lastAutoAttackSound;
 	ClickOnGround m_actualClickOnGroundFx;
-	bool m_inMenuMode;
+	bool m_inMenuMode = false;
 	PauseGame m_pauseGame;
 	GameManager m_gameManager;
 	ObjectType m_clickOnGround = ObjectType.ClickOnGround;
@@ -638,8 +638,8 @@ public class PlayerManager : MonoBehaviour {
 
 	void Start(){
 		m_gameManager = GameManager.Instance;
-		m_inMenuMode = m_gameManager.m_playerSettings.m_startInMenuMode;
-		ChangeState(m_gameManager.m_playerSettings.m_playerStartState);
+		// m_inMenuMode = m_gameManager.m_playerSettings.m_startInMenuMode;
+		ChangeState(m_playerDebug.m_playerStartState);
 
 		m_playerUiCorout = GetComponent<PlayerUiAnimationCorout>();
 
@@ -868,9 +868,9 @@ public class PlayerManager : MonoBehaviour {
 		m_leftMiddlePos = m_powers.m_iceNova.m_uI.m_firstUiParent.localPosition;
 		m_leftRightPos = m_powers.m_arcaneProjectiles.m_uI.m_firstUiParent.localPosition;
 
-		m_rightLeftPos = m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim ? m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition : m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition;
+		m_rightLeftPos = m_playerDebug.m_useSymetricalHudSpellAnim ? m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition : m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition;
 		m_rightMiddlePos = m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition;
-		m_rightRightPos = m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim ? m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition : m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
+		m_rightRightPos = m_playerDebug.m_useSymetricalHudSpellAnim ? m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition : m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition;
 
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_fireBalls.m_uI.m_secondSpellImage, m_powers.m_fireBalls.m_uI.m_secondCooldownImage, m_powers.m_fireBalls.m_uI.m_secondText, 0);
 		m_playerUiCorout.ChangeSpellAlpha(m_powers.m_iceNova.m_uI.m_secondSpellImage, m_powers.m_iceNova.m_uI.m_secondCooldownImage, m_powers.m_iceNova.m_uI.m_secondText, 0);
@@ -953,7 +953,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// --------------------------
 				// ---------- FIRE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -1005,7 +1005,7 @@ public class PlayerManager : MonoBehaviour {
 				
 				// -------------------------
 				// ---------- ICE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1115,7 +1115,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// ----------------------------
 				// ---------- ARCANE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -1167,7 +1167,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// --------------------------
 				// ---------- FIRE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_fireTrail.m_uI.m_firstUiParent, m_powers.m_fireTrail.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1278,7 +1278,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// -------------------------
 				// ---------- ICE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_iceBuff.m_uI.m_firstUiParent, m_powers.m_iceBuff.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightRightPosition.localPosition));
@@ -1330,7 +1330,7 @@ public class PlayerManager : MonoBehaviour {
 
 				// ----------------------------
 				// ---------- ARCANE ----------
-				if(m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim){
+				if(m_playerDebug.m_useSymetricalHudSpellAnim){
 					if(!rightSpell){
 						// First
 						m_playerUiCorout.StartCoroutine(m_playerUiCorout.MoveToYourNextPosition(m_powers.m_arcaneExplosion.m_uI.m_firstUiParent, m_powers.m_arcaneExplosion.m_uI.m_firstUiParent.localPosition, m_powers.m_uI.m_uIAnimations.m_rightLeftPosition.localPosition));
@@ -1780,7 +1780,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public void On_PlayerDie(){
-		if(m_gameManager.m_playerSettings.m_playerCanDie){
+		if(m_playerDebug.m_playerCanDie){
 			ChangeState(PlayerState.PlayerDieState);
 		}
 	}
@@ -1794,10 +1794,10 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public void ChangeHudSpellAnim(){
-		m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim =! m_gameManager.m_playerSettings.m_useSymetricalHudSpellAnim;
+		m_playerDebug.m_useSymetricalHudSpellAnim =! m_playerDebug.m_useSymetricalHudSpellAnim;
 	}
 	public void ChangeJainaCanDie(){
-		m_gameManager.m_playerSettings.m_playerCanDie =! m_gameManager.m_playerSettings.m_playerCanDie;
+		m_playerDebug.m_playerCanDie =! m_playerDebug.m_playerCanDie;
 	}
 
 	public void SwitchPlayerToCinematicState(float timeToBeInCinematic){
