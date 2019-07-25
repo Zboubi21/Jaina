@@ -35,13 +35,13 @@ public class CameraManager : MonoBehaviour {
     }
 
 	Transform m_target;
-    // Vector3 m_offset;
 	Vector3 m_mousePoint;
 
     void Start (){
 		m_target = PlayerManager.Instance.transform;
         // m_offset = transform.position - m_target.position;
 		// transform.position = m_target.position + m_offset;
+		m_mousePoint = m_target.position + m_offset;
     }
 
 	void Update(){
@@ -76,7 +76,8 @@ public class CameraManager : MonoBehaviour {
 
 	public void ResetPosition(){
 		transform.position = m_target.position + m_offset;
-		m_mousePoint = Vector3.zero;
+		// m_mousePoint = Vector3.zero;
+		m_mousePoint = m_target.position + m_offset;
 	}
 
 	void OnDrawGizmos(){
