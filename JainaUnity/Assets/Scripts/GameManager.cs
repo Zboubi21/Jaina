@@ -176,9 +176,5 @@ public class GameManager : MonoBehaviour {
 		// m_mainMenuCamera.enabled = false;
         // FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, false);
 	}
-
-    public void SetHudSpellAnimSymetric(Toggle toggle){
-        
-    }
     
 }
