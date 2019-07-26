@@ -24,7 +24,10 @@ public class Butcher_ImpatienceState : ImpatienceState
 
     public override void Enter()
     {
-        m_enemyController.StopMoving(true);
+        if(m_enemyController.Agent != null && m_enemyController.Agent.isActiveAndEnabled)
+        {
+            m_enemyController.StopMoving(true);
+        }
 
         m_enemyController.Agent.enabled = false;
 

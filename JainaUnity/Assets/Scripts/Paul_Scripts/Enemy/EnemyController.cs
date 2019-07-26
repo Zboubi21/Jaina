@@ -539,7 +539,7 @@ public class EnemyController : MonoBehaviour {
 
     }
 
-    void Update () {
+    public virtual void Update () {
 
         m_sM.Update();
         if (IsRootByIceNova)

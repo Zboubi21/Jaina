@@ -40,6 +40,19 @@ public class ZglorgetteController : EnemyController
             currentTimeBeforeZglorgetteGettingImpatient = value;
         }
     }
+
+    public IEnumerator CastImpatienceCorout
+    {
+        get
+        {
+            return m_castImpatienceCorout;
+        }
+
+        set
+        {
+            m_castImpatienceCorout = value;
+        }
+    }
     #endregion
 
     private void Awake()
@@ -62,6 +75,13 @@ public class ZglorgetteController : EnemyController
         {
             Debug.LogError("You need to have the same number of State in ZglorgController and EnemyStateEnum");
         }
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        rayCastReturn = OnRayCastSide();
+        rayCastFowardReturn = OnRayCast();
     }
 
     public override void LogicAtStart()
@@ -242,7 +262,39 @@ public class ZglorgetteController : EnemyController
         }
         return false;
     }
+    int rayCastReturn;
+    int rayCastFowardReturn;
+    int nbrOfProjectilThrown;
+    IEnumerator m_castImpatienceCorout;
 
+    public IEnumerator CastImpatience()
+    {
+        yield return new WaitForSeconds(1.15f);
+        while (nbrOfProjectilThrown < nombreDeGrandeAttack)
+        {
+            OnCastImpatienceProjectil();
+            nbrOfProjectilThrown++;
+            yield return new WaitForSeconds(timeBetweenImpatiencePorjectil);
+        }
+        nbrOfProjectilThrown = 0;
+        yield return new WaitForSeconds(0.5f);
+        if (rayCastReturn == 2 && rayCastFowardReturn == 2/*&& m_enemyController.OnRayRightCast() == 2 && m_enemyController.OnRayLeftCast() == 2*/)
+        {
+            ChangeState((int)EnemyZglorgetteState.Zglorgette_AttackState); //Attack
+        }
+        else
+        {
+            ChangeState((int)EnemyZglorgetteState.Zglorgette_ChaseState); //Chase
+        }
+    }
+    public override void Die()
+    {
+        base.Die();
+        if (CastImpatienceCorout != null)
+        {
+            StopCoroutine(CastImpatienceCorout);
+        }
+    }
     public override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
