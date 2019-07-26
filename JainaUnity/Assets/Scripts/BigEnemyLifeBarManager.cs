@@ -196,6 +196,8 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         isFightingABoss = b;
         if(!b)
         {
+            //HideBigLifeBar();
+
             ActivateLifeBar(bossStats.m_enemyPowerLevel, false, bossStats);
             DestroyMarques();
             DeactivateBool(false);
