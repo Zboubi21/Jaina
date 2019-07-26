@@ -105,8 +105,15 @@ public class PauseGame : MainMenu {
 		// GameManager.Instance.ReturnToMainMenu();
         ObjectPooler.Instance.On_ReturnAllInPool();
 	}
+    public void ReturnToMainMenuFromArena()
+    {
+        m_canPaused = false;
+        StartLevel(0); //
+                       // GameManager.Instance.ReturnToMainMenu();
+        ObjectPooler.Instance.On_ReturnAllInPool();
+    }
 
-	public void ReturnToMainMenuWithArcadeModeAnimator(){
+    public void ReturnToMainMenuWithArcadeModeAnimator(){
 		m_playerManager.On_AnimateArcadeModeAnimator();
 		m_canPaused = false;
 		StartLevel(0); //
