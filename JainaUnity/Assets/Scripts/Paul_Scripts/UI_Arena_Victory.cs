@@ -14,52 +14,48 @@ public class UI_Arena_Victory : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(FadeIn());
-
-
-
-        float second = arena.Second;
-        float minutes = arena.Minutes;
-        TextMeshProUGUI textPro = clock.GetComponent<TextMeshProUGUI>();
-        if (second < 10)
-        {
-            if (minutes < 10)
-            {
-                textPro.text = string.Format("0{0}:0{1}", (int)minutes, (int)second);
-            }
-            else
-            {
-                textPro.text = string.Format("{0}:0{1}", (int)minutes, (int)second);
-            }
-
-        }
-        else
-        {
-            if (minutes < 10)
-            {
-                textPro.text = string.Format("0{0}:{1}", (int)minutes, (int)second);
-            }
-            else
-            {
-                textPro.text = string.Format("{0}:{1}", (int)minutes, (int)second);
-            }
-        }
     }
-
+    float second;
+    float minutes;
     IEnumerator FadeIn()
     {
         while (true)
         {
             yield return new WaitForSeconds(0.02f);
             Color alp = img.color;
-            alp.a += 0.05f;
+            alp.a += 0.025f;
             img.color = alp;
             if(alp.a >= 1)
             {
+                victoryScreen.SetActive(true);
+                second = arena.Second;
+                minutes = arena.Minutes;
+                TextMeshProUGUI textPro = clock.GetComponent<TextMeshProUGUI>();
+                if (second < 10)
+                {
+                    if (minutes < 10)
+                    {
+                        textPro.text = string.Format("0{0}:0{1}", (int)minutes, (int)second);
+                    }
+                    else
+                    {
+                        textPro.text = string.Format("{0}:0{1}", (int)minutes, (int)second);
+                    }
+
+                }
+                else
+                {
+                    if (minutes < 10)
+                    {
+                        textPro.text = string.Format("0{0}:{1}", (int)minutes, (int)second);
+                    }
+                    else
+                    {
+                        textPro.text = string.Format("{0}:{1}", (int)minutes, (int)second);
+                    }
+                }
                 StopCoroutine(FadeIn());
                 break;
-            }else if (alp.a > 0.8f)
-            {
-                victoryScreen.SetActive(true);
             }
         }
     }

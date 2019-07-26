@@ -1856,15 +1856,15 @@ public class PlayerManager : MonoBehaviour {
 		m_ui.m_UiCanvas.SetActive(!m_inMenuMode);
 		m_pauseGame.enabled = !m_inMenuMode;
 		m_bigEnemyLifeBarManager.enabled = !m_inMenuMode;
-		m_audioListener.enabled = !m_inMenuMode;
+		//m_audioListener.enabled = !m_inMenuMode;
 	}
 
-	public void SetPlayerMenuMode(bool inMenu, Transform newPos = null){
+	public void SetPlayerMenuMode(bool inMenu/*, Transform newPos = null*/){
 		m_inMenuMode = inMenu;
 		SetUiModeParameters();
-		if(newPos != null){
-			SetTpPoint(newPos.position);
-		}
+		//if(newPos != null){
+		//	SetTpPoint(newPos.position);
+		//}
 	}
 
 	public void On_ArcadeModeIsEnabled(){

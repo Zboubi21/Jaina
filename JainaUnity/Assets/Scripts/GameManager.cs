@@ -121,16 +121,16 @@ public class GameManager : MonoBehaviour {
     //         m_mainMenuObjects = objects;
     //     }
     // }
-    IEnumerator WaitTimeToStartGame(Transform newPos){
-        m_blackScreenAnimator.SetTrigger("BlackScreen");
-		yield return new WaitForSeconds(m_waitTimeTp);
-        m_mainMenuCanvas.SetActive(false);
-		PlayerManager.Instance.SetPlayerMenuMode(false, newPos);
-		CameraManager.Instance.ResetPosition();
-        CameraManager.Instance.CanMoveCamera = true;
-		m_mainMenuCamera.enabled = false;
-        // FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, false);
-	}
+ //   IEnumerator WaitTimeToStartGame(Transform newPos){
+ //       m_blackScreenAnimator.SetTrigger("BlackScreen");
+	//	yield return new WaitForSeconds(m_waitTimeTp);
+ //       m_mainMenuCanvas.SetActive(false);
+	//	PlayerManager.Instance.SetPlayerMenuMode(false, newPos);
+	//	CameraManager.Instance.ResetPosition();
+ //       CameraManager.Instance.CanMoveCamera = true;
+	//	m_mainMenuCamera.enabled = false;
+ //       // FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, false);
+	//}
 
     public void ReturnToMainMenu(){
         // FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, true);
