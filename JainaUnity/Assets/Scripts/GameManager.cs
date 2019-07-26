@@ -33,11 +33,6 @@ public class GameManager : MonoBehaviour {
     [Header("Player settings")]
     public PlayerSettings m_playerSettings = new PlayerSettings();
 	[System.Serializable] public class PlayerSettings {
-		// public bool m_playerCanDie = true;
-		// public bool m_useSymetricalHudSpellAnim = true;
-		// public PlayerState m_playerStartState;
-		// public bool m_startInMenuMode = true;
-        [Space]
         public bool m_useCanGoInArcadeModeDebuger = false;
         public bool m_canGoInArcadeMode = false;
         public Button m_arcadeModeBtn;
@@ -78,10 +73,10 @@ public class GameManager : MonoBehaviour {
         // if(Input.GetKeyDown(KeyCode.G)){
         //     SetArcadeModeBtn(true);
         // }
-        if(Input.GetKeyDown(KeyCode.R)){
-            PlayerPrefs.DeleteKey(m_canArcade);
-            SetArcadeModeBtn(false);
-        }
+        // if(Input.GetKeyDown(KeyCode.R)){
+        //     PlayerPrefs.DeleteKey(m_canArcade);
+        //     SetArcadeModeBtn(false);
+        // }
 
         // if(Input.GetKeyDown(KeyCode.K)){
         //     FindAndSetObjects(m_levelDesignObjects, m_levelDesignObjectsName, true);
@@ -181,5 +176,9 @@ public class GameManager : MonoBehaviour {
 		// m_mainMenuCamera.enabled = false;
         // FindAndSetObjects(m_mainMenuObjects, m_mainMenuObjectsName, false);
 	}
+
+    public void SetHudSpellAnimSymetric(Toggle toggle){
+        
+    }
     
 }
