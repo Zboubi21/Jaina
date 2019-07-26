@@ -553,9 +553,17 @@ public class EnemyStats : CharacterStats {
         base.Update();
 
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(4999);
+        }
+        else if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(1000);
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(100);
         }
 #endif
         m_canvas.transform.LookAt(mainCamera.transform);
@@ -584,7 +592,7 @@ public class EnemyStats : CharacterStats {
     }
     void CanvasSetActiveMethod()
     {
-        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown))
+        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown) && PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled)
         {
             m_canvas.SetActive(true);
         }
@@ -661,8 +669,10 @@ public class EnemyStats : CharacterStats {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-
-        m_canvas.SetActive(true);
+        if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled)
+        {
+            m_canvas.SetActive(true);
+        }
 
         if (m_canvas.activeSelf)
         {

@@ -111,7 +111,7 @@ public class PlayerStats : CharacterStats {
         {
             if(doors[i] != null)
             {
-                Debug.Log("closeDi]oor");
+                //Debug.Log("closeDi]oor");
                 doors[i].SetTrigger(closeDoor);
             }
         }
@@ -127,7 +127,7 @@ public class PlayerStats : CharacterStats {
         {
             if(doors[i] != null)
             {
-                Debug.Log("openDoor");
+                //Debug.Log("openDoor");
                 doors[i].SetTrigger(openDoor);
             }
         }

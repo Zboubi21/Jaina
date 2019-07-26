@@ -81,7 +81,7 @@ public class WarLord_MiseEnScene : MonoBehaviour
             }
             lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
             lifeBar.OnFightBoss(true);
-            Debug.Log("lifeBar.OnFightBoss(true)");
+            //Debug.Log("lifeBar.OnFightBoss(true)");
         }
         else if (stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded/* || (!m_playerManager.GetComponent<PlayerStats>().IsInCombat && fightHasEnded)) && go*/)
         {
@@ -90,9 +90,10 @@ public class WarLord_MiseEnScene : MonoBehaviour
             {
                 anims[i].SetTrigger(triggerOff);
             }
+            m_playerManager.GetComponent<PlayerStats>().IsInCombat = false;
             lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
             lifeBar.OnFightBoss(false);
-            Debug.Log("lifeBar.OnFightBoss(false)");
+            //Debug.Log("lifeBar.OnFightBoss(false)");
             //m_playerManager.SwitchPlayerToCinematicState(m_timeToBeInCinematicState);
             OnEndFight.Invoke();
         }
