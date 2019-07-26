@@ -67,14 +67,13 @@ public class WarLord_MiseEnScene : MonoBehaviour
         stats = GetComponent<EnemyStats>();
         m_playerManager = PlayerManager.Instance;
         fightHasEnded = false;
+        fightHasStart = false;
     }
-    bool go;
     void Update()
     {
-        if (controller.PlayerInLookRange() && !fightHasStart && !fightHasEnded)
+        if (controller.PlayerInLookRange() && !fightHasStart)
         {
             fightHasStart = true;
-            go = true;
             OnStartFight.Invoke();
             for (int i = 0, l = anims.Length; i < l; ++i)
             {
@@ -84,12 +83,9 @@ public class WarLord_MiseEnScene : MonoBehaviour
             lifeBar.OnFightBoss(true);
             Debug.Log("lifeBar.OnFightBoss(true)");
         }
-
-        if (((stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded) || (!m_playerManager.GetComponent<PlayerStats>().IsInCombat && fightHasEnded)) && go)
+        else if (stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded/* || (!m_playerManager.GetComponent<PlayerStats>().IsInCombat && fightHasEnded)) && go*/)
         {
             fightHasEnded = true;
-            fightHasStart = false;
-            go = false;
             for (int i = 0, l = anims.Length; i < l; ++i)
             {
                 anims[i].SetTrigger(triggerOff);
