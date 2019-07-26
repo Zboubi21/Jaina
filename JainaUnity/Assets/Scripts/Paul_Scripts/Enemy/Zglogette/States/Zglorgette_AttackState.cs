@@ -20,7 +20,10 @@ public class Zglorgette_AttackState : AttackState
     public override void Enter()
     {
         base.Enter();
-        m_enemyController.StopMoving(true);
+        if (m_enemyController.Agent.isActiveAndEnabled && m_enemyController.Agent != null)
+        {
+            m_enemyController.StopMoving(true);
+        }
     }
     public override void Update()
     {

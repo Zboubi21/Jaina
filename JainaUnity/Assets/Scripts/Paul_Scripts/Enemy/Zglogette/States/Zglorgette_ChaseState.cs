@@ -17,11 +17,13 @@ public class Zglorgette_ChaseState : ChaseState
     int rayCastReturn;
     int rayCastFowardReturn;
 
-
     public override void Enter()
     {
         base.Enter();
-        m_enemyController.StopMoving(false);
+        if (m_enemyController.m_sM.IsLastStateIndex((int)EnemyZglorgetteState.Zglorgette_AttackState))
+        {
+            m_enemyController.StopMoving(false);
+        }
         if(m_enemyController.CurrentTimeBeforeZglorgetteGettingImpatient > 0)
         {
             m_enemyController.TimeBeforeZglorgetteGettingImpatient = m_enemyController.CurrentTimeBeforeZglorgetteGettingImpatient;
