@@ -114,7 +114,17 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         enemyStats = GetByRay<EnemyStats>(ray);
         if (!isFightingABoss)
         {
-            if ((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn)
+            if(bossStats != null)
+            {
+                ActivateLifeBar(bossStats.m_enemyPowerLevel, false, bossStats);
+                DestroyMarques();
+                DeactivateBool(false);
+                enemyStatsSave = null;
+                bossStats = null;
+                timeToHideLifeBar = m_hidLifeBar;
+                timeToShowLifeBar = m_showLifeBar;
+            }
+            if (((enemyStats != null && Input.GetKeyDown(KeyCode.Mouse0)) || unitFrameOn))
             {
                 if (!unitFrameOn)
                 {
@@ -176,7 +186,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 }
             }
         }
-        else
+        else if(bossStats != null)
         {
             ActivateUnitFrame(bossStats);
             ActivateLifeBar(bossStats.m_enemyPowerLevel, true, bossStats);

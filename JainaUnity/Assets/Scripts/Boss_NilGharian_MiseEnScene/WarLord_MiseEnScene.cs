@@ -17,9 +17,9 @@ public class WarLord_MiseEnScene : MonoBehaviour
     [Header("Boss Life Bar")]
     public BigEnemyLifeBarManager lifeBar;
     [Space]
-    [Header("Cinématique var")]
+    /*[Header("Cinématique var")]
     public float m_timeToBeInCinematicState = 5;
-    [Space]
+    [Space]*/
     [Header("Event Triggering")]
     public UnityEvent OnStartFight;
     public UnityEvent OnEndFight;
@@ -69,15 +69,23 @@ public class WarLord_MiseEnScene : MonoBehaviour
         fightHasEnded = false;
         fightHasStart = false;
     }
+    public void StartTheFight(bool b)
+    {
+        showBossLifeBar = b;
+    }
+    bool showBossLifeBar;
     void Update()
     {
-        if (controller.PlayerInLookRange() && !fightHasStart)
+        if (controller.PlayerInLookRange() && !fightHasStart || showBossLifeBar)
         {
             fightHasStart = true;
             OnStartFight.Invoke();
             for (int i = 0, l = anims.Length; i < l; ++i)
             {
-                anims[i].SetTrigger(triggerOn);
+                if(anims[i] != null)
+                {
+                    anims[i].SetTrigger(triggerOn);
+                }
             }
             lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
             lifeBar.OnFightBoss(true);
@@ -85,10 +93,14 @@ public class WarLord_MiseEnScene : MonoBehaviour
         }
         else if (stats.CurrentHealth <= (stats.maxHealth * (_percentHpBeforeEvent/100f)) && !fightHasEnded/* || (!m_playerManager.GetComponent<PlayerStats>().IsInCombat && fightHasEnded)) && go*/)
         {
+            showBossLifeBar = false;
             fightHasEnded = true;
             for (int i = 0, l = anims.Length; i < l; ++i)
             {
-                anims[i].SetTrigger(triggerOff);
+                if (anims[i] != null)
+                {
+                    anims[i].SetTrigger(triggerOff);
+                }
             }
             m_playerManager.GetComponent<PlayerStats>().IsInCombat = false;
             lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
