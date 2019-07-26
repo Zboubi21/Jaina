@@ -329,7 +329,6 @@ public class EnemyStats : CharacterStats {
         m_cirlceCanvas.SetActive(false);
         slider.fillAmount = 1;
         DestroyAllMarks();
-
     }
     private void OnDisable()
     {
@@ -338,7 +337,6 @@ public class EnemyStats : CharacterStats {
         {
             enemyController.m_fxs.m_freezed.SetActive(false);
         }
-
     }
     public override void Start()
     {
@@ -563,7 +561,6 @@ public class EnemyStats : CharacterStats {
         MarksCoolDownMethods();
         if (!IsDead)
         {
-            
             CanvasSetActiveMethod();
         }
         else
