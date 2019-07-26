@@ -360,7 +360,7 @@ public class Waves_Methods : MonoBehaviour
                     if (useArenaUI)
                     {
                         nbrOfWave = 0;
-                        victoryScreen.SetActive(true);
+                        //victoryScreen.SetActive(true);
                         waveUI.SetActive(false);
                         wave_Identifier.timerWave.fontSize = 45;
                     }
