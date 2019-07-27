@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour {
     [Header("Sounds")]
     public Sounds m_sounds = new Sounds();
 	[System.Serializable] public class Sounds {
+        public bool m_useZglorgSoundManager = false;
         public GameObject[] m_impatienceFx;
         public GameObject[] m_detectionFx;
         public GameObject[] m_dieFx;
@@ -29,6 +30,10 @@ public class EnemyController : MonoBehaviour {
 
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
+
+        if(m_sounds.m_useZglorgSoundManager){
+            m_zglorgSoundManager = ZglorgSoundManager.Instance;
+        }
 
         if(!m_isInstatiate){
             ChangeState((int)EnemyState.IdleState);
@@ -482,6 +487,20 @@ public class EnemyController : MonoBehaviour {
             enemystats = value;
         }
     }
+
+    ZglorgSoundManager m_zglorgSoundManager;
+    public ZglorgSoundManager ZglorgSoundManager
+    {
+        get
+        {
+            return m_zglorgSoundManager;
+        }
+
+        set
+        {
+            m_zglorgSoundManager = value;
+        }
+    }
     #endregion
 
     public virtual void LogicWhenEnable()
@@ -856,7 +875,13 @@ public class EnemyController : MonoBehaviour {
 
     IEnumerator OnWaitForAnimToEnd()
     {
-        SpawnRandomGameObject(m_sounds.m_dieFx);
+        if(!m_sounds.m_useZglorgSoundManager){
+            SpawnRandomGameObject(m_sounds.m_dieFx);
+        }else{
+            if(m_zglorgSoundManager.CanDoDeathSound()){
+                SpawnRandomGameObject(m_sounds.m_dieFx);
+            }
+        }
         m_mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(m_timeToWaitBeforeDespawnEnemy);    //Animation time

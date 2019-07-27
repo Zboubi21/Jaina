@@ -2,7 +2,7 @@
 
 public class ArcadeSoundManager : MonoBehaviour {
     
-    #region Singleton
+#region Singleton
 
 	public static ArcadeSoundManager Instance;
 
