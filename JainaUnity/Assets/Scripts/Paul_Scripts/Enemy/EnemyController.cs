@@ -31,9 +31,9 @@ public class EnemyController : MonoBehaviour {
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
 
-        if(m_sounds.m_useZglorgSoundManager){
-            m_zglorgSoundManager = ZglorgSoundManager.Instance;
-        }
+        // if(m_sounds.m_useZglorgSoundManager){
+        //     m_zglorgSoundManager = ZglorgSoundManager.Instance;
+        // }
 
         if(!m_isInstatiate){
             ChangeState((int)EnemyState.IdleState);
@@ -875,13 +875,13 @@ public class EnemyController : MonoBehaviour {
 
     IEnumerator OnWaitForAnimToEnd()
     {
-        if(!m_sounds.m_useZglorgSoundManager){
+        // if(!m_sounds.m_useZglorgSoundManager){
             SpawnRandomGameObject(m_sounds.m_dieFx);
-        }else{
-            if(m_zglorgSoundManager.CanDoDeathSound()){
-                SpawnRandomGameObject(m_sounds.m_dieFx);
-            }
-        }
+        // }else{
+            // if(m_zglorgSoundManager.CanDoDeathSound()){
+                // SpawnRandomGameObject(m_sounds.m_dieFx);
+            // }
+        // }
         m_mycollider.enabled = false;
         agent.enabled = false;
         yield return new WaitForSeconds(m_timeToWaitBeforeDespawnEnemy);    //Animation time

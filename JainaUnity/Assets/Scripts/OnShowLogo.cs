@@ -20,18 +20,18 @@ public class OnShowLogo : MonoBehaviour
     public GameObject[] obj;
 
 
-    public static bool go;
+    public static bool showLogo;
 
     void Start()
     {
-        if (!go)
+        if (!showLogo)
         {
             lastPanel = GetComponent<Image>();
             for (int i = 0, l = obj.Length; i < l; ++i)
             {
                 obj[i].SetActive(false);
             }
-            go = true;
+            showLogo = true;
             StartCoroutine(Fades());
         }
         else
