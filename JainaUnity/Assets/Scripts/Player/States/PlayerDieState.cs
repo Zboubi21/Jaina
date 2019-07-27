@@ -20,7 +20,13 @@ public class PlayerDieState : IState {
 		m_playerManager.JainaAnimator.SetTrigger("Die");
         m_playerManager.PlayerIsDead = true;
 		m_playerManager.StopPlayerMovement();
-        m_playerManager.SaveManager.On_PlayerDie();
+
+        if(m_playerManager.m_playerDebug.m_isStoryJaina){
+            m_playerManager.SaveManager.On_PlayerDie();
+        }else{
+            m_playerManager.PauseGame.RestartArena(false);
+        }
+
         m_playerManager.CapsuleColl.enabled = false;
     }
 

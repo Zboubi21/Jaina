@@ -29,6 +29,7 @@ public class JainaUiController : MonoBehaviour {
 
     PlayerManager m_playerManager;
     bool m_playerInAutoAttack;
+    CursorManagaer m_cursorManager;
 
     void Awake(){
         for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
@@ -41,6 +42,7 @@ public class JainaUiController : MonoBehaviour {
 
     void Start(){
         m_playerManager = GetComponent<PlayerManager>();
+        m_cursorManager = CursorManagaer.Instance;
     }
 
     public void On_UiPointerOver(JainaUI clickedUI){
@@ -63,6 +65,8 @@ public class JainaUiController : MonoBehaviour {
             }
             m_inUi = false;
             m_playerManager.CanAutoAttackBecauseUi = true;
+
+            m_cursorManager.ChangeCursorModeInMenu(false);
         }
     }
     
@@ -70,6 +74,7 @@ public class JainaUiController : MonoBehaviour {
         m_playerInAutoAttack = m_playerManager.InAutoAttack;
         if(!m_playerInAutoAttack){
             m_playerManager.CanAutoAttackBecauseUi = false;
+            m_cursorManager.ChangeCursorModeInMenu(true);
         }
     }
 
@@ -85,6 +90,7 @@ public class JainaUiController : MonoBehaviour {
                 m_jainUiOver.ShowUi();
             }
             m_playerManager.CanAutoAttackBecauseUi = false;
+            m_cursorManager.ChangeCursorModeInMenu(true);
         }
     }
 

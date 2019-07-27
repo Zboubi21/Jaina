@@ -8,8 +8,8 @@ using UnityEngine.AI;
 
 public class MainMenu : MonoBehaviour {
 
-	[SerializeField] float m_waitTimeToQuit = 0.175f;
-	[SerializeField] Animator m_blackScreenAnimator;
+	public float m_waitTimeToQuit = 0.175f;
+	public Animator m_blackScreenAnimator;
 
 void Awake(){
 	SetResolution();

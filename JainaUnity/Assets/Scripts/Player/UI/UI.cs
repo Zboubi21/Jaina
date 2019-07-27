@@ -43,7 +43,9 @@ public class UI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     public virtual void OnPointerExit(PointerEventData eventData) {
         // Debug.Log("Mouse exit");
         m_mouseInUI = false;
-        UiController.On_UiPointerExit();
+        if(m_uiController != null){
+            m_uiController.On_UiPointerExit();
+        }
     }
 
 }
