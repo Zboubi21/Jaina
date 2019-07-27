@@ -27,13 +27,12 @@ public class EnemyController : MonoBehaviour {
 
     public virtual void OnEnable()
     {
-
         if(Anim == null)
             Anim = GetComponentInChildren<Animator>();
 
-        // if(m_sounds.m_useZglorgSoundManager){
-        //     m_zglorgSoundManager = ZglorgSoundManager.Instance;
-        // }
+        if(m_sounds.m_useZglorgSoundManager){
+            m_zglorgSoundManager = ZglorgSoundManager.Instance;
+        }
 
         if(!m_isInstatiate){
             ChangeState((int)EnemyState.IdleState);

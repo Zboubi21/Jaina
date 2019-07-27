@@ -22,13 +22,13 @@ public class ImpatienceState : IState
         StateAnimation(m_enemyController.Anim);
         ImpatienceEffect(m_zglorgController.speedSprint);
         m_enemyController.IsImpatient = true;
-        if(!m_enemyController.m_sounds.m_useZglorgSoundManager){
+        // if(!m_enemyController.m_sounds.m_useZglorgSoundManager){
             m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
-        }else{
-            if(m_enemyController.ZglorgSoundManager.CanDoDeathSound()){
-                m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
-            }
-        }
+        // }else{
+        //     if(m_enemyController.ZglorgSoundManager.CanDoDeathSound()){
+        //         m_enemyController.SpawnRandomGameObject(m_enemyController.m_sounds.m_impatienceFx);
+        //     }
+        // }
     }
 
     public virtual void FixedUpdate()
