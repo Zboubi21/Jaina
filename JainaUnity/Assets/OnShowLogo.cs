@@ -15,6 +15,9 @@ public class OnShowLogo : MonoBehaviour
     public float timeToShowLogo = 1;
     public float logoFadeSpeed = 1;
     public float lastPanelFadeSpeed = 1;
+    [Space]
+    [Header("Activate At End Of anim")]
+    public GameObject[] obj;
 
 
     public static bool go;
@@ -24,8 +27,20 @@ public class OnShowLogo : MonoBehaviour
         if (!go)
         {
             lastPanel = GetComponent<Image>();
+            for (int i = 0, l = obj.Length; i < l; ++i)
+            {
+                obj[i].SetActive(false);
+            }
             go = true;
             StartCoroutine(Fades());
+        }
+        else
+        {
+            for (int i = 0, l = obj.Length; i < l; ++i)
+            {
+                obj[i].SetActive(true);
+            }
+            gameObject.SetActive(false);
         }
     }
 
@@ -48,6 +63,10 @@ public class OnShowLogo : MonoBehaviour
                     Logo.color = Lalp;
                     if(Lalp.a <= 0)
                     {
+                        for (int i = 0, l = obj.Length; i < l; ++i)
+                        {
+                            obj[i].SetActive(true);
+                        }
                         while (true)
                         {
                             yield return new WaitForSeconds(0.02f / Mathf.Abs(lastPanelFadeSpeed));
