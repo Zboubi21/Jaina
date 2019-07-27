@@ -464,11 +464,11 @@ public class PlayerManager : MonoBehaviour {
 	GameObject m_lastAutoAttackSound;
 	ClickOnGround m_actualClickOnGroundFx;
 	bool m_inMenuMode;
-	PauseGame m_pauseGame;
 	BigEnemyLifeBarManager m_bigEnemyLifeBarManager;
 	AudioListener m_audioListener;
 	GameManager m_gameManager;
 	ObjectType m_clickOnGround = ObjectType.ClickOnGround;
+	CursorManagaer m_cursorManager;
 	
 #region Input Buttons
 
@@ -614,6 +614,16 @@ public class PlayerManager : MonoBehaviour {
             m_jainaUiController = value;
         }
     }
+
+	PauseGame m_pauseGame;
+	public PauseGame PauseGame{
+        get{
+            return m_pauseGame;
+        }
+        set{
+            m_pauseGame = value;
+        }
+    }
 	
 #endregion Encapsuled
 
@@ -662,6 +672,7 @@ public class PlayerManager : MonoBehaviour {
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;
 		m_cameraManager = CameraManager.Instance;
+		m_cursorManager = CursorManagaer.Instance;
 
 		InitializeStartAutoAttackCooldown();
 		SetPlayerSpeed(m_moveSpeed.m_normalspeed);
@@ -686,9 +697,9 @@ public class PlayerManager : MonoBehaviour {
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
 
-		// if(Input.GetKeyDown(KeyCode.Q)){
-		// 	On_ArcadeModeIsEnabled();
-		// }
+		if(Input.GetKeyDown(KeyCode.Q)){
+			On_ArcadeModeIsEnabled();
+		}
 	}
 
 	void FixedUpdate(){
@@ -1862,6 +1873,7 @@ public class PlayerManager : MonoBehaviour {
 	public void SetPlayerMenuMode(bool inMenu/*, Transform newPos = null*/){
 		m_inMenuMode = inMenu;
 		SetUiModeParameters();
+		m_cursorManager.ChangeCursorModeInMenu(inMenu);
 		//if(newPos != null){
 		//	SetTpPoint(newPos.position);
 		//}
