@@ -697,9 +697,9 @@ public class PlayerManager : MonoBehaviour {
 		DecreaseChanneledSpell();
 		UpdatePlayerSpeed();
 
-		if(Input.GetKeyDown(KeyCode.Q)){
+		/*if(Input.GetKeyDown(KeyCode.Q)){
 			On_ArcadeModeIsEnabled();
-		}
+		}*/
 	}
 
 	void FixedUpdate(){
