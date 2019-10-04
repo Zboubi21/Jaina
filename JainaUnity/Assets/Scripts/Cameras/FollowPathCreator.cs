@@ -67,7 +67,8 @@ public class FollowPathCreator : MonoBehaviour {
 
 		m_pathCreator = GetComponent<PathCreator>();
 		m_actualMoveSpeed = m_startMoveSpeed;
-		m_followTransform.gameObject.SetActive(false);
+		// m_followTransform.gameObject.SetActive(false);
+		m_followTransform.GetComponent<Camera>().enabled = false;
 		StartCoroutine(WaitTimeToUsePath(m_usePathAtStart));
 	}
 
@@ -112,7 +113,8 @@ public class FollowPathCreator : MonoBehaviour {
 			m_videoCameraManager.DisableOtherFollowPath();
 			m_usePath = true;
 			m_videoCameraManager.SetPathsCanvasIsActive(false);
-			m_followTransform.gameObject.SetActive(true);
+			// m_followTransform.gameObject.SetActive(true);
+			m_followTransform.GetComponent<Camera>().enabled = true;
 			m_eventsAtStartPath.Invoke();
 		}
 	}
@@ -134,7 +136,8 @@ public class FollowPathCreator : MonoBehaviour {
 	}
 
 	public void ResetPath(){
-		m_followTransform.gameObject.SetActive(false);
+		// m_followTransform.gameObject.SetActive(false);
+		m_followTransform.GetComponent<Camera>().enabled = false;
 		m_distanceTravelled = 0;
 		m_timer = 0;
 		m_actualLastTimer = 0;

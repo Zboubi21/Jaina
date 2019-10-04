@@ -245,7 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6071771040292041713}
-  - component: {fileID: 6182296293637801819}
+  - component: {fileID: 2194504609505642303}
   - component: {fileID: 6180732714737403601}
   m_Layer: 0
   m_Name: PathCreator
@@ -268,7 +268,7 @@ Transform:
   m_Father: {fileID: 6071627276848847003}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6182296293637801819
+--- !u!114 &2194504609505642303
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,30 +284,12 @@ MonoBehaviour:
     _bezierPath:
       points:
       - {x: 0, y: 0, z: 0}
-      - {x: 3.2564666, y: -1.8558873, z: -7.765023}
-      - {x: 6.5129333, y: -3.7117746, z: -15.530046}
-      - {x: 11.828927, y: -4.2713223, z: -20.299637}
-      - {x: 16.313765, y: -4.7433844, z: -24.323502}
-      - {x: 23.88927, y: -4.873883, z: -27.599167}
-      - {x: 30.165173, y: -3.6497211, z: -28.593933}
-      - {x: 38.146923, y: -2.0928211, z: -29.859085}
-      - {x: 49.206608, y: 1.1252806, z: -30.535114}
-      - {x: 56.169216, y: 2.0639668, z: -26.557327}
-      - {x: 61.432377, y: 2.7735367, z: -23.550446}
-      - {x: 66.94464, y: 3.1310117, z: -19.579689}
-      - {x: 71.0718, y: 3.4550667, z: -15.707489}
-      - {x: 77.299126, y: 3.9440212, z: -9.864868}
-      - {x: 79.074455, y: 6.255072, z: -7.2656345}
-      - {x: 83.66313, y: 5.4818134, z: -6.2410126}
-      - {x: 89.53481, y: 4.4923487, z: -4.9299026}
-      - {x: 96.10896, y: -0.5408535, z: -4.594574}
-      - {x: 99.1937, y: -2.856536, z: -9.275009}
-      - {x: 101.54864, y: -4.624364, z: -12.848125}
-      - {x: 103.92826, y: -4.6818266, z: -19.15712}
-      - {x: 103.91211, y: -5.1122036, z: -24.14981}
+      - {x: -0.0000006258487, y: 0.49999955, z: 0.99999654}
+      - {x: -0.0000018775461, y: 1.4999987, z: 2.9999895}
+      - {x: -0.0000025033949, y: 1.9999982, z: 3.9999862}
       isClosed: 0
       space: 0
-      controlMode: 0
+      controlMode: 3
       autoControlLength: 0.3
       boundsUpToDate: 0
       bounds:
@@ -316,32 +298,26 @@ MonoBehaviour:
       perAnchorNormalsAngle:
       - 0
       - 0
-      - 0
-      - 0
-      - 0
-      - 354.14938
-      - 337.99576
-      - 320.00836
-      globalNormalsAngle: 90
+      globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
-    showTransformTool: 0
+    showTransformTool: 1
     showPathBounds: 0
     showPerSegmentBounds: 0
     displayAnchorPoints: 1
     displayControlPoints: 1
-    bezierHandleScale: 3
+    bezierHandleScale: 1
     globalDisplaySettingsFoldout: 0
     keepConstantHandleSize: 0
     showNormalsInVertexMode: 0
     showBezierPathInVertexMode: 0
-    showDisplayOptions: 1
+    showDisplayOptions: 0
     showPathOptions: 1
     showVertexPathDisplayOptions: 0
     showVertexPathOptions: 1
-    showNormals: 1
+    showNormals: 0
     showNormalsHelpInfo: 0
     tabIndex: 0
   initialized: 1
