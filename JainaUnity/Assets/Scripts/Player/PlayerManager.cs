@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_startInMenuMode = false;
 		public bool m_isStoryJaina = false;
 		public bool m_isArcadeJaina = false;
+        public bool m_showHUD = true;
 	}
 
 	public StateMachine m_sM = new StateMachine();
@@ -1864,7 +1865,23 @@ public class PlayerManager : MonoBehaviour {
     }
 
 	void SetUiModeParameters(){
-		m_ui.m_UiCanvas.SetActive(!m_inMenuMode);
+        if (m_playerDebug.m_showHUD)
+        {
+            if (m_inMenuMode)
+            {
+                m_ui.m_UiCanvas.SetActive(false);
+            }
+            else
+            {
+                m_ui.m_UiCanvas.SetActive(true);
+            }
+        }
+        else
+        {
+            m_ui.m_UiCanvas.SetActive(false);
+        }
+        //m_ui.m_UiCanvas.SetActive(!m_inMenuMode);
+
 		m_pauseGame.enabled = !m_inMenuMode;
 		m_bigEnemyLifeBarManager.enabled = !m_inMenuMode;
 		//m_audioListener.enabled = !m_inMenuMode;
