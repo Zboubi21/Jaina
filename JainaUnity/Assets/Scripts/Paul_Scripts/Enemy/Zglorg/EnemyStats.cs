@@ -37,6 +37,7 @@ public class EnemyStats : CharacterStats {
     GameObject MarqueDeGivre;
     [Space]
     [Header("Canvas")]
+    public bool neverShowCanvas;
     public GameObject m_canvas;
     public Image slider;
     public float timeBeforeLifeBarOff = 5f;
@@ -589,7 +590,7 @@ public class EnemyStats : CharacterStats {
     }
     void CanvasSetActiveMethod()
     {
-        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown) && PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled)
+        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown) && PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !neverShowCanvas)
         {
             m_canvas.SetActive(true);
         }
@@ -666,7 +667,7 @@ public class EnemyStats : CharacterStats {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled)
+        if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !neverShowCanvas)
         {
             m_canvas.SetActive(true);
         }
