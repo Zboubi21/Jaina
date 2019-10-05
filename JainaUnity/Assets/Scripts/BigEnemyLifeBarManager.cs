@@ -134,7 +134,10 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 }
                 ActivateUnitFrame(enemyStatsLocked);
                 ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true, enemyStatsLocked);
-                enemyStatsLocked.m_cirlceCanvas.SetActive(true);
+                if (!enemyStatsLocked.neverShowCanvas)
+                {
+                    enemyStatsLocked.m_cirlceCanvas.SetActive(true);
+                }
                 timeToShowLifeBar = m_showLifeBar;
 
             }
@@ -190,7 +193,10 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             ActivateUnitFrame(bossStats);
             ActivateLifeBar(bossStats.m_enemyPowerLevel, true, bossStats);
-            bossStats.m_cirlceCanvas.SetActive(true);
+            if (!bossStats.neverShowCanvas)
+            {
+                bossStats.m_cirlceCanvas.SetActive(true);
+            }
         }
     }
 
