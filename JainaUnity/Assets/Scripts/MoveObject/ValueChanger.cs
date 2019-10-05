@@ -150,6 +150,50 @@ public class ValueChanger : MonoBehaviour
         }
     #endregion //ChangeFloat
 
+    #region MoveRotation
+        public MoveObjectData MoveRotationWithTime(Transform transformRotation, Vector3 toRotation, float timeToReachNewValue, AnimationCurve animationCurve)
+        {
+            MoveObjectData moveObjectData =  new MoveObjectData();
+            float distance = Vector3.Distance(transformRotation.localRotation.eulerAngles, toRotation);
+            float speed = distance / timeToReachNewValue;
+            m_coroutineMonoBehaviour.StartCoroutine(MoveRotationCorout(moveObjectData, transformRotation, toRotation, speed, animationCurve));
+            return moveObjectData;
+        }
+        IEnumerator MoveRotationCorout(MoveObjectData moveObjectData, Transform rotateTransform, Vector3 toRotation, float changeSpeed, AnimationCurve animationCurve = null)
+        {
+
+            Vector3 fromRotation = rotateTransform.localRotation.eulerAngles;
+
+            float moveFracJourney = 0;
+            float distance = Vector3.Distance(fromRotation, toRotation);
+
+            moveObjectData.IsRunning = true;
+            moveObjectData.FracJourney = 0;
+
+            On_StartChangeValue();
+
+            while (rotateTransform.localRotation.eulerAngles != toRotation)
+            {
+                moveFracJourney += (Time.deltaTime) * changeSpeed / distance;
+                moveObjectData.FracJourney = moveFracJourney;
+
+                if (animationCurve != null)
+                {
+                    rotateTransform.localRotation = Quaternion.Euler(Vector3.Lerp(fromRotation, toRotation, animationCurve.Evaluate(moveFracJourney)));
+                }
+                else
+                {
+                    // moveTransform.rotation = Quaternion.Lerp(fromRotation, toRotation, moveFracJourney);
+                    rotateTransform.localRotation = Quaternion.Euler(Vector3.Lerp(fromRotation, toRotation, moveFracJourney));
+                }
+                On_WhileChangeValue();
+                yield return null;
+            }
+            moveObjectData.IsRunning = false;
+            On_EndChangeValue();
+        }
+    #endregion //MoveRotation
+
 #endregion //Move Functions 
 
 #region Observer functions
