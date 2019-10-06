@@ -20008,7 +20008,7 @@ MonoBehaviour:
     - {fileID: 1631861431149152089}
     - {fileID: 3639216874918401232}
     - {fileID: 6397944841058809703}
-  _name: Yiehn'Gharian high matron
+  _name: Niel'serian high matron
   m_enemyPowerLevel: 1
   m_enemyType: 0
   _hasBackPack: 0
@@ -20018,6 +20018,7 @@ MonoBehaviour:
   MarqueFeu: {fileID: 1153815350473856, guid: 017b77a46a632354f93685bd9566850d, type: 3}
   MarqueGivre: {fileID: 1193358281785756, guid: f15c3dd996f4fe146a916b57630410d0,
     type: 3}
+  neverShowCanvas: 0
   m_canvas: {fileID: 8618503824712320982}
   slider: {fileID: 8505080640193856554}
   timeBeforeLifeBarOff: 5
@@ -20064,6 +20065,7 @@ MonoBehaviour:
   m_isInstatiate: 1
   m_enemyType: 11
   m_sounds:
+    m_useZglorgSoundManager: 0
     m_impatienceFx:
     - {fileID: 7234169076135870180, guid: 9037aa462c70086419a5b0a5fb8ef6e7, type: 3}
     - {fileID: 7234169076135870180, guid: b5cbe1a4e719a1c47bfa69dd9af15fd1, type: 3}
@@ -22258,10 +22260,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2338426, guid: ecb8c293446c98c43a854908230b43f7, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 046b05422404dcf45b9e4cb46222333b, type: 2}
     - target: {fileID: 419578, guid: ecb8c293446c98c43a854908230b43f7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.1
@@ -22318,6 +22316,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 2338426, guid: ecb8c293446c98c43a854908230b43f7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 046b05422404dcf45b9e4cb46222333b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecb8c293446c98c43a854908230b43f7, type: 3}
 --- !u!4 &6379837526456571374 stripped

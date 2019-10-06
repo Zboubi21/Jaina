@@ -18,7 +18,7 @@ public class PauseGame : MainMenu {
 	[Space]
 	[SerializeField] Animator m_arenaDieCanvas;
 
-	bool m_canPaused = true;
+	bool m_canPaused;
 	public bool CanPaused{
         get{
             return m_canPaused;
@@ -34,9 +34,9 @@ public class PauseGame : MainMenu {
 	CursorManagaer m_curosrManager;
     
     void OnEnable(){
-		m_canPaused = true;
+        StartCoroutine(WaitForFadeInToEscape());
 	}
-
+    
 	void Start(){
 		m_pause = false;
 		m_playerManager = GetComponent<PlayerManager>();
@@ -53,11 +53,11 @@ public class PauseGame : MainMenu {
 	
 	void Update(){
 		m_pauseKey = Input.GetButtonDown("Pause");
+        Debug.Log(m_canPaused);
 		if(m_canPaused && m_pauseKey){
 			Resume();
 		}
 	}
-
 	public void Resume(){
 		
 		m_pause = !m_pause;
@@ -98,7 +98,13 @@ public class PauseGame : MainMenu {
 		}
 		StartCoroutine(RestartLevelCorout());
 	}
-	IEnumerator RestartLevelCorout(){
+    IEnumerator WaitForFadeInToEscape()
+    {
+        yield return new WaitForSeconds(1f);
+        m_canPaused = true;
+        StopCoroutine(WaitForFadeInToEscape());
+    }
+    IEnumerator RestartLevelCorout(){
 		yield return new WaitForSeconds(m_waitTimeToQuit);
 		SaveManager m_saveManager = SaveManager.Instance;
 		m_saveManager.StartCoroutine(m_saveManager.On_RestartFromLastCheckPoint());
