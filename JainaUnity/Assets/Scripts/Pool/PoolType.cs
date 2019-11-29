@@ -20,6 +20,8 @@
         Zglorg_GrandConquérant,
         Butcher_GrandConquérant,
         Zglorgette_GrandConquérant,
+
+        Stalactite
 	}
     [System.Serializable] public enum SpellType {
 		AutoAttack_Ice,
@@ -35,6 +37,8 @@
         ArcaneExplosion,
         AutoAttack_Zglorgette,
         Spell_Zglorgette,
+
+        LavaArea,
 	}
     [System.Serializable] public enum ObjectType {
         LifePotion,

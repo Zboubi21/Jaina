@@ -77,19 +77,19 @@ public class StateMachine
         }
     }
 
-    public void Update()
-    {
-        if (m_currentState != null)
-        {
-            m_currentState.Update();
-        }
-    }
-
     public void FixedUpdate()
     {
         if (m_currentState != null)
         {
             m_currentState.FixedUpdate();
+        }
+    }
+
+    public void Update()
+    {
+        if (m_currentState != null)
+        {
+            m_currentState.Update();
         }
     }
 

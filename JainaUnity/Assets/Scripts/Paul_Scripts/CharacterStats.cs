@@ -99,6 +99,7 @@ public class CharacterStats : MonoBehaviour {
             maxArcanMarkCount = value;
         }
     }
+
     #endregion
     private float currentHealth;// { get; private set; }
     int arcanMarkCount;
@@ -117,6 +118,8 @@ public class CharacterStats : MonoBehaviour {
     bool isDead = false;
     bool m_canShowHitFx = true;
 
+    PlayerStats m_playerState;
+
     public virtual void OnEnable()
     {
         if(mainCamera == null){
@@ -134,6 +137,8 @@ public class CharacterStats : MonoBehaviour {
         arcanBlastMultiplicateur = PlayerManager.Instance.m_powers.m_arcaneExplosion.m_blastMultiplicateur / 100f;
         maxArcanMarkCount = PlayerManager.Instance.m_maxArcanMarkCount;
         //Debug.Log(multiplicateur);
+
+        m_playerState = GetComponent<PlayerStats>();
     }
 
     public virtual void Update()
@@ -292,6 +297,76 @@ public class CharacterStats : MonoBehaviour {
     IEnumerator RecoveryHit(){
         yield return new WaitForSeconds(m_hit.m_timeToRecovery);
         m_canShowHitFx = true;
+    }
+
+
+    bool m_characterInLava = false;
+    float m_lavaTick;
+    public float LavaTick
+    {
+        get
+        {
+            return m_lavaTick;
+        }
+
+        set
+        {
+            m_lavaTick = value;
+        }
+    }
+    float m_actualLavaTick = 0;
+
+    int m_lavaTickDamage;
+    public int LavaTickDamage
+    {
+        get
+        {
+            return m_lavaTickDamage;
+        }
+
+        set
+        {
+            m_lavaTickDamage = value;
+        }
+    }
+
+    int m_lavaAreaNb = 0;
+
+    public void OnCharacterEnterInLavaArea()
+    {
+        m_lavaAreaNb ++;
+        m_characterInLava = true;
+        if(m_actualLavaTick == 0){
+            m_actualLavaTick = m_lavaTick;
+        }
+    }
+    public void OnCharacterExitInLavaArea()
+    {
+        m_lavaAreaNb --;
+        if(m_lavaAreaNb == 0){
+            m_characterInLava = false;
+            m_actualLavaTick = m_lavaTick;
+        }
+    }
+    void LavaAreaDamage()
+    {
+        m_actualLavaTick -= Time.deltaTime;
+        if(m_actualLavaTick <= 0)
+        {
+            if(m_playerState != null){
+                m_playerState.TakeDamage(m_lavaTickDamage);
+            }else{
+                TakeDamage(m_lavaTickDamage);
+                StartHitFxCorout();
+            }
+            m_actualLavaTick = m_lavaTick;
+        }
+    }
+
+    void FixedUpdate(){
+        if(m_characterInLava && !isDead){
+            LavaAreaDamage();
+        }
     }
 
 }

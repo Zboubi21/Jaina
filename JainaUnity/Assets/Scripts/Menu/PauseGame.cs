@@ -53,7 +53,7 @@ public class PauseGame : MainMenu {
 	
 	void Update(){
 		m_pauseKey = Input.GetButtonDown("Pause");
-        Debug.Log(m_canPaused);
+        // Debug.Log(m_canPaused);
 		if(m_canPaused && m_pauseKey){
 			Resume();
 		}
