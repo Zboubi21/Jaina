@@ -23,6 +23,9 @@ public class IceNova : Spell {
             col.gameObject.GetComponent<EnemyController>().Freeze();
         }
 
+		if(col.CompareTag("Stalactite")){
+			col.GetComponent<StalactiteController>().RemoveStalactiteState();
+		}		
 	}
 
 	IEnumerator DestroyNova(){
