@@ -101,7 +101,10 @@ public class Projectile : Spell {
                         break;
 				}
             	CharacterStats.StartHitFxCorout();
-                col.gameObject.GetComponent<EnemyController>().CheckIfStunable();
+                if(col.gameObject.GetComponent<GolemController>() == null)
+                {
+                    col.gameObject.GetComponent<EnemyController>().CheckIfStunable();
+                }
                 if (m_dieWhenHit){
 					DestroyProjectile();
 				}

@@ -134,7 +134,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                 }
                 ActivateUnitFrame(enemyStatsLocked);
                 ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, true, enemyStatsLocked);
-                if (!enemyStatsLocked.neverShowCanvas)
+                if (!enemyStatsLocked._bigBossFight)
                 {
                     enemyStatsLocked.m_cirlceCanvas.SetActive(true);
                 }
@@ -193,7 +193,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         {
             ActivateUnitFrame(bossStats);
             ActivateLifeBar(bossStats.m_enemyPowerLevel, true, bossStats);
-            if (!bossStats.neverShowCanvas)
+            if (!bossStats._bigBossFight)
             {
                 bossStats.m_cirlceCanvas.SetActive(true);
             }

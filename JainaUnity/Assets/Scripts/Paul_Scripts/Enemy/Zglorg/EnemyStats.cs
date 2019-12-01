@@ -24,6 +24,9 @@ public class EnemyStats : CharacterStats {
     bool[] arcanOn;
     bool[] fireOn;
     bool[] iceOn;
+    [Tooltip("No little life bar - No BackPack - Pooling")]
+    public bool _bigBossFight;
+    public bool _isNotMoving;
     [Header("Debuf Var")]
     public GameObject DebufRoot;
     public GameObject MarqueArcane;
@@ -37,7 +40,6 @@ public class EnemyStats : CharacterStats {
     GameObject MarqueDeGivre;
     [Space]
     [Header("Canvas")]
-    public bool neverShowCanvas;
     public GameObject m_canvas;
     public Image slider;
     public float timeBeforeLifeBarOff = 5f;
@@ -308,65 +310,75 @@ public class EnemyStats : CharacterStats {
 
     public override void OnEnable()
     {
-        base.OnEnable();
-        if(m_backPack != null)
+        if (!_bigBossFight)
         {
-            m_backPack.SetActive(_hasBackPack);
-            MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
-            for (int i = 0; i < go.Length; i++)
+            base.OnEnable();
+            if(m_backPack != null)
             {
-                if (go[i] != m_backPack.GetComponent<MeshRenderer>())
+                m_backPack.SetActive(_hasBackPack);
+                MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
+                for (int i = 0; i < go.Length; i++)
                 {
-                    if (!go[i].gameObject.activeSelf)
+                    if (go[i] != m_backPack.GetComponent<MeshRenderer>())
                     {
-                        go[i].gameObject.SetActive(true);
+                        if (!go[i].gameObject.activeSelf)
+                        {
+                            go[i].gameObject.SetActive(true);
+                        }
                     }
                 }
             }
+            lifeBar = m_canvas.GetComponentsInChildren<Image>();
+            enemyController = GetComponent<EnemyController>();
+            m_canvas.SetActive(false);
+            m_cirlceCanvas.SetActive(false);
+            slider.fillAmount = 1;
+            DestroyAllMarks();
         }
-        lifeBar = m_canvas.GetComponentsInChildren<Image>();
-        enemyController = GetComponent<EnemyController>();
-        m_canvas.SetActive(false);
-        m_cirlceCanvas.SetActive(false);
-        slider.fillAmount = 1;
-        DestroyAllMarks();
     }
     private void OnDisable()
     {
-        m_canvas.SetActive(false);
-        if(enemyController.m_fxs.m_freezed != null)
+        if (!_bigBossFight)
         {
-            enemyController.m_fxs.m_freezed.SetActive(false);
+            m_canvas.SetActive(false);
+            if(enemyController.m_fxs.m_freezed != null)
+            {
+                enemyController.m_fxs.m_freezed.SetActive(false);
+            }
         }
     }
     public override void Start()
     {
         base.Start();
-        lifeBar = m_canvas.GetComponentsInChildren<Image>();
-        if(m_backPack != null)
+        if (!_bigBossFight)
         {
-            m_backPack.SetActive(_hasBackPack);
-            MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
-            for (int i = 0; i < go.Length; i++)
+            lifeBar = m_canvas.GetComponentsInChildren<Image>();
+            if(m_backPack != null)
             {
-                if (go[i] != m_backPack.GetComponent<MeshRenderer>())
+                m_backPack.SetActive(_hasBackPack);
+                MeshRenderer[] go = m_backPack.GetComponentsInChildren<MeshRenderer>();
+                for (int i = 0; i < go.Length; i++)
                 {
-                    if (!go[i].gameObject.activeSelf)
+                    if (go[i] != m_backPack.GetComponent<MeshRenderer>())
                     {
-                        go[i].gameObject.SetActive(true);
+                        if (!go[i].gameObject.activeSelf)
+                        {
+                            go[i].gameObject.SetActive(true);
+                        }
                     }
                 }
             }
+            slider.fillAmount = 1;
+            miseEnScene = GetComponent<WarLord_MiseEnScene>();
+
+            #region Canvas Var
+
+            saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
+
+            #endregion
         }
-        slider.fillAmount = 1;
+
         enemyController = GetComponent<EnemyController>();
-        miseEnScene = GetComponent<WarLord_MiseEnScene>();
-
-        #region Canvas Var
-
-        saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
-
-        #endregion
 
         #region Fire Mark Tick Damage Var
         TimerTickDamage = PlayerManager.Instance.m_debuffs.m_fireTicks.m_timerTickDamage;
@@ -383,15 +395,18 @@ public class EnemyStats : CharacterStats {
         #endregion
 
         #region Ice Mark Slow Var
-        agent = GetComponent<NavMeshAgent>();
-        saveSpeed = agent.speed;
-        iceSlow = PlayerManager.Instance.m_debuffs.m_IceSlow.m_iceSlow;
+        if (!_isNotMoving)
+        {
+            agent = GetComponent<NavMeshAgent>();
+            saveSpeed = agent.speed;
+            iceSlow = PlayerManager.Instance.m_debuffs.m_IceSlow.m_iceSlow;
+        }
         #endregion
 
         #region Ice Nova Var
         saveTimerFreezeSnare = PlayerManager.Instance.m_powers.m_iceNova.m_timeFreezed;
         #endregion
-
+        Debug.Log(CurrentHealth);
     }
 
 
@@ -408,8 +423,11 @@ public class EnemyStats : CharacterStats {
         base.ArcanMark(damage, timerDebuf, nbrMarks);
         if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount && CurrentHealth - damage > 0)
         {
-            MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
-            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            }
             arcaneHasBeenInstanciated = true;
         }
         StartArcaneCooldown = true;
@@ -420,8 +438,11 @@ public class EnemyStats : CharacterStats {
         base.AutoAttackArcanMark(damage, timerDebuf, nbrMarks);
         if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount && CurrentHealth - damage > 0)
         {
-            MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
-            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                MarqueDeArcane = InstantiateMarks(MarqueArcane, DebufRoot);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            }
             arcaneHasBeenInstanciated = true;
         }
         if(ArcanMarkCount == 1)
@@ -436,8 +457,11 @@ public class EnemyStats : CharacterStats {
         base.AutoAttackFireMark(timerDebuf);
         if (!fireHasBeenInstanciated)
         {
-            MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
-            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
+                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            }
 
             fireHasBeenInstanciated = true;
         }
@@ -449,26 +473,36 @@ public class EnemyStats : CharacterStats {
         base.FireMark(timerDebuf);
         if (!fireHasBeenInstanciated)
         {
-            MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
-            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                MarqueDeFeu = InstantiateMarks(MarqueFeu, DebufRoot);
+                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+            }
 
             fireHasBeenInstanciated = true;
         }
         StartFireCooldown = true;
         m_timerFire = saveTimerFire = timerDebuf;
+
         if (FireMarkCount == 2)
         {
-            Destroy(MarqueDeFeu);
-            fireHasBeenInstanciated = false;
-            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                Destroy(MarqueDeFeu);
+                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
 
+            }
+            fireHasBeenInstanciated = false;
             FireMarkCount = 0;
             TimerTickDamage = saveDamageTick;
             StartFireCooldown = false;
             // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
-            TakeDamage(FireExplosionDamage);
+
+            // Fx pour faire exploser la marque de feu, faut le faire meme si ça arrive pas souvent
             Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
+
+            TakeDamage(FireExplosionDamage);
         }
     }
     
@@ -477,18 +511,24 @@ public class EnemyStats : CharacterStats {
         base.IceMark(timerDebuf);
         if (!iceHasBeenInstanciated)
         {
-            MarqueDeGivre = InstantiateMarks(MarqueGivre, DebufRoot);
-            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                MarqueDeGivre = InstantiateMarks(MarqueGivre, DebufRoot);
+                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+            }
 
             iceHasBeenInstanciated = true;
         }
         StartGivreCooldown = true;
-        if(GivreMarkCount == 1)
+        if (!_isNotMoving)
         {
-            speed = agent.speed;
+            if(GivreMarkCount == 1)
+            {
+                speed = agent.speed;
+            }
+            slow = 1-((float)(iceSlow * GivreMarkCount)/100);
+            agent.speed = speed * slow;
         }
-        slow = 1-((float)(iceSlow * GivreMarkCount)/100);
-        agent.speed = speed * slow;
         m_timerGivre = saveTimerGivre = timerDebuf;
     }
     public override void ArcaneExplosion(int damage)
@@ -565,18 +605,7 @@ public class EnemyStats : CharacterStats {
             TakeDamage(100);
         }
 #endif
-        m_canvas.transform.LookAt(mainCamera.transform);
-
         MarksCoolDownMethods();
-        if (!IsDead)
-        {
-            CanvasSetActiveMethod();
-        }
-        else
-        {
-            m_canvas.SetActive(false);
-        }
-
         if (hasTakenDamage)
         {
             m_timeToDecreaseWhiteLifeBar -= Time.deltaTime;
@@ -586,11 +615,24 @@ public class EnemyStats : CharacterStats {
                 hasTakenDamage = false;
             }
         }
+        if (!_bigBossFight)
+        {
+            m_canvas.transform.LookAt(mainCamera.transform);
 
+            if (!IsDead)
+            {
+                CanvasSetActiveMethod();
+            }
+            else
+            {
+                m_canvas.SetActive(false);
+            }
+
+        }
     }
     void CanvasSetActiveMethod()
     {
-        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown) && PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !neverShowCanvas)
+        if((StartArcaneCooldown || StartFireCooldown || StartGivreCooldown) && PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !_bigBossFight)
         {
             m_canvas.SetActive(true);
         }
@@ -609,31 +651,44 @@ public class EnemyStats : CharacterStats {
 
     void MarksCoolDownMethods()
     {
-        if (StartArcaneCooldown && MarqueDeArcane != null)
+        if (StartArcaneCooldown)
         {
             m_timerArcane -= Time.deltaTime;
-            MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
+            if(MarqueDeArcane != null)
+            {
+                MarqueDeArcane.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerArcane, m_timerArcane);
+            }
             if (m_timerArcane <= 0)
             {
-                Destroy(MarqueDeArcane);
+                if (!_bigBossFight)
+                {
+                    Destroy(MarqueDeArcane);
+                    m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                    m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+                }
                 arcaneHasBeenInstanciated = false;
-                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
                 ArcanMarkCount = 0;
                 StartArcaneCooldown = false;
             }
         }
-        if (StartFireCooldown && MarqueDeFeu != null)
+        if (StartFireCooldown)
         {
             m_timerFire -= Time.deltaTime;
-            MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
+            if(MarqueDeFeu != null)
+            {
+                MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
+            }
             TimerTickDamage -= Time.deltaTime;
             if (m_timerFire <= 0)
             {
-                Destroy(MarqueDeFeu);
+                if (!_bigBossFight)
+                {
+                    Destroy(MarqueDeFeu);
+                    m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                    m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+                }
+
                 fireHasBeenInstanciated = false;
-                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 FireMarkCount = 0;
                 TimerTickDamage = saveDamageTick;
                 StartFireCooldown = false;
@@ -644,19 +699,29 @@ public class EnemyStats : CharacterStats {
                 TakeDamage(FireTickDamage);
             }
         }
-        if (StartGivreCooldown && MarqueDeGivre !=null)
+        if (StartGivreCooldown)
         {
             m_timerGivre -= Time.deltaTime;
-            MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
+            if(MarqueDeGivre != null)
+            {
+                MarqueDeGivre.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerGivre, m_timerGivre);
+            }
             if (m_timerGivre <= 0)
             {
-                agent.speed = agent.speed / slow;
-                slow = 1;
-                //enemyController.IceSlow();
-                Destroy(MarqueDeGivre);
+                if (!_bigBossFight)
+                {
+                    //enemyController.IceSlow();
+                    Destroy(MarqueDeGivre);
+                    m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+                    m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+                }
+                if (_isNotMoving)
+                {
+                    agent.speed = agent.speed / slow;
+                    slow = 1;
+                }
+
                 iceHasBeenInstanciated = false;
-                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
-                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 GivreMarkCount = 0;
                 StartGivreCooldown = false;
             }
@@ -667,25 +732,28 @@ public class EnemyStats : CharacterStats {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !neverShowCanvas)
+        if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !_bigBossFight)
         {
             m_canvas.SetActive(true);
         }
-
-        if (m_canvas.activeSelf)
+        if (!_bigBossFight)
         {
-            timeBeforeLifeBarOff -= Time.deltaTime;
-            if (timeBeforeLifeBarOff <= 0)
+            if (m_canvas.activeSelf)
             {
-                m_canvas.SetActive(false);
-                timeBeforeLifeBarOff = saveTimeBeforeLifeBarOff;
+                timeBeforeLifeBarOff -= Time.deltaTime;
+                if (timeBeforeLifeBarOff <= 0)
+                {
+                    m_canvas.SetActive(false);
+                    timeBeforeLifeBarOff = saveTimeBeforeLifeBarOff;
+                }
             }
+            slider.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
         }
+
         m_timeToDecreaseWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
         hasTakenDamage = true;
         //BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
 
-        slider.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
     }
 
     public override void Die()
@@ -699,20 +767,28 @@ public class EnemyStats : CharacterStats {
     public void DestroyAllMarks(){
         if(MarqueDeArcane != null)
         {
-            m_iceMarkPos = CheckPosition(fireHasBeenInstanciated, arcaneHasBeenInstanciated);
-            m_fireMarkPos = CheckPosition(iceHasBeenInstanciated, arcaneHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                m_iceMarkPos = CheckPosition(fireHasBeenInstanciated, arcaneHasBeenInstanciated);
+                m_fireMarkPos = CheckPosition(iceHasBeenInstanciated, arcaneHasBeenInstanciated);
+                Destroy(MarqueDeArcane);
+            }
+
             m_timerArcane = 0;
-            Destroy(MarqueDeArcane);
             arcaneHasBeenInstanciated = false;
             ArcanMarkCount = 0;
             StartArcaneCooldown = false;
         }
         if(MarqueDeFeu != null)
         {
-            m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+                Destroy(MarqueDeFeu);
+            }
+
             m_timerFire = 0;
-            Destroy(MarqueDeFeu);
             fireHasBeenInstanciated = false;
             FireMarkCount = 0;
             TimerTickDamage = saveDamageTick;
@@ -720,15 +796,21 @@ public class EnemyStats : CharacterStats {
         }
         if(MarqueDeGivre != null)
         {
-            m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
-            m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+            if (!_bigBossFight)
+            {
+                m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
+                m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+                Destroy(MarqueDeGivre);
+            }
+            if (!_isNotMoving)
+            {
+                agent.speed = agent.speed / slow;
+                slow = 1;
+            }
             m_timerGivre = 0;
-            Destroy(MarqueDeGivre);
             iceHasBeenInstanciated = false;
             GivreMarkCount = 0;
             StartGivreCooldown = false;
-            agent.speed = agent.speed / slow;
-            slow = 1;
         }
     }
 
