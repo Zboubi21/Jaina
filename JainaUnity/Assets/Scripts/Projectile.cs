@@ -114,6 +114,13 @@ public class Projectile : Spell {
 				DestroyProjectile();
 			}
 		}
+
+		// Le projectile touche un élément du décor
+		if(col.CompareTag("Stalactite")){
+			if(m_dieWhenHit){
+				DestroyProjectile();
+			}
+		}
 	}
 
 	public virtual void OnArcanEnter(Collider col){
