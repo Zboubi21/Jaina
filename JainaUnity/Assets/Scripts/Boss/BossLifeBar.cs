@@ -5,19 +5,38 @@ using UnityEngine;
 public class BossLifeBar : MonoBehaviour
 {
     public BigEnemyLifeBarManager lifeBar;
+    public EnemyStats bossStats;
+    bool FightOn;
+    public ParticleSystem[] flammingDoor;
+    public GameObject cantBlinkAgent;
 
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player") && !FightOn)
+        {
+            FightOn = true;
+
+            for (int i = 0, l = flammingDoor.Length; i < l; ++i)
+            {
+                if (flammingDoor[i] != null)
+                { 
+                    flammingDoor[i].Play(true); 
+                }
+            }
+            if (!cantBlinkAgent.activeSelf)
+            {
+                cantBlinkAgent.SetActive(true);
+            }
+
+            
+        }
     }
 
-    bool ison;
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M) || ison)
+        if (FightOn)
         {
-            ison = true;
-            lifeBar.OnLoadBossGameObject(GetComponent<EnemyStats>());
+            lifeBar.OnLoadBossGameObject(bossStats);
             lifeBar.OnFightBoss(true);
         }
     }

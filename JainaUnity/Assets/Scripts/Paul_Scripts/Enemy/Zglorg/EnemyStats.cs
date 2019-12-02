@@ -77,6 +77,7 @@ public class EnemyStats : CharacterStats {
 
     NavMeshAgent agent;
     EnemyController enemyController;
+    GolemController bossController;
     WarLord_MiseEnScene miseEnScene;
     int iceSlow;
     int SpeedPercent;
@@ -335,6 +336,10 @@ public class EnemyStats : CharacterStats {
             slider.fillAmount = 1;
             DestroyAllMarks();
         }
+        else
+        {
+            bossController = GetComponent<GolemController>();
+        }
     }
     private void OnDisable()
     {
@@ -379,7 +384,7 @@ public class EnemyStats : CharacterStats {
         }
 
         enemyController = GetComponent<EnemyController>();
-
+        bossController = GetComponent<GolemController>();
         #region Fire Mark Tick Damage Var
         TimerTickDamage = PlayerManager.Instance.m_debuffs.m_fireTicks.m_timerTickDamage;
         FireTickDamage = PlayerManager.Instance.m_debuffs.m_fireTicks.m_fireTickDamage;
@@ -491,7 +496,7 @@ public class EnemyStats : CharacterStats {
                 Destroy(MarqueDeFeu);
                 m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
                 m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
-
+                Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
             }
             fireHasBeenInstanciated = false;
             FireMarkCount = 0;
@@ -500,7 +505,7 @@ public class EnemyStats : CharacterStats {
             // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
 
             // Fx pour faire exploser la marque de feu, faut le faire meme si ça arrive pas souvent
-            Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
+            Level.AddFX(bossController.m_fxs.m_markExplosion, bossController.m_fxs.m_markExplosionRoot.position, bossController.m_fxs.m_markExplosionRoot.rotation);
 
             TakeDamage(FireExplosionDamage);
         }
@@ -715,7 +720,7 @@ public class EnemyStats : CharacterStats {
                     m_fireMarkPos = CheckPosition(arcaneHasBeenInstanciated, iceHasBeenInstanciated);
                     m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 }
-                if (_isNotMoving)
+                if (!_isNotMoving)
                 {
                     agent.speed = agent.speed / slow;
                     slow = 1;
@@ -761,7 +766,14 @@ public class EnemyStats : CharacterStats {
         base.Die();
         //checkiIfItIsDead = true;
         DestroyAllMarks();
-        enemyController.OnEnemyDie();
+        if (!_bigBossFight)
+        {
+            enemyController.OnEnemyDie();
+        }
+        else
+        {
+            bossController.OnEnemyDie();
+        }
     }
 
     public void DestroyAllMarks(){

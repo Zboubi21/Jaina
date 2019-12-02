@@ -54,6 +54,25 @@ public class GolemController : MonoBehaviour
     public void ChangeState(GolemState newState){
 		m_sM.ChangeState((int)newState);
 	}
-#endregion
+
+    #endregion
+
+    [Header("FX")]
+    public FXs m_fxs = new FXs();
+    [System.Serializable]
+    public class FXs
+    {
+        public GameObject m_freezed;
+        public GameObject m_markExplosion;
+        public Transform m_markExplosionRoot;
+    }
+
+
+    public void OnEnemyDie()
+    {
+        ChangeState(GolemState.Idle); // Die //passer en die state
+    }
+
+
 
 }
