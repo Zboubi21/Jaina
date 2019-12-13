@@ -21,8 +21,10 @@ public class NoThrowSpellState : IState
 		if(m_playerManager.m_rightMouseClick){
 			m_playerManager.MovePlayer();
 		}
+		m_playerManager.MovePlayerWithGamepad();
 
 		m_playerManager.RotatePlayer();
+		m_playerManager.RotatePlayerWithGamepad();
 
 		if(m_playerManager.m_leftMouseClick){
 			m_playerManager.InAutoAttack = true;

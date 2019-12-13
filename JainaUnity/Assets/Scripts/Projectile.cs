@@ -154,13 +154,18 @@ public class Projectile : Spell {
 	}
 
 	public void SetTargetPos(Vector3 targetPos){
-		// Debug.Log("SetTargetPos");
 		Vector3 projectileToMouse = targetPos - transform.position;
 		projectileToMouse.y = 0f;
 		Quaternion newRotation = Quaternion.LookRotation(projectileToMouse);
 		transform.rotation = newRotation;
+	}
 
-		// transform.LookAt(targetPos, Vector3.up * transform.position.y);
+	public void SetTargetPosWithGamepad(Vector3 targetPos){
+		Vector3 projectileToMouse = targetPos - transform.position;
+		projectileToMouse.y = 0f;
+		Quaternion newRotation = Quaternion.LookRotation(projectileToMouse);
+		newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, newRotation.eulerAngles.y, newRotation.eulerAngles.z);
+		transform.rotation = newRotation;
 	}
 
 }

@@ -24,6 +24,7 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_isStoryJaina = false;
 		public bool m_isArcadeJaina = false;
         public bool m_showHUD = true;
+		public bool m_useGamepad = false;
 	}
 
 	public StateMachine m_sM = new StateMachine();
@@ -452,6 +453,11 @@ public class PlayerManager : MonoBehaviour {
 		public GameObject m_arcadeButton;
 	}
 
+	public GamepadInput m_gamepadInput;
+	[Serializable] public class GamepadInput {
+		public float m_deadZoneValue = 0.1f;
+	}
+
 #endregion Public [Serializable] Variables
 
     [Space]
@@ -482,7 +488,11 @@ public class PlayerManager : MonoBehaviour {
 	[HideInInspector] public bool m_blinkButton;
 	[HideInInspector] public bool m_iceBlockButton;
 	[HideInInspector] public bool m_leftSpellButton;
+	bool m_useLeftSpell = false;
+	bool m_lastUseLeftSpell = false;
 	[HideInInspector] public bool m_rightSpellButton;
+	bool m_useRightSpell = false;
+	bool m_lastUseRightSpell = false;
 
 #endregion Input Buttons
 
@@ -496,6 +506,8 @@ public class PlayerManager : MonoBehaviour {
 #endregion UI Positions
 
 #region Encapsuled
+	
+
 	Vector3 m_playerTargetPosition;
     public Vector3 PlayerTargetPosition
     {
@@ -625,6 +637,24 @@ public class PlayerManager : MonoBehaviour {
             m_pauseGame = value;
         }
     }
+
+	Vector3 m_movementInput;
+	public Vector3 MovementInput
+    {
+        get
+        {
+            return m_movementInput;
+        }
+	}
+
+	Vector3 m_rotationInput;
+	public Vector3 RotationInput
+    {
+        get
+        {
+            return m_rotationInput;
+        }
+	}
 	
 #endregion Encapsuled
 
@@ -778,6 +808,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void UpdateInputButtons(){
+		// Mouse and keyboard inputs
 		m_leftMouseClick = Input.GetButton("LeftClick");
 		m_leftMouseDownClick = Input.GetButtonDown("LeftClick");
 		m_leftMouseUpClick = Input.GetButtonUp("LeftClick");
@@ -787,8 +818,47 @@ public class PlayerManager : MonoBehaviour {
 
 		m_blinkButton = Input.GetButtonDown("Blink");
 		m_iceBlockButton = Input.GetButtonDown("IceBlock");
-		m_leftSpellButton = Input.GetButtonDown("LeftSpell");
-		m_rightSpellButton = Input.GetButtonDown("RightSpell");
+
+		// m_leftSpellButton = Input.GetButtonDown("LeftSpell");
+		if(Input.GetAxis("LeftSpell") > m_gamepadInput.m_deadZoneValue){
+			m_useLeftSpell = true;
+		}else{
+			m_useLeftSpell = false;
+			m_lastUseLeftSpell = false;
+		}
+		if(m_useLeftSpell){
+			if(!m_lastUseLeftSpell){
+				m_lastUseLeftSpell = true;
+				m_leftSpellButton = true;
+			}else{
+				m_leftSpellButton = false;
+			}
+		}
+
+		// m_rightSpellButton = Input.GetButtonDown("RightSpell");
+		if(Input.GetAxis("RightSpell") > m_gamepadInput.m_deadZoneValue){
+			m_useRightSpell = true;
+		}else{
+			m_useRightSpell = false;
+			m_lastUseRightSpell = false;
+		}
+		if(m_useRightSpell){
+			if(!m_lastUseRightSpell){
+				m_lastUseRightSpell = true;
+				m_rightSpellButton = true;
+			}else{
+				m_rightSpellButton = false;
+			}
+		}
+
+		// Gamepad inputs
+		m_movementInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+		Vector3 rot = new Vector3(Input.GetAxis("RightJoystick_h"), 0, Input.GetAxis("RightJoystick_v"));
+		if(rot != Vector3.zero){
+			m_rotationInput = rot;
+			AutoAttackWithGamepad();
+		}
 	}
 
 	Vector3 m_lastDestination;
@@ -809,6 +879,7 @@ public class PlayerManager : MonoBehaviour {
 			PlayerTargetPosition = hit.point;
 		}
 	}
+
 	RaycastHit GroundRaycast(){
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -816,6 +887,9 @@ public class PlayerManager : MonoBehaviour {
 		return hit;
 	}
 	public void MovePlayer(){
+		if(m_playerDebug.m_useGamepad){
+			return;
+		}
 		if(PlayerTargetPosition != Vector3.zero){
 			m_agent.SetDestination(PlayerTargetPosition);
 
@@ -828,10 +902,22 @@ public class PlayerManager : MonoBehaviour {
 			}
 		}
 	}
+	public void MovePlayerWithGamepad(){
+		if(!m_playerDebug.m_useGamepad){
+			return;
+		}
+		PlayerTargetPosition = transform.position + m_movementInput;
+		if(PlayerTargetPosition != Vector3.zero){
+			m_agent.SetDestination(PlayerTargetPosition);
+		}
+	}
 	public void StopPlayerMovement(){
 		m_agent.ResetPath();
 	}
 	public void RotatePlayer(){
+		if(m_playerDebug.m_useGamepad){
+			return;
+		}
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit floorHit;
         if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_rotateLayer)){
@@ -840,6 +926,16 @@ public class PlayerManager : MonoBehaviour {
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
             m_mesh.m_playerMesh.transform.rotation = newRotation;
         }
+	}
+	public void RotatePlayerWithGamepad()
+	{
+		if(!m_playerDebug.m_useGamepad){
+			return;
+		}
+		if(m_rotationInput != Vector3.zero){
+			Quaternion newRotation = Quaternion.LookRotation(m_rotationInput);
+			m_mesh.m_playerMesh.transform.rotation = newRotation;
+		}
 	}
 	public void SetPlayerSpeed(float newSpeed){
 		// Debug.Log("new speed = " + newSpeed);
@@ -1734,6 +1830,9 @@ public class PlayerManager : MonoBehaviour {
 		if(!m_canAutoAttackBecauseUi){
 			return;
 		}
+		if(m_playerDebug.m_useGamepad){
+			return;
+		}
 		if(m_canAutoAttack){
 			m_canAutoAttack = false;
 			
@@ -1760,6 +1859,45 @@ public class PlayerManager : MonoBehaviour {
 					GameObject fireGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Fire, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
 					if(fireGo != null){
 						fireGo.GetComponent<Projectile>().SetTargetPos(hitPoint);
+					}
+				break;
+			}
+			if(m_lastAutoAttackSound != null){
+				Destroy(m_lastAutoAttackSound);
+			}
+			m_lastAutoAttackSound = SpawnRandomGameObject(m_autoAttacks.m_autoAttacksSounds);
+		}
+	}
+	public void AutoAttackWithGamepad(){
+		if(!m_canAutoAttackBecauseUi){
+			return;
+		}
+		if(!m_playerDebug.m_useGamepad){
+			return;
+		}
+		if(m_canAutoAttack){
+			m_canAutoAttack = false;
+			
+			Vector3 directionPoint = new Vector3();
+			// directionPoint = transform.position + m_rotationInput;
+			directionPoint = transform.position + m_mesh.m_playerMesh.transform.forward * 999;
+			switch(m_currentElement){
+				case ElementType.Arcane:
+					GameObject arcaneGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Arcane, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(arcaneGo != null){
+						arcaneGo.GetComponent<Projectile>().SetTargetPosWithGamepad(directionPoint);
+					}
+				break;
+				case ElementType.Ice:
+					GameObject iceGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Ice, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(iceGo != null){
+						iceGo.GetComponent<Projectile>().SetTargetPosWithGamepad(directionPoint);
+					}
+				break;
+				case ElementType.Fire:
+					GameObject fireGo = m_objectPooler.SpawnSpellFromPool(SpellType.AutoAttack_Fire, m_autoAttacks.m_positionRoot.position, m_autoAttacks.m_rotationRoot.rotation);
+					if(fireGo != null){
+						fireGo.GetComponent<Projectile>().SetTargetPosWithGamepad(directionPoint);
 					}
 				break;
 			}

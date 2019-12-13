@@ -28,11 +28,23 @@ public class BlinkState : IState {
     }
 
     void RayCast(){
-      if(m_playerManager.m_powers.m_blink.m_useMouseBlink){
-        destination = new Vector3(Mathf.Clamp(CameraManager.Instance.m_cursorPosition.x, m_playerManager.transform.position.x - m_playerManager.m_powers.m_blink.m_maxDistance, m_playerManager.transform.position.x + m_playerManager.m_powers.m_blink.m_maxDistance), CameraManager.Instance.m_cursorPosition.y, Mathf.Clamp(CameraManager.Instance.m_cursorPosition.z, m_playerManager.transform.position.z - m_playerManager.m_powers.m_blink.m_maxDistance, m_playerManager.transform.position.z + m_playerManager.m_powers.m_blink.m_maxDistance));
-      }else{
-        destination = m_playerManager.transform.position + m_playerManager.transform.forward * m_playerManager.m_powers.m_blink.m_maxDistance;
+      if(!m_playerManager.m_playerDebug.m_useGamepad)
+      {
+        if(m_playerManager.m_powers.m_blink.m_useMouseBlink){
+          destination = new Vector3(Mathf.Clamp(CameraManager.Instance.m_cursorPosition.x, m_playerManager.transform.position.x - m_playerManager.m_powers.m_blink.m_maxDistance, m_playerManager.transform.position.x + m_playerManager.m_powers.m_blink.m_maxDistance), CameraManager.Instance.m_cursorPosition.y, Mathf.Clamp(CameraManager.Instance.m_cursorPosition.z, m_playerManager.transform.position.z - m_playerManager.m_powers.m_blink.m_maxDistance, m_playerManager.transform.position.z + m_playerManager.m_powers.m_blink.m_maxDistance));
+        }else{
+          destination = m_playerManager.transform.position + m_playerManager.transform.forward * m_playerManager.m_powers.m_blink.m_maxDistance;
+        }
       }
+      else
+      {
+        if(m_playerManager.MovementInput != Vector3.zero){
+          destination = m_playerManager.transform.position + m_playerManager.MovementInput * m_playerManager.m_powers.m_blink.m_maxDistance;
+        }else{
+          destination = m_playerManager.transform.position + m_playerManager.m_mesh.m_playerMesh.transform.forward * m_playerManager.m_powers.m_blink.m_maxDistance;
+        }
+      }
+
       destination = new Vector3(destination.x, m_playerManager.m_powers.m_blink.m_rayCastToCanBlink.position.y, destination.z);
       
       Vector3 origin = m_playerManager.m_powers.m_blink.m_rayCastToCanBlink.position;
