@@ -64,6 +64,20 @@ public class StalactiteController : MonoBehaviour
 
         public CameraShake m_shakeCamera;
     }
+    [Header("FX")]
+    public FXs m_fxs = new FXs();
+    [System.Serializable]
+    public class FXs
+    {
+        public GameObject m_markExplosion;
+        public Transform m_markExplosionRoot;
+    }
+    [Header("Cristals")]
+    public Cristals m_cristals;
+    [Serializable]public class Cristals
+    {
+        public GameObject cristalsParent;
+    }
 
     [SerializeField] Renderer[] m_meshes;
 
@@ -124,12 +138,86 @@ public class StalactiteController : MonoBehaviour
 
     CameraShaker m_cameraShaker;
 
-#endregion
+    int intSlotPosition;
+    StalactiteSpawnManager spawnManager;
+    bool isCristilize;
+    bool isInLava;
 
-#region Encapsulate Variables
-#endregion
 
-#region Event Functions
+
+    #endregion
+
+    #region Get Set
+    public int IntSlotPosition
+    {
+        get
+        {
+            return intSlotPosition;
+        }
+
+        set
+        {
+            intSlotPosition = value;
+        }
+    }
+
+    public StalactiteSpawnManager SpawnManager
+    {
+        get
+        {
+            return spawnManager;
+        }
+
+        set
+        {
+            spawnManager = value;
+        }
+    }
+
+    public bool IsCristilize
+    {
+        get
+        {
+            return isCristilize;
+        }
+
+        set
+        {
+            isCristilize = value;
+        }
+    }
+
+    public bool IsInLava
+    {
+        get
+        {
+            return isInLava;
+        }
+
+        set
+        {
+            isInLava = value;
+        }
+    }
+
+    public StalactiteState StalactiteState
+    {
+        get
+        {
+            return m_stalactiteState;
+        }
+
+        set
+        {
+            m_stalactiteState = value;
+        }
+    }
+    #endregion
+
+    #region Encapsulate Variables
+    #endregion
+
+    #region Event Functions
 
     void OnEnable()
     {
@@ -137,6 +225,7 @@ public class StalactiteController : MonoBehaviour
         {
             m_explosion.m_meshToHideOnExploded.SetActive(true);
         }
+
 
         EnableStalactiteColliderAndNavMesh(false);
 
@@ -148,7 +237,7 @@ public class StalactiteController : MonoBehaviour
                 m_meshes[i].material.SetColor("_EmissionColor", m_startEmissiveColor);
             }
         }
-        Invoke("StartFallingStalactite", 2); // À enlever
+        //Invoke("StartFallingStalactite", 2); // À enlever
     }
 
     void Start()
@@ -201,7 +290,25 @@ public class StalactiteController : MonoBehaviour
 
         Level.AddFX(m_explosion.m_explosionFX, transform.position, Quaternion.identity);
         StartCoroutine(CheckOtherStalactiteArea());
-        StartCoroutine(SpawnLava());
+
+        if (!isInLava)
+        {
+            StartCoroutine(SpawnLava());
+        }
+        else
+        {
+            DisableStalactite();
+        }
+
+        #region Might need to reset bool when disable
+
+
+
+
+
+        #endregion
+
+        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
 
         ShakeCamera(m_explosion.m_shakeCamera.m_magnitudeShake, m_explosion.m_shakeCamera.m_roughnessShake, m_explosion.m_shakeCamera.m_fadeInTimeShake, m_explosion.m_shakeCamera.m_fadeOutTimeShake);
     }
@@ -379,8 +486,9 @@ public class StalactiteController : MonoBehaviour
     public void StartFallingStalactite()
     {
         Vector3 toPos = new Vector3(transform.position.x, m_moveAnimation.m_worldYTargetedPosition, transform.position.z);
-
-        m_fallSignGo = m_objectPooler.SpawnObjectFromPool(ObjectType.StalactiteSign, toPos, m_sign.m_fallSign.transform.rotation);
+        
+        //m_fallSignGo = m_objectPooler.SpawnObjectFromPool(ObjectType.StalactiteSign, toPos, m_sign.m_fallSign.transform.rotation);
+        m_fallSignGo = ObjectPooler.Instance.SpawnObjectFromPool(ObjectType.StalactiteSign, toPos, m_sign.m_fallSign.transform.rotation);
         m_fallSignImg = m_fallSignGo.GetComponentInChildren<Image>();
 
         StartCoroutine(FallSizeSign());
@@ -449,9 +557,10 @@ public class StalactiteController : MonoBehaviour
     public void OnBeKilled()
     {
         DisableStalactite();
+        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false);
     }
 
-#endregion
+    #endregion
 
     void OnDrawGizmos()
     {

@@ -179,7 +179,10 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
                             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
                             DestroyMarques();
                             DeactivateBool(false);
-                            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+                            if (enemyStatsLocked.needsASelectionCircle)
+                            {
+                                enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+                            }
                             unitFrameOn = false;
                             timeToHideLifeBar = m_hidLifeBar;
                             timeToShowLifeBar = m_showLifeBar;
@@ -433,7 +436,10 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         if(enemyStatsLocked != null){
 
             ActivateLifeBar(enemyStatsLocked.m_enemyPowerLevel, false, enemyStatsLocked);
-            enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+            if (enemyStatsLocked.needsASelectionCircle)
+            {
+                enemyStatsLocked.m_cirlceCanvas.SetActive(false);
+            }
         }
         DestroyMarques();
         DeactivateBool(false);

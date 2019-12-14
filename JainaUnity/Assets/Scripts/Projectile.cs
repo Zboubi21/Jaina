@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StalactiteStateEnum;
 
 public class Projectile : Spell {
 
@@ -101,7 +102,7 @@ public class Projectile : Spell {
                         break;
 				}
             	CharacterStats.StartHitFxCorout();
-                if(col.gameObject.GetComponent<GolemController>() == null)
+                if(col.gameObject.GetComponent<GolemController>() == null && col.gameObject.GetComponent<EnemyController>() != null)
                 {
                     col.gameObject.GetComponent<EnemyController>().CheckIfStunable();
                 }
@@ -120,10 +121,41 @@ public class Projectile : Spell {
 
 		// Le projectile touche un élément du décor
 		if(col.CompareTag("Stalactite")){
-			if(m_dieWhenHit){
-				DestroyProjectile();
-			}
-		}
+            StalactiteStats CharacterStats = col.gameObject.GetComponent<StalactiteStats>();
+            StalactiteController controller = col.gameObject.GetComponent<StalactiteController>();
+            if (m_projectileType == ProjectileType.Player)
+            {
+                switch (m_currentElement)
+                {
+                    case ElementType.None:
+
+                        break;
+
+                    case ElementType.Arcane:
+                        OnArcanEnter(col);
+                        break;
+                    case ElementType.Ice:
+                        CharacterStats.IceMark(MarksTime1.Ice);
+                        CharacterStats.TakeDamage(Damage);
+                        break;
+                    case ElementType.Fire:
+                        OnFireEnter(col);
+                        if (controller.StalactiteState == StalactiteState.Fusion)
+                        {
+                            CharacterStats.TakeDamage(Damage * CharacterStats.fireDamageMutliplicater);
+                        }
+                        else
+                        {
+                            CharacterStats.TakeDamage(Damage);
+                        }
+                        break;
+                }
+                if (m_dieWhenHit)
+                {
+                    DestroyProjectile();
+                }
+            }
+        }
 	}
 
 	public virtual void OnArcanEnter(Collider col){

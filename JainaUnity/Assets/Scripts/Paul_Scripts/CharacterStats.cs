@@ -181,6 +181,7 @@ public class CharacterStats : MonoBehaviour {
     }
     public virtual void FireMark(float timerDebuf)
     {
+
         if (FireMarkCount <= 2)
         {
             FireMarkCount++;
@@ -259,7 +260,7 @@ public class CharacterStats : MonoBehaviour {
 
     }
 
-    void CheckIfHasToDie(float health)
+    protected void CheckIfHasToDie(float health)
     {
         if (health <= 0)
         {

@@ -15,7 +15,7 @@ public class BossLifeBar : MonoBehaviour
         if (other.CompareTag("Player") && !FightOn)
         {
             FightOn = true;
-
+            PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat = FightOn;
             for (int i = 0, l = flammingDoor.Length; i < l; ++i)
             {
                 if (flammingDoor[i] != null)

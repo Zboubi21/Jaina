@@ -27,6 +27,7 @@ public class EnemyStats : CharacterStats {
     [Tooltip("No little life bar - No BackPack - Pooling")]
     public bool _bigBossFight;
     public bool _isNotMoving;
+    public bool needsASelectionCircle = true;
     [Header("Debuf Var")]
     public GameObject DebufRoot;
     public GameObject MarqueArcane;
@@ -35,15 +36,15 @@ public class EnemyStats : CharacterStats {
     bool arcaneHasBeenInstanciated;
     bool fireHasBeenInstanciated;
     bool iceHasBeenInstanciated;
-    GameObject MarqueDeArcane;
-    GameObject MarqueDeFeu;
-    GameObject MarqueDeGivre;
+    protected GameObject MarqueDeArcane;
+    protected GameObject MarqueDeFeu;
+    protected GameObject MarqueDeGivre;
     [Space]
     [Header("Canvas")]
     public GameObject m_canvas;
     public Image slider;
     public float timeBeforeLifeBarOff = 5f;
-    float saveTimeBeforeLifeBarOff;
+    protected float saveTimeBeforeLifeBarOff;
     [Space]
     [Header("Selection Circle")]
     public GameObject m_cirlceCanvas;
@@ -63,17 +64,17 @@ public class EnemyStats : CharacterStats {
     float saveTimerGivre;
 
     bool StartArcaneCooldown;
-    bool StartFireCooldown;
+    protected bool StartFireCooldown;
     bool StartGivreCooldown;
 
     bool StartFreezSnareCooldown;
     float TimeFreezed;
     float saveTimerFreezeSnare;
 
-    float TimerTickDamage;
-    int FireTickDamage;
-    int FireExplosionDamage;
-    float saveDamageTick;
+    protected float TimerTickDamage;
+    protected int FireTickDamage;
+    protected int FireExplosionDamage;
+    protected float saveDamageTick;
 
     NavMeshAgent agent;
     EnemyController enemyController;
@@ -83,8 +84,8 @@ public class EnemyStats : CharacterStats {
     int SpeedPercent;
     float saveSpeed;
 
-    float TimeBetweenFireTrailTicks;
-    int DamageFireTrailTicks;
+    protected float TimeBetweenFireTrailTicks;
+    protected int DamageFireTrailTicks;
     #region get set
     public bool ArcaneHasBeenInstanciated
     {
@@ -332,7 +333,10 @@ public class EnemyStats : CharacterStats {
             lifeBar = m_canvas.GetComponentsInChildren<Image>();
             enemyController = GetComponent<EnemyController>();
             m_canvas.SetActive(false);
-            m_cirlceCanvas.SetActive(false);
+            if (needsASelectionCircle)
+            {
+                m_cirlceCanvas.SetActive(false);
+            }
             slider.fillAmount = 1;
             DestroyAllMarks();
         }
@@ -346,9 +350,12 @@ public class EnemyStats : CharacterStats {
         if (!_bigBossFight)
         {
             m_canvas.SetActive(false);
-            if(enemyController.m_fxs.m_freezed != null)
+            if (!_isNotMoving)
             {
-                enemyController.m_fxs.m_freezed.SetActive(false);
+                if(enemyController.m_fxs.m_freezed != null)
+                {
+                    enemyController.m_fxs.m_freezed.SetActive(false);
+                }
             }
         }
     }
@@ -411,7 +418,6 @@ public class EnemyStats : CharacterStats {
         #region Ice Nova Var
         saveTimerFreezeSnare = PlayerManager.Instance.m_powers.m_iceNova.m_timeFreezed;
         #endregion
-        Debug.Log(CurrentHealth);
     }
 
 
@@ -546,14 +552,14 @@ public class EnemyStats : CharacterStats {
         arcaneHasBeenInstanciated = fireHasBeenInstanciated = iceHasBeenInstanciated = StartArcaneCooldown = StartFireCooldown = StartGivreCooldown = false;
     }
 
-    GameObject InstantiateMarks(GameObject mark, GameObject root)
+    protected GameObject InstantiateMarks(GameObject mark, GameObject root)
     {
         GameObject marksave = Instantiate(mark, root.transform);
 
         return marksave;
     }
 
-    int CheckPosition(bool otherMark_1, bool otherMark_2)
+    protected int CheckPosition(bool otherMark_1, bool otherMark_2)
     {
         if(!otherMark_1 && !otherMark_2)
         {
@@ -676,34 +682,7 @@ public class EnemyStats : CharacterStats {
                 StartArcaneCooldown = false;
             }
         }
-        if (StartFireCooldown)
-        {
-            m_timerFire -= Time.deltaTime;
-            if(MarqueDeFeu != null)
-            {
-                MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
-            }
-            TimerTickDamage -= Time.deltaTime;
-            if (m_timerFire <= 0)
-            {
-                if (!_bigBossFight)
-                {
-                    Destroy(MarqueDeFeu);
-                    m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
-                    m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
-                }
-
-                fireHasBeenInstanciated = false;
-                FireMarkCount = 0;
-                TimerTickDamage = saveDamageTick;
-                StartFireCooldown = false;
-
-            }else if (TimerTickDamage <= 0)
-            {
-                TimerTickDamage = saveDamageTick;
-                TakeDamage(FireTickDamage);
-            }
-        }
+        OnStartFireCooldown();
         if (StartGivreCooldown)
         {
             m_timerGivre -= Time.deltaTime;
@@ -732,8 +711,41 @@ public class EnemyStats : CharacterStats {
             }
         }
     }
+
+    public virtual void OnStartFireCooldown()
+    {
+        if (StartFireCooldown)
+        {
+            m_timerFire -= Time.deltaTime;
+            if (MarqueDeFeu != null)
+            {
+                MarqueDeFeu.GetComponent<ReferenceScript>().marksArray[1].fillAmount = Mathf.InverseLerp(0, saveTimerFire, m_timerFire);
+            }
+            TimerTickDamage -= Time.deltaTime;
+            if (m_timerFire <= 0)
+            {
+                if (!_bigBossFight)
+                {
+                    Destroy(MarqueDeFeu);
+                    m_iceMarkPos = CheckPosition(arcaneHasBeenInstanciated, fireHasBeenInstanciated);
+                    m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
+                }
+
+                fireHasBeenInstanciated = false;
+                FireMarkCount = 0;
+                TimerTickDamage = saveDamageTick;
+                StartFireCooldown = false;
+
+            }
+            else if (TimerTickDamage <= 0)
+            {
+                TimerTickDamage = saveDamageTick;
+                TakeDamage(FireTickDamage);
+            }
+        }
+    }
     bool hasTakenDamage;
-    float m_timeToDecreaseWhiteLifeBar;
+    protected float m_timeToDecreaseWhiteLifeBar;
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
