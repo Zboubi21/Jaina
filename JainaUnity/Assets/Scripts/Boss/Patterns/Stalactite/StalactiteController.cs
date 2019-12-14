@@ -5,11 +5,34 @@ using UnityEngine;
 using StalactiteStateEnum;
 using PoolTypes;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
+using EZCameraShake;
 public class StalactiteController : MonoBehaviour
 {
 
 #region [SerializeField] Variables
+
+    [Header("Signs")]
+    public Sign m_sign;
+	[Serializable] public class Sign {
+        public GameObject m_fallSign;
+        public float m_timetoFallStalactite = 5;
+
+        [Header("Anim")]
+        public Anim m_anim;
+        [Serializable] public class Anim {
+            [Header("Color")]
+            public Color m_startColor;
+            public Color m_endColor;
+            public float m_timeToDoColorAnim = 5;
+            public AnimationCurve m_colorCurve;
+            [Header("Size")]
+            public Vector2 m_startSize;
+            public Vector2 m_endSize;
+            public float m_timeToDoSizeAnim = 5;
+            public AnimationCurve m_sizeCurve;
+        }
+    }
 
     [Header("Move")]
     public MoveAnimation m_moveAnimation;
@@ -19,15 +42,28 @@ public class StalactiteController : MonoBehaviour
         public AnimationCurve m_moveCurve;
     }
 
-    [Header("Explosion")]
-    [SerializeField] float m_explosionRange = 6;
-    [SerializeField] LayerMask m_explosionLayer;
-    [SerializeField] GameObject m_explosionFX;
-    [SerializeField] GameObject m_meshToHideOnExploded;
-    [SerializeField] float m_waitTimeToSpawnLava = 0.5f;
-    [SerializeField] float m_waitToCheckOtherStalactiteArea = 0.25f;
+    [Header("Fall Damage")]
+    public FallDamage m_fallDamage;
+	[Serializable] public class FallDamage {
+        public int m_damageValue = 15;
+        public float m_damageRange = 3f;
+        public LayerMask m_damageLayer;
 
-    [Space]
+        public CameraShake m_shakeCamera;
+    }
+
+    [Header("Explosion")]
+    public Explosion m_explosion;
+	[Serializable] public class Explosion {
+        public float m_explosionRange = 6;
+        public LayerMask m_explosionLayer;
+        public GameObject m_explosionFX;
+        public GameObject m_meshToHideOnExploded;
+        public float m_waitTimeToSpawnLava = 0.5f;
+        public float m_waitToCheckOtherStalactiteArea = 0.25f;
+
+        public CameraShake m_shakeCamera;
+    }
 
     [SerializeField] Renderer[] m_meshes;
 
@@ -53,10 +89,19 @@ public class StalactiteController : MonoBehaviour
 
     [Header("Gizmos")]
     [SerializeField] bool m_showGizmos = true;
-    [SerializeField] Color m_gizmosColor = Color.white;
+    [SerializeField] Color m_fallDamageRangeColor = Color.grey;
+    [SerializeField] Color m_explosionRangeColor = Color.white;
 
     [Header("DEBUG")]
     [SerializeField] bool m_canExploded = false;
+
+    [Serializable] public class CameraShake {
+        public float m_magnitudeShake = 4f;
+        public float m_roughnessShake = 4f;
+        public float m_fadeInTimeShake = 0.1f;
+        public float m_fadeOutTimeShake = 0.1f;
+    }
+
 #endregion    
 
 #region Private Variables
@@ -74,6 +119,11 @@ public class StalactiteController : MonoBehaviour
     IEnumerator m_changeColorCorout;
     IEnumerator m_changeEmissiveColorCorout;
 
+    GameObject m_fallSignGo;
+    Image m_fallSignImg;
+
+    CameraShaker m_cameraShaker;
+
 #endregion
 
 #region Encapsulate Variables
@@ -83,18 +133,13 @@ public class StalactiteController : MonoBehaviour
 
     void OnEnable()
     {
-        if(!m_meshToHideOnExploded.activeSelf)
+        if(!m_explosion.m_meshToHideOnExploded.activeSelf)
         {
-            m_meshToHideOnExploded.SetActive(true);
+            m_explosion.m_meshToHideOnExploded.SetActive(true);
         }
-        if(m_navMeshObstacle != null && !m_navMeshObstacle.enabled)
-        {
-            m_navMeshObstacle.enabled = true;
-        }
-        if(m_collider != null && !m_collider.enabled)
-        {
-            m_collider.enabled = true;
-        }
+
+        EnableStalactiteColliderAndNavMesh(false);
+
         if(m_firstInitialization)
         {
             for (int i = 0, l = m_meshes.Length; i < l; ++i)
@@ -103,8 +148,7 @@ public class StalactiteController : MonoBehaviour
                 m_meshes[i].material.SetColor("_EmissionColor", m_startEmissiveColor);
             }
         }
-
-        StartToMoveStalactite();
+        Invoke("StartFallingStalactite", 2); // À enlever
     }
 
     void Start()
@@ -112,6 +156,7 @@ public class StalactiteController : MonoBehaviour
         m_objectPooler = ObjectPooler.Instance;
         m_navMeshObstacle = GetComponent<NavMeshObstacle>();
         m_collider = GetComponent<CapsuleCollider>();
+        m_cameraShaker = CameraShaker.Instance;
 
         m_startBaseColor = m_meshes[0].material.GetColor("_Color");
         m_startEmissiveColor = m_meshes[0].material.GetColor("_EmissionColor");
@@ -150,18 +195,20 @@ public class StalactiteController : MonoBehaviour
 
     void OnExploded()
     {
-        m_meshToHideOnExploded.SetActive(false);
-        m_navMeshObstacle.enabled = false;
-        m_collider.enabled = false;
+        m_explosion.m_meshToHideOnExploded.SetActive(false);
 
-        Level.AddFX(m_explosionFX, transform.position, Quaternion.identity);
+        EnableStalactiteColliderAndNavMesh(false);
+
+        Level.AddFX(m_explosion.m_explosionFX, transform.position, Quaternion.identity);
         StartCoroutine(CheckOtherStalactiteArea());
         StartCoroutine(SpawnLava());
+
+        ShakeCamera(m_explosion.m_shakeCamera.m_magnitudeShake, m_explosion.m_shakeCamera.m_roughnessShake, m_explosion.m_shakeCamera.m_fadeInTimeShake, m_explosion.m_shakeCamera.m_fadeOutTimeShake);
     }
 
     IEnumerator CheckOtherStalactiteArea(){
-        yield return new WaitForSeconds(m_waitToCheckOtherStalactiteArea);
-         Collider[] colliders = Physics.OverlapSphere(transform.position, m_explosionRange, m_explosionLayer);
+        yield return new WaitForSeconds(m_explosion.m_waitToCheckOtherStalactiteArea);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, m_explosion.m_explosionRange, m_explosion.m_explosionLayer);
 		foreach(Collider col in colliders)
         {
 			if(col.gameObject.CompareTag("Stalactite"))
@@ -176,7 +223,7 @@ public class StalactiteController : MonoBehaviour
     }
 
     IEnumerator SpawnLava(){
-        yield return new WaitForSeconds(m_waitTimeToSpawnLava);
+        yield return new WaitForSeconds(m_explosion.m_waitTimeToSpawnLava);
         m_objectPooler.SpawnSpellFromPool(SpellType.LavaArea, transform.position, Quaternion.identity);
         DisableStalactite();
     }
@@ -236,8 +283,49 @@ public class StalactiteController : MonoBehaviour
         }    
     }
 
+    IEnumerator FallSizeSign()
+    {
+        Vector2 fromSize = m_sign.m_anim.m_startSize;
+        Vector2 toSize = m_sign.m_anim.m_endSize;
+
+        RectTransform m_fallSignRectTrans = m_fallSignGo.GetComponent<RectTransform>();
+
+        float fracJourney = 0;
+        float distance = Vector2.Distance(fromSize, toSize);
+        float vitesse = distance / m_sign.m_anim.m_timeToDoSizeAnim;
+        Vector2 actualSize = fromSize;
+
+        while (actualSize != toSize)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualSize = Vector2.Lerp(fromSize, toSize, m_sign.m_anim.m_sizeCurve.Evaluate(fracJourney));
+            m_fallSignRectTrans.sizeDelta = actualSize;
+            yield return null;
+        }
+    }
+    IEnumerator FallColorSign()
+    {
+        Color fromColor = m_sign.m_anim.m_startColor;
+        Color toColor = m_sign.m_anim.m_endColor;
+
+        float fracJourney = 0;
+        float distance = Mathf.Abs(fromColor.r - toColor.r) + Mathf.Abs(fromColor.g - toColor.g) + Mathf.Abs(fromColor.b - toColor.b) + Mathf.Abs(fromColor.a - toColor.a);
+        float vitesse = distance / m_sign.m_anim.m_timeToDoColorAnim;
+        Color actualColor = fromColor;
+
+        while (actualColor != toColor)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualColor = Color.Lerp(fromColor, toColor, m_sign.m_anim.m_colorCurve.Evaluate(fracJourney));
+            m_fallSignImg.color = actualColor;
+            yield return null;
+        }
+    }
+
     IEnumerator MoveStalactiteAnimation()
     {
+        yield return new WaitForSeconds(m_sign.m_timetoFallStalactite);
+
         Vector3 fromPos = transform.position;
         Vector3 toPos = new Vector3(fromPos.x, m_moveAnimation.m_worldYTargetedPosition, fromPos.z);
         float fracJourney = 0;
@@ -249,15 +337,54 @@ public class StalactiteController : MonoBehaviour
             fracJourney += (Time.deltaTime) * vitesse / distance;
             transform.position = Vector3.Lerp(fromPos, toPos, m_moveAnimation.m_moveCurve.Evaluate(fracJourney));
             yield return null;
-        }    
+        }
+        CheckFallDamageArea();
+        m_objectPooler.ReturnObjectToPool(ObjectType.StalactiteSign, m_fallSignGo);
+        EnableStalactiteColliderAndNavMesh(true);
+        ShakeCamera(m_fallDamage.m_shakeCamera.m_magnitudeShake, m_fallDamage.m_shakeCamera.m_roughnessShake, m_fallDamage.m_shakeCamera.m_fadeInTimeShake, m_fallDamage.m_shakeCamera.m_fadeOutTimeShake);
     }
+
+    void CheckFallDamageArea()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, m_fallDamage.m_damageRange, m_fallDamage.m_damageLayer);
+		foreach(Collider col in colliders)
+        {
+			if(col.gameObject.CompareTag("Player"))
+            {
+                PlayerStats playerStats = col.GetComponent<PlayerStats>();
+                playerStats.TakeDamage(m_fallDamage.m_damageValue);
+            }
+		}
+    }
+
+    void EnableStalactiteColliderAndNavMesh(bool enabled){
+        if(m_navMeshObstacle != null && m_navMeshObstacle.enabled != enabled)
+        {
+            m_navMeshObstacle.enabled = enabled;
+        }
+        if(m_collider != null && m_collider.enabled != enabled)
+        {
+            m_collider.enabled = enabled;
+        }
+    }
+
+    void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
+		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
+	}
 
 #endregion
 
 #region Public Functions
 
-    public void StartToMoveStalactite()
+    public void StartFallingStalactite()
     {
+        Vector3 toPos = new Vector3(transform.position.x, m_moveAnimation.m_worldYTargetedPosition, transform.position.z);
+
+        m_fallSignGo = m_objectPooler.SpawnObjectFromPool(ObjectType.StalactiteSign, toPos, m_sign.m_fallSign.transform.rotation);
+        m_fallSignImg = m_fallSignGo.GetComponentInChildren<Image>();
+
+        StartCoroutine(FallSizeSign());
+        StartCoroutine(FallColorSign());
         StartCoroutine(MoveStalactiteAnimation());
     }
 
@@ -332,8 +459,11 @@ public class StalactiteController : MonoBehaviour
         {
             return;
         }
-        Gizmos.color = m_gizmosColor;
-        Gizmos.DrawWireSphere(transform.position, m_explosionRange);
+        Gizmos.color = m_explosionRangeColor;
+        Gizmos.DrawWireSphere(transform.position, m_explosion.m_explosionRange);
+
+        Gizmos.color = m_fallDamageRangeColor;
+        Gizmos.DrawWireSphere(transform.position, m_fallDamage.m_damageRange);
     }
 
 }

@@ -695,9 +695,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a30491c83d58464e99c39c7660b4e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_sign:
+    m_fallSign: {fileID: 7545637395066182356, guid: 34647dbc4e0dd004aa61cb97025d4391,
+      type: 3}
+    m_timetoFallStalactite: 2.5
+    m_anim:
+      m_startColor: {r: 0, g: 0, b: 0, a: 0}
+      m_endColor: {r: 0, g: 0, b: 0, a: 1}
+      m_timeToDoColorAnim: 5
+      m_colorCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_startSize: {x: 5.5, y: 5.5}
+      m_endSize: {x: 6, y: 6}
+      m_timeToDoSizeAnim: 2.5
+      m_sizeCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
   m_moveAnimation:
     m_worldYTargetedPosition: -1
-    m_timeToReachPosition: 3
+    m_timeToReachPosition: 1.5
     m_moveCurve:
       serializedVersion: 2
       m_Curve:
@@ -722,15 +781,32 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_explosionRange: 5
-  m_explosionLayer:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_explosionFX: {fileID: 7106362547060010112, guid: 4bc0c03650587f74f9d856ab753eb952,
-    type: 3}
-  m_meshToHideOnExploded: {fileID: 746690695254578139}
-  m_waitTimeToSpawnLava: 0
-  m_waitToCheckOtherStalactiteArea: 0.25
+  m_fallDamage:
+    m_damageValue: 15
+    m_damageRange: 3
+    m_damageLayer:
+      serializedVersion: 2
+      m_Bits: 1024
+    m_shakeCamera:
+      m_magnitudeShake: 3
+      m_roughnessShake: 3
+      m_fadeInTimeShake: 0.1
+      m_fadeOutTimeShake: 0.15
+  m_explosion:
+    m_explosionRange: 5
+    m_explosionLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    m_explosionFX: {fileID: 7106362547060010112, guid: 4bc0c03650587f74f9d856ab753eb952,
+      type: 3}
+    m_meshToHideOnExploded: {fileID: 8247880364784655095}
+    m_waitTimeToSpawnLava: 0
+    m_waitToCheckOtherStalactiteArea: 0.25
+    m_shakeCamera:
+      m_magnitudeShake: 5
+      m_roughnessShake: 5
+      m_fadeInTimeShake: 0.25
+      m_fadeOutTimeShake: 0.5
   m_meshes:
   - {fileID: 7689881500483543600}
   - {fileID: 1063753077973373297}
@@ -795,7 +871,8 @@ MonoBehaviour:
         m_RotationOrder: 4
   m_fireMaterial: {fileID: 2100000, guid: 01d86e077e5596e4c8ab2328913d9497, type: 2}
   m_showGizmos: 0
-  m_gizmosColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fallDamageRangeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_explosionRangeColor: {r: 1, g: 1, b: 1, a: 1}
   m_canExploded: 1
 --- !u!208 &836103098408811549
 NavMeshObstacle:

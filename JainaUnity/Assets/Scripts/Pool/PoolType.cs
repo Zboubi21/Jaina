@@ -44,5 +44,6 @@
         LifePotion,
         ButcherCheckArea,
         ClickOnGround,
+        StalactiteSign,
 	}
 }
