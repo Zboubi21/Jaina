@@ -332,7 +332,6 @@ public class CharacterStats : MonoBehaviour {
     }
 
     int m_lavaAreaNb = 0;
-
     public void OnCharacterEnterInLavaArea()
     {
         m_lavaAreaNb ++;
@@ -364,9 +363,73 @@ public class CharacterStats : MonoBehaviour {
         }
     }
 
+    bool m_characterInLaser = false;
+    float m_laserTick;
+    public float LaserTick
+    {
+        get
+        {
+            return m_laserTick;
+        }
+
+        set
+        {
+            m_laserTick = value;
+        }
+    }
+    float m_actualLaserTick = 0;
+
+    int m_laserTickDamage;
+    public int LaserTickDamage
+    {
+        get
+        {
+            return m_laserTickDamage;
+        }
+
+        set
+        {
+            m_laserTickDamage = value;
+        }
+    }
+    public void OnCharacterEnterInLaserArea()
+    {
+        m_characterInLaser = true;
+        if(m_actualLaserTick == 0){
+            m_actualLaserTick = m_laserTick;
+        }
+        TakeLaserDamage();
+    }
+    public void OnCharacterExitInLaserArea()
+    {
+        m_characterInLaser = false;
+        m_actualLaserTick = m_laserTick;
+    }
+    void LaserAreaDamage()
+    {
+        m_actualLaserTick -= Time.deltaTime;
+        if(m_actualLaserTick <= 0)
+        {
+            TakeLaserDamage();
+            m_actualLaserTick = m_laserTick;
+        }
+    }
+    void TakeLaserDamage()
+    {
+        if(m_playerState != null){
+            m_playerState.TakeDamage(m_laserTickDamage);
+        }else{
+            TakeDamage(m_laserTickDamage);
+            StartHitFxCorout();
+        }
+    }
+
     void FixedUpdate(){
         if(m_characterInLava && !isDead){
             LavaAreaDamage();
+        }
+        if(m_characterInLaser && !isDead){
+            LaserAreaDamage();
         }
     }
 
