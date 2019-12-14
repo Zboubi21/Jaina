@@ -115,8 +115,10 @@ public class StalactiteSpawnManager : MonoBehaviour
     void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion)
     {
         GameObject go = m_objectPooler.SpawnEnemyFromPool(EnemyType.Stalactite, possibleSlot[possibleSlotInts[index]].position, Quaternion.identity);
-
-        StalactiteController control = go.GetComponent<StalactiteController>(); //Tant que JJ boss sur le prefab
+        StalactiteController control = go.GetComponent<StalactiteController>();
+        StalactiteStats stats = go.GetComponent<StalactiteStats>();
+        stats.CurrentHealth = stats.maxHealth;
+        stats.IsDead = false;
         control.StartFallingStalactite();
 
         control.IntSlotPosition = possibleSlotInts[index];

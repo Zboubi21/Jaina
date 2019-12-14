@@ -15,31 +15,46 @@ public class FireTrail : Spell {
 	void OnTriggerEnter(Collider col){
 
 		// Le tir du player touche un enemy
-		if(col.CompareTag("Enemy") || col.CompareTag("Stalactite"))
+		if(col.CompareTag("Enemy"))
         {
             CharacterStats = col.gameObject.GetComponent<CharacterStats>();
+            
+            CharacterStats.FireMark(MarksTime1.Fire);
+            CharacterStats.TakeDamage(m_damage);
+
+            
+            CharacterStats.StartHitFxCorout();
+        }
+        if (col.CompareTag("Stalactite"))
+        {
             StalactiteController controller = col.gameObject.GetComponent<StalactiteController>();
             StalactiteStats stats = col.gameObject.GetComponent<StalactiteStats>();
-            CharacterStats.FireMark(MarksTime1.Fire);
-            if(controller != null && stats != null && controller.StalactiteState == StalactiteState.Fusion)
+            stats.FireMark(MarksTime1.Fire);
+
+            if (controller != null && stats != null && controller.StalactiteState == StalactiteState.Fusion)
             {
-                CharacterStats.TakeDamage(m_damage * stats.fireDamageMutliplicater);
+                stats.TakeDamage(m_damage * stats.fireDamageMutliplicater);
             }
             else
             {
-                CharacterStats.TakeDamage(m_damage);
+                stats.TakeDamage(m_damage);
             }
-            CharacterStats.StartHitFxCorout();
         }
 
 	}
     private void OnTriggerStay(Collider col)
     {
-        if (col.CompareTag("Enemy") || col.CompareTag("Stalactite"))
+        if (col.CompareTag("Enemy"))
         {
             CharacterStats = col.gameObject.GetComponent<CharacterStats>();
             CharacterStats.FireTrail();
             CharacterStats.StartHitFxCorout();
+        }
+        if (col.CompareTag("Stalactite"))
+        {
+            StalactiteController controller = col.gameObject.GetComponent<StalactiteController>();
+            StalactiteStats stats = col.gameObject.GetComponent<StalactiteStats>();
+            stats.FireTrail();
         }
     }
 

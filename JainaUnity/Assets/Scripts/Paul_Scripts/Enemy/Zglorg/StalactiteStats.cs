@@ -25,6 +25,7 @@ public class StalactiteStats : EnemyStats {
         DestroyAllMarks();
         if (!_bigBossFight)
         {
+            
             controller.OnBeKilled();
         }
     }
