@@ -792,7 +792,7 @@ PrefabInstance:
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
       propertyPath: m_enemyPools.Array.data[0].m_size
-      value: 25
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8452892143023132403, guid: 722380f59c774b04db0299b55ee487f6,
         type: 3}
@@ -24803,10 +24803,11 @@ MonoBehaviour:
   - {fileID: 1595249462}
   - {fileID: 1464670181}
   - {fileID: 1060788196}
-  stalactitePrefab: {fileID: 3038115760655520686, guid: 58be2d5085326bb4aabadbba646d251f,
-    type: 3}
-  currentPhase: 0
+  currentPhase: 2
   nbrOfStalactitePerPhase: 0a0000000f00000014000000
+  nbrOfCristilizeStalactitePerPhase: 010000000300000010000000
+  chanceForAStalactiteToBeCristilized: 50
+  minTimeBeforeStalactiteFall: 0
   maxTimeBeforeStalactiteFall: 1
 --- !u!1001 &1163398197
 PrefabInstance:
@@ -41617,6 +41618,7 @@ MonoBehaviour:
   m_groundLayer:
     serializedVersion: 2
     m_Bits: 16384
+  m_distanceToMoveWithGamepad: 3
   m_cursorPosition: {x: 0, y: 0, z: 0}
 --- !u!20 &1658235780
 Camera:
@@ -41942,7 +41944,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1688583628}
+      objectReference: {fileID: 1860019951}
     - target: {fileID: 6948350026436048121, guid: 20fa5fcc1a51b0147a10b7eaf3f2191f,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -42433,43 +42435,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1682421240}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &1688583628
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 2DxFX/Standard/Liquid
-  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - EValue: 1
-    - Light: 1
-    - _Alpha: 1
-    - _ColorMask: 15
-    - _Distortion: 0
-    - _Speed: 1
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &1691998022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44259,6 +44224,43 @@ Transform:
   m_Father: {fileID: 1946692875}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -96.281006, z: 0}
+--- !u!21 &1860019951
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 2DxFX/Standard/Liquid
+  m_Shader: {fileID: 4800000, guid: 910822b3116d8c949b6aa4aab2f52a49, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - EValue: 1
+    - Light: 1
+    - _Alpha: 1
+    - _ColorMask: 15
+    - _Distortion: 0
+    - _Speed: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &1861146678
 PrefabInstance:
   m_ObjectHideFlags: 0
