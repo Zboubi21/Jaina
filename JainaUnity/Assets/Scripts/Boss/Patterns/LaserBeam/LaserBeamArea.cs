@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserArea : MonoBehaviour
+public class LaserBeamArea : MonoBehaviour
 {
     LaserBeamController m_laserBeamController;
     List<GameObject> m_stalactiteInTrigger = new List<GameObject>();

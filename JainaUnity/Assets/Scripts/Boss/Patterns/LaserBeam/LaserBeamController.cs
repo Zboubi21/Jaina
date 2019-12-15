@@ -7,7 +7,9 @@ public class LaserBeamController : MonoBehaviour
 {
     [Header("Debug")]
     [Range(1, 3), SerializeField] int m_phaseNbr = 1;
+    [SerializeField] bool m_useInfiniteLaser = false;
     [SerializeField] Transform[] m_rayPos;
+    [SerializeField] ProgressControlV3D m_laserControlFx;
     // [Space]
     // [SerializeField] Transform m_centerPos;
     // [Range(1, 50)] [SerializeField] int m_rayCastNbr = 10;
@@ -29,9 +31,9 @@ public class LaserBeamController : MonoBehaviour
     public Laser m_laser;
     [Serializable] public class Laser {
         public float m_castDistance = 100;
-        public LayerMask m_firstLaserLayer;
-        public LayerMask m_secondLaserLayer;
-        public LayerMask m_allLayer;
+        // public LayerMask m_firstLaserLayer;
+        // public LayerMask m_secondLaserLayer;
+        public LayerMask m_damageLayer;
 
         [Header("Damages")]
         public int m_damage = 5;
@@ -41,9 +43,10 @@ public class LaserBeamController : MonoBehaviour
     public LaserGizmos m_gizmos;
     [Serializable] public class LaserGizmos {
         public bool m_show = true;
-        public Color m_firstLaserColor = Color.white;
-        public Color m_secondLaserColor = Color.magenta;
+        public Color m_laserColor = Color.white;
+        // public Color m_secondLaserColor = Color.magenta;
     }
+
 #endregion
 
 #region Private Variables
@@ -52,7 +55,7 @@ public class LaserBeamController : MonoBehaviour
     int m_nbrOfRotationToDo = 1;
     int m_actualNbrOfRotation = 0;
 
-    LaserArea m_laserArea;
+    LaserBeamArea m_laserArea;
     CharacterStats m_characterStats;
 
     GameObject m_lastStalactite;
@@ -62,18 +65,23 @@ public class LaserBeamController : MonoBehaviour
         }
     }
 
+    bool m_playerInLaserArea = false;
+    bool m_playerTouchByLaser = false;
+    GameObject m_player;
+
     #endregion
 
 #region Event Functions
     void Start()
     {
-        m_laserArea = GetComponentInChildren<LaserArea>();
-        RotateLaser(m_phaseNbr);
+        m_laserArea = GetComponentInChildren<LaserBeamArea>();
+        StartLaserBeam();
     }
 
     void FixedUpdate()
     {
-        CheckLaserCollision();
+        // CheckLaserCollision();
+        CheckIfPlayerIsInLaser();
     }
 
     // public float xValue;
@@ -83,7 +91,7 @@ public class LaserBeamController : MonoBehaviour
         {
             return;
         }
-        Gizmos.color = m_gizmos.m_firstLaserColor;
+        Gizmos.color = m_gizmos.m_laserColor;
         for (int i = 0, l = m_rayPos.Length; i < l; ++i)
         {
             Gizmos.DrawRay(m_rayPos[i].position, m_rayPos[i].forward * m_laser.m_castDistance);
@@ -115,9 +123,9 @@ public class LaserBeamController : MonoBehaviour
     }
 #endregion
 
-#region  Private Functions
+#region Private Functions
     void RotateLaser(int phaseNbr)
-    {
+    {        
         m_nbrOfRotationToDo = phaseNbr;
         if(m_lastRotateDirectionWasRight)
         {
@@ -150,6 +158,13 @@ public class LaserBeamController : MonoBehaviour
         if(m_actualNbrOfRotation == m_nbrOfRotationToDo)
         {
             // On arrête d'utiliser le laser
+            m_laserControlFx.StopLaserFx();
+            
+            if(m_useInfiniteLaser)
+            {
+                StartLaserBeam();
+            }
+            
         }else{
             StartCoroutine(WaitTimeToRotateAgain());
         }
@@ -160,27 +175,27 @@ public class LaserBeamController : MonoBehaviour
         RotateLaser(m_phaseNbr);
     }
 
-    void CheckLaserCollision()
-    {
-        RaycastHit hit;
-		Vector3 from = transform.position;
-        Vector3 to = transform.forward;
+    // void CheckLaserCollision()
+    // {
+    //     RaycastHit hit;
+	// 	Vector3 from = transform.position;
+    //     Vector3 to = transform.forward;
 
-        if(!Physics.Raycast(transform.position, transform.forward, out hit, m_laser.m_castDistance, m_laser.m_secondLaserLayer))
-        {
-            if(Physics.Raycast(transform.position, transform.forward, out hit, m_laser.m_castDistance, m_laser.m_firstLaserLayer))
-            {
-                // Debug.DrawLine(transform.position, hit.point, m_gizmos.m_firstLaserColor);
-                // Debug.DrawLine(hit.point, transform.position + transform.forward * m_laser.m_castDistance, m_gizmos.m_secondLaserColor);
-            }else{
-                // Debug.DrawLine(transform.position,transform.position + transform.forward * m_laser.m_castDistance, m_gizmos.m_firstLaserColor);
-            }
-        }
-        else
-        {
-            // Debug.DrawLine(transform.position, hit.point, m_gizmos.m_secondLaserColor);
-        }
-    }
+    //     if(!Physics.Raycast(transform.position, transform.forward, out hit, m_laser.m_castDistance, m_laser.m_secondLaserLayer))
+    //     {
+    //         if(Physics.Raycast(transform.position, transform.forward, out hit, m_laser.m_castDistance, m_laser.m_firstLaserLayer))
+    //         {
+    //             // Debug.DrawLine(transform.position, hit.point, m_gizmos.m_firstLaserColor);
+    //             // Debug.DrawLine(hit.point, transform.position + transform.forward * m_laser.m_castDistance, m_gizmos.m_secondLaserColor);
+    //         }else{
+    //             // Debug.DrawLine(transform.position,transform.position + transform.forward * m_laser.m_castDistance, m_gizmos.m_firstLaserColor);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         // Debug.DrawLine(transform.position, hit.point, m_gizmos.m_secondLaserColor);
+    //     }
+    // }
 
     bool TargetIsInLaser(GameObject target)
     {
@@ -188,7 +203,7 @@ public class LaserBeamController : MonoBehaviour
         for (int i = 0, l = m_rayPos.Length; i < l; ++i)
         {
             RaycastHit hit;
-            if(Physics.Raycast(m_rayPos[i].position, m_rayPos[i].forward, out hit, m_laser.m_castDistance, m_laser.m_allLayer))
+            if(Physics.Raycast(m_rayPos[i].position, m_rayPos[i].forward, out hit, m_laser.m_castDistance, m_laser.m_damageLayer))
             {
                 if(hit.collider.gameObject == target)
                 {
@@ -209,9 +224,61 @@ public class LaserBeamController : MonoBehaviour
         }
     }
 
+    void CheckIfPlayerIsInLaser()
+    {
+        if(m_playerInLaserArea)
+        {
+            if(TargetIsInLaser(m_player))
+            {
+                if(!m_playerTouchByLaser)
+                {
+                    m_playerTouchByLaser = true;
+                    PlayerIsInLaserArea();
+                }
+            }
+            else
+            {
+                if(m_playerTouchByLaser)
+                {
+                    m_playerTouchByLaser = false;
+                    PlayerIsNotInLaserArea();
+                }
+            }
+        }
+    }
+
+    void PlayerIsInLaserArea()
+    {
+        if(m_characterStats == null)
+        {
+            m_characterStats = m_player.GetComponent<CharacterStats>();
+        }
+
+        if(m_characterStats.LaserTick != m_laser.m_tick)
+        {
+            m_characterStats.LaserTick = m_laser.m_tick;
+        }
+        if(m_characterStats.LaserTickDamage != m_laser.m_damage)
+        {
+            m_characterStats.LaserTickDamage = m_laser.m_damage;
+        }
+        m_characterStats.OnCharacterEnterInLaserArea();
+    }
+    void PlayerIsNotInLaserArea()
+    {
+        m_characterStats.OnCharacterExitInLaserArea();
+    }
+
 #endregion
 
 #region Public Functions
+
+    public void StartLaserBeam()
+    {
+        m_actualNbrOfRotation = 0;
+        m_laserControlFx.StartLaserFx();
+        RotateLaser(m_phaseNbr);
+    }
 
     public void On_StalactiteEnterInLaserTrigger(GameObject obj)
     {
@@ -243,25 +310,12 @@ public class LaserBeamController : MonoBehaviour
 
     public void On_PlayerEnterInLaserTrigger(GameObject player)
     {
-        if(m_characterStats == null)
-        {
-            m_characterStats = player.GetComponent<CharacterStats>();
-        }
-
-        if(m_characterStats.LaserTick != m_laser.m_tick)
-        {
-            m_characterStats.LaserTick = m_laser.m_tick;
-        }
-        if(m_characterStats.LaserTickDamage != m_laser.m_damage)
-        {
-            m_characterStats.LaserTickDamage = m_laser.m_damage;
-        }
-
-        m_characterStats.OnCharacterEnterInLaserArea();
+        m_player = player;
+        m_playerInLaserArea = true;
     }
     public void On_PlayerExitFromLaserTrigger()
     {
-        m_characterStats.OnCharacterExitInLaserArea();
+        m_playerInLaserArea = false;
     }
 
 #endregion

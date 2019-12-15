@@ -13,6 +13,8 @@ public class LaserLineV3D : MonoBehaviour
     public bool scalingWithSize = true;
     public float finalSize = 1f;
 
+    [SerializeField] LayerMask m_maskCollision;
+
     private float preSize;
     private float HitLength;
     private ParticleSystem ps;
@@ -44,7 +46,7 @@ public class LaserLineV3D : MonoBehaviour
     void LaserCastRay()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, maxLength))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, maxLength, m_maskCollision))
         {
             HitLength = hit.distance;
             positionForExplosion = Vector3.MoveTowards(hit.point, transform.position, moveHitToSource);

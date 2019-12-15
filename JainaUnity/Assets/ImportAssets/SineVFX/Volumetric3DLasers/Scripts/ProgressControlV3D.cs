@@ -27,6 +27,8 @@ public class ProgressControlV3D : MonoBehaviour {
     private LightLineV3D[] lils;
     private Renderer[] renderers;
 
+    bool m_laserIsActive = false;
+
     private void Start()
     {
         globalProgress = 1f;
@@ -34,6 +36,22 @@ public class ProgressControlV3D : MonoBehaviour {
         lls = GetComponentsInChildren<LaserLineV3D>(true);
         lils = GetComponentsInChildren<LightLineV3D>(true);
         renderers = GetComponentsInChildren<Renderer>(true);
+        StartLaserFx();
+        // Invoke("StopLaserFx", 5);
+    }
+
+    public void StartLaserFx()
+    {
+        m_laserIsActive = true;
+        globalProgress = 0f;
+        endPointEffect.emit = true;
+        globalImpactProgress = 0f;
+        sfxcontroller.StartSound();
+    }
+    public void StopLaserFx()
+    {
+        m_laserIsActive = false;
+        endPointEffect.emit = false;
     }
 
     public void ChangeColor(Color color)
@@ -87,25 +105,30 @@ public class ProgressControlV3D : MonoBehaviour {
             globalImpactProgress += Time.deltaTime * globalImpactProgressSpeed;
         }
 
-        if (Input.GetMouseButton(0) || always == true)
+        // if (Input.GetMouseButton(0) || always == true)
+        // {
+        //     globalProgress = 0f;
+        //     endPointEffect.emit = true;
+        // }
+        // else
+        // {
+        //     endPointEffect.emit = false;
+        // }
+
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     globalImpactProgress = 0f;
+        // }
+        
+        if (m_laserIsActive)
         {
             globalProgress = 0f;
-            endPointEffect.emit = true;
-        }
-        else
-        {
-            endPointEffect.emit = false;
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            globalImpactProgress = 0f;
-        }
-
-        if (always == true)
-        {
-            globalProgress = 0f;
-        }
+        // if (always == true)
+        // {
+        //     globalProgress = 0f;
+        // }
 
         foreach (LaserLineV3D ll in lls)
         {

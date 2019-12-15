@@ -12,17 +12,21 @@ public class MouseTargetV3D : MonoBehaviour {
     // Positioning cursor prefab
     void FixedUpdate () {  
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            mouseWorldPosition = hit.point;
-        }
+        // if (Physics.Raycast(ray, out hit, 100))
+        // {
+        //     mouseWorldPosition = hit.point;
+        // }else{
+        //     mouseWorldPosition = transform.position + transform.forward * 999;
+        // }
 
-        Quaternion toRotation = Quaternion.LookRotation(mouseWorldPosition - transform.position);
-        transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, speed * Time.deltaTime);
-        targetCursor.position = mouseWorldPosition;
+        // mouseWorldPosition = transform.position + transform.forward * 99999;
+
+        // Quaternion toRotation = Quaternion.LookRotation(mouseWorldPosition - transform.position);
+        // transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, speed * Time.deltaTime);
+        // targetCursor.position = mouseWorldPosition;
 
     }
 }
