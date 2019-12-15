@@ -251,9 +251,9 @@ public class CharacterStats : MonoBehaviour {
 
         CheckIfHasToDie(CurrentHealth);
     }
-    public virtual void HealDamage(int heal)
+    public virtual bool HealDamage(int heal)
     {
-
+        return false;
     }
     public virtual void FullHeal()
     {

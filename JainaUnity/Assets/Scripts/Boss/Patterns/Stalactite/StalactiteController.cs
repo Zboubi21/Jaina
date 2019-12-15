@@ -308,7 +308,10 @@ public class StalactiteController : MonoBehaviour
 
         #endregion
 
-        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
+        if(spawnManager != null)
+        {
+            spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
+        }
 
         ShakeCamera(m_explosion.m_shakeCamera.m_magnitudeShake, m_explosion.m_shakeCamera.m_roughnessShake, m_explosion.m_shakeCamera.m_fadeInTimeShake, m_explosion.m_shakeCamera.m_fadeOutTimeShake);
     }

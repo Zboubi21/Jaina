@@ -4,37 +4,66 @@ using UnityEngine;
 
 public class HealHandeler : MonoBehaviour
 {
-    ReferenceScript _getImg;
-
+    public bool useHealUI;
+    [Space]
+    public int healAmount;
+    [Space]
     public int maxHealCount;
     int _currentHealCount;
-
+    [Space]
     public float healCooldown;
     float _currenthealCooldown;
+    [Space]
+    public GameObject m_healSFX;
+    public GameObject m_healVFX;
 
+    ReferenceScript _getImg;
+    CharacterStats stats;
 
     private void Start()
     {
         _getImg = GetComponent<ReferenceScript>();
         _currentHealCount = maxHealCount;
+
+        if (!useHealUI)
+        {
+            gameObject.SetActive(false);
+        }
+
+        stats = PlayerManager.Instance.GetComponent<CharacterStats>();
     }
 
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        //--------------------------- A mettre sur le player manager --------------------------------
+        if (Input.GetKeyDown(KeyCode.H) && useHealUI)
         {
-            if(_currentHealCount -1 >= 0)
-            {
-                _currentHealCount--;
-            }
+            HealEffect();
         }
 
+
+        HealCoolDownHandeler();
+
+    }
+
+    public void HealEffect()
+    {
+        if (_currentHealCount - 1 >= 0 && stats.HealDamage(healAmount))
+        {
+            _currentHealCount--;
+            Level.AddFX(m_healSFX, Vector3.zero, Quaternion.identity);
+            Level.AddFX(m_healVFX, stats.gameObject.transform.position, stats.gameObject.transform.rotation);
+        }
+    }
+
+    public void HealCoolDownHandeler()
+    {
         if (_currentHealCount < maxHealCount)
         {
             _currenthealCooldown += Time.deltaTime;
 
-            if(_currentHealCount > 0)
+            if (_currentHealCount > 0)
             {
                 _getImg.marksArray[1].fillAmount = Mathf.InverseLerp(0, healCooldown, _currenthealCooldown);
             }
@@ -55,13 +84,7 @@ public class HealHandeler : MonoBehaviour
             _currentHealCount = maxHealCount;
         }
 
-        _getImg.count.text = string.Format("{0}", _currentHealCount);
-
-    }
-
-
-    void HealCoolDown()
-    {
+        _getImg.count.text = string.Format("x {0}", _currentHealCount);
 
     }
 }
