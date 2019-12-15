@@ -330,8 +330,12 @@ public class StalactiteController : MonoBehaviour
     }
 
     IEnumerator SpawnLava(){
+        float random = UnityEngine.Random.Range(0f, 360f);
         yield return new WaitForSeconds(m_explosion.m_waitTimeToSpawnLava);
-        m_objectPooler.SpawnSpellFromPool(SpellType.LavaArea, transform.position, Quaternion.identity);
+        GameObject go =  m_objectPooler.SpawnSpellFromPool(SpellType.LavaArea, transform.position, Quaternion.identity);
+        Vector3 trans = go.transform.rotation.eulerAngles;
+        trans.y = random;
+        go.transform.eulerAngles = trans;
         DisableStalactite();
     }
 
