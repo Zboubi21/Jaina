@@ -67,17 +67,28 @@ public class PlayerStats : CharacterStats {
         }
     }
 
-    public override void HealDamage(int heal)
+    public override bool HealDamage(int heal)
     {
-        if (CurrentHealth + heal >= maxHealth)
+        if(CurrentHealth != maxHealth)
         {
-            CurrentHealth = maxHealth;
+            if (CurrentHealth + heal >= maxHealth)
+            {
+                CurrentHealth = maxHealth;
+                m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+                return true;
+            }
+            else
+            {
+                CurrentHealth += heal;
+                m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+                return true;
+            }
         }
         else
         {
-            CurrentHealth += heal;
+            m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+            return false;
         }
-        m_lifeBar.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
 
     }
     public override void FullHeal()

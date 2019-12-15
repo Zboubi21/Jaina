@@ -308,7 +308,10 @@ public class StalactiteController : MonoBehaviour
 
         #endregion
 
-        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
+        if(spawnManager != null)
+        {
+            spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
+        }
 
         ShakeCamera(m_explosion.m_shakeCamera.m_magnitudeShake, m_explosion.m_shakeCamera.m_roughnessShake, m_explosion.m_shakeCamera.m_fadeInTimeShake, m_explosion.m_shakeCamera.m_fadeOutTimeShake);
     }
@@ -330,8 +333,12 @@ public class StalactiteController : MonoBehaviour
     }
 
     IEnumerator SpawnLava(){
+        float random = UnityEngine.Random.Range(0f, 360f);
         yield return new WaitForSeconds(m_explosion.m_waitTimeToSpawnLava);
-        m_objectPooler.SpawnSpellFromPool(SpellType.LavaArea, transform.position, Quaternion.identity);
+        GameObject go =  m_objectPooler.SpawnSpellFromPool(SpellType.LavaArea, transform.position, Quaternion.identity);
+        Vector3 trans = go.transform.rotation.eulerAngles;
+        trans.y = random;
+        go.transform.eulerAngles = trans;
         DisableStalactite();
     }
 
