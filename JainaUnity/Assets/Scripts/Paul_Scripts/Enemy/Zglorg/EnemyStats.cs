@@ -80,6 +80,7 @@ public class EnemyStats : CharacterStats {
     EnemyController enemyController;
     GolemController bossController;
     WarLord_MiseEnScene miseEnScene;
+    CristalsChargeCounter cris;
     int iceSlow;
     int SpeedPercent;
     float saveSpeed;
@@ -388,6 +389,10 @@ public class EnemyStats : CharacterStats {
             saveTimeBeforeLifeBarOff = timeBeforeLifeBarOff;
 
             #endregion
+        }
+        else
+        {
+            cris = PlayerManager.Instance.GetComponent<CristalsChargeCounter>();
         }
 
         enemyController = GetComponent<EnemyController>();
@@ -748,13 +753,13 @@ public class EnemyStats : CharacterStats {
     protected float m_timeToDecreaseWhiteLifeBar;
     public override void TakeDamage(int damage)
     {
-        base.TakeDamage(damage);
         if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !_bigBossFight)
         {
             m_canvas.SetActive(true);
         }
         if (!_bigBossFight)
         {
+            base.TakeDamage(damage);
             if (m_canvas.activeSelf)
             {
                 timeBeforeLifeBarOff -= Time.deltaTime;
@@ -765,6 +770,16 @@ public class EnemyStats : CharacterStats {
                 }
             }
             slider.fillAmount = Mathf.InverseLerp(0, maxHealth, CurrentHealth);
+        }
+        else
+        {
+            float n_damage = damage * (cris.CristCount*cris.percentDamageMultiplicator + 1);
+            if (CurrentHealth > 0)
+            {
+                CurrentHealth -= n_damage;
+            }
+
+            CheckIfHasToDie(CurrentHealth);
         }
 
         m_timeToDecreaseWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;

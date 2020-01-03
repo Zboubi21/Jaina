@@ -565,6 +565,12 @@ public class StalactiteController : MonoBehaviour
     {
         DisableStalactite();
         spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false);
+
+        if (IsCristilize)
+        {
+            PlayerManager.Instance.GetComponent<CristalsChargeCounter>().AddCristCount();
+        }
+
     }
 
     #endregion

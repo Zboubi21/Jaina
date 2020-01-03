@@ -476,6 +476,8 @@ public class PlayerManager : MonoBehaviour {
 	GameManager m_gameManager;
 	ObjectType m_clickOnGround = ObjectType.ClickOnGround;
 	CursorManagaer m_cursorManager;
+
+
 	
 #region Input Buttons
 
