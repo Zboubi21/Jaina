@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GroundHitSign : MonoBehaviour
 {
@@ -11,17 +12,17 @@ public class GroundHitSign : MonoBehaviour
     public float m_timeToDoMoveAnim = 5;
     public AnimationCurve m_moveCurve;
 
-    MeshRenderer m_mesh;
+    Image m_image;
 
     void Start()
     {
-        m_mesh = GetComponent<MeshRenderer>();
-        m_mesh.enabled = false;
+        m_image = GetComponent<Image>();
+        m_image.enabled = false;
     }
 
     public void StartToMove()
     {
-        m_mesh.enabled = true;
+        m_image.enabled = true;
         transform.localPosition = m_startLocalPos;
         StartCoroutine(HitMoveSign());
     }
@@ -41,7 +42,7 @@ public class GroundHitSign : MonoBehaviour
             transform.localPosition = Vector3.Lerp(fromPos, toPos, m_moveCurve.Evaluate(fracJourney));
             yield return null;
         }
-        m_mesh.enabled = false;
+        m_image.enabled = false;
     }
 
 }

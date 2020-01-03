@@ -56,13 +56,11 @@ public class GroundHitArea : MonoBehaviour
     IEnumerator CheckAreaCorout()
     {
         m_col.enabled = true;
-        yield return new WaitForSeconds(0.25f);
-        // yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
         DoDamage();
-        yield return new WaitForSeconds(0.25f);
-        // yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
         m_col.enabled = false;
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForFixedUpdate();
         ResetList();
     }
     void DoDamage()
@@ -74,7 +72,7 @@ public class GroundHitArea : MonoBehaviour
             {            
                 if(go.CompareTag("Player"))
                 {
-                    go.GetComponent<CharacterStats>().TakeDamage(m_groundHitController.m_damage);
+                    go.GetComponent<CharacterStats>().TakeDamage(m_groundHitController.m_damage.m_damage);
                 }
                 if(go.CompareTag("Stalactite"))
                 {
