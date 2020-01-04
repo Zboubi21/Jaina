@@ -249,12 +249,12 @@ public class GroundHitController : BossAttack
         if(phaseNbr == 2)
         {
             // Debug.Log("On fait tomber les stalactite basic");
-            m_stalactiteSpawner.OnGenerateStalactite(CalculateStalactiteNbr(phaseNbr), false);
+            m_stalactiteSpawner.OnGenerateStalactite(CalculateStalactiteNbr(phaseNbr), false, false);
         }
         if(phaseNbr == 3)
         {
             // Debug.Log("On fait tomber les stalactite en fusion");
-            m_stalactiteSpawner.OnGenerateStalactite(CalculateStalactiteNbr(phaseNbr), true);
+            m_stalactiteSpawner.OnGenerateStalactite(CalculateStalactiteNbr(phaseNbr), true, false);
         }
     }
     int CalculateStalactiteNbr(int phaseNbr)

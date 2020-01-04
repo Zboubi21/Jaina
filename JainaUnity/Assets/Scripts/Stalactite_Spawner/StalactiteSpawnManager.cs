@@ -6,6 +6,7 @@ using PoolTypes;
 public class StalactiteSpawnManager : BossAttack
 {
     public Transform[] possibleSlot;
+    public Transform[] possibleGreenSlot;
     //[Space]
     //public GameObject stalactitePrefab;
     [Space]
@@ -23,10 +24,18 @@ public class StalactiteSpawnManager : BossAttack
     [Space]
     public float minTimeBeforeStalactiteFall = 0f;
     public float maxTimeBeforeStalactiteFall = 1f;
+
     List<int> usedSlots = new List<int>();
     List<int> possibleSlotInts = new List<int>();
+
+    List<int> usedGreenSlots = new List<int>();
+    List<int> possibleGreenSlotInts = new List<int>();
+
     List<int> lavaSlots = new List<int>();
+
     int nbrOfFreeSlots;
+    int nbtOfFreeGreenSlots;
+
     int randomSlots;
 
     ObjectPooler m_objectPooler;
@@ -43,6 +52,10 @@ public class StalactiteSpawnManager : BossAttack
         {
             possibleSlotInts.Add(i);
         }
+        for (int i = 0, l = possibleGreenSlot.Length; i < l; ++i)
+        {
+            possibleGreenSlotInts.Add(i);
+        }
     }
 
 
@@ -50,74 +63,129 @@ public class StalactiteSpawnManager : BossAttack
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false);   //Generation for the stalactite patern
+            OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);   //Generation for the stalactite patern
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], true);   //Generation for the smash patern in P3
+            OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], true, true);   //Generation for the smash patern in P3
         }
     }
 
-    public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion)
+    public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
     {
-        if (usedSlots.Count != 0)
+        if (isBeingCalledHadAnAttack)
         {
-            nbrOfFreeSlots = possibleSlot.Length - usedSlots.Count;
+            if (usedSlots.Count != 0)
+            {
+                nbrOfFreeSlots = possibleSlot.Length - usedSlots.Count;
+            }
+            else
+            {
+                nbrOfFreeSlots = possibleSlot.Length;
+            }
         }
         else
         {
-            nbrOfFreeSlots = possibleSlot.Length;
+            if (usedGreenSlots.Count != 0)
+            {
+                nbrOfFreeSlots = possibleGreenSlot.Length - usedGreenSlots.Count;
+            }
+            else
+            {
+                nbrOfFreeSlots = possibleGreenSlot.Length;
+            }
         }
 
         if (nbrOfFreeSlots >= nbrOfStalactiteToSpawn)
         {
-            LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion);
+            LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion, isBeingCalledHadAnAttack);
         }
         else
         {
-            LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion);
+            LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion, isBeingCalledHadAnAttack);
         }
     }
-    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava)
+    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava, bool isBeingCalledHadAnAttack)
     {
         if (hasToCreateLava)
         {
             lavaSlots.Add(pos);
         }
-        possibleSlotInts.Add(pos);
-        usedSlots.Remove(pos);
+
+        if (isBeingCalledHadAnAttack)
+        {
+            possibleSlotInts.Add(pos);
+            usedSlots.Remove(pos);
+        }
+        else
+        {
+            possibleGreenSlotInts.Add(pos);
+            usedGreenSlots.Remove(pos);
+        }
+
+
         _countStalactite--;
     }
 
     #region LockSlotsMethods
     int i;
-    void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion)
+    void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
     {
-        while(i < nbrOfSlots)
+        if (isBeingCalledHadAnAttack)
         {
-            i++;
-            int indexToSpawn = Random.Range(0, possibleSlotInts.Count);
-            int intSlotToSpawn = possibleSlotInts[indexToSpawn];
-
-            usedSlots.Add(possibleSlotInts[indexToSpawn]);
-            possibleSlotInts.RemoveAt(indexToSpawn);
-
-            if (HasToCristilize())
+            while(i < nbrOfSlots)
             {
-                _currentCristilizeStalactite++;
-                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion));
+                i++;
+                int indexToSpawn = Random.Range(0, possibleSlotInts.Count);
+                int intSlotToSpawn = possibleSlotInts[indexToSpawn];
+
+                usedSlots.Add(possibleSlotInts[indexToSpawn]);
+                possibleSlotInts.RemoveAt(indexToSpawn);
+
+                if (HasToCristilize())
+                {
+                    _currentCristilizeStalactite++;
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledHadAnAttack));
+                }
+                else
+                {
+                    _currentSpawnedStalactite++;
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledHadAnAttack));
+                }
             }
-            else
-            {
-                _currentSpawnedStalactite++;
-                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion));
-            }
+
+            i = 0;
+            _currentCristilizeStalactite = 0;
+            _currentSpawnedStalactite = 0;
         }
+        else
+        {
+            while (i < nbrOfSlots)
+            {
+                i++;
+                int indexToSpawn = Random.Range(0, possibleGreenSlotInts.Count);
+                int intSlotToSpawn = possibleGreenSlotInts[indexToSpawn];
 
-        i = 0;
-        _currentCristilizeStalactite = 0;
-        _currentSpawnedStalactite = 0;
+                usedGreenSlots.Add(possibleGreenSlotInts[indexToSpawn]);
+                possibleGreenSlotInts.RemoveAt(indexToSpawn);
+
+                if (HasToCristilize())
+                {
+                    _currentCristilizeStalactite++;
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledHadAnAttack));
+                }
+                else
+                {
+                    _currentSpawnedStalactite++;
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledHadAnAttack));
+                }
+            }
+
+            i = 0;
+            _currentCristilizeStalactite = 0;
+            _currentSpawnedStalactite = 0;
+        }
 
 
     }
@@ -125,13 +193,20 @@ public class StalactiteSpawnManager : BossAttack
 
     #region Spawn Stalactite Corout
     int _countStalactite;
-    IEnumerator SpawnStalactiteOnSlots(int indexToSpawn, bool isCristilized, bool hasToEnterFusion)
+    IEnumerator SpawnStalactiteOnSlots(int indexToSpawn, bool isCristilized, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
     {
         float randomTime = Random.Range(minTimeBeforeStalactiteFall, maxTimeBeforeStalactiteFall);
         yield return new WaitForSeconds(randomTime);
-        SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion);
+        if (isBeingCalledHadAnAttack)
+        {
+            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleSlot);
+        }
+        else
+        {
+            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleGreenSlot);
+        }
         _countStalactite++;
-        if (_countStalactite == usedSlots.Count)
+        if (_countStalactite == usedSlots.Count && isBeingCalledHadAnAttack)
         {
             float time = timeToWaitUntilLastStalactiteHasFallen;
             StartCoroutine(WaitUntilLastStalactilHasFallen(time));
@@ -149,13 +224,14 @@ public class StalactiteSpawnManager : BossAttack
         return false;
     }
 
-    void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion)
+    void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion, bool isBeingCalledHadAnAttack, Transform[] slots)
     {
-        GameObject go = m_objectPooler.SpawnEnemyFromPool(EnemyType.Stalactite, possibleSlot[index].position, Quaternion.identity);
+        GameObject go = m_objectPooler.SpawnEnemyFromPool(EnemyType.Stalactite, slots[index].position, Quaternion.identity);
         StalactiteController control = go.GetComponent<StalactiteController>();
         StalactiteStats stats = go.GetComponent<StalactiteStats>();
         stats.CurrentHealth = stats.maxHealth;
         stats.IsDead = false;
+        control.HasSpawnInRedSlots = isBeingCalledHadAnAttack;
         control.StartFallingStalactite();
 
         control.IntSlotPosition = index;
@@ -196,7 +272,7 @@ public class StalactiteSpawnManager : BossAttack
     {
         base.On_AttackBegin(phaseNbr);
         _phaseForArray = phaseNbr - 1;
-        OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false);
+        OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);
     }
 
     public override void On_AttackEnd()
