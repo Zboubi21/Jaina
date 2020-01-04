@@ -123,8 +123,6 @@ public class StalactiteSpawnManager : BossAttack
             possibleGreenSlotInts.Add(pos);
             usedGreenSlots.Remove(pos);
         }
-
-
         _countStalactite--;
     }
 
@@ -206,6 +204,8 @@ public class StalactiteSpawnManager : BossAttack
             SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleGreenSlot);
         }
         _countStalactite++;
+        Debug.Log("Nbr de slots = " + usedSlots.Count);
+        Debug.Log("Nbr de Stalactite = " + _countStalactite);
         if (_countStalactite == usedSlots.Count && isBeingCalledHadAnAttack)
         {
             float time = timeToWaitUntilLastStalactiteHasFallen;
@@ -264,7 +264,7 @@ public class StalactiteSpawnManager : BossAttack
     IEnumerator WaitUntilLastStalactilHasFallen(float time)
     {
         yield return new WaitForSeconds(time);
-        // Debug.Log("J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!");
+        Debug.Log("J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!");
         On_AttackEnd();
     }
 
