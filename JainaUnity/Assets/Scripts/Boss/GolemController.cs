@@ -6,6 +6,7 @@ using GolemStateEnum;
 
 public class GolemController : MonoBehaviour
 {
+	public static GolemController s_instance;
 
 #region Serializable Variables
     [Header("Debug")]
@@ -55,8 +56,10 @@ public class GolemController : MonoBehaviour
 #endregion
 
 #region Private Variables
-    AttackType m_lastAttack = AttackType.TripleStrike;
-    #endregion
+    Animator m_animator;
+    AttackType m_lastAttack = AttackType.ArmedialsWrath;
+
+#endregion
 
 #region Encapsulate Variables
     public int PhaseNbr { get { return m_phaseNbr; } }
@@ -71,6 +74,11 @@ public class GolemController : MonoBehaviour
 #region Event Functions
     void Awake()
     {
+        if(s_instance == null){
+			s_instance = this;
+		}else{
+			Debug.LogError("Two instance of GolemController");
+		}
 		SetupStateMachine();
         SetupAttacks();
     }
@@ -82,6 +90,7 @@ public class GolemController : MonoBehaviour
 
     void Start()
     {
+        m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
     }
 
