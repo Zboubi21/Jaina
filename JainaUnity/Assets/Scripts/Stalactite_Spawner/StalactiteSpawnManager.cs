@@ -31,6 +31,8 @@ public class StalactiteSpawnManager : MonoBehaviour
 
     ObjectPooler m_objectPooler;
 
+    float timeToWaitUntilLastStalactiteHasFallen;
+
     private void Start()
     {
         m_objectPooler = ObjectPooler.Instance;
@@ -74,58 +76,99 @@ public class StalactiteSpawnManager : MonoBehaviour
 
         if (nbrOfFreeSlots >= nbrOfStalactiteToSpawn)
         {
-            StartCoroutine(CreatRandomSlots(nbrOfStalactiteToSpawn, hasToEnterFusion));
+            LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion);
         }
         else
         {
-            StartCoroutine(CreatRandomSlots(nbrOfFreeSlots, hasToEnterFusion));
+            LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion);
         }
     }
-
-    IEnumerator CreatRandomSlots(int nbrOfSlots, bool hasToEnterFusion)
+    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava)
     {
-        for (int i = 0, l = nbrOfSlots; i < l; ++i)
+        if (hasToCreateLava)
         {
-            float randomTime = Random.Range(minTimeBeforeStalactiteFall, maxTimeBeforeStalactiteFall);
-            int index = Random.Range(0, possibleSlotInts.Count);
-            usedSlots.Add(possibleSlotInts[index]);
+            lavaSlots.Add(pos);
+        }
+        possibleSlotInts.Add(pos);
+        usedSlots.Remove(pos);
+        _countStalactite--;
+    }
 
+    #region LockSlotsMethods
+    int i;
+    void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion)
+    {
+        while(i < nbrOfSlots)
+        {
+            i++;
+            int indexToSpawn = Random.Range(0, possibleSlotInts.Count);
+            int intSlotToSpawn = possibleSlotInts[indexToSpawn];
 
-            float isCristilize = Random.Range(0, 100);
+            usedSlots.Add(possibleSlotInts[indexToSpawn]);
+            possibleSlotInts.RemoveAt(indexToSpawn);
 
-            yield return new WaitForSeconds(randomTime);
-            if ((_currentCristilizeStalactite != nbrOfCristilizeStalactitePerPhase[_phaseForArray] && isCristilize <= chanceForAStalactiteToBeCristilized) || (nbrOfStalactitePerPhase[_phaseForArray] - _currentSpawnedStalactite == nbrOfCristilizeStalactitePerPhase[_phaseForArray]))
+            if (HasToCristilize())
             {
                 _currentCristilizeStalactite++;
-                SpawnFromPooler(index, true, hasToEnterFusion);
+                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion));
             }
             else
             {
                 _currentSpawnedStalactite++;
-                SpawnFromPooler(index, false, hasToEnterFusion);
+                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion));
             }
-            possibleSlotInts.RemoveAt(index);
         }
 
+        i = 0;
         _currentCristilizeStalactite = 0;
         _currentSpawnedStalactite = 0;
-    }
 
+
+    }
+    #endregion
+
+    #region Spawn Stalactite Corout
+    int _countStalactite;
+    IEnumerator SpawnStalactiteOnSlots(int indexToSpawn, bool isCristilized, bool hasToEnterFusion)
+    {
+        float randomTime = Random.Range(minTimeBeforeStalactiteFall, maxTimeBeforeStalactiteFall);
+        yield return new WaitForSeconds(randomTime);
+        SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion);
+        _countStalactite++;
+        if (_countStalactite == usedSlots.Count)
+        {
+            float time = timeToWaitUntilLastStalactiteHasFallen;
+            StartCoroutine(WaitUntilLastStalactilHasFallen(time));
+        }
+    }
+    #endregion
+
+    bool HasToCristilize()
+    {
+        float isCristilize = Random.Range(0, 100);
+        if((_currentCristilizeStalactite != nbrOfCristilizeStalactitePerPhase[_phaseForArray] && isCristilize <= chanceForAStalactiteToBeCristilized) || (nbrOfStalactitePerPhase[_phaseForArray] - _currentSpawnedStalactite == nbrOfCristilizeStalactitePerPhase[_phaseForArray]))
+        {
+            return true;
+        }
+        return false;
+    }
 
     void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion)
     {
-        GameObject go = m_objectPooler.SpawnEnemyFromPool(EnemyType.Stalactite, possibleSlot[possibleSlotInts[index]].position, Quaternion.identity);
+        GameObject go = m_objectPooler.SpawnEnemyFromPool(EnemyType.Stalactite, possibleSlot[index].position, Quaternion.identity);
         StalactiteController control = go.GetComponent<StalactiteController>();
         StalactiteStats stats = go.GetComponent<StalactiteStats>();
         stats.CurrentHealth = stats.maxHealth;
         stats.IsDead = false;
         control.StartFallingStalactite();
 
-        control.IntSlotPosition = possibleSlotInts[index];
+        control.IntSlotPosition = index;
         control.SpawnManager = this;
 
         control.m_cristals.cristalsParent.SetActive(hasToCristilize);
         control.IsCristilize = hasToCristilize;
+
+        timeToWaitUntilLastStalactiteHasFallen = control.m_moveAnimation.m_timeToReachPosition + control.m_sign.m_timetoFallStalactite;
 
         if (hasToEnterFusion)
         {
@@ -136,7 +179,7 @@ public class StalactiteSpawnManager : MonoBehaviour
         {
             for (int i = 0, l = lavaSlots.Count; i < l; ++i)
             {
-                if(possibleSlotInts[index] == lavaSlots[i])
+                if(index == lavaSlots[i])
                 {
                     control.IsInLava = true;
                     break;
@@ -146,13 +189,12 @@ public class StalactiteSpawnManager : MonoBehaviour
         }
     }
 
-    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava)
+    IEnumerator WaitUntilLastStalactilHasFallen(float time)
     {
-        if (hasToCreateLava)
-        {
-            lavaSlots.Add(pos);
-        }
-        possibleSlotInts.Add(pos);
-        usedSlots.Remove(pos);
+        yield return new WaitForSeconds(time);
+        Debug.Log("J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!");
+        // J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!
+
     }
+
 }

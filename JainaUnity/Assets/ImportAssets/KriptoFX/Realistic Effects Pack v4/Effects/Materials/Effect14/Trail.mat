@@ -4,14 +4,15 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Decal 1
-  m_Shader: {fileID: 4800000, guid: d8f400148b999fe41bd30759b3a9126b, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_OFF SoftParticles_OFF USE_ALPHA_POW
-    USE_CUTOUT USE_CUTOUT_TEX USE_NOISE_DISTORTION USE_QUAD_DECAL VertLight_OFF _BLENDMODE_BLEND
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Trail
+  m_Shader: {fileID: 4800000, guid: 18cc8fe7d50c89741b56c1ae6a5baa66, type: 3}
+  m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_OFF SoftParticles_ON VertLight_OFF
+    _ALPHABLEND_ON _BLENDMODE_BLEND
   m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -23,16 +24,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _BumpTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CutoutRamp:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _CutoutTex:
-        m_Texture: {fileID: 2800000, guid: b426e03e281012044a0e24fc67e58e17, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -47,28 +40,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _DistortTex:
-        m_Texture: {fileID: 2800000, guid: 1931425b86a63f445b9a37c1830a5699, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4925ee9198b00c8498b9d1e91b2c4b59, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Mask:
-        m_Texture: {fileID: 2800000, guid: b426e03e281012044a0e24fc67e58e17, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Texture: {fileID: 2800000, guid: a3559c42d9e864c418df28c1b4185a54, type: 3}
+        m_Scale: {x: 0.3, y: 0.3}
+        m_Offset: {x: 0, y: 0.15}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 994e51c46f307ae4d9386e5c8022a40b, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -80,47 +65,50 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - DstMode: 10
+    - DstMode: 1
     - SrcMode: 5
-    - _AlphaPow: 2
     - _BlendMode: 1
     - _BumpScale: 1
-    - _Cutoff: 0
-    - _Cutout: 0.5
-    - _CutoutAlphaMul: 2
-    - _CutoutThickness: 0.402
+    - _CullMode: 0
+    - _Cutoff: 0.5
+    - _Cutout: 0.1
     - _CutoutThreshold: 0.015
     - _DetailNormalMapScale: 1
-    - _DistortScale: 0.2
-    - _DistortSpeed: 1.5
     - _DstBlend: 0
     - _DstMode: 10
-    - _Glossiness: 0.397
+    - _FogColorMultiplier: 0
+    - _FresnelFadeFactor: 3
+    - _FresnelPow: 5
+    - _FresnelR0: 0.04
+    - _Glossiness: 0.5
     - _InvFade: 1
-    - _MaskPow: 1
-    - _Metallic: 0.547
+    - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 1
-    - _Speed: 1
+    - _SoftInverted: 0
     - _SrcBlend: 1
     - _SrcMode: 5
     - _UVSec: 0
-    - _UseAlphaPow: 1
-    - _UseCutout: 1
-    - _UseCutoutTex: 1
+    - _UseCutout: 0
+    - _UseCutoutTex: 0
     - _UseCutoutThreshold: 0
     - _UseFrameBlending: 0
-    - _UseNoiseDistortion: 1
-    - _UseWorldSpaceUV: 0
-    - _ZTest1: 4
-    - _ZWrite: 1
+    - _UseFresnel: 0
+    - _UseFresnelFading: 0
+    - _UseNoiseDistortion: 0
+    - _UseParticlesAlphaCutout: 0
+    - _UseSoft: 0
+    - _UseSoftCutout: 0
+    - _UseVertexStreamRandom: 0
+    - _ZWrite: 0
+    - _ZWriteMode: 0
     m_Colors:
-    - _BorderColor: {r: 0.4470588, g: 0.51720095, b: 1.9, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DistortionSpeedScale: {r: 1, g: -1, b: 0.15, a: 0.15}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Speed: {r: 2, g: 2, b: 0, a: 1}
+    - _FogColorMultiplier: {r: 0, g: 0, b: 0, a: 0}
+    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling: {r: 800, g: 800, b: 8, a: 8}
-    - _TintColor: {r: 2.5, g: 2.8620677, b: 10, a: 1}
+    - _TintColor: {r: 2.2513082, g: 8.955293, b: 9.999999, a: 0.75}

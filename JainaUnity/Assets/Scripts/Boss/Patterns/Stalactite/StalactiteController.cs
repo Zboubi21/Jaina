@@ -50,6 +50,7 @@ public class StalactiteController : MonoBehaviour
         public LayerMask m_damageLayer;
 
         public CameraShake m_shakeCamera;
+        public GameObject audioFall;
     }
 
     [Header("Explosion")]
@@ -63,6 +64,15 @@ public class StalactiteController : MonoBehaviour
         public float m_waitToCheckOtherStalactiteArea = 0.25f;
 
         public CameraShake m_shakeCamera;
+        public GameObject audioExplosion;
+    }
+    [Header("Explosion When Destroyed")]
+    public DestroyExplosion m_destroyExplosion;
+    [Serializable]
+    public class DestroyExplosion
+    {
+        public GameObject regularExpolion;
+        public GameObject cristalExpolion;
     }
     [Header("FX")]
     public FXs m_fxs = new FXs();
@@ -289,6 +299,7 @@ public class StalactiteController : MonoBehaviour
         EnableStalactiteColliderAndNavMesh(false);
 
         Level.AddFX(m_explosion.m_explosionFX, transform.position, Quaternion.identity);
+        Level.AddFX(m_explosion.audioExplosion, transform.position, Quaternion.identity);
         StartCoroutine(CheckOtherStalactiteArea());
 
         if (!isInLava)
@@ -456,6 +467,7 @@ public class StalactiteController : MonoBehaviour
         m_objectPooler.ReturnObjectToPool(ObjectType.StalactiteSign, m_fallSignGo);
         EnableStalactiteColliderAndNavMesh(true);
         ShakeCamera(m_fallDamage.m_shakeCamera.m_magnitudeShake, m_fallDamage.m_shakeCamera.m_roughnessShake, m_fallDamage.m_shakeCamera.m_fadeInTimeShake, m_fallDamage.m_shakeCamera.m_fadeOutTimeShake);
+        Level.AddFX(m_fallDamage.audioFall, transform.position, Quaternion.identity);
     }
 
     void CheckFallDamageArea()
@@ -569,6 +581,12 @@ public class StalactiteController : MonoBehaviour
         if (IsCristilize)
         {
             PlayerManager.Instance.GetComponent<CristalsChargeCounter>().AddCristCount();
+            Level.AddFX(m_destroyExplosion.cristalExpolion, transform.position, Quaternion.identity);
+
+        }
+        else
+        {
+            Level.AddFX(m_destroyExplosion.regularExpolion, transform.position, Quaternion.identity);
         }
 
     }
