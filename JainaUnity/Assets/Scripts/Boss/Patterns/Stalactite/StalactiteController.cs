@@ -154,10 +154,11 @@ public class StalactiteController : MonoBehaviour
     bool isInLava;
     bool hasSpawnInRedSlots;
 
+    GolemController m_golemController;
 
     #endregion
 
-    #region Get Set
+#region Get Set
     public int IntSlotPosition
     {
         get
@@ -235,12 +236,12 @@ public class StalactiteController : MonoBehaviour
             hasSpawnInRedSlots = value;
         }
     }
-    #endregion
+#endregion
 
-    #region Encapsulate Variables
-    #endregion
+#region Encapsulate Variables
+#endregion
 
-    #region Event Functions
+#region Event Functions
 
     void OnEnable()
     {
@@ -260,11 +261,11 @@ public class StalactiteController : MonoBehaviour
                 m_meshes[i].material.SetColor("_EmissionColor", m_startEmissiveColor);
             }
         }
-        //Invoke("StartFallingStalactite", 2); // À enlever
     }
 
     void Start()
     {
+        m_golemController = GolemController.Instance;
         m_objectPooler = ObjectPooler.Instance;
         m_navMeshObstacle = GetComponent<NavMeshObstacle>();
         m_collider = GetComponent<CapsuleCollider>();
@@ -279,11 +280,6 @@ public class StalactiteController : MonoBehaviour
         }
 
         m_firstInitialization = true;
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     void Update()
@@ -374,6 +370,8 @@ public class StalactiteController : MonoBehaviour
             Destroy(poolTracker);
         }
         m_objectPooler.ReturnEnemyToPool(EnemyType.Stalactite, gameObject);
+
+        m_golemController.On_StalactiteDie();
     }
 
     void ResetStalactiteForPool()
@@ -481,6 +479,8 @@ public class StalactiteController : MonoBehaviour
         EnableStalactiteColliderAndNavMesh(true);
         ShakeCamera(m_fallDamage.m_shakeCamera.m_magnitudeShake, m_fallDamage.m_shakeCamera.m_roughnessShake, m_fallDamage.m_shakeCamera.m_fadeInTimeShake, m_fallDamage.m_shakeCamera.m_fadeOutTimeShake);
         Level.AddFX(m_fallDamage.audioFall, transform.position, Quaternion.identity);
+
+        m_golemController.On_StalactiteLive();
     }
 
     void CheckFallDamageArea()

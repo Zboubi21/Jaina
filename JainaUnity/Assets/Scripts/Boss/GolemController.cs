@@ -6,7 +6,7 @@ using GolemStateEnum;
 
 public class GolemController : MonoBehaviour
 {
-	public static GolemController s_instance;
+	public static GolemController Instance;
 
 #region Serializable Variables
     [Header("Debug")]
@@ -21,6 +21,10 @@ public class GolemController : MonoBehaviour
             public BossAttack m_bossAttacks;
             [Range(0, 100)] public int m_probabilities;
         }
+
+        [Header("Attack Trigger")]
+        public int m_stalactiteNbrToTriggerFall = 0;
+        public int m_stalactiteNbrToTriggerArmedialsWrath = 20;
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
@@ -58,6 +62,7 @@ public class GolemController : MonoBehaviour
 #region Private Variables
     Animator m_animator;
     AttackType m_lastAttack = AttackType.ArmedialsWrath;
+    int m_livingStalactite = 0;
 
 #endregion
 
@@ -74,8 +79,8 @@ public class GolemController : MonoBehaviour
 #region Event Functions
     void Awake()
     {
-        if(s_instance == null){
-			s_instance = this;
+        if(Instance == null){
+			Instance = this;
 		}else{
 			Debug.LogError("Two instance of GolemController");
 		}
@@ -158,6 +163,8 @@ public class GolemController : MonoBehaviour
 
     AttackType ChoseAttack()
     {
+        CheckStalactiteNbr();
+        
         // Est-ce qu'il faut faire un "ArmedialsWrath" car il y a trop de stalactite ?
         if(m_needToDoArmedialsWrath)
         {
@@ -227,6 +234,18 @@ public class GolemController : MonoBehaviour
         StartAttack();
     }
 
+    void CheckStalactiteNbr()
+    {
+        if(m_livingStalactite <= m_bossAttacks.m_stalactiteNbrToTriggerFall)
+        {
+            m_needToFallStalactite = true;
+        }
+        if(m_livingStalactite >= m_bossAttacks.m_stalactiteNbrToTriggerArmedialsWrath)
+        {
+            m_needToDoArmedialsWrath = true;
+        }
+    }
+
 #endregion
 
 #region Public Functions
@@ -242,6 +261,18 @@ public class GolemController : MonoBehaviour
     public void On_AttackIsFinished()
     {
         StartCoroutine(DelayToDoNextAttack());
+    }
+
+    public void On_StalactiteLive()
+    {
+        m_livingStalactite ++;
+    }
+    public void On_StalactiteDie()
+    {
+        if(m_livingStalactite > 0)
+        {
+            m_livingStalactite --;
+        }
     }
 
 #endregion
