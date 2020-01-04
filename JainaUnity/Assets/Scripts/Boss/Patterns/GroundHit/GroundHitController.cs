@@ -125,11 +125,6 @@ public class GroundHitController : BossAttack
     {
         m_actualPhaseNbr = phaseNbr;
         m_stopRotation = false;
-        ChooseArea();
-    }
-
-    void ChooseArea()
-    {
         StartArea(m_actualArea);
     }
 
@@ -141,11 +136,6 @@ public class GroundHitController : BossAttack
                 if(m_rightRotateDirection)
                 {
                     m_actualArea = AreaType.Middle;
-                }
-                else
-                {
-                    m_stopRotation = true;
-                    On_AttackEnd();
                 }
             break;
             case AreaType.Middle:
@@ -159,13 +149,7 @@ public class GroundHitController : BossAttack
                 }
             break;
             case AreaType.Right:
-                if(m_rightRotateDirection)
-                {
-                    m_stopRotation = true;
-                    On_AttackEnd();
-                    
-                }
-                else
+                if(!m_rightRotateDirection)
                 {
                     m_actualArea = AreaType.Middle;
                 }
@@ -300,14 +284,7 @@ public class GroundHitController : BossAttack
         {
             yield return new WaitForSeconds(m_waitTimeBetweenAttack);
             SelectArea();
-            if(!m_stopRotation)
-            {
-                ChooseArea();
-            }
-            else
-            {
-                m_rightRotateDirection =! m_rightRotateDirection;
-            }
+            StartArea(m_actualArea);
         }
     }
 
@@ -325,6 +302,7 @@ public class GroundHitController : BossAttack
 
     public override void On_AttackEnd()
     {
-        // base.On_AttackEnd();
+        base.On_AttackEnd();
+        m_rightRotateDirection =! m_rightRotateDirection;
     }
 }
