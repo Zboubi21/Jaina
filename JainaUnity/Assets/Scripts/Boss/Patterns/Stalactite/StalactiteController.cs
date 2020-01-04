@@ -109,7 +109,6 @@ public class StalactiteController : MonoBehaviour
         }
 	}
 
-    [SerializeField] Material m_fireMaterial;
 
     [Header("Gizmos")]
     [SerializeField] bool m_showGizmos = true;
@@ -546,11 +545,6 @@ public class StalactiteController : MonoBehaviour
                 }
                 m_changeEmissiveColorCorout = ChangeMaterialEmissiveColor(m_meshes[0].material.GetColor("_EmissionColor"), m_changeColors.m_emissiveColor.m_desiredColor);
                 StartCoroutine(m_changeEmissiveColorCorout);
-
-                for (int i = 0, l = m_meshes.Length; i < l; ++i)
-                {
-                    m_meshes[i].materials[1] = m_fireMaterial;
-                }
             break;
 
             case StalactiteState.Fusion:

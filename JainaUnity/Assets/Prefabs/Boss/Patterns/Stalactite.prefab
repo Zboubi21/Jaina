@@ -34,7 +34,7 @@ RectTransform:
   - {fileID: 657582185951055862}
   - {fileID: 7764118115356411995}
   m_Father: {fileID: 3038115760655520687}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 7976574630716961113}
   - component: {fileID: 6297029731320528749}
   - component: {fileID: 1063753077973373297}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -276,7 +276,7 @@ Transform:
   - {fileID: 1065396991581037603}
   - {fileID: 373369008412890837}
   m_Father: {fileID: 142201044370344191}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1008720567121741961
 GameObject:
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 2859219219121355524}
   - component: {fileID: 5921515470280556670}
   - component: {fileID: 1300950544542602366}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 8932390316410750674}
   - component: {fileID: 4175316135232869324}
   - component: {fileID: 8354817497905456453}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3876509860650555680}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Explosion_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,7 +460,7 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children: []
   m_Father: {fileID: 3038115760655520687}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1957185958879949730
 GameObject:
@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 2097956179691305391}
   - component: {fileID: 9060984295565823939}
   - component: {fileID: 6553809616313539951}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -585,7 +585,7 @@ GameObject:
   - component: {fileID: 4659531169437008244}
   - component: {fileID: 6992378817803917276}
   - component: {fileID: 6726902035234559996}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 8402200937295605114}
   - component: {fileID: 5376864905396970684}
   - component: {fileID: 7178863784377933088}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Metrics_Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,7 +776,7 @@ GameObject:
   - component: {fileID: 8668260159009732547}
   - component: {fileID: 5930640515419934969}
   - component: {fileID: 6489064281600831800}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -887,7 +887,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1909364527745611824}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Blue_Cristals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -901,9 +901,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2949183561683122020}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.068, y: 0.16666667, z: 0.040000003}
+  m_LocalScale: {x: 0.4, y: 0.6666667, z: 0.4}
   m_Children:
   - {fileID: 3705847157556750174}
   - {fileID: 2937942994094568730}
@@ -913,8 +913,8 @@ Transform:
   - {fileID: 1956163619157139828}
   - {fileID: 4216973088682633212}
   - {fileID: 3771953519371552009}
-  m_Father: {fileID: 3038115760655520687}
-  m_RootOrder: 2
+  m_Father: {fileID: 142201044370344191}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3038115760655520686
 GameObject:
@@ -950,7 +950,6 @@ Transform:
   m_Children:
   - {fileID: 8402200937295605114}
   - {fileID: 142201044370344191}
-  - {fileID: 1909364527745611824}
   - {fileID: 4899523623806580261}
   - {fileID: 3876509860650555680}
   m_Father: {fileID: 0}
@@ -1157,7 +1156,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-  m_fireMaterial: {fileID: 2100000, guid: 01d86e077e5596e4c8ab2328913d9497, type: 2}
   m_showGizmos: 0
   m_fallDamageRangeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_explosionRangeColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1262,7 +1260,7 @@ GameObject:
   - component: {fileID: 6746535668535436121}
   - component: {fileID: 6330151256178287166}
   - component: {fileID: 4581655615303558977}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1339,7 +1337,7 @@ GameObject:
   - component: {fileID: 418328846253950203}
   - component: {fileID: 8394583373227762421}
   - component: {fileID: 756796310694854731}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1416,7 +1414,7 @@ GameObject:
   - component: {fileID: 6262271694687352631}
   - component: {fileID: 8106449890765757089}
   - component: {fileID: 5084908374391739859}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1493,7 +1491,7 @@ GameObject:
   - component: {fileID: 7895388317774668923}
   - component: {fileID: 2985019356744003952}
   - component: {fileID: 6585807326861804149}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1570,7 +1568,7 @@ GameObject:
   - component: {fileID: 6115653982986871562}
   - component: {fileID: 8390054664231621685}
   - component: {fileID: 7928312982299333279}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1647,7 +1645,7 @@ GameObject:
   - component: {fileID: 2303432877149055148}
   - component: {fileID: 4552638095297976785}
   - component: {fileID: 2957043191789990680}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1834,7 +1832,7 @@ GameObject:
   - component: {fileID: 5508844157599940264}
   - component: {fileID: 6224128300817427436}
   - component: {fileID: 2363495259173042021}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1911,7 +1909,7 @@ GameObject:
   - component: {fileID: 4142483873858457284}
   - component: {fileID: 482035901837862062}
   - component: {fileID: 2004936173568893763}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1988,7 +1986,7 @@ GameObject:
   - component: {fileID: 8412369749524518250}
   - component: {fileID: 7795766591735824241}
   - component: {fileID: 6167437022131777878}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2100,7 +2098,7 @@ GameObject:
   - component: {fileID: 8088196383396663249}
   - component: {fileID: 8045700128296574866}
   - component: {fileID: 902951785186320411}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2177,7 +2175,7 @@ GameObject:
   - component: {fileID: 8582101021225919663}
   - component: {fileID: 1485598258559312911}
   - component: {fileID: 8792681870459217696}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2347,7 +2345,7 @@ Transform:
   - {fileID: 5480959154301239235}
   - {fileID: 6316007495281175092}
   m_Father: {fileID: 142201044370344191}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8176236542270913933
 GameObject:
@@ -2360,7 +2358,7 @@ GameObject:
   - component: {fileID: 4265377731101074047}
   - component: {fileID: 4648428501773486288}
   - component: {fileID: 4203777205702966263}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2453,6 +2451,7 @@ Transform:
   m_LocalPosition: {x: 0.17, y: -0.25, z: -0.1}
   m_LocalScale: {x: 2.5, y: 1.5, z: 2.5}
   m_Children:
+  - {fileID: 1909364527745611824}
   - {fileID: 3727131867704277170}
   - {fileID: 6972095677715600707}
   m_Father: {fileID: 3038115760655520687}
@@ -2469,7 +2468,7 @@ GameObject:
   - component: {fileID: 7470724286085148451}
   - component: {fileID: 9096353172032382304}
   - component: {fileID: 9195663379629749240}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2546,7 +2545,7 @@ GameObject:
   - component: {fileID: 8909129033159694397}
   - component: {fileID: 2206792821491205497}
   - component: {fileID: 7977044032638599443}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2623,7 +2622,7 @@ GameObject:
   - component: {fileID: 4172489750563312461}
   - component: {fileID: 5162156659414930724}
   - component: {fileID: 2553986995951433788}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2700,7 +2699,7 @@ GameObject:
   - component: {fileID: 2560221456382534279}
   - component: {fileID: 4743239767006692943}
   - component: {fileID: 7689881500483543600}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2776,6 +2775,10 @@ PrefabInstance:
     - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2860,6 +2863,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.20682
@@ -2942,6 +2949,10 @@ PrefabInstance:
     - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3026,6 +3037,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.31518
@@ -3108,6 +3123,10 @@ PrefabInstance:
     - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3192,6 +3211,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.98083
@@ -3275,6 +3298,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.22482
@@ -3357,6 +3384,10 @@ PrefabInstance:
     - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_Name
       value: SM_Env_Gem_Large_01 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x

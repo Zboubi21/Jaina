@@ -22,9 +22,14 @@ public class GolemController : MonoBehaviour
             [Range(0, 100)] public int m_probabilities;
         }
 
-        [Header("Attack Trigger")]
+        [Header("Attack Trigger per phase")]
         public int m_stalactiteNbrToTriggerFall = 0;
         public int m_stalactiteNbrToTriggerArmedialsWrath = 20;
+
+        [SerializeField] StalactiteNbrTrigger m_stalactiteNbrTrigger;
+        [Serializable] public class StalactiteNbrTrigger {
+
+        }
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
