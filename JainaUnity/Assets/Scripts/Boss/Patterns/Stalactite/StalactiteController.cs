@@ -152,7 +152,7 @@ public class StalactiteController : MonoBehaviour
     StalactiteSpawnManager spawnManager;
     bool isCristilize;
     bool isInLava;
-
+    bool hasSpawnInRedSlots;
 
 
     #endregion
@@ -220,6 +220,19 @@ public class StalactiteController : MonoBehaviour
         set
         {
             m_stalactiteState = value;
+        }
+    }
+
+    public bool HasSpawnInRedSlots
+    {
+        get
+        {
+            return hasSpawnInRedSlots;
+        }
+
+        set
+        {
+            hasSpawnInRedSlots = value;
         }
     }
     #endregion
@@ -321,7 +334,7 @@ public class StalactiteController : MonoBehaviour
 
         if(spawnManager != null)
         {
-            spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava);               //Add a lava slot in the list
+            spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, !isInLava, hasSpawnInRedSlots);               //Add a lava slot in the list
         }
 
         ShakeCamera(m_explosion.m_shakeCamera.m_magnitudeShake, m_explosion.m_shakeCamera.m_roughnessShake, m_explosion.m_shakeCamera.m_fadeInTimeShake, m_explosion.m_shakeCamera.m_fadeOutTimeShake);
@@ -576,7 +589,7 @@ public class StalactiteController : MonoBehaviour
     public void OnBeKilled()
     {
         DisableStalactite();
-        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false);
+        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false, hasSpawnInRedSlots);
 
         if (IsCristilize)
         {

@@ -12,6 +12,6 @@ public class StalactiteSpawnerTracker : MonoBehaviour
     private void OnDisable()
     {
         Debug.Log("AIEU !!");
-        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, true);
+        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, true, GetComponent<StalactiteController>().HasSpawnInRedSlots);
     }
 }
