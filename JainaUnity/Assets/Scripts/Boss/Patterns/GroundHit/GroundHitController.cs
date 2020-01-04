@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using EZCameraShake;
 
-public class GroundHitController : MonoBehaviour
+public class GroundHitController : BossAttack
 {
     [Header("Debug")]
     [Range(1, 3), SerializeField] int m_phaseNbr = 1;
@@ -66,6 +66,9 @@ public class GroundHitController : MonoBehaviour
         }
     }
 
+    [Header("Attack Delay")]
+    [SerializeField] float m_waitTimeBetweenAttack = 3;
+
     [Header("Test")]
     [SerializeField] StalactiteSpawnManager m_stalactiteSpawner;
 
@@ -79,7 +82,9 @@ public class GroundHitController : MonoBehaviour
     bool m_rightRotateDirection;
     bool m_stopRotation = false;
 
-	public enum AreaType{
+    int m_actualNbrOfAttack = 0;
+
+    public enum AreaType{
 		Left,
 		Middle,
 		Right
@@ -112,11 +117,11 @@ public class GroundHitController : MonoBehaviour
     {
         if(m_useDebugInput && Input.GetKeyDown(m_testInput))
         {
-            StartGroundHit(m_phaseNbr);
+            On_AttackBegin(m_phaseNbr);
         }
     }
 
-    public void StartGroundHit(int phaseNbr)
+    void StartGroundHit(int phaseNbr)
     {
         m_actualPhaseNbr = phaseNbr;
         m_stopRotation = false;
@@ -126,6 +131,10 @@ public class GroundHitController : MonoBehaviour
     void ChooseArea()
     {
         StartArea(m_actualArea);
+    }
+
+    void SelectArea()
+    {
         switch (m_actualArea)
         {
             case AreaType.Left:
@@ -135,8 +144,8 @@ public class GroundHitController : MonoBehaviour
                 }
                 else
                 {
-                    // Stop the pattern
                     m_stopRotation = true;
+                    On_AttackEnd();
                 }
             break;
             case AreaType.Middle:
@@ -152,8 +161,9 @@ public class GroundHitController : MonoBehaviour
             case AreaType.Right:
                 if(m_rightRotateDirection)
                 {
-                    // Stop the pattern
                     m_stopRotation = true;
+                    On_AttackEnd();
+                    
                 }
                 else
                 {
@@ -161,6 +171,7 @@ public class GroundHitController : MonoBehaviour
                 }
             break;
         }
+        
     }
 
     void StartArea(AreaType areaType)
@@ -275,19 +286,45 @@ public class GroundHitController : MonoBehaviour
                 m_rightArea.CheckArea();
             break;
         }
+        m_actualNbrOfAttack ++;
+        StartCoroutine(WaitTimeBetweenAttack());
+    }
 
-        if(!m_stopRotation)
+    IEnumerator WaitTimeBetweenAttack()
+    {
+        if(m_actualNbrOfAttack == 3)
         {
-            ChooseArea();
+            On_AttackEnd();
         }
         else
         {
-            m_rightRotateDirection =! m_rightRotateDirection;
+            yield return new WaitForSeconds(m_waitTimeBetweenAttack);
+            SelectArea();
+            if(!m_stopRotation)
+            {
+                ChooseArea();
+            }
+            else
+            {
+                m_rightRotateDirection =! m_rightRotateDirection;
+            }
         }
     }
 
-    void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
+    void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime)
+    {
 		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
 	}
-    
+
+    public override void On_AttackBegin(int phaseNbr)
+    {
+        base.On_AttackBegin(phaseNbr);
+        m_actualNbrOfAttack = 0;
+        StartGroundHit(phaseNbr);
+    }
+
+    public override void On_AttackEnd()
+    {
+        // base.On_AttackEnd();
+    }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PoolTypes;
 
-public class StalactiteSpawnManager : MonoBehaviour
+public class StalactiteSpawnManager : BossAttack
 {
     public Transform[] possibleSlot;
     //[Space]
@@ -50,16 +50,12 @@ public class StalactiteSpawnManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false);   //Generation for the stalactite patern
-
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], true);   //Generation for the smash patern in P3
-
         }
     }
 
@@ -192,9 +188,20 @@ public class StalactiteSpawnManager : MonoBehaviour
     IEnumerator WaitUntilLastStalactilHasFallen(float time)
     {
         yield return new WaitForSeconds(time);
-        Debug.Log("J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!");
-        // J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!
+        // Debug.Log("J'AI FINI DE FAIRE TOMBER LES STALACTITES !!!!");
+        On_AttackEnd();
+    }
 
+    public override void On_AttackBegin(int phaseNbr)
+    {
+        base.On_AttackBegin(phaseNbr);
+        _phaseForArray = phaseNbr - 1;
+        OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false);
+    }
+
+    public override void On_AttackEnd()
+    {
+        base.On_AttackEnd();
     }
 
 }

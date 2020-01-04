@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserBeamController : MonoBehaviour
+public class LaserBeamController : BossAttack
 {
     [Header("Debug")]
     [Range(1, 3), SerializeField] int m_phaseNbr = 1;
-    [SerializeField] bool m_useInfiniteLaser = false;
     [SerializeField] Transform[] m_rayPos;
     [SerializeField] ProgressControlV3D m_laserControlFx;
     // [Space]
@@ -69,19 +68,24 @@ public class LaserBeamController : MonoBehaviour
     bool m_playerTouchByLaser = false;
     GameObject m_player;
 
+    bool m_laserIsUsed = false;
+
     #endregion
 
 #region Event Functions
     void Start()
     {
         m_laserArea = GetComponentInChildren<LaserBeamArea>();
-        StartLaserBeam();
+        // On_AttackBegin(m_phaseNbr);
     }
 
     void FixedUpdate()
     {
         // CheckLaserCollision();
-        CheckIfPlayerIsInLaser();
+        if(m_laserIsUsed)
+        {
+            CheckIfPlayerIsInLaser();
+        }
     }
 
     // public float xValue;
@@ -157,14 +161,7 @@ public class LaserBeamController : MonoBehaviour
         m_actualNbrOfRotation ++;
         if(m_actualNbrOfRotation == m_nbrOfRotationToDo)
         {
-            // On arrête d'utiliser le laser
-            m_laserControlFx.StopLaserFx();
-            
-            if(m_useInfiniteLaser)
-            {
-                StartLaserBeam();
-            }
-            
+            On_AttackEnd();
         }else{
             StartCoroutine(WaitTimeToRotateAgain());
         }
@@ -273,11 +270,12 @@ public class LaserBeamController : MonoBehaviour
 
 #region Public Functions
 
-    public void StartLaserBeam()
+    public void StartLaserBeam(int phaseNbr)
     {
         m_actualNbrOfRotation = 0;
         m_laserControlFx.StartLaserFx();
-        RotateLaser(m_phaseNbr);
+        m_laserIsUsed = true;
+        RotateLaser(phaseNbr);
     }
 
     public void On_StalactiteEnterInLaserTrigger(GameObject obj)
@@ -316,6 +314,19 @@ public class LaserBeamController : MonoBehaviour
     public void On_PlayerExitFromLaserTrigger()
     {
         m_playerInLaserArea = false;
+    }
+
+    public override void On_AttackBegin(int phaseNbr)
+    {
+        base.On_AttackBegin(phaseNbr);
+        StartLaserBeam(phaseNbr);
+    }
+
+    public override void On_AttackEnd()
+    {
+        base.On_AttackEnd();
+        m_laserControlFx.StopLaserFx();
+        m_laserIsUsed = false;
     }
 
 #endregion

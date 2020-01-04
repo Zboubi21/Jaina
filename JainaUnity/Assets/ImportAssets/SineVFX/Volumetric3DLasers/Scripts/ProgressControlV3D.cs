@@ -36,7 +36,7 @@ public class ProgressControlV3D : MonoBehaviour {
         lls = GetComponentsInChildren<LaserLineV3D>(true);
         lils = GetComponentsInChildren<LightLineV3D>(true);
         renderers = GetComponentsInChildren<Renderer>(true);
-        StartLaserFx();
+        // StartLaserFx();
         // Invoke("StopLaserFx", 5);
     }
 

@@ -828,11 +828,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sM:
     m_currentStateString: 
+  m_phaseNbr: 1
+  m_bossAttacks:
+    m_attacks:
+    - m_bossAttacks: {fileID: 0}
+      m_probabilities: 10
+    - m_bossAttacks: {fileID: 0}
+      m_probabilities: 40
+    - m_bossAttacks: {fileID: 0}
+      m_probabilities: 40
+    - m_bossAttacks: {fileID: 0}
+      m_probabilities: 10
+    m_delayBetweenAttacks:
+    - 5
+    - 3
+    - 1
   m_fxs:
     m_freezed: {fileID: 0}
     m_markExplosion: {fileID: 1824010770675008, guid: a0d7f57f658ad324990e59977dfd6da6,
       type: 3}
     m_markExplosionRoot: {fileID: 2976689605834286379}
+  m_aleaDebug:
+    m_useDebug: 0
+    m_debugInput: 103
+    m_testNbr: 100
+    m_testProb: 0a00000028000000280000000a000000
+    m_value: 00000000000000000000000000000000
 --- !u!1 &2920371533498048818
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,6 +2115,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6852165857129815742}
     m_Modifications:
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Name
+      value: SM_Env_Gem_Large_10_Hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.07300007
@@ -2149,18 +2182,6 @@ PrefabInstance:
     - target: {fileID: 481882, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.35507733
-      objectReference: {fileID: 0}
-    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
-      propertyPath: m_Name
-      value: SM_Env_Gem_Large_10_Hit
-      objectReference: {fileID: 0}
-    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 190188, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2310154, guid: 87874848711c372419e6cf6ca05d9ea1, type: 3}
       propertyPath: m_CastShadows
