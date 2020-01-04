@@ -10,6 +10,13 @@ public class BossLifeBar : MonoBehaviour
     public ParticleSystem[] flammingDoor;
     public GameObject cantBlinkAgent;
 
+    GolemController m_golemController;
+
+    void Start()
+    {
+        m_golemController = GolemController.Instance;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !FightOn)
@@ -28,7 +35,7 @@ public class BossLifeBar : MonoBehaviour
                 cantBlinkAgent.SetActive(true);
             }
 
-            
+            m_golemController.On_StartFight();
         }
     }
 

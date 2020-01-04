@@ -23,12 +23,10 @@ public class GolemController : MonoBehaviour
         }
 
         [Header("Attack Trigger per phase")]
-        public int m_stalactiteNbrToTriggerFall = 0;
-        public int m_stalactiteNbrToTriggerArmedialsWrath = 20;
-
-        [SerializeField] StalactiteNbrTrigger m_stalactiteNbrTrigger;
+        public StalactiteNbrTrigger[] m_stalactiteNbrTrigger = new StalactiteNbrTrigger[3];
         [Serializable] public class StalactiteNbrTrigger {
-
+            public int m_triggerFallStalactite = 0;
+            public int m_triggerArmedialsWrath = 20;
         }
 
         [Header("Delay")]
@@ -171,14 +169,14 @@ public class GolemController : MonoBehaviour
         CheckStalactiteNbr();
         
         // Est-ce qu'il faut faire un "ArmedialsWrath" car il y a trop de stalactite ?
-        if(m_needToDoArmedialsWrath)
+        if(m_needToDoArmedialsWrath && m_lastAttack != AttackType.ArmedialsWrath)
         {
             m_needToDoArmedialsWrath = false;
             return AttackType.ArmedialsWrath;
         }
 
         // Est-ce qu'il faut faire un "StalactiteFall" car il n'y a pas assez de stalactite ?
-        if(m_needToFallStalactite)
+        if(m_needToFallStalactite && m_lastAttack != AttackType.StalactiteFall)
         {
             m_needToFallStalactite = false;
             return AttackType.StalactiteFall;
@@ -241,11 +239,11 @@ public class GolemController : MonoBehaviour
 
     void CheckStalactiteNbr()
     {
-        if(m_livingStalactite <= m_bossAttacks.m_stalactiteNbrToTriggerFall)
+        if (m_livingStalactite <= m_bossAttacks.m_stalactiteNbrTrigger[m_phaseNbr - 1].m_triggerFallStalactite)
         {
             m_needToFallStalactite = true;
         }
-        if(m_livingStalactite >= m_bossAttacks.m_stalactiteNbrToTriggerArmedialsWrath)
+        if (m_livingStalactite >= m_bossAttacks.m_stalactiteNbrTrigger[m_phaseNbr - 1].m_triggerArmedialsWrath)
         {
             m_needToDoArmedialsWrath = true;
         }
@@ -257,6 +255,11 @@ public class GolemController : MonoBehaviour
     public void ChangeState(GolemState newState){
 		m_sM.ChangeState((int)newState);
 	}
+
+    public void On_StartFight()
+    {
+        m_animator.SetTrigger("StartFight");
+    }
 
     public void OnEnemyDie()
     {
