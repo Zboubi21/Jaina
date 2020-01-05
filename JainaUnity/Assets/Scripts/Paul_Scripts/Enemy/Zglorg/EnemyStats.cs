@@ -392,7 +392,7 @@ public class EnemyStats : CharacterStats {
         }
         else
         {
-            cris = PlayerManager.Instance.GetComponent<CristalsChargeCounter>();
+            cris = PlayerManager.Instance.GetComponentInChildren<CristalsChargeCounter>();
         }
 
         enemyController = GetComponent<EnemyController>();

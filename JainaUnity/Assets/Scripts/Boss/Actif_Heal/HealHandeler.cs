@@ -36,19 +36,15 @@ public class HealHandeler : MonoBehaviour
 
     private void Update()
     {
-        //--------------------------- A mettre sur le player manager --------------------------------
-        if (Input.GetKeyDown(KeyCode.H) && useHealUI)
-        {
-            HealEffect();
-        }
-
-
         HealCoolDownHandeler();
-
     }
 
     public void HealEffect()
     {
+        if(!useHealUI)
+        {
+            return;
+        }
         if (_currentHealCount - 1 >= 0 && stats.HealDamage(healAmount))
         {
             _currentHealCount--;

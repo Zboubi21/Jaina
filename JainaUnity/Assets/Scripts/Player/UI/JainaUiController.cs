@@ -32,11 +32,19 @@ public class JainaUiController : MonoBehaviour {
     CursorManagaer m_cursorManager;
 
     void Awake(){
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            m_uiImage[i].UiController = this;
+        for (int i = 0, l = m_uiImage.Length; i < l; ++i)
+        {
+            if(m_uiImage[i] != null)
+            {
+                m_uiImage[i].UiController = this;
+            }
         }
-        for (int i = 0, l = m_ui.Length; i < l; ++i) {
-            m_ui[i].UiController = this;
+        for (int i = 0, l = m_ui.Length; i < l; ++i)
+        {
+            if(m_ui[i] != null)
+            {
+                m_ui[i].UiController = this;
+            }
         }
     }
 
@@ -46,9 +54,14 @@ public class JainaUiController : MonoBehaviour {
     }
 
     public void On_UiPointerOver(JainaUI clickedUI){
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            if(clickedUI != m_uiImage[i]){
-                m_uiImage[i].CloseUI();
+        for (int i = 0, l = m_uiImage.Length; i < l; ++i)
+        {
+            if(m_uiImage[i] != null)
+            {
+                if(clickedUI != m_uiImage[i])
+                {
+                    m_uiImage[i].CloseUI();
+                }
             }
         }
     }
@@ -60,8 +73,12 @@ public class JainaUiController : MonoBehaviour {
     IEnumerator WaitToExit(){
         yield return new WaitForEndOfFrame();
         if(!IsOverUi()){
-            for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-                m_uiImage[i].CloseUI();
+            for (int i = 0, l = m_uiImage.Length; i < l; ++i)
+            {
+                if(m_uiImage[i] != null)
+                {
+                    m_uiImage[i].CloseUI();
+                }
             }
             m_inUi = false;
             m_playerManager.CanAutoAttackBecauseUi = true;
@@ -96,61 +113,27 @@ public class JainaUiController : MonoBehaviour {
 
     bool IsOverUi(){
         bool isIn = false;
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            if(m_uiImage[i].MouseInUI){
-                isIn = true;
+        for (int i = 0, l = m_uiImage.Length; i < l; ++i)
+        {
+            if(m_uiImage[i] != null)
+            {
+                if(m_uiImage[i].MouseInUI)
+                {
+                    isIn = true;
+                }
             }
         }
-        for (int i = 0, l = m_ui.Length; i < l; ++i) {
-            if(m_ui[i].MouseInUI){
-                isIn = true;
+        for (int i = 0, l = m_ui.Length; i < l; ++i)
+        {
+            if(m_ui[i] != null)
+            {
+                if(m_ui[i].MouseInUI)
+                {
+                    isIn = true;
+                }
             }
         }
         return isIn;
     }
 
 }
-
-// Before just use PointerOver
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class JainaUiController : MonoBehaviour {
-    
-    [SerializeField] JainaUI[] m_uiImage;
-
-    JainaUI m_selectedUI;
-    public JainaUI SelectedUI{
-        get{
-            return m_selectedUI;
-        }
-        set{
-            m_selectedUI = value;
-        }
-    }
-
-    void Awake(){
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            m_uiImage[i].UiController = this;
-        }
-    }
-
-    public void On_UiPointerOver(JainaUI clickedUI){
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            if(clickedUI != m_uiImage[i]){
-                m_uiImage[i].CloseUI();
-            }
-        }
-    }
-
-    public void On_UiPointerClick(JainaUI clickedUI, bool isSelected){
-        for (int i = 0, l = m_uiImage.Length; i < l; ++i) {
-            if(clickedUI != m_uiImage[i]){
-                m_uiImage[i].CloseUI();
-            }
-            m_selectedUI = isSelected ? clickedUI : null;
-        }
-    }
-    
-}*/

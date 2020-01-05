@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour {
 		public bool m_startInMenuMode = false;
 		public bool m_isStoryJaina = false;
 		public bool m_isArcadeJaina = false;
+		public bool m_isBossFightJaina = false;
         public bool m_showHUD = true;
 		public bool m_useGamepad = false;
 	}
@@ -303,6 +304,9 @@ public class PlayerManager : MonoBehaviour {
 			public float m_fadeOutTimeShake = 0.1f;
 		}
 
+		[Header("Heal")]
+		public HealHandeler m_healHandeler;
+
 		[Serializable] public class SpellUI {
 			[Header("First UI")]
 			public RectTransform m_firstUiParent;
@@ -451,6 +455,10 @@ public class PlayerManager : MonoBehaviour {
 		[Space]
 		public GameObject m_historyButton;
 		public GameObject m_arcadeButton;
+		public GameObject m_bossFightButton;
+		[Space]
+		public GameObject m_heal;
+		public GameObject m_cristalsBuff;
 	}
 
 	public GamepadInput m_gamepadInput;
@@ -495,6 +503,8 @@ public class PlayerManager : MonoBehaviour {
 	[HideInInspector] public bool m_rightSpellButton;
 	bool m_useRightSpell = false;
 	bool m_lastUseRightSpell = false;
+
+	[HideInInspector] public bool m_healButton;
 
 #endregion Input Buttons
 
@@ -860,6 +870,12 @@ public class PlayerManager : MonoBehaviour {
 		if(rot != Vector3.zero){
 			m_rotationInput = rot;
 			AutoAttackWithGamepad();
+		}
+
+		m_healButton = Input.GetButtonDown("Heal");
+		if(m_healButton)
+		{
+			m_powers.m_healHandeler.HealEffect();
 		}
 	}
 
@@ -2050,13 +2066,29 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	void SetUiButtons(){
-		if(m_playerDebug.m_isStoryJaina){
+		if(m_playerDebug.m_isStoryJaina)
+		{
 			m_ui.m_historyButton.SetActive(true);
 			m_ui.m_arcadeButton.SetActive(false);
+			m_ui.m_bossFightButton.SetActive(false);
+			m_ui.m_heal.SetActive(false);
+			m_ui.m_cristalsBuff.SetActive(false);
 		}
-		if(m_playerDebug.m_isArcadeJaina){
+		if(m_playerDebug.m_isArcadeJaina)
+		{
 			m_ui.m_historyButton.SetActive(false);
 			m_ui.m_arcadeButton.SetActive(true);
+			m_ui.m_bossFightButton.SetActive(false);
+			m_ui.m_heal.SetActive(false);
+			m_ui.m_cristalsBuff.SetActive(false);
+		}
+		if(m_playerDebug.m_isBossFightJaina)
+		{
+			m_ui.m_historyButton.SetActive(false);
+			m_ui.m_arcadeButton.SetActive(false);
+			m_ui.m_bossFightButton.SetActive(true);
+			m_ui.m_heal.SetActive(true);
+			m_ui.m_cristalsBuff.SetActive(true);
 		}
 	}
 

@@ -5,7 +5,6 @@ using UnityEngine;
 public class CristalsChargeCounter : MonoBehaviour
 {
 
-    public GameObject cristalUIHandeler;
     [Range(0, 1)]
     public float percentDamageMultiplicator = 0.1f;
     private int cristCount;
@@ -29,10 +28,7 @@ public class CristalsChargeCounter : MonoBehaviour
 
     private void Start()
     {
-        if(cristalUIHandeler != null)
-        {
-            _getImg = cristalUIHandeler.GetComponent<ReferenceScript>();
-        }
+        _getImg = GetComponent<ReferenceScript>();
     }
 
     public void AddCristCount()
