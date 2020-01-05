@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1453988029760907928}
   - component: {fileID: 1453988029760907931}
   - component: {fileID: 984224045}
+  - component: {fileID: 8911861989481017244}
   m_Layer: 0
   m_Name: Stalactite_AudioFall_SFX
   m_TagString: Untagged
@@ -39,10 +40,10 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453988029760907930}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 70a2d051802ebc5449f30d822f6a3c16, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a98f8e926c6e7a24b9fdd8d788703411, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.1
   m_Pitch: 1
@@ -140,3 +141,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca276f100dc423f42b4ad8b1728cd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8911861989481017244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453988029760907930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d953db355648c34a93fcecb96d766b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: a98f8e926c6e7a24b9fdd8d788703411, type: 3}
+  - {fileID: 8300000, guid: df58388b36ca0a84f862115b6a6a2d42, type: 3}

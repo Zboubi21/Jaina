@@ -30,8 +30,10 @@ public class DrawSpawnerGizmos : MonoBehaviour
             Gizmos.color = c_lavaRadius;
             Gizmos.DrawWireSphere(transform.position, lavaRadius);
         }
-
-        gameObject.GetComponent<MeshRenderer>().enabled = isClickable;
+        if(gameObject.GetComponent<MeshRenderer>() != null)
+        {
+            gameObject.GetComponent<MeshRenderer>().enabled = isClickable;
+        }
 
     }
 
