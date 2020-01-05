@@ -8,7 +8,16 @@ public class LaserBeamController : BossAttack
     [Header("Debug")]
     [Range(1, 3), SerializeField] int m_phaseNbr = 1;
     [SerializeField] Transform[] m_rayPos;
+    [SerializeField] bool m_useDebug = false;
+    [SerializeField] KeyCode m_debugInput = KeyCode.H;
+    [Space]
     [SerializeField] ProgressControlV3D m_laserControlFx;
+    [SerializeField] Transform m_golemLookAtPoint;
+    [Space]
+    [SerializeField] float m_waitTimeToRotateGolem = 2;
+    [SerializeField] float m_timeToGolemLookAtPoint = 2;
+    [SerializeField] AnimationCurve m_golemLookAtPointCurve;
+
     // [Space]
     // [SerializeField] Transform m_centerPos;
     // [Range(1, 50)] [SerializeField] int m_rayCastNbr = 10;
@@ -76,7 +85,14 @@ public class LaserBeamController : BossAttack
     void Start()
     {
         m_laserArea = GetComponentInChildren<LaserBeamArea>();
-        // On_AttackBegin(m_phaseNbr);
+    }
+
+    void Update()
+    {
+        if(m_useDebug && Input.GetKeyDown(m_debugInput))
+        {
+            On_AttackBegin(m_phaseNbr);
+        }
     }
 
     void FixedUpdate()
@@ -85,6 +101,7 @@ public class LaserBeamController : BossAttack
         if(m_laserIsUsed)
         {
             CheckIfPlayerIsInLaser();
+            RotateGolemToLookAtPoint();
         }
     }
 
@@ -128,6 +145,19 @@ public class LaserBeamController : BossAttack
 #endregion
 
 #region Private Functions
+    void StartLaserBeam(int phaseNbr)
+    {
+        m_actualNbrOfRotation = 0;
+        m_laserControlFx.StartLaserFx();
+        m_laserIsUsed = true;
+        RotateLaser(phaseNbr);
+    }
+    IEnumerator WaitTimeToStartLaser(int phaseNbr)
+    {
+        yield return new WaitForSeconds(m_waitTimeToRotateGolem);
+        StartLaserBeam(phaseNbr);
+    }
+
     void RotateLaser(int phaseNbr)
     {        
         m_nbrOfRotationToDo = phaseNbr;
@@ -266,17 +296,32 @@ public class LaserBeamController : BossAttack
         m_characterStats.OnCharacterExitInLaserArea();
     }
 
+    IEnumerator RotateGolemToLookAtPointWithTime(float toRot)
+    {
+        float fromRot = GolemController.transform.rotation.eulerAngles.y;
+
+        float fracJourney = 0;
+        float distance = Mathf.Abs(fromRot - toRot);
+        float vitesse = distance / m_timeToGolemLookAtPoint;
+        float actualValue = fromRot;
+
+        while (actualValue != toRot)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualValue = Mathf.Lerp(fromRot, toRot, m_golemLookAtPointCurve.Evaluate(fracJourney));
+            GolemController.transform.eulerAngles = new Vector3(GolemController.transform.rotation.eulerAngles.x, actualValue, GolemController.transform.rotation.eulerAngles.z);
+            yield return null;
+        }
+    }
+    void RotateGolemToLookAtPoint()
+    {
+        GolemController.transform.LookAt(m_golemLookAtPoint);
+        GolemController.transform.localEulerAngles = new Vector3(0, GolemController.transform.localEulerAngles.y, GolemController.transform.localEulerAngles.z);
+    }
+
 #endregion
 
 #region Public Functions
-
-    public void StartLaserBeam(int phaseNbr)
-    {
-        m_actualNbrOfRotation = 0;
-        m_laserControlFx.StartLaserFx();
-        m_laserIsUsed = true;
-        RotateLaser(phaseNbr);
-    }
 
     public void On_StalactiteEnterInLaserTrigger(GameObject obj)
     {
@@ -319,7 +364,16 @@ public class LaserBeamController : BossAttack
     public override void On_AttackBegin(int phaseNbr)
     {
         base.On_AttackBegin(phaseNbr);
-        StartLaserBeam(phaseNbr);
+        StartCoroutine(WaitTimeToStartLaser(phaseNbr));
+
+        if(m_lastRotateDirectionWasRight)
+        {
+            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_rightWorldRotation));
+        }
+        else
+        {
+            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_leftWorldRotation));
+        }
     }
 
     public override void On_AttackEnd()
@@ -327,6 +381,7 @@ public class LaserBeamController : BossAttack
         base.On_AttackEnd();
         m_laserControlFx.StopLaserFx();
         m_laserIsUsed = false;
+        StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation));
     }
 
 #endregion

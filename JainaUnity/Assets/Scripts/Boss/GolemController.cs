@@ -41,6 +41,12 @@ public class GolemController : MonoBehaviour
         public Transform m_markExplosionRoot;
     }
 
+    [Header("SFX")]
+    [SerializeField] SFXs m_sfx;
+    [Serializable] public class SFXs {
+        public GameObject m_screamSfx;
+    }
+
     [Header("Alea Debug")]
     public AleaDebug m_aleaDebug;
     [Serializable] public class AleaDebug {
@@ -67,16 +73,17 @@ public class GolemController : MonoBehaviour
     AttackType m_lastAttack = AttackType.ArmedialsWrath;
     int m_livingStalactite = 0;
 
+    bool m_needToDoArmedialsWrath = false;
+    bool m_needToFallStalactite = false;
+
 #endregion
 
 #region Encapsulate Variables
     public int PhaseNbr { get { return m_phaseNbr; } }
 
-    bool m_needToDoArmedialsWrath = false;
-    public bool NeedToDoArmedialsWrath { get { return m_needToDoArmedialsWrath; } set { m_needToDoArmedialsWrath = value; } }
-
-    bool m_needToFallStalactite = false;
-    public bool NeedToFallStalactite { get { return m_needToFallStalactite; } set { m_needToFallStalactite = value; } }
+    float m_yStartRotation;
+    public float YStartRotation { get { return m_yStartRotation; } }
+    
 #endregion
 
 #region Event Functions
@@ -100,6 +107,7 @@ public class GolemController : MonoBehaviour
     {
         m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
+        m_yStartRotation = transform.eulerAngles.y;
     }
 
     void FixedUpdate()
@@ -162,6 +170,25 @@ public class GolemController : MonoBehaviour
             m_bossAttacks.m_attacks[(int)attackToDo].m_bossAttacks.On_AttackBegin(m_phaseNbr);
         }
         m_lastAttack = attackToDo;
+
+        m_animator.SetBool("FightIdle", false);
+
+        switch (attackToDo)
+        {
+            case AttackType.StalactiteFall:
+            break;
+
+            case AttackType.TripleStrike:
+                m_animator.SetTrigger("Triple Strike");
+            break;
+
+            case AttackType.LavaBeam:
+            break;
+
+            case AttackType.ArmedialsWrath:
+                m_animator.SetTrigger("Armedial's Wrath");
+            break;
+        }
     }
 
     AttackType ChoseAttack()
@@ -259,6 +286,7 @@ public class GolemController : MonoBehaviour
     public void On_StartFight()
     {
         m_animator.SetTrigger("StartFight");
+        Level.AddFX(m_sfx.m_screamSfx, Vector3.zero, Quaternion.identity);
     }
 
     public void OnEnemyDie()
@@ -268,6 +296,7 @@ public class GolemController : MonoBehaviour
 
     public void On_AttackIsFinished()
     {
+        m_animator.SetBool("FightIdle", true);
         StartCoroutine(DelayToDoNextAttack());
     }
 

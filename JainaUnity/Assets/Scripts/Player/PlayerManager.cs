@@ -873,7 +873,7 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		m_healButton = Input.GetButtonDown("Heal");
-		if(m_healButton)
+		if(m_healButton && !m_playerIsDead && m_playerDebug.m_isBossFightJaina)
 		{
 			m_powers.m_healHandeler.HealEffect();
 		}
