@@ -135,27 +135,28 @@ public class LavaBeamController : BossAttack
         for (int i = 0; i < nbrOfShot; ++i)
         {
             yield return new WaitForSeconds(timeBeforeShooting);
-            StartCoroutine(ShootLava());
-        }
-
-        for (int i = 0, l = actifSpawner.Count; i < l; ++i)
-        {
-            actifSpawnerParent[i].gameObject.SetActive(false);
-            actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
-            actifSpawnerScript[i].HasToLookAt = true;
+            yield return StartCoroutine(ShootLava(nbrOfShot));
         }
         On_AttackEnd();
     }
 
-    IEnumerator ShootLava()
+    IEnumerator ShootLava(int nbrOfShot)
     {
         for (int i = 0, l = actifSpawner.Count; i < l; ++i)
         {
             actifSpawnerScript[i].HasToLookAt = false;
             yield return new WaitForSeconds(timeBetweenEachShoot/2);
             Level.AddFX(lavaBeamVFX, actifSpawner[i].transform.position, actifSpawner[i].transform.rotation);
+            actifSpawnerScript[i].NbrOfShoot++;
             yield return new WaitForSeconds(timeBetweenEachShoot/2);
             actifSpawnerScript[i].HasToLookAt = true;
+            if(actifSpawnerScript[i].NbrOfShoot == nbrOfShot)
+            {
+                actifSpawnerScript[i].NbrOfShoot = 0;
+                actifSpawnerParent[i].gameObject.SetActive(false);
+                actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
+                actifSpawnerScript[i].HasToLookAt = true;
+            }
         }
     }
 

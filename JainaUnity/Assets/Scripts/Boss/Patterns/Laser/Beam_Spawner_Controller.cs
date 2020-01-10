@@ -9,6 +9,7 @@ public class Beam_Spawner_Controller : MonoBehaviour
     public Image sign;
     
     bool hasToLookAt = true;
+    int _nbrOfShoot;
 
     #region Get Set
     public bool HasToLookAt
@@ -21,6 +22,19 @@ public class Beam_Spawner_Controller : MonoBehaviour
         set
         {
             hasToLookAt = value;
+        }
+    }
+
+    public int NbrOfShoot
+    {
+        get
+        {
+            return _nbrOfShoot;
+        }
+
+        set
+        {
+            _nbrOfShoot = value;
         }
     }
     #endregion
