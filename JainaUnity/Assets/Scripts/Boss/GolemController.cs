@@ -18,8 +18,8 @@ public class GolemController : MonoBehaviour
     [Serializable] public class BossAttacks {
         public Attacks[] m_attacks = new Attacks[4];
         [Serializable] public class Attacks {
-            public BossAttack m_bossAttacks;
-            [Range(0, 100)] public int m_probabilities;
+            public BossAttack m_attack;
+            [Range(0, 100)] public int m_probability;
         }
 
         [Header("Attack Trigger per phase")]
@@ -153,9 +153,9 @@ public class GolemController : MonoBehaviour
         {
             for (int i = 0, l = m_bossAttacks.m_attacks.Length; i < l; ++i)
             {
-                if(m_bossAttacks.m_attacks[i].m_bossAttacks != null)
+                if(m_bossAttacks.m_attacks[i].m_attack != null)
                 {
-                    m_bossAttacks.m_attacks[i].m_bossAttacks.GolemController = this;
+                    m_bossAttacks.m_attacks[i].m_attack.GolemController = this;
                 }
             }
         }
@@ -165,9 +165,9 @@ public class GolemController : MonoBehaviour
     {
         AttackType attackToDo = ChoseAttack();
         Debug.Log("attackToDo = " + attackToDo);
-        if(m_bossAttacks.m_attacks[(int)attackToDo].m_bossAttacks != null)
+        if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
         {
-            m_bossAttacks.m_attacks[(int)attackToDo].m_bossAttacks.On_AttackBegin(m_phaseNbr);
+            m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
         }
         m_lastAttack = attackToDo;
 
@@ -212,7 +212,7 @@ public class GolemController : MonoBehaviour
         int[] probs = new int[4];
         for (int i = 0, l = probs.Length; i < l; ++i)
         {
-            probs[i] = m_bossAttacks.m_attacks[i].m_probabilities;
+            probs[i] = m_bossAttacks.m_attacks[i].m_probability;
         }
 
         switch (m_lastAttack)
