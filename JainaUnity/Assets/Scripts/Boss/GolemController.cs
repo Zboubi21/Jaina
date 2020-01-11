@@ -44,7 +44,7 @@ public class GolemController : MonoBehaviour
     [Header("SFX")]
     [SerializeField] SFXs m_sfx;
     [Serializable] public class SFXs {
-        public GameObject m_screamSfx;
+
     }
 
     [Header("Alea Debug")]
@@ -75,6 +75,7 @@ public class GolemController : MonoBehaviour
 
     bool m_needToDoArmedialsWrath = false;
     bool m_needToFallStalactite = false;
+    bool m_fightIsStarted = false;
 
 #endregion
 
@@ -126,7 +127,7 @@ public class GolemController : MonoBehaviour
                 m_aleaDebug.m_value[alea] ++;
             }
         }
-        if(Input.GetKeyDown(KeyCode.L))
+        if(Input.GetKeyDown(KeyCode.L) && m_fightIsStarted == false)
         {
             StartAttack();
         }
@@ -163,6 +164,10 @@ public class GolemController : MonoBehaviour
 
     void StartAttack()
     {
+        if(m_fightIsStarted == false)
+        {
+            m_fightIsStarted = true;
+        }
         AttackType attackToDo = ChoseAttack();
         Debug.Log("attackToDo = " + attackToDo);
         if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
@@ -176,6 +181,7 @@ public class GolemController : MonoBehaviour
         switch (attackToDo)
         {
             case AttackType.StalactiteFall:
+                m_animator.SetTrigger("Stalactite Fall");
             break;
 
             case AttackType.TripleStrike:
@@ -285,8 +291,7 @@ public class GolemController : MonoBehaviour
 
     public void On_StartFight()
     {
-        m_animator.SetTrigger("StartFight");
-        Level.AddFX(m_sfx.m_screamSfx, Vector3.zero, Quaternion.identity);
+        StartAttack();
     }
 
     public void OnEnemyDie()

@@ -7,8 +7,6 @@ public class StalactiteSpawnManager : BossAttack
 {
     public Transform[] possibleSlot;
     public Transform[] possibleGreenSlot;
-    //[Space]
-    //public GameObject stalactitePrefab;
     [Space]
     [Range(1,3)]
     public int currentPhase;
@@ -24,6 +22,9 @@ public class StalactiteSpawnManager : BossAttack
     [Space]
     public float minTimeBeforeStalactiteFall = 0f;
     public float maxTimeBeforeStalactiteFall = 1f;
+
+    [Header("FX")]
+    [SerializeField] GameObject m_screamSfx;
 
     List<int> usedSlots = new List<int>();
     List<int> possibleSlotInts = new List<int>();
@@ -268,6 +269,7 @@ public class StalactiteSpawnManager : BossAttack
     public override void On_AttackBegin(int phaseNbr)
     {
         base.On_AttackBegin(phaseNbr);
+        Level.AddFX(m_screamSfx, Vector3.zero, Quaternion.identity);
         _phaseForArray = phaseNbr - 1;
         OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);
     }
