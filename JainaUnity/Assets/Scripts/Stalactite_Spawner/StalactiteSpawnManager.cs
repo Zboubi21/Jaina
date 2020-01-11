@@ -131,6 +131,11 @@ public class StalactiteSpawnManager : BossAttack
     int i;
     void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
     {
+
+        if(nbrOfSlots == 0)
+        {
+            StartCoroutine(WaitUntilLastStalactilHasFallen(1f));
+        }
         if (isBeingCalledHadAnAttack)
         {
             while(i < nbrOfSlots)

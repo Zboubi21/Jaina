@@ -44,7 +44,7 @@ public class LavaBeamController : BossAttack
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             StartLaser(phaseNbr);
             lavaBeamPaternActif = true;
