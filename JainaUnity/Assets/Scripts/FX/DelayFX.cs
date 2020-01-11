@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DelayFX : FX
 {
-    [SerializeField, Range(0, 5)] float m_soundDelay = 0.5f;
+    [SerializeField, Range(0, 10)] float m_soundDelay = 0.5f;
 
     void Awake()
     {
@@ -15,6 +15,11 @@ public class DelayFX : FX
     {
 		GetComponent<AudioSource>().Play();
         base.Start();
+    }
+
+    protected override void Start()
+    {
+
     }
 
 }

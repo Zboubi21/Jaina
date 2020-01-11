@@ -102,7 +102,7 @@ public class LaserBeamController : BossAttack
         if(m_laserIsUsed)
         {
             CheckIfPlayerIsInLaser();
-            RotateGolemToLookAtPoint();
+            RotateGolemToLookAtPoint(m_golemLookAtPoint);
         }
     }
 
@@ -297,29 +297,6 @@ public class LaserBeamController : BossAttack
         m_characterStats.OnCharacterExitInLaserArea();
     }
 
-    IEnumerator RotateGolemToLookAtPointWithTime(float toRot)
-    {
-        float fromRot = GolemController.transform.rotation.eulerAngles.y;
-
-        float fracJourney = 0;
-        float distance = Mathf.Abs(fromRot - toRot);
-        float vitesse = distance / m_timeToGolemLookAtPoint;
-        float actualValue = fromRot;
-
-        while (actualValue != toRot)
-        {
-            fracJourney += (Time.deltaTime) * vitesse / distance;
-            actualValue = Mathf.Lerp(fromRot, toRot, m_golemLookAtPointCurve.Evaluate(fracJourney));
-            GolemController.transform.eulerAngles = new Vector3(GolemController.transform.rotation.eulerAngles.x, actualValue, GolemController.transform.rotation.eulerAngles.z);
-            yield return null;
-        }
-    }
-    void RotateGolemToLookAtPoint()
-    {
-        GolemController.transform.LookAt(m_golemLookAtPoint);
-        GolemController.transform.localEulerAngles = new Vector3(0, GolemController.transform.localEulerAngles.y, GolemController.transform.localEulerAngles.z);
-    }
-
 #endregion
 
 #region Public Functions
@@ -369,11 +346,11 @@ public class LaserBeamController : BossAttack
 
         if(m_lastRotateDirectionWasRight)
         {
-            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_rightWorldRotation));
+            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_rightWorldRotation, m_timeToGolemLookAtPoint, m_golemLookAtPointCurve));
         }
         else
         {
-            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_leftWorldRotation));
+            StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_leftWorldRotation, m_timeToGolemLookAtPoint, m_golemLookAtPointCurve));
         }
     }
 
@@ -387,7 +364,7 @@ public class LaserBeamController : BossAttack
     public override void On_AttackEnd()
     {
         base.On_AttackEnd();
-        StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation));
+        StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation, m_timeToGolemLookAtPoint, m_golemLookAtPointCurve));
     }
 
 #endregion

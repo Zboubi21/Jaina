@@ -11,10 +11,12 @@ public class BossLifeBar : MonoBehaviour
     public GameObject cantBlinkAgent;
 
     GolemController m_golemController;
+    CameraManager m_cameraManager;
 
     void Start()
     {
         m_golemController = GolemController.Instance;
+        m_cameraManager = CameraManager.Instance;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,6 +38,7 @@ public class BossLifeBar : MonoBehaviour
             }
 
             m_golemController.On_StartFight();
+            m_cameraManager.StartCoroutine(m_cameraManager.SwitchCamOffset());
         }
     }
 

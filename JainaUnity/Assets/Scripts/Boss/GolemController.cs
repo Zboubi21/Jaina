@@ -41,10 +41,20 @@ public class GolemController : MonoBehaviour
         public Transform m_markExplosionRoot;
     }
 
-    [Header("SFX")]
-    [SerializeField] SFXs m_sfx;
-    [Serializable] public class SFXs {
-        public GameObject m_screamSfx;
+    [Header("Die")]
+    [SerializeField] Die m_die;
+    [Serializable] public class Die {
+        public float m_waitTimeToDieCrystal = 4.5f;
+        public GolemCrystal m_golemCrystal;
+        [Space]
+        public float m_waitTimeToAssEffect = 3f;
+        public RFX4_EffectSettings m_assFX;
+        [Space]
+        public GolemTornado m_golemTornado;
+        [Space]
+        public GolemSmoke m_golemSmoke;
+        [Space]
+        public GameObject[] m_dieSFX;
     }
 
     [Header("Alea Debug")]
@@ -75,6 +85,10 @@ public class GolemController : MonoBehaviour
 
     bool m_needToDoArmedialsWrath = false;
     bool m_needToFallStalactite = false;
+    bool m_fightIsStarted = false;
+
+    PlayerManager m_playerManager;
+    CameraManager m_cameraManager;
 
 #endregion
 
@@ -83,6 +97,9 @@ public class GolemController : MonoBehaviour
 
     float m_yStartRotation;
     public float YStartRotation { get { return m_yStartRotation; } }
+
+    bool m_isDead = false;
+    public bool IsDead { get { return m_isDead; } set { m_isDead = value; } }
     
 #endregion
 
@@ -105,6 +122,8 @@ public class GolemController : MonoBehaviour
 
     void Start()
     {
+        m_playerManager = PlayerManager.Instance;
+        m_cameraManager = CameraManager.Instance;
         m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
         m_yStartRotation = transform.eulerAngles.y;
@@ -126,9 +145,14 @@ public class GolemController : MonoBehaviour
                 m_aleaDebug.m_value[alea] ++;
             }
         }
-        if(Input.GetKeyDown(KeyCode.L))
+        if(Input.GetKeyDown(KeyCode.L) && m_fightIsStarted == false)
         {
             StartAttack();
+        }
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            m_isDead = true;
+            On_GolemDie();
         }
     }
 
@@ -163,30 +187,40 @@ public class GolemController : MonoBehaviour
 
     void StartAttack()
     {
+        if(m_isDead)
+        {
+            return;
+        }
+
+        if(m_fightIsStarted == false)
+        {
+            m_fightIsStarted = true;
+        }
         AttackType attackToDo = ChoseAttack();
-        Debug.Log("attackToDo = " + attackToDo);
+        // Debug.Log("attackToDo = " + attackToDo);
         if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
         {
             m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
         }
         m_lastAttack = attackToDo;
 
-        m_animator.SetBool("FightIdle", false);
+        SetBoolAnimation("FightIdle", false);
 
         switch (attackToDo)
         {
             case AttackType.StalactiteFall:
+                SetTriggerAnimation("Stalactite Fall");
             break;
 
             case AttackType.TripleStrike:
-                m_animator.SetTrigger("Triple Strike");
+                // m_animator.SetTrigger("Triple Strike");
             break;
 
             case AttackType.LavaBeam:
             break;
 
             case AttackType.ArmedialsWrath:
-                m_animator.SetTrigger("Armedial's Wrath");
+                SetTriggerAnimation("Armedial's Wrath");
             break;
         }
     }
@@ -276,6 +310,12 @@ public class GolemController : MonoBehaviour
         }
     }
 
+    IEnumerator WaitCrystalGolemDieFX()
+    {
+        yield return new WaitForSeconds(m_die.m_waitTimeToDieCrystal);
+        m_die.m_golemCrystal.On_CrystalDie();
+    }
+
 #endregion
 
 #region Public Functions
@@ -285,8 +325,7 @@ public class GolemController : MonoBehaviour
 
     public void On_StartFight()
     {
-        m_animator.SetTrigger("StartFight");
-        Level.AddFX(m_sfx.m_screamSfx, Vector3.zero, Quaternion.identity);
+        StartAttack();
     }
 
     public void OnEnemyDie()
@@ -296,7 +335,7 @@ public class GolemController : MonoBehaviour
 
     public void On_AttackIsFinished()
     {
-        m_animator.SetBool("FightIdle", true);
+        SetBoolAnimation("FightIdle", true);
         StartCoroutine(DelayToDoNextAttack());
     }
 
@@ -311,6 +350,32 @@ public class GolemController : MonoBehaviour
             m_livingStalactite --;
         }
     }
+
+    public void SetTriggerAnimation(string name)
+    {
+        m_animator.SetTrigger(name);
+    }
+    public void SetBoolAnimation(string name, bool value)
+    {
+        m_animator.SetBool(name, value);
+    }
+
+    public void On_GolemDie()
+    {
+        SetTriggerAnimation("Die");
+        StartCoroutine(WaitCrystalGolemDieFX());
+        m_die.m_assFX.FadeoutTime = m_die.m_waitTimeToAssEffect;
+        m_die.m_assFX.IsVisible = false;
+        m_die.m_golemTornado.On_ScaleTornado();
+        m_die.m_golemSmoke.On_ChangeSmoke();
+        for (int i = 0, l = m_die.m_dieSFX.Length; i < l; ++i)
+        {
+            Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
+        }
+        m_playerManager.SwitchPlayerToCinematicState(900);
+        m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
+        m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
+    }  
 
 #endregion
 

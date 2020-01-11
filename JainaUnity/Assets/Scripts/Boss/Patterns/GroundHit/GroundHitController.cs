@@ -24,13 +24,24 @@ public class GroundHitController : BossAttack
     [SerializeField] Image m_rightSignMesh;
 
     [Header("Anim Color")]
-    public AnimColor m_animColor;
+    [SerializeField] AnimColor m_animColor;
     [Serializable] public class AnimColor {
         public float m_delayBeforStart = 0;
         public Color m_startColor;
         public Color m_endColor;
         public float m_timeToDoColorAnim = 5;
         public AnimationCurve m_colorCurve;
+    }
+
+    [Header("Rotate")]
+    [SerializeField] Rotate m_rotate;
+    [Serializable] public class Rotate {
+        public float m_yRightAttackGolemRotation;
+        public float m_yMiddleAttackGolemRotation;
+        public float m_yLeftAttackGolemRotation;
+        [Space]
+        public float m_timeToRotate = 1;
+        public AnimationCurve m_rotateCurve;
     }
 
     [Header("Damage")]
@@ -46,15 +57,26 @@ public class GroundHitController : BossAttack
 
         public CameraShake m_cameraShake;
         [Serializable] public class CameraShake {
-        public float m_magnitude = 4f;
-        public float m_roughness = 4f;
-        public float m_fadeInTime = 0.1f;
-        public float m_fadeOutTime = 0.1f;
+            public float m_magnitude = 4f;
+            public float m_roughness = 4f;
+            public float m_fadeInTime = 0.1f;
+            public float m_fadeOutTime = 0.1f;
+        }
     }
+
+    [Header("Impact FX")]
+    public ImpactFX m_impactFX;
+    [Serializable] public class ImpactFX {
+        [Header("SFX")]
+        public GameObject[] m_sounds;
+
+        [Header("FX")]
+        public GameObject m_hitGroundFX;
+        public Transform[] m_hitPos = new Transform[3];
     }
 
     [Header("Stalactite Spawn")]
-    public StalactiteSpawn m_stalactiteSpawn;
+    [SerializeField] StalactiteSpawn m_stalactiteSpawn;
     [Serializable] public class StalactiteSpawn {
         public float m_timeToFallStalactite = 1;
         public SpawnParameters m_spawnPhaseTwo; 
@@ -160,8 +182,27 @@ public class GroundHitController : BossAttack
 
     void StartArea(AreaType areaType)
     {
+        GolemController.SetTriggerAnimation("Triple Strike");
         ShowHitSign(areaType);
         StartCoroutine(WaitTimeToDoDamage(areaType, m_actualPhaseNbr));
+        switch (areaType)
+        {
+            case AreaType.Left:
+                StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_yLeftAttackGolemRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
+            break;
+
+            case AreaType.Middle:
+                StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_yMiddleAttackGolemRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
+            break;
+
+            case AreaType.Right:
+                StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_yRightAttackGolemRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
+            break;
+        }
+        for (int i = 0, l = m_impactFX.m_sounds.Length; i < l; ++i)
+        {
+            Level.AddFX(m_impactFX.m_sounds[i], Vector3.zero, Quaternion.identity);
+        }
     }
 
     void ShowHitSign(AreaType areaType)
@@ -260,17 +301,21 @@ public class GroundHitController : BossAttack
         {
             case AreaType.Left:
                 m_leftArea.CheckArea();
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[0].position,  m_impactFX.m_hitPos[0].rotation);
             break;
 
             case AreaType.Middle:
                 m_middleArea.CheckArea();
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[1].position,  m_impactFX.m_hitPos[2].rotation);
             break;
 
             case AreaType.Right:
                 m_rightArea.CheckArea();
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[1].position,  m_impactFX.m_hitPos[2].rotation);
             break;
         }
         m_actualNbrOfAttack ++;
+        GolemController.SetTriggerAnimation("Triple Strike Idle");
         StartCoroutine(WaitTimeBetweenAttack());
     }
 
@@ -304,5 +349,6 @@ public class GroundHitController : BossAttack
     {
         base.On_AttackEnd();
         m_rightRotateDirection =! m_rightRotateDirection;
+        StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
     }
 }
