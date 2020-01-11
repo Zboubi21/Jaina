@@ -17,6 +17,7 @@ public class LaserBeamController : BossAttack
     [SerializeField] float m_waitTimeToRotateGolem = 2;
     [SerializeField] float m_timeToGolemLookAtPoint = 2;
     [SerializeField] AnimationCurve m_golemLookAtPointCurve;
+    [SerializeField] float m_waitAdditionnalTimeToEndAttack = 1f;
 
     // [Space]
     // [SerializeField] Transform m_centerPos;
@@ -191,7 +192,7 @@ public class LaserBeamController : BossAttack
         m_actualNbrOfRotation ++;
         if(m_actualNbrOfRotation == m_nbrOfRotationToDo)
         {
-            On_AttackEnd();
+            StartCoroutine(WaitAdditionnalTimeToEndAttack());
         }else{
             StartCoroutine(WaitTimeToRotateAgain());
         }
@@ -376,11 +377,16 @@ public class LaserBeamController : BossAttack
         }
     }
 
+    IEnumerator WaitAdditionnalTimeToEndAttack()
+    {
+        m_laserControlFx.StopLaserFx();
+        m_laserIsUsed = false;
+        yield return new WaitForSeconds(m_waitAdditionnalTimeToEndAttack);
+        On_AttackEnd();
+    }
     public override void On_AttackEnd()
     {
         base.On_AttackEnd();
-        m_laserControlFx.StopLaserFx();
-        m_laserIsUsed = false;
         StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation));
     }
 

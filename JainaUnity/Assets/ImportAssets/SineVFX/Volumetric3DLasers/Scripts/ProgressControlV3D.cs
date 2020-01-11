@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ProgressControlV3D : MonoBehaviour {
 
+    [Header("Anim")]
+    public float m_timeToChangeMaxDistance = 0.5f;
+    public AnimationCurve m_changeDistCurve;
+
+    [Header("ProgressControlV3D")]
     public bool changeAllMaxLength = true;
     public float maxLength = 32f;
     public float globalProgressSpeed = 1f;
@@ -28,6 +33,8 @@ public class ProgressControlV3D : MonoBehaviour {
     private Renderer[] renderers;
 
     bool m_laserIsActive = false;
+    float m_actualLength = 0;
+    IEnumerator m_changeLaserDistance;
 
     private void Start()
     {
@@ -47,11 +54,41 @@ public class ProgressControlV3D : MonoBehaviour {
         endPointEffect.emit = true;
         globalImpactProgress = 0f;
         sfxcontroller.StartSound();
+        StartChangeMaxLaserDistanceCorout(ChangeMaxLaserDistance(m_actualLength, maxLength));
     }
     public void StopLaserFx()
     {
-        m_laserIsActive = false;
-        endPointEffect.emit = false;
+        StartChangeMaxLaserDistanceCorout(ChangeMaxLaserDistance(m_actualLength, 0));
+    }
+    void StartChangeMaxLaserDistanceCorout(IEnumerator corout)
+    {
+        if(m_changeLaserDistance != null)
+        {
+            StopCoroutine(m_changeLaserDistance);
+        }
+        m_changeLaserDistance = corout;
+        StartCoroutine(m_changeLaserDistance);
+    }
+    IEnumerator ChangeMaxLaserDistance(float fromDist, float toDist)
+    {
+        float fracJourney = 0;
+        float distance = Mathf.Abs(fromDist - toDist);
+        float vitesse = distance / m_timeToChangeMaxDistance;
+        float actualValue = fromDist;
+
+        while (actualValue != toDist)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualValue = Mathf.Lerp(fromDist, toDist, m_changeDistCurve.Evaluate(fracJourney));
+            m_actualLength = actualValue;
+            yield return null;
+        }
+
+        if(toDist == 0)
+        {
+            m_laserIsActive = false;
+            endPointEffect.emit = false;
+        }
     }
 
     public void ChangeColor(Color color)
@@ -136,7 +173,7 @@ public class ProgressControlV3D : MonoBehaviour {
             ll.SetGlobalImpactProgress(globalImpactProgress);
             if (changeAllMaxLength == true)
             {
-                ll.maxLength = maxLength;
+                ll.maxLength = m_actualLength;
             }            
         }
 
@@ -146,7 +183,7 @@ public class ProgressControlV3D : MonoBehaviour {
             lil.SetGlobalImpactProgress(globalImpactProgress);
             if (changeAllMaxLength == true)
             {
-                lil.maxLength = maxLength;
+                lil.maxLength = m_actualLength;
             }
         }
 
