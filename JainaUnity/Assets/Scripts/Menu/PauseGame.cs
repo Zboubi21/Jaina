@@ -175,6 +175,15 @@ public class PauseGame : MainMenu {
         ObjectPooler.Instance.On_ReturnAllInPool();
 	}
 
+	public void ReturnToMainMenuFromBossFight(float waitTime){
+		StartCoroutine(ReturnToMainMenuFromBossFightCorout(waitTime));
+	}
+	IEnumerator ReturnToMainMenuFromBossFightCorout(float waitTime){
+		yield return new WaitForSeconds(waitTime);
+		StartLevel(0); //
+        ObjectPooler.Instance.On_ReturnAllInPool();
+	}
+
 	public override void Quit(){
 		m_canPaused = false;
 		Resume();

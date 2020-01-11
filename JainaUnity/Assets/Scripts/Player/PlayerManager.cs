@@ -436,9 +436,8 @@ public class PlayerManager : MonoBehaviour {
 		public AnimationCurve m_curve;
 
 		[Header("Boss Black Screen")]
-		public Animator m_blackScreenAnimator;
-		public float m_waitTimeToBlackScreen = 5;
-		public float m_waitTimeToGoMenu = 10;
+		public Animator m_winScreenAnimator;
+		public float m_waitTimeToShowWinText = 7.5f;
 
 		[HideInInspector] public bool m_isInCinematicState = false;
 		[HideInInspector] public float m_timeToBeInCinematic = 0;
@@ -2099,10 +2098,9 @@ public class PlayerManager : MonoBehaviour {
 
 	public IEnumerator StartBossFightBlackScreen()
 	{
-		yield return new WaitForSeconds(m_cinematic.m_waitTimeToBlackScreen);
-		m_cinematic.m_blackScreenAnimator.SetTrigger("BlackScreen");
-		yield return new WaitForSeconds(m_cinematic.m_waitTimeToGoMenu - m_cinematic.m_waitTimeToBlackScreen);
-		m_pauseGame.ReturnToMainMenuFromArena();
+		m_pauseGame.CanPaused = false;
+		yield return new WaitForSeconds(m_cinematic.m_waitTimeToShowWinText);
+		m_cinematic.m_winScreenAnimator.SetTrigger("Enabled");
 	}
 
 }

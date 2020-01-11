@@ -283,12 +283,12 @@ public class StalactiteController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
-            AddStalactiteState();
-        }
-        if(Input.GetKeyDown(KeyCode.M)){
-            RemoveStalactiteState();
-        }
+        // if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
+        //     AddStalactiteState();
+        // }
+        // if(Input.GetKeyDown(KeyCode.M)){
+        //     RemoveStalactiteState();
+        // }
     }
 
     void OnDisable()

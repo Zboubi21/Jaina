@@ -33,11 +33,11 @@ public class SmartWaveParticlesControllerV3D : MonoBehaviour
     {
         controlParticles = new ParticleSystem.Particle[5];
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            distortionSpherePS.Emit(1);
-            controlPS.Emit(1);
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     distortionSpherePS.Emit(1);
+        //     controlPS.Emit(1);
+        // }
     }
 
     void Update()
