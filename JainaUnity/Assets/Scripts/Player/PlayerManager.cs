@@ -435,6 +435,11 @@ public class PlayerManager : MonoBehaviour {
 		public float m_timeToEndAnim = 3;
 		public AnimationCurve m_curve;
 
+		[Header("Boss Black Screen")]
+		public Animator m_blackScreenAnimator;
+		public float m_waitTimeToBlackScreen = 5;
+		public float m_waitTimeToGoMenu = 10;
+
 		[HideInInspector] public bool m_isInCinematicState = false;
 		[HideInInspector] public float m_timeToBeInCinematic = 0;
 
@@ -2090,6 +2095,14 @@ public class PlayerManager : MonoBehaviour {
 			m_ui.m_heal.SetActive(true);
 			m_ui.m_cristalsBuff.SetActive(true);
 		}
+	}
+
+	public IEnumerator StartBossFightBlackScreen()
+	{
+		yield return new WaitForSeconds(m_cinematic.m_waitTimeToBlackScreen);
+		m_cinematic.m_blackScreenAnimator.SetTrigger("BlackScreen");
+		yield return new WaitForSeconds(m_cinematic.m_waitTimeToGoMenu - m_cinematic.m_waitTimeToBlackScreen);
+		m_pauseGame.ReturnToMainMenuFromArena();
 	}
 
 }

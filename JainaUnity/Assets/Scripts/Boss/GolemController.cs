@@ -87,6 +87,9 @@ public class GolemController : MonoBehaviour
     bool m_needToFallStalactite = false;
     bool m_fightIsStarted = false;
 
+    PlayerManager m_playerManager;
+    CameraManager m_cameraManager;
+
 #endregion
 
 #region Encapsulate Variables
@@ -119,6 +122,8 @@ public class GolemController : MonoBehaviour
 
     void Start()
     {
+        m_playerManager = PlayerManager.Instance;
+        m_cameraManager = CameraManager.Instance;
         m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
         m_yStartRotation = transform.eulerAngles.y;
@@ -367,6 +372,9 @@ public class GolemController : MonoBehaviour
         {
             Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
         }
+        m_playerManager.SwitchPlayerToCinematicState(900);
+        m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
+        m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
     }  
 
 #endregion

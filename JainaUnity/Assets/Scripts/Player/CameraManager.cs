@@ -27,8 +27,13 @@ public class CameraManager : MonoBehaviour {
 	[SerializeField] float m_distanceToMoveWithGamepad = 3;
 
 	[Header("Switch Camera")]
-	[SerializeField] float m_timeToSwitch = 3;
-	[SerializeField] AnimationCurve m_switchCurve;
+	[SerializeField] float m_timeToSwitchCamera = 3;
+	[SerializeField] AnimationCurve m_switchCameraCurve;
+
+	[Header("End Boss Fight")]
+	[SerializeField] Vector3 m_camPos;
+	[SerializeField] float m_timeToChangePos = 3;
+	[SerializeField] AnimationCurve m_changePosCurve;
 
 	[HideInInspector] public Vector3 m_cursorPosition;
 	
@@ -41,6 +46,8 @@ public class CameraManager : MonoBehaviour {
             m_canMoveCamera = value;
         }
     }
+
+	bool m_inEndBossCinematic = false;
 
 	PlayerManager m_playerManager;
 	Transform m_target;
@@ -68,6 +75,10 @@ public class CameraManager : MonoBehaviour {
 	}
 
     void LateUpdate (){
+		if(m_inEndBossCinematic)
+		{
+			return;
+		}
 		Vector3 targetCamPos = m_target.position + m_actualOffset;
 		Vector3 middlePos = Vector3.Lerp(targetCamPos, m_mousePoint, m_posBetweenTargetAndMouse);
 		transform.position = Vector3.Lerp(transform.position, middlePos, m_smoothing * Time.deltaTime);
@@ -112,12 +123,30 @@ public class CameraManager : MonoBehaviour {
 
         float fracJourney = 0;
         float distance = Vector3.Distance(fromOffset, toOffset);
-        float vitesse = distance / m_timeToSwitch;
+        float vitesse = distance / m_timeToSwitchCamera;
 
         while (m_actualOffset != toOffset)
         {
             fracJourney += (Time.deltaTime) * vitesse / distance;
-            m_actualOffset = Vector3.Lerp(fromOffset, toOffset, m_switchCurve.Evaluate(fracJourney));
+            m_actualOffset = Vector3.Lerp(fromOffset, toOffset, m_switchCameraCurve.Evaluate(fracJourney));
+            yield return null;
+        }
+	}
+
+	public IEnumerator LookEndBossFightPos()
+	{
+		m_inEndBossCinematic = true;
+		Vector3 fromPos = transform.position;
+		Vector3 toPos = m_camPos;
+
+        float fracJourney = 0;
+        float distance = Vector3.Distance(fromPos, toPos);
+        float vitesse = distance / m_timeToChangePos;
+
+        while (transform.position != toPos)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            transform.position = Vector3.Lerp(fromPos, toPos, m_changePosCurve.Evaluate(fracJourney));
             yield return null;
         }
 	}

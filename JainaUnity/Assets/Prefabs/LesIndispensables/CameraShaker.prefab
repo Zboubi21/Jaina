@@ -96,8 +96,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   m_distanceToMoveWithGamepad: 3
-  m_timeToSwitch: 3
-  m_switchCurve:
+  m_timeToSwitchCamera: 3
+  m_switchCameraCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -115,6 +115,32 @@ MonoBehaviour:
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_camPos: {x: 60, y: 40, z: 115}
+  m_timeToChangePos: 3
+  m_changePosCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
