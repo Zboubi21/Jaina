@@ -5,8 +5,11 @@ using UnityEngine.UI;
 public class Beam_Spawner_Controller : MonoBehaviour
 {
     public GameObject actifVFX;
+    public Transform startPivot;
     public Transform pivotPoint;
     public Image sign;
+    public Image butchSign;
+
     
     bool hasToLookAt = true;
     int _nbrOfShoot;

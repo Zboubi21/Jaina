@@ -69,7 +69,7 @@ public class PlayerStats : CharacterStats {
 
     public override bool HealDamage(int heal)
     {
-        if(CurrentHealth != maxHealth)
+        if(CurrentHealth != maxHealth && !PlayerManager.Instance.PlayerIsDead)
         {
             if (CurrentHealth + heal >= maxHealth)
             {

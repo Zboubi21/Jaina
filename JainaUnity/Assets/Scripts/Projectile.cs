@@ -18,7 +18,12 @@ public class Projectile : Spell {
 	[Space]
 	[Header("FX")]
 	[SerializeField] GameObject m_dieFX;
-	[Space]
+    [SerializeField] bool hasToRespectColliderNormal = true;
+    [SerializeField] float timeToGoBackToPool;
+    [SerializeField] GameObject parentToReturnToPool;
+    [Tooltip("Only if hasToRespectColliderNormal == false")]
+    [SerializeField] Quaternion rotation;
+    [Space]
 	[HideInInspector] public bool m_haveMaxLifeTime = true;
 	[HideInInspector] public bool m_dieWhenHit = true;
 	
@@ -55,6 +60,7 @@ public class Projectile : Spell {
     public override void Start(){
 		base.Start();
 		RBody = GetComponent<Rigidbody>();
+        StartCoroutine(GoBackToPoolAnyWay());
 	}
 
 	public virtual void FixedUpdate(){
@@ -64,9 +70,16 @@ public class Projectile : Spell {
 			ProjectileReturnToPool();
 		}
 	}
+    IEnumerator GoBackToPoolAnyWay()
+    {
+        yield return new WaitForSeconds(timeToGoBackToPool);
+        ProjectileReturnToPool();
+    }
 
 	void OnTriggerEnter(Collider col){
 
+
+        Debug.Log(col);
 		// Le tir d'un enemy touche le player
 		if(col.CompareTag("Player")){
 			if(m_projectileType == ProjectileType.Enemy){
@@ -155,6 +168,25 @@ public class Projectile : Spell {
                     DestroyProjectile();
                 }
             }
+            else if(m_projectileType == ProjectileType.Enemy)
+            {
+                switch (m_currentElement)
+                {
+                    case ElementType.None:
+                        controller.AddStalactiteState();
+                        break;
+                    case ElementType.Arcane:
+                        break;
+                    case ElementType.Ice:
+                        break;
+                    case ElementType.Fire:
+                        break;
+                }
+                if (m_dieWhenHit)
+                {
+                    DestroyProjectile();
+                }
+            }
         }
 	}
 
@@ -170,8 +202,15 @@ public class Projectile : Spell {
 
 	void DestroyProjectile(){
 		if(m_dieFX != null){
-			Level.AddFX(m_dieFX, transform.position, transform.rotation);
-		}
+            if (hasToRespectColliderNormal)
+            {
+			    Level.AddFX(m_dieFX, transform.position, transform.rotation);
+            }
+            else
+            {
+                Level.AddFX(m_dieFX, transform.position, rotation);
+            }
+        }
 		
 		PoolTracker poolTracker = GetComponent<PoolTracker>();
         if(poolTracker != null){
@@ -181,9 +220,19 @@ public class Projectile : Spell {
 		ProjectileReturnToPool();
 	}
 
-	public void ProjectileReturnToPool(){
-		ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
-	}
+	public void ProjectileReturnToPool()
+    {
+        if (hasToRespectColliderNormal)
+        {
+		    ObjectPoolerInstance.ReturnSpellToPool(m_spellType, gameObject);
+        }
+        else if(parentToReturnToPool != null)
+        {
+
+            ObjectPoolerInstance.ReturnSpellToPool(m_spellType, parentToReturnToPool);
+            gameObject.transform.position = parentToReturnToPool.transform.position;
+        }
+    }
 
 	public void SetTargetPos(Vector3 targetPos){
 		Vector3 projectileToMouse = targetPos - transform.position;

@@ -195,7 +195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &492282
 Transform:
   m_ObjectHideFlags: 0
@@ -1404,7 +1404,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 0}
+        key0: {r: 1, g: 0, b: 0, a: 0}
         key1: {r: 1, g: 1, b: 1, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0.039215688}
         key3: {r: 0, g: 0, b: 0, a: 0}
@@ -4806,6 +4806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 488446}
   - component: {fileID: 8246490}
+  - component: {fileID: 5849197228673681766}
   m_Layer: 13
   m_Name: Explosion
   m_TagString: Untagged
@@ -4837,9 +4838,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 258c0bd998368544a9d6ee546f91d593, type: 3}
+  m_audioClip: {fileID: 8300000, guid: fe3b797ec81f61d4daf3032fd0980b1e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.6
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4883,7 +4884,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -4923,6 +4924,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &5849197228673681766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca276f100dc423f42b4ad8b1728cd535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &141754
 GameObject:
   m_ObjectHideFlags: 0
@@ -4933,6 +4946,7 @@ GameObject:
   m_Component:
   - component: {fileID: 444928}
   - component: {fileID: 8202724}
+  - component: {fileID: 4628195469843616169}
   m_Layer: 13
   m_Name: Explosion2
   m_TagString: Untagged
@@ -4966,7 +4980,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 664d2aed339fa13488f0830dcfc0973e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1.3
   Loop: 0
   Mute: 0
@@ -5010,7 +5024,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -5050,6 +5064,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &4628195469843616169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca276f100dc423f42b4ad8b1728cd535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &162910
 GameObject:
   m_ObjectHideFlags: 0
@@ -5067,7 +5093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &420188
 Transform:
   m_ObjectHideFlags: 0
@@ -5235,6 +5261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 483074}
   - component: {fileID: 114696015101734952}
+  - component: {fileID: 6326941883314423897}
   m_Layer: 13
   m_Name: Effect21_Collision
   m_TagString: Untagged
@@ -5249,7 +5276,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168890}
-  m_LocalRotation: {x: 0, y: 0.7071066, z: 0, w: -0.70710695}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.498, y: 1.58, z: -0.182}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5263,7 +5290,7 @@ Transform:
   - {fileID: 477136}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114696015101734952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5290,6 +5317,19 @@ MonoBehaviour:
   Speed: 10
   AirDrag: 0.1
   UseGravity: 1
+--- !u!114 &6326941883314423897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac0a4bfe28935b4aba1d38e2d41a95f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_timeToDeleteFX: 1
 --- !u!1 &173204
 GameObject:
   m_ObjectHideFlags: 0
@@ -5307,7 +5347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &466340
 Transform:
   m_ObjectHideFlags: 0
@@ -10074,7 +10114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &469426
 Transform:
   m_ObjectHideFlags: 0
@@ -10278,7 +10318,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191558}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -10353,8 +10393,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 3
-      minScalar: 1.5
+      scalar: 2
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11481,8 +11521,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 11180
-        atime2: 42791
+        atime1: 14842
+        atime2: 18890
         atime3: 65535
         atime4: 0
         atime5: 0

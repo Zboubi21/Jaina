@@ -39,6 +39,7 @@
         Spell_Zglorgette,
 
         LavaArea,
+        LavaBeam,
 	}
     [System.Serializable] public enum ObjectType {
         LifePotion,

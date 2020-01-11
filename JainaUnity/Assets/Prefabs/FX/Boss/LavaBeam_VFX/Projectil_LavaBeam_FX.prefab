@@ -9,7 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7506673334395194730}
-  - component: {fileID: 7614319632435573060}
+  - component: {fileID: 5901306423233675942}
+  - component: {fileID: 1479507091600632010}
+  - component: {fileID: 7948300353467591508}
+  - component: {fileID: 9161275922556161484}
+  - component: {fileID: 8485865351649825050}
   m_Layer: 13
   m_Name: Collision
   m_TagString: Untagged
@@ -25,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7509759953392917912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7506800077825514304}
@@ -35,7 +39,36 @@ Transform:
   m_Father: {fileID: 7506680503324493560}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7614319632435573060
+--- !u!135 &5901306423233675942
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509759953392917912}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1479507091600632010
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509759953392917912}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 20
+  m_CollisionDetection: 0
+--- !u!114 &7948300353467591508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,28 +77,68 @@ MonoBehaviour:
   m_GameObject: {fileID: 7509759953392917912}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9320f3afef659b64cb7316ce3c0bfbab, type: 3}
+  m_Script: {fileID: 11500000, guid: c1e1bf80510c1644ca123cf53244e299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseCollisionDetect: 1
-  MaxDistnace: -1
-  Mass: 1
-  Speed: 100
-  RandomSpeedOffset: 0
-  AirDrag: 0.01
-  UseGravity: 0
-  ForceMode: 1
-  AddRealtimeForce: {x: 0, y: 0, z: 0}
-  MinSpeed: 0
-  ColliderRadius: 0.05
-  FreezeRotation: 0
-  UseTargetPositionAfterCollision: 0
-  EffectOnCollision: {fileID: 168890, guid: 2c936a8ea5b0042458c44a79a667c645, type: 3}
-  CollisionEffectInWorldSpace: 1
-  LookAtNormal: 1
-  CollisionEffectDestroyAfter: 5
-  DeactivateObjectsAfterCollision: []
-  HUE: -1
+  m_currentElement: 0
+  m_spellType: 14
+  m_scripToBecameInvisible: {fileID: 315452118}
+  m_projectileType: 1
+  m_damage: 20
+  m_speed: 100
+  m_dieFX: {fileID: 168890, guid: 2c936a8ea5b0042458c44a79a667c645, type: 3}
+  hasToRespectColliderNormal: 0
+  timeToGoBackToPool: 3
+  parentToReturnToPool: {fileID: 7510657013167114276}
+  rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_haveMaxLifeTime: 1
+  m_dieWhenHit: 1
+  m_maxLifeTime: 5
+--- !u!23 &9161275922556161484
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509759953392917912}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 157d5b2fac20a984da91c945e9e82e45, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &8485865351649825050
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509759953392917912}
+  m_Mesh: {fileID: 4300000, guid: 860470bfd6decf7419951805089d7e6c, type: 3}
 --- !u!1 &7510234692565574032
 GameObject:
   m_ObjectHideFlags: 0
@@ -4655,6 +4728,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7506680503324493560}
   - component: {fileID: 7614041727522626544}
+  - component: {fileID: 315452118}
+  - component: {fileID: 2463049875719255449}
   m_Layer: 13
   m_Name: Projectil_LavaBeam_FX
   m_TagString: Untagged
@@ -4669,14 +4744,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7510657013167114276}
-  m_LocalRotation: {x: 0.24635792, y: -0, z: -0, w: 0.9691789}
-  m_LocalPosition: {x: 36.18925, y: 3.14, z: 122.23577}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7506673334395194730}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 28.524002, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7614041727522626544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4693,7 +4768,7 @@ MonoBehaviour:
   UseLightShadows: 0
   UseFastFlatDecalsForMobiles: 1
   UseCustomColor: 1
-  EffectColor: {r: 1, g: 0, b: 0, a: 1}
+  EffectColor: {r: 1, g: 0.41951597, b: 0, a: 1}
   IsVisible: 1
   FadeoutTime: 1.5
   UseCollisionDetection: 1
@@ -4703,6 +4778,31 @@ MonoBehaviour:
   Speed: 100
   AirDrag: 0.01
   UseGravity: 0
+--- !u!114 &315452118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7510657013167114276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9d7e6e3d7650544af216154c1907e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2463049875719255449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7510657013167114276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a703564c42cde7479158f61879c0112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  childScript: {fileID: 7509759953392917912}
 --- !u!1 &7510830259313723696
 GameObject:
   m_ObjectHideFlags: 0
@@ -4721,7 +4821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7506934873633889582
 Transform:
   m_ObjectHideFlags: 0
@@ -4912,7 +5012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7506831458483736198
 Transform:
   m_ObjectHideFlags: 0
@@ -9528,10 +9628,10 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.5
+  m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.85
+    widthMultiplier: 1.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -9566,8 +9666,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 7710
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -9575,7 +9675,7 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
@@ -9601,7 +9701,7 @@ MonoBehaviour:
   Color:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -9618,7 +9718,7 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 0
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0

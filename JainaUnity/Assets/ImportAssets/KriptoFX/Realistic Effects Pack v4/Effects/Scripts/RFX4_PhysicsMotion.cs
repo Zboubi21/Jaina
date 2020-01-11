@@ -17,6 +17,7 @@ public class RFX4_PhysicsMotion : MonoBehaviour
     public Vector3 AddRealtimeForce = Vector3.zero;
     public float MinSpeed = 0;
     public float ColliderRadius = 0.05f;
+    public LayerMask layer;
     public bool FreezeRotation;
 
     public bool UseTargetPositionAfterCollision;
@@ -41,6 +42,21 @@ public class RFX4_PhysicsMotion : MonoBehaviour
     bool isInitializedForce;
     float currentSpeedOffset;
     private RFX4_EffectSettings effectSettings;
+
+    int damage;
+
+    public int Damage
+    {
+        get
+        {
+            return damage;
+        }
+
+        set
+        {
+            damage = value;
+        }
+    }
 
     void OnEnable ()
     {
@@ -72,7 +88,11 @@ public class RFX4_PhysicsMotion : MonoBehaviour
 
     void InitializeForce()
     {
-        rigid = gameObject.AddComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
+        if(rigid != null)
+        {
+            rigid = gameObject.AddComponent<Rigidbody>();
+        }
         rigid.mass = effectSettings.Mass;
         rigid.drag = effectSettings.AirDrag;
         rigid.useGravity = effectSettings.UseGravity;
@@ -82,9 +102,23 @@ public class RFX4_PhysicsMotion : MonoBehaviour
         rigid.AddForce(transform.forward * (effectSettings.Speed + currentSpeedOffset), ForceMode);
         isInitializedForce = true;
     }
-
+    Collider CheckCollision(Vector3 positon)
+    {
+                Debug.Log("Player");
+        Collider[] hitCollider = Physics.OverlapSphere(positon, ColliderRadius, layer);
+        for (int i = 0, l = hitCollider.Length; i < l; ++i)
+        {
+            if (hitCollider[i].CompareTag("Player") || hitCollider[i].CompareTag("Enemy"))
+            {
+                return hitCollider[i];
+            }
+        }
+        return null;
+    }
     void OnCollisionEnter(Collision collision)
     {
+        
+
         if (isCollided && !effectSettings.UseCollisionDetection) return;
         foreach (ContactPoint contact in collision.contacts)
         {
@@ -114,6 +148,8 @@ public class RFX4_PhysicsMotion : MonoBehaviour
             if (EffectOnCollision != null)
             {
                 var instance = Instantiate(EffectOnCollision, contact.point, new Quaternion()) as GameObject;
+                
+
 
                 if (HUE > -0.9f) RFX4_ColorHelper.ChangeObjectColorByHUE(instance, HUE);
                 
@@ -135,8 +171,8 @@ public class RFX4_PhysicsMotion : MonoBehaviour
         }
 
 
-        if (rigid != null) Destroy(rigid);
-        if (collid != null) Destroy(collid);
+        //if (rigid != null) Destroy(rigid);
+        //if (collid != null) Destroy(collid);
     }
 
 
