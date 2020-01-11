@@ -41,10 +41,20 @@ public class GolemController : MonoBehaviour
         public Transform m_markExplosionRoot;
     }
 
-    [Header("SFX")]
-    [SerializeField] SFXs m_sfx;
-    [Serializable] public class SFXs {
-
+    [Header("Die")]
+    [SerializeField] Die m_die;
+    [Serializable] public class Die {
+        public float m_waitTimeToDieCrystal = 4.5f;
+        public GolemCrystal m_golemCrystal;
+        [Space]
+        public float m_waitTimeToAssEffect = 3f;
+        public RFX4_EffectSettings m_assFX;
+        [Space]
+        public GolemTornado m_golemTornado;
+        [Space]
+        public GolemSmoke m_golemSmoke;
+        [Space]
+        public GameObject[] m_dieSFX;
     }
 
     [Header("Alea Debug")]
@@ -84,6 +94,9 @@ public class GolemController : MonoBehaviour
 
     float m_yStartRotation;
     public float YStartRotation { get { return m_yStartRotation; } }
+
+    bool m_isDead = false;
+    public bool IsDead { get { return m_isDead; } set { m_isDead = value; } }
     
 #endregion
 
@@ -131,6 +144,11 @@ public class GolemController : MonoBehaviour
         {
             StartAttack();
         }
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            m_isDead = true;
+            On_GolemDie();
+        }
     }
 
 #endregion
@@ -164,12 +182,17 @@ public class GolemController : MonoBehaviour
 
     void StartAttack()
     {
+        if(m_isDead)
+        {
+            return;
+        }
+
         if(m_fightIsStarted == false)
         {
             m_fightIsStarted = true;
         }
         AttackType attackToDo = ChoseAttack();
-        Debug.Log("attackToDo = " + attackToDo);
+        // Debug.Log("attackToDo = " + attackToDo);
         if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
         {
             m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
@@ -282,6 +305,12 @@ public class GolemController : MonoBehaviour
         }
     }
 
+    IEnumerator WaitCrystalGolemDieFX()
+    {
+        yield return new WaitForSeconds(m_die.m_waitTimeToDieCrystal);
+        m_die.m_golemCrystal.On_CrystalDie();
+    }
+
 #endregion
 
 #region Public Functions
@@ -325,6 +354,20 @@ public class GolemController : MonoBehaviour
     {
         m_animator.SetBool(name, value);
     }
+
+    public void On_GolemDie()
+    {
+        SetTriggerAnimation("Die");
+        StartCoroutine(WaitCrystalGolemDieFX());
+        m_die.m_assFX.FadeoutTime = m_die.m_waitTimeToAssEffect;
+        m_die.m_assFX.IsVisible = false;
+        m_die.m_golemTornado.On_ScaleTornado();
+        m_die.m_golemSmoke.On_ChangeSmoke();
+        for (int i = 0, l = m_die.m_dieSFX.Length; i < l; ++i)
+        {
+            Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
+        }
+    }  
 
 #endregion
 

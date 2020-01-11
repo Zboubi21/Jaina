@@ -15,14 +15,20 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 #endregion Singleton
-
-	[SerializeField] Vector3 m_offset = new Vector3(0, 20, -20);
+	
+	[SerializeField] bool m_startWithCloseOffset = true;
+	[SerializeField] Vector3 m_closeOffset = new Vector3(0, 20, -20);
+	[SerializeField] Vector3 m_farOffset = new Vector3(0, 30, -20);
     [SerializeField] float m_smoothing = 5f;
     [SerializeField] float m_clampedValue = 1f;
 	[SerializeField, Range(0, 1)] float m_posBetweenTargetAndMouse = 0.5f;
 	[SerializeField] LayerMask m_groundLayer;
 	[Space]
 	[SerializeField] float m_distanceToMoveWithGamepad = 3;
+
+	[Header("Switch Camera")]
+	[SerializeField] float m_timeToSwitch = 3;
+	[SerializeField] AnimationCurve m_switchCurve;
 
 	[HideInInspector] public Vector3 m_cursorPosition;
 	
@@ -39,13 +45,17 @@ public class CameraManager : MonoBehaviour {
 	PlayerManager m_playerManager;
 	Transform m_target;
 	Vector3 m_mousePoint;
+	Vector3 m_actualOffset;
+	bool m_isCloseOffset = true;
 
     void Start (){
 		m_playerManager = PlayerManager.Instance;
 		m_target = m_playerManager.transform;
         // m_offset = transform.position - m_target.position;
 		// transform.position = m_target.position + m_offset;
-		m_mousePoint = m_target.position + m_offset;
+		m_isCloseOffset = m_startWithCloseOffset;
+		m_actualOffset = m_isCloseOffset ? m_closeOffset : m_farOffset;
+		m_mousePoint = m_target.position + m_actualOffset;
     }
 
 	void Update(){
@@ -53,15 +63,15 @@ public class CameraManager : MonoBehaviour {
 			Ray();
 			MoveCameraWithGamepad();
 		}else{
-			m_mousePoint = m_target.position + m_offset;
+			m_mousePoint = m_target.position + m_actualOffset;
 		}
 	}
 
     void LateUpdate (){
-		Vector3 targetCamPos = m_target.position + m_offset;
+		Vector3 targetCamPos = m_target.position + m_actualOffset;
 		Vector3 middlePos = Vector3.Lerp(targetCamPos, m_mousePoint, m_posBetweenTargetAndMouse);
 		transform.position = Vector3.Lerp(transform.position, middlePos, m_smoothing * Time.deltaTime);
-		transform.position = new Vector3(transform.position.x, m_offset.y, transform.position.z);
+		transform.position = new Vector3(transform.position.x, m_actualOffset.y, transform.position.z);
     }
 
 	void Ray(){
@@ -74,8 +84,8 @@ public class CameraManager : MonoBehaviour {
         if(Physics.Raycast (ray, out floorHit, Mathf.Infinity, m_groundLayer)){
 			Vector3 hitPoint = floorHit.point;
 			m_cursorPosition = hitPoint;
-			hitPoint = new Vector3(Mathf.Clamp(hitPoint.x, m_target.position.x - m_clampedValue, m_target.position.x + m_clampedValue), m_offset.y, Mathf.Clamp(hitPoint.z, m_target.position.z - m_clampedValue, m_target.position.z + m_clampedValue));
-            m_mousePoint = hitPoint + m_offset;
+			hitPoint = new Vector3(Mathf.Clamp(hitPoint.x, m_target.position.x - m_clampedValue, m_target.position.x + m_clampedValue), m_actualOffset.y, Mathf.Clamp(hitPoint.z, m_target.position.z - m_clampedValue, m_target.position.z + m_clampedValue));
+            m_mousePoint = hitPoint + m_actualOffset;
 		}
 	}
 
@@ -84,13 +94,32 @@ public class CameraManager : MonoBehaviour {
 			return;
 		}
 		Vector3 targetPos = m_playerManager.transform.position + m_playerManager.RotationInput * m_distanceToMoveWithGamepad;
-		targetPos.y = m_offset.y;
-		m_mousePoint = targetPos + m_offset;
+		targetPos.y = m_actualOffset.y;
+		m_mousePoint = targetPos + m_actualOffset;
 	}
 
 	public void ResetPosition(){
-		transform.position = m_target.position + m_offset;
-		m_mousePoint = m_target.position + m_offset;
+		transform.position = m_target.position + m_actualOffset;
+		m_mousePoint = m_target.position + m_actualOffset;
+	}
+
+	public IEnumerator SwitchCamOffset()
+	{
+		Vector3 fromOffset = m_actualOffset;
+		Vector3 toOffset = m_isCloseOffset ? m_farOffset : m_closeOffset;
+
+		m_isCloseOffset =! m_isCloseOffset;
+
+        float fracJourney = 0;
+        float distance = Vector3.Distance(fromOffset, toOffset);
+        float vitesse = distance / m_timeToSwitch;
+
+        while (m_actualOffset != toOffset)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            m_actualOffset = Vector3.Lerp(fromOffset, toOffset, m_switchCurve.Evaluate(fracJourney));
+            yield return null;
+        }
 	}
 
 	void OnDrawGizmos(){
