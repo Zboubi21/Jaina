@@ -176,23 +176,23 @@ public class GolemController : MonoBehaviour
         }
         m_lastAttack = attackToDo;
 
-        m_animator.SetBool("FightIdle", false);
+        SetBoolAnimation("FightIdle", false);
 
         switch (attackToDo)
         {
             case AttackType.StalactiteFall:
-                m_animator.SetTrigger("Stalactite Fall");
+                SetTriggerAnimation("Stalactite Fall");
             break;
 
             case AttackType.TripleStrike:
-                m_animator.SetTrigger("Triple Strike");
+                // m_animator.SetTrigger("Triple Strike");
             break;
 
             case AttackType.LavaBeam:
             break;
 
             case AttackType.ArmedialsWrath:
-                m_animator.SetTrigger("Armedial's Wrath");
+                SetTriggerAnimation("Armedial's Wrath");
             break;
         }
     }
@@ -301,7 +301,7 @@ public class GolemController : MonoBehaviour
 
     public void On_AttackIsFinished()
     {
-        m_animator.SetBool("FightIdle", true);
+        SetBoolAnimation("FightIdle", true);
         StartCoroutine(DelayToDoNextAttack());
     }
 
@@ -315,6 +315,15 @@ public class GolemController : MonoBehaviour
         {
             m_livingStalactite --;
         }
+    }
+
+    public void SetTriggerAnimation(string name)
+    {
+        m_animator.SetTrigger(name);
+    }
+    public void SetBoolAnimation(string name, bool value)
+    {
+        m_animator.SetBool(name, value);
     }
 
 #endregion
