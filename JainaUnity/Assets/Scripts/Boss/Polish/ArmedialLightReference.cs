@@ -6,4 +6,5 @@ public class ArmedialLightReference : MonoBehaviour
 {
     public Light[] lights;
     public Material[] mats;
+    public Transform VFX_Spawn;
 }

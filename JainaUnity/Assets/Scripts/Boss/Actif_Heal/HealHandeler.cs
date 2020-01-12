@@ -15,10 +15,11 @@ public class HealHandeler : MonoBehaviour
     float _currenthealCooldown;
     [Space]
     public ArmedialLightReference artefactRef;
-    public AnimationCurve artefactLightPath;
+    public AnimationCurve artefactLightPathCurve;
     public float timeToLightFeedBack;
     public GameObject m_healSFX;
     public GameObject m_healVFX;
+    public GameObject m_healVFX_ForArmedial;
 
     ReferenceScript _getImg;
     CharacterStats stats;
@@ -58,6 +59,7 @@ public class HealHandeler : MonoBehaviour
             if(artefactRef != null)
             {
                 StartCoroutine(ArmedialsHealFeedBack());
+                Level.AddFX(m_healVFX_ForArmedial, artefactRef.VFX_Spawn.position, artefactRef.VFX_Spawn.rotation);
             }
             Level.AddFX(m_healSFX, Vector3.zero, Quaternion.identity);
             Level.AddFX(m_healVFX, stats.gameObject.transform.position, stats.gameObject.transform.rotation);
@@ -71,6 +73,11 @@ public class HealHandeler : MonoBehaviour
 
         float _currentTimeOfAnimation = 0;
 
+        for (int i = 0, l = artefactRef.lights.Length; i < l; ++i)
+        {
+            artefactRef.lights[i].transform.position = artefactRef.lights[i].gameObject.GetComponent<ArmedialLightPathReference>().startPoint.position;
+        }
+
         while (_currentTimeOfAnimation / timeToLightFeedBack <= 1)
         {
             yield return new WaitForSeconds(0.01f);
@@ -81,7 +88,9 @@ public class HealHandeler : MonoBehaviour
                 float startPointY = artefactRef.lights[i].gameObject.GetComponent<ArmedialLightPathReference>().startPoint.position.y;
                 float endPointY = artefactRef.lights[i].gameObject.GetComponent<ArmedialLightPathReference>().endPoint.position.y;
                 Vector3 posY = artefactRef.lights[i].transform.position;
-                posY.y = Mathf.Lerp(startPointY, endPointY, _currentTimeOfAnimation / timeToLightFeedBack);
+                float evaluate = artefactLightPathCurve.Evaluate(_currentTimeOfAnimation / timeToLightFeedBack);
+                posY.y = Mathf.Lerp(startPointY, endPointY, evaluate);
+                artefactRef.lights[i].transform.position = posY;
                 artefactRef.lights[i].intensity = Mathf.Lerp(0, 2, _currentTimeOfAnimation / timeToLightFeedBack);
             }
 
