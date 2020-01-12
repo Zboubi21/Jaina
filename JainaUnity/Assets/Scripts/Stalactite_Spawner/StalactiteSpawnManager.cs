@@ -26,6 +26,9 @@ public class StalactiteSpawnManager : BossAttack
     [Header("FX")]
     [SerializeField] GameObject[] m_screamSfx;
 
+    [Header("Debug")]
+    [SerializeField] bool m_debugInput = false;
+
     List<int> usedSlots = new List<int>();
     List<int> possibleSlotInts = new List<int>();
 
@@ -62,12 +65,12 @@ public class StalactiteSpawnManager : BossAttack
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && m_debugInput)
         {
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);   //Generation for the stalactite patern
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && m_debugInput)
         {
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], true, true);   //Generation for the smash patern in P3
         }

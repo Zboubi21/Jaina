@@ -73,7 +73,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
+  m_Intensity: 2.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnOn:
-    m_lightIntensity: 3
+    m_lightIntensity: 2.5
     m_timeToChangeLight: 3
     m_changeLightCurve:
       serializedVersion: 2
@@ -5517,7 +5517,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
+  m_Intensity: 2.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -5843,7 +5843,7 @@ MonoBehaviour:
     - {fileID: 4165956475555171865}
     - {fileID: 3451406331175806521}
     - {fileID: 4227845682150806435}
-  _name: Armedial's Golem
+  _name: Armedial's Guardian
   m_enemyPowerLevel: 2
   m_enemyType: 0
   _hasBackPack: 0
@@ -5933,6 +5933,59 @@ MonoBehaviour:
     m_dieSFX:
     - {fileID: 3302716250885165797, guid: caa1f2632d351174296d27ee9e74ec87, type: 3}
     - {fileID: 7263396520350872751, guid: 95311ada3bff1d34cbff32f43eb202a5, type: 3}
+    m_armedialLight: {fileID: 0}
+    m_waitTimeToActivateArtefact: 5
+    m_toLightValue: 2
+    m_timeToActivateLight: 3
+    m_activateLightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_timeToChangeColor: 3
+    m_materialCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   m_aleaDebug:
     m_useDebug: 0
     m_debugInput: 103
@@ -6245,7 +6298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnOn:
-    m_lightIntensity: 3
+    m_lightIntensity: 2.5
     m_timeToChangeLight: 3
     m_changeLightCurve:
       serializedVersion: 2
@@ -6443,7 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnOn:
-    m_lightIntensity: 3
+    m_lightIntensity: 2.5
     m_timeToChangeLight: 3
     m_changeLightCurve:
       serializedVersion: 2
@@ -6780,7 +6833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnOn:
-    m_lightIntensity: 3
+    m_lightIntensity: 2.5
     m_timeToChangeLight: 3
     m_changeLightCurve:
       serializedVersion: 2
@@ -12431,7 +12484,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
+  m_Intensity: 2.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -17472,7 +17525,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
+  m_Intensity: 2.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
