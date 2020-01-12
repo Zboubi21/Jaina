@@ -28,6 +28,7 @@ public class EnemyStats : CharacterStats {
     public bool _bigBossFight;
     public bool _isNotMoving;
     public bool needsASelectionCircle = true;
+
     [Header("Debuf Var")]
     public GameObject DebufRoot;
     public GameObject MarqueArcane;

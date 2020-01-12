@@ -32,16 +32,6 @@ public class FireProjectiles : Projectile {
 	float m_anotherTimer = 0;
 	// bool m_canMove = true;
 
-	FireFlameInstantiator ffi;
-	public FireFlameInstantiator Ffi{
-        get{
-            return ffi;
-        }
-        set{
-            ffi = value;
-        }
-    }
-
 	void OnEnable(){
 		m_dieWhenHit = false;
 		m_haveMaxLifeTime = false;
@@ -49,13 +39,6 @@ public class FireProjectiles : Projectile {
 		m_duration = (m_distance + (m_distance / 2)) / m_speed;
 		m_timeFromStart = 0;
 		m_anotherTimer = 0;
-
-		// Invoke("DestroyProjectile", m_duration);
-
-		FireFlameInstantiator ffi = GetComponentInParent<FireFlameInstantiator>();
-		if(ffi != null){
-			ffi.DestroyInstantiator(m_duration + 1);
-		}
 	}
 
 

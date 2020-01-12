@@ -25,6 +25,9 @@ public class RFX4_EffectSettings : MonoBehaviour
     public float AirDrag = 0.1f;
     public bool UseGravity = true;
 
+    [Space]
+    public GameObject[] m_objectsToActive;
+
     private const string distortionNamePC = "KriptoFX/RFX4/Distortion";
     private const string distortionNameMobile = "KriptoFX/RFX4/DistortionMobile";
     private bool isCheckedDistortion;
@@ -35,7 +38,7 @@ public class RFX4_EffectSettings : MonoBehaviour
     Renderer[] skinRenderers;
     Light[] lights;
     ParticleSystem[] particleSystems;
-    private AudioSource[] audioSources;
+    public AudioSource[] audioSources;
 
     private void Awake()
     {
@@ -212,7 +215,7 @@ public class RFX4_EffectSettings : MonoBehaviour
 
         foreach (var audioSource in audioSources)
         {
-            audioSource.volume -= (1f / 30f) / FadeoutTime;;
+            audioSource.volume -= (1f / 30f) / FadeoutTime;
         }
     }
 
@@ -222,7 +225,7 @@ public class RFX4_EffectSettings : MonoBehaviour
         skinRenderers = GetComponentsInChildren<SkinnedMeshRenderer>(true);
         lights = GetComponentsInChildren<Light>(true);
         particleSystems = GetComponentsInChildren<ParticleSystem>(true);
-        audioSources = GetComponentsInChildren<AudioSource>();
+        // audioSources = GetComponentsInChildren<AudioSource>();
     }
 
     void Fadein()
@@ -232,6 +235,11 @@ public class RFX4_EffectSettings : MonoBehaviour
         {
             go.gameObject.SetActive(false);
             go.gameObject.SetActive(true);
+        }
+
+        for (int i = 0, l = m_objectsToActive.Length; i < l; ++i)
+        {
+            m_objectsToActive[i].SetActive(true);
         }
 
         foreach (var rend in renderers)

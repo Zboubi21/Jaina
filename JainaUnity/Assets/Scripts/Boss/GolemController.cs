@@ -41,6 +41,12 @@ public class GolemController : MonoBehaviour
         public Transform m_markExplosionRoot;
     }
 
+    [Header("Staging")]
+    [SerializeField] Staging m_staging;
+    [Serializable] public class Staging {
+        public float m_waitTimeToLaunchFirstAttack = 3;
+    }
+
     [Header("Die")]
     [SerializeField] Die m_die;
     [Serializable] public class Die {
@@ -86,6 +92,7 @@ public class GolemController : MonoBehaviour
     bool m_needToDoArmedialsWrath = false;
     bool m_needToFallStalactite = false;
     bool m_fightIsStarted = false;
+    EnemyStats m_enemyStats;
 
     PlayerManager m_playerManager;
     CameraManager m_cameraManager;
@@ -127,6 +134,7 @@ public class GolemController : MonoBehaviour
         m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
         m_yStartRotation = transform.eulerAngles.y;
+        m_enemyStats = GetComponent<EnemyStats>();
     }
 
     void FixedUpdate()
@@ -313,7 +321,13 @@ public class GolemController : MonoBehaviour
     IEnumerator WaitCrystalGolemDieFX()
     {
         yield return new WaitForSeconds(m_die.m_waitTimeToDieCrystal);
-        m_die.m_golemCrystal.On_CrystalDie();
+        m_die.m_golemCrystal.On_CrystalLive(false);
+    }
+
+    IEnumerator WaitTimeToLunchFirstAttack()
+    {
+        yield return new WaitForSeconds(m_staging.m_waitTimeToLaunchFirstAttack);
+        StartAttack();
     }
 
 #endregion
@@ -325,7 +339,11 @@ public class GolemController : MonoBehaviour
 
     public void On_StartFight()
     {
-        StartAttack();
+        m_die.m_golemCrystal.On_CrystalLive(true);
+        m_die.m_golemTornado.On_ScaleTornado(true);
+        m_die.m_assFX.IsVisible = true;
+        StartCoroutine(WaitTimeToLunchFirstAttack());
+        m_enemyStats.m_canTakeDamage = true;
     }
 
     public void OnEnemyDie()
@@ -366,7 +384,7 @@ public class GolemController : MonoBehaviour
         StartCoroutine(WaitCrystalGolemDieFX());
         m_die.m_assFX.FadeoutTime = m_die.m_waitTimeToAssEffect;
         m_die.m_assFX.IsVisible = false;
-        m_die.m_golemTornado.On_ScaleTornado();
+        m_die.m_golemTornado.On_ScaleTornado(false);
         m_die.m_golemSmoke.On_ChangeSmoke();
         for (int i = 0, l = m_die.m_dieSFX.Length; i < l; ++i)
         {
