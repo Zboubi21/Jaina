@@ -19,7 +19,7 @@ public class Projectile : Spell {
 	[Header("FX")]
 	[SerializeField] GameObject m_dieFX;
     [SerializeField] bool hasToRespectColliderNormal = true;
-    [SerializeField] float timeToGoBackToPool;
+    [SerializeField] float timeToGoBackToPool = 3;
     [SerializeField] GameObject parentToReturnToPool;
     [Tooltip("Only if hasToRespectColliderNormal == false")]
     [SerializeField] Quaternion rotation;
@@ -27,9 +27,9 @@ public class Projectile : Spell {
 	[HideInInspector] public bool m_haveMaxLifeTime = true;
 	[HideInInspector] public bool m_dieWhenHit = true;
 	
-	public float m_maxLifeTime = 5;
 	Rigidbody m_rBody;
-    #region Get Set
+
+#region Get Set
     public int Damage
     {
         get
@@ -55,20 +55,24 @@ public class Projectile : Spell {
             m_rBody = value;
         }
     }
-    #endregion
+#endregion
+
+    void OnEnable()
+    {
+        StartCoroutine(GoBackToPoolAnyWay());
+    }
 
     public override void Start(){
 		base.Start();
 		RBody = GetComponent<Rigidbody>();
-        StartCoroutine(GoBackToPoolAnyWay());
 	}
 
 	public virtual void FixedUpdate(){
 		RBody.velocity = transform.forward * m_speed;
 
-		if(m_scripToBecameInvisible.TimeToDestroy){
-			ProjectileReturnToPool();
-		}
+		// if(m_scripToBecameInvisible.TimeToDestroy){
+		// 	ProjectileReturnToPool();
+		// }
 	}
     IEnumerator GoBackToPoolAnyWay()
     {
@@ -78,8 +82,8 @@ public class Projectile : Spell {
 
 	void OnTriggerEnter(Collider col){
 
+        // Debug.Log(col);
 
-        Debug.Log(col);
 		// Le tir d'un enemy touche le player
 		if(col.CompareTag("Player")){
 			if(m_projectileType == ProjectileType.Enemy){

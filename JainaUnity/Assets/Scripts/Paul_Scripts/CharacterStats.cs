@@ -8,6 +8,8 @@ public class CharacterStats : MonoBehaviour {
     [Range(0,100)]
     public float m_currentHealth = 100;
 
+    public bool m_canTakeDamage = true;
+
     public Stats damage;
     public Stats armor;
 
@@ -238,6 +240,8 @@ public class CharacterStats : MonoBehaviour {
 
     public virtual void TakeDamage (int damage)
     {   
+        if(!m_canTakeDamage) return;
+
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
@@ -278,6 +282,7 @@ public class CharacterStats : MonoBehaviour {
     }
 
     public void StartHitFxCorout(){
+        if(!m_canTakeDamage) return;
         StartCoroutine(HitFxCorout());
     }
     IEnumerator HitFxCorout(){

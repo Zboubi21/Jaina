@@ -18,16 +18,17 @@ public class FireFlameInstantiator : MonoBehaviour {
 
 		for(int i = 0; i < m_objectNb; ++i){
 			FireProjectiles projectile = m_playerManager.ObjectPooler.SpawnSpellFromPool(SpellType.FireBalls, transform.position, m_playerManager.m_mesh.m_playerMesh.transform.rotation * Quaternion.Euler(0, m_rotationDivise * i, 0)).GetComponent<FireProjectiles>();
-			if(projectile != null){
-				projectile.Ffi = this;
-			}
+			// if(projectile != null){
+			// 	projectile.Ffi = this;
+			// }
 		}
-
+		StartCoroutine(WaitToDestroy());
 	}
 
-	public void DestroyInstantiator(float time){
-		// Debug.Log("Je vais mourir dans : " + time);
-		Destroy(gameObject, time);
+	IEnumerator WaitToDestroy()
+	{
+		yield return new WaitForSeconds(1);
+		Destroy(gameObject);
 	}
 
 }
