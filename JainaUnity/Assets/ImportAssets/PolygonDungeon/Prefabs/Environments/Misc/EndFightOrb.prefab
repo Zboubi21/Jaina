@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2312722}
   - component: {fileID: 8664487736093598963}
   m_Layer: 21
-  m_Name: SM_Env_GlowingOrb_02
+  m_Name: EndFightOrb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,6 @@ Transform:
   - {fileID: 2560410514312547486}
   - {fileID: 1542473320572045454}
   - {fileID: 5082443098633033530}
-  - {fileID: 1534494882}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -103,78 +102,9 @@ MonoBehaviour:
   - {fileID: 1542473320572045455}
   - {fileID: 5082443098633033531}
   mats:
-  - {fileID: 2100000, guid: 7d6f6977a71c30c4880f1c557ae722a5, type: 2}
-  - {fileID: 2100000, guid: e3023c0182312214e86398117753528d, type: 2}
+  - {fileID: 2100000, guid: 8f6eddfc4ee9e3b4c94bbe085c78edc8, type: 2}
+  - {fileID: 2100000, guid: 2855baf005c08e947aac73273e585531, type: 2}
   VFX_Spawn: {fileID: 3525037570533109259}
---- !u!1 &1534494881
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1534494882}
-  - component: {fileID: 1534494883}
-  m_Layer: 21
-  m_Name: Point Light (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1534494882
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1534494881}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.96, y: 1.39, z: 5.99}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 411698}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &1534494883
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1534494881}
-  m_Enabled: 1
-  serializedVersion: 8
-  m_Type: 2
-  m_Color: {r: 0, g: 1, b: 0.94070315, a: 1}
-  m_Intensity: 2
-  m_Range: 20.443497
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!1 &2127933857
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +117,7 @@ GameObject:
   - component: {fileID: 2127933859}
   - component: {fileID: 555188685816646109}
   m_Layer: 21
-  m_Name: Point Light
+  m_Name: Point Light (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -69,6 +69,20 @@ public class GolemController : MonoBehaviour
         public GolemSmoke m_golemSmoke;
         [Space]
         public GameObject[] m_dieSFX;
+
+        [Space]
+        [Header("Armedial's Artefact")]
+        public ArmedialLightReference m_armedialLight;
+        public float m_waitTimeToActivateArtefact = 5;
+
+        [Header("Light")]
+        public float m_toLightValue = 2;
+        public float m_timeToActivateLight = 3;
+        public AnimationCurve m_activateLightCurve;
+
+        [Header("Material")]
+        public float m_timeToChangeColor = 3;
+        public AnimationCurve m_materialCurve;
     }
 
     [Header("Alea Debug")]
@@ -405,6 +419,55 @@ public class GolemController : MonoBehaviour
 		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
 	}
 
+    void ActivateArmedialLight()
+    {
+        for (int i = 0, l = m_die.m_armedialLight.lights.Length; i < l; ++i)
+        {
+            StartCoroutine(ChangeArmedialLightValue(m_die.m_armedialLight.lights[i], m_die.m_toLightValue));
+        }
+        StartCoroutine(ChangeArmedialMaterialtValue());
+    }
+    IEnumerator ChangeArmedialLightValue(Light light, float toValue)
+    {
+        yield return new WaitForSeconds(m_die.m_waitTimeToActivateArtefact);
+
+        float fromValue = light.intensity;
+        float fracJourney = 0;
+        float distance = Mathf.Abs(fromValue - toValue);
+        float vitesse = distance / m_die.m_timeToActivateLight;
+        float actualValue = fromValue;
+
+        while (actualValue != toValue)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualValue = Mathf.Lerp(fromValue, toValue, m_die.m_activateLightCurve.Evaluate(fracJourney));
+            light.intensity = actualValue;
+            yield return null;
+        }
+    }
+    IEnumerator ChangeArmedialMaterialtValue()
+    {
+        yield return new WaitForSeconds(m_die.m_waitTimeToActivateArtefact);
+        
+        Color fromValue = m_die.m_armedialLight.mats[0].color;
+        Color actualValue = fromValue;
+        Color toValue = m_die.m_armedialLight.mats[1].color;
+
+        float fracJourney = 0;
+        float distance = Mathf.Abs(fromValue.r - toValue.r) + Mathf.Abs(fromValue.g - toValue.g) + Mathf.Abs(fromValue.b - toValue.b) + Mathf.Abs(fromValue.a - toValue.a);
+        float vitesse = distance / m_die.m_timeToChangeColor;
+
+        MeshRenderer mesh = m_die.m_armedialLight.GetComponent<MeshRenderer>();
+
+        while (actualValue != toValue)
+        {
+            fracJourney += (Time.deltaTime) * vitesse / distance;
+            actualValue = Color.Lerp(fromValue, toValue, m_die.m_materialCurve.Evaluate(fracJourney));
+            mesh.material.color = actualValue;
+            yield return null;
+        }
+    }
+
 #endregion
 
 #region Public Functions
@@ -443,6 +506,7 @@ public class GolemController : MonoBehaviour
         m_playerManager.SwitchPlayerToCinematicState(900);
         m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
         m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
+        ActivateArmedialLight();
     }
 
     public void On_AttackIsFinished()

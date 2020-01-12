@@ -24,7 +24,7 @@ public class BossAttack : MonoBehaviour
     public IEnumerator RotateGolemToLookAtPointWithTime(float toRot, float timeToRotate, AnimationCurve rotateCurve)
     {
         float fromRot = GolemController.transform.rotation.eulerAngles.y;
-
+        Debug.Log("dsgdsg");
         float fracJourney = 0;
         float distance = Mathf.Abs(fromRot - toRot);
         float vitesse = distance / timeToRotate;

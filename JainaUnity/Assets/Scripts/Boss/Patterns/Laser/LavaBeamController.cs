@@ -9,7 +9,7 @@ public class LavaBeamController : BossAttack
     public GameObject[] laserSpanwerPhase2;
     [Space]
     [Header("Lava Beam Var")]
-    public Transform target;
+    // public Transform target;
     public float timeBeforeShooting;
     public float timeBetweenEachShoot;
     float _currentTimeBeforeShooting;
@@ -34,6 +34,7 @@ public class LavaBeamController : BossAttack
     public int phaseNbr;
     public float offset = 89f;
     public float lookAtOffset;
+    [SerializeField] bool m_debugInput = false;
 
     bool lavaBeamPaternActif;
     bool allShootingHaveBeenDone = true;
@@ -41,10 +42,16 @@ public class LavaBeamController : BossAttack
     List<Beam_Spawner_Controller> actifSpawnerScript = new List<Beam_Spawner_Controller>();
     List<GameObject> actifSpawnerParent = new List<GameObject>();
 
+    Transform m_target;
+
+    void Start()
+    {
+        m_target = PlayerManager.Instance.transform;
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M) && m_debugInput)
         {
             StartLaser(phaseNbr);
             lavaBeamPaternActif = true;
@@ -77,11 +84,11 @@ public class LavaBeamController : BossAttack
 
                 if (actifSpawnerScript[i].HasToLookAt)
                 {
-                    float PosY = target.localPosition.y + lookAtOffset;
-                    Vector3 pos = new Vector3(target.localPosition.x, PosY, target.localPosition.z);
+                    float PosY = m_target.localPosition.y + lookAtOffset;
+                    Vector3 pos = new Vector3(m_target.localPosition.x, PosY, m_target.localPosition.z);
 
 
-                    actifSpawner[i].transform.LookAt(target);
+                    actifSpawner[i].transform.LookAt(m_target);
 
                     Vector3 angle = actifSpawner[i].transform.localEulerAngles;
                     Vector3 pivotAngle = actifSpawnerScript[i].pivotPoint.transform.localEulerAngles;
