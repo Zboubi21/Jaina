@@ -342,6 +342,7 @@ public class LaserBeamController : BossAttack
     public override void On_AttackBegin(int phaseNbr)
     {
         base.On_AttackBegin(phaseNbr);
+        m_phaseNbr = phaseNbr;
         StartCoroutine(WaitTimeToStartLaser(phaseNbr));
 
         if(m_lastRotateDirectionWasRight)

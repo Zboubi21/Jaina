@@ -787,6 +787,7 @@ public class EnemyStats : CharacterStats {
         hasTakenDamage = true;
         //BigEnemyLifeBarManager.Instance.TimeForWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
 
+        CheckPhaseChanges();
     }
 
     public override void Die()
@@ -800,7 +801,7 @@ public class EnemyStats : CharacterStats {
         }
         else
         {
-            bossController.OnEnemyDie();
+            bossController.On_GolemDie();
         }
     }
 
@@ -861,4 +862,10 @@ public class EnemyStats : CharacterStats {
         count = 0;
         coolDown = false;
     }
+
+    protected virtual void CheckPhaseChanges()
+    {
+
+    }
+
 }

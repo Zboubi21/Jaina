@@ -671,6 +671,16 @@ public class PlayerManager : MonoBehaviour {
             return m_rotationInput;
         }
 	}
+
+    PlayerStats m_playerStats;
+    public PlayerStats PlayerStats
+    {
+        get
+        {
+            return m_playerStats;
+        }
+    }
+
 	
 #endregion Encapsuled
 
@@ -715,6 +725,7 @@ public class PlayerManager : MonoBehaviour {
 		m_audioListener = GetComponent<AudioListener>();
 		m_bigEnemyLifeBarManager = GetComponent<BigEnemyLifeBarManager>();
 		m_jainaUiController = GetComponent<JainaUiController>();
+		m_playerStats = GetComponent<PlayerStats>();
 
 		m_saveManager = SaveManager.Instance;
 		m_objectPooler = ObjectPooler.Instance;

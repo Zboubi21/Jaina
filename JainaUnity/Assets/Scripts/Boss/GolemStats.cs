@@ -7,34 +7,40 @@ using EnemyStateEnum;
 
 public class GolemStats : EnemyStats
 {
-    public override void OnEnable()
-    {
-    }
-    private void OnDisable()
-    {
-    }
+
+    [Space]
+    [Header("Boss Phases")]
+    [SerializeField, Range(0, 100)] float m_phase2LifeTrigger = 66;
+    [SerializeField, Range(0, 100)] float m_phase3LifeTrigger = 33;
+
+    GolemController m_golemController;
+    int m_actualPhase = 1;
+
     public override void Start()
     {
+        base.Start();
+        m_golemController = GetComponent<GolemController>();
+        m_actualPhase = m_golemController.PhaseNbr;
     }
-    public override void Update()
+
+    protected override void CheckPhaseChanges()
     {
-#if UNITY_EDITOR
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
+        if(m_actualPhase == 1 && GetLifePercentage() <= m_phase2LifeTrigger)
         {
-            TakeDamage(4999);
+            m_actualPhase = 2;
+            m_golemController.On_GolemChangePhase();
         }
-        else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
+
+        if(m_actualPhase == 2 && GetLifePercentage() <= m_phase3LifeTrigger)
         {
-            TakeDamage(1000);
+            m_actualPhase = 3;
+            m_golemController.On_GolemChangePhase();
         }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            TakeDamage(100);
-        }
-#endif
     }
-    public override void ArcanMark(int damage, float timerDebuf, int nbrMarks)
+
+    float GetLifePercentage()
     {
-        Debug.Log("aie");
+        return CurrentHealth / maxHealth * 100;
     }
+
 }

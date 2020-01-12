@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1259768221557958327
+--- !u!1 &2849492061088156349
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3303940203374644508}
-  - component: {fileID: 7508915105986607406}
-  - component: {fileID: 7583274435768467612}
+  - component: {fileID: 2849492061088156350}
+  - component: {fileID: 2849492061088156351}
+  - component: {fileID: 2849492061088156348}
   m_Layer: 0
-  m_Name: GolemScream_FX
+  m_Name: FallStalactite_FX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3303940203374644508
+--- !u!4 &2849492061088156350
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259768221557958327}
+  m_GameObject: {fileID: 2849492061088156349}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,17 +32,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &7508915105986607406
+--- !u!82 &2849492061088156351
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259768221557958327}
+  m_GameObject: {fileID: 2849492061088156349}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 62ae776405052c64896d86940ebc9c39, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e7f481a791a7c4e478ec5edb01772d71, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -128,16 +128,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7583274435768467612
+--- !u!114 &2849492061088156348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259768221557958327}
+  m_GameObject: {fileID: 2849492061088156349}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03f98e48ff62cb641aeabc99f3cbe412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_soundDelay: 0.5
+  m_soundDelay: 2

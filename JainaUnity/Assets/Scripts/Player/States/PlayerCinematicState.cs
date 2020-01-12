@@ -25,6 +25,7 @@ public class PlayerCinematicState : IState {
 		m_playerManager.StopPlayerMovement();
         m_playerManager.CameraManager.CanMoveCamera = false;
         m_playerManager.m_powers.m_Block.m_inIceBlock = true;
+        m_playerManager.PlayerStats.m_canTakeDamage = false;
     }
 
     public void Update(){
@@ -44,6 +45,7 @@ public class PlayerCinematicState : IState {
         m_playerManager.StartCinematicStringCorout(false);
         m_playerManager.CameraManager.CanMoveCamera = true;
         m_playerManager.m_powers.m_Block.m_inIceBlock = false;
+        m_playerManager.PlayerStats.m_canTakeDamage = true;
 	}
 
 }

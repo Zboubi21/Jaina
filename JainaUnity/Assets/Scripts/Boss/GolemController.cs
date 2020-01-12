@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GolemStateEnum;
+using EZCameraShake;
 
 public class GolemController : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class GolemController : MonoBehaviour
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
+        public float[] m_delayToChangeBossPhase = new float[3];
+        public CameraShake m_changePhaseShake;
+        public GameObject m_changePhaseScream_SFX;
     }
 
     [Header("FX")]
@@ -52,6 +56,10 @@ public class GolemController : MonoBehaviour
     [Serializable] public class Die {
         public float m_waitTimeToDieCrystal = 4.5f;
         public GolemCrystal m_golemCrystal;
+
+        public GolemCrystal[] m_phase2Crystal = new GolemCrystal[2];
+        public GolemCrystal m_phase3Crystal;
+        public ParticleSystem[] m_phase3Particles = new ParticleSystem[2];
         [Space]
         public float m_waitTimeToAssEffect = 3f;
         public RFX4_EffectSettings m_assFX;
@@ -72,6 +80,13 @@ public class GolemController : MonoBehaviour
         public int[] m_testProb = new int[4];
         public int[] m_value = new int[4];
     }
+
+    [Serializable] public class CameraShake {
+        public float m_magnitudeShake = 4f;
+        public float m_roughnessShake = 4f;
+        public float m_fadeInTimeShake = 0.1f;
+        public float m_fadeOutTimeShake = 0.1f;
+    }
 #endregion
 
 #region Enum
@@ -91,12 +106,14 @@ public class GolemController : MonoBehaviour
 
     bool m_needToDoArmedialsWrath = false;
     bool m_needToFallStalactite = false;
+    bool m_needToChangePhase = false;
     bool m_fightIsStarted = false;
     EnemyStats m_enemyStats;
 
     PlayerManager m_playerManager;
     CameraManager m_cameraManager;
-
+    CameraShaker m_cameraShaker;
+    
 #endregion
 
 #region Encapsulate Variables
@@ -131,6 +148,7 @@ public class GolemController : MonoBehaviour
     {
         m_playerManager = PlayerManager.Instance;
         m_cameraManager = CameraManager.Instance;
+        m_cameraShaker = CameraShaker.Instance;
         m_animator = GetComponentInChildren<Animator>();
 		ChangeState(GolemState.Idle);
         m_yStartRotation = transform.eulerAngles.y;
@@ -159,7 +177,6 @@ public class GolemController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.N))
         {
-            m_isDead = true;
             On_GolemDie();
         }
     }
@@ -300,9 +317,53 @@ public class GolemController : MonoBehaviour
     
     IEnumerator DelayToDoNextAttack()
     {
-        float delay = 0;
-        delay = m_bossAttacks.m_delayBetweenAttacks[m_phaseNbr - 1];
-        yield return new WaitForSeconds(delay);
+        if(m_needToChangePhase)
+        {
+            StartCoroutine(ChangePhase(true));
+        }
+        else
+        {
+            float delay = m_bossAttacks.m_delayBetweenAttacks[m_phaseNbr - 1];
+            yield return new WaitForSeconds(delay);
+            if(m_needToChangePhase)
+            {
+                StartCoroutine(ChangePhase(false));
+            }
+            else
+            {
+                StartAttack();
+            }
+        }
+    }
+    IEnumerator ChangePhase(bool needToWait)
+    {
+        if(needToWait)
+        {
+            yield return new WaitForSeconds(1);
+        }
+        m_needToChangePhase = false;
+        m_phaseNbr ++;
+        SetTriggerAnimation("ChangePhase");
+        Level.AddFX(m_bossAttacks.m_changePhaseScream_SFX, Vector3.zero, Quaternion.identity);
+        ShakeCamera(m_bossAttacks.m_changePhaseShake.m_magnitudeShake, m_bossAttacks.m_changePhaseShake.m_roughnessShake, m_bossAttacks.m_changePhaseShake.m_fadeInTimeShake, m_bossAttacks.m_changePhaseShake.m_fadeOutTimeShake);
+        
+        if(m_phaseNbr == 2)
+        {
+            for (int i = 0, l = m_die.m_phase2Crystal.Length; i < l; ++i)
+            {
+                m_die.m_phase2Crystal[i].On_CrystalLive(true);
+            }
+        }
+        if(m_phaseNbr == 3)
+        {
+            m_die.m_phase3Crystal.On_CrystalLive(true);
+            for (int i = 0, l = m_die.m_phase3Particles.Length; i < l; ++i)
+            {
+                m_die.m_phase3Particles[i].Play();
+            }
+        }
+
+        yield return new WaitForSeconds(m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 1] - 1);
         StartAttack();
     }
 
@@ -322,6 +383,16 @@ public class GolemController : MonoBehaviour
     {
         yield return new WaitForSeconds(m_die.m_waitTimeToDieCrystal);
         m_die.m_golemCrystal.On_CrystalLive(false);
+        for (int i = 0, l = m_die.m_phase2Crystal.Length; i < l; ++i)
+        {
+            m_die.m_phase2Crystal[i].On_CrystalLive(false);
+        }
+        m_die.m_phase3Crystal.On_CrystalLive(false);
+        for (int i = 0, l = m_die.m_phase3Particles.Length; i < l; ++i)
+        {
+            m_die.m_phase3Particles[i].Play();
+            m_die.m_phase3Particles[i].loop = false;
+        }
     }
 
     IEnumerator WaitTimeToLunchFirstAttack()
@@ -329,6 +400,10 @@ public class GolemController : MonoBehaviour
         yield return new WaitForSeconds(m_staging.m_waitTimeToLaunchFirstAttack);
         StartAttack();
     }
+
+    void ShakeCamera(float magnitude, float rougness, float fadeInTime, float fadeOutTime){
+		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
+	}
 
 #endregion
 
@@ -346,9 +421,28 @@ public class GolemController : MonoBehaviour
         m_enemyStats.m_canTakeDamage = true;
     }
 
-    public void OnEnemyDie()
+    public void On_GolemChangePhase()
     {
-        ChangeState(GolemState.Idle); // Die //passer en die state
+        m_needToChangePhase = true;
+    }
+
+    public void On_GolemDie()
+    {
+        m_isDead = true;
+        // ChangeState(GolemState.Idle); // Die //passer en die state
+        SetTriggerAnimation("Die");
+        StartCoroutine(WaitCrystalGolemDieFX());
+        m_die.m_assFX.FadeoutTime = m_die.m_waitTimeToAssEffect;
+        m_die.m_assFX.IsVisible = false;
+        m_die.m_golemTornado.On_ScaleTornado(false);
+        m_die.m_golemSmoke.On_ChangeSmoke();
+        for (int i = 0, l = m_die.m_dieSFX.Length; i < l; ++i)
+        {
+            Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
+        }
+        m_playerManager.SwitchPlayerToCinematicState(900);
+        m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
+        m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
     }
 
     public void On_AttackIsFinished()
@@ -377,23 +471,6 @@ public class GolemController : MonoBehaviour
     {
         m_animator.SetBool(name, value);
     }
-
-    public void On_GolemDie()
-    {
-        SetTriggerAnimation("Die");
-        StartCoroutine(WaitCrystalGolemDieFX());
-        m_die.m_assFX.FadeoutTime = m_die.m_waitTimeToAssEffect;
-        m_die.m_assFX.IsVisible = false;
-        m_die.m_golemTornado.On_ScaleTornado(false);
-        m_die.m_golemSmoke.On_ChangeSmoke();
-        for (int i = 0, l = m_die.m_dieSFX.Length; i < l; ++i)
-        {
-            Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
-        }
-        m_playerManager.SwitchPlayerToCinematicState(900);
-        m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
-        m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
-    }  
 
 #endregion
 

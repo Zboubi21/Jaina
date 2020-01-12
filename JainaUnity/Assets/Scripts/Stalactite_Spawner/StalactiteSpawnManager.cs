@@ -24,7 +24,7 @@ public class StalactiteSpawnManager : BossAttack
     public float maxTimeBeforeStalactiteFall = 1f;
 
     [Header("FX")]
-    [SerializeField] GameObject m_screamSfx;
+    [SerializeField] GameObject[] m_screamSfx;
 
     List<int> usedSlots = new List<int>();
     List<int> possibleSlotInts = new List<int>();
@@ -274,7 +274,10 @@ public class StalactiteSpawnManager : BossAttack
     public override void On_AttackBegin(int phaseNbr)
     {
         base.On_AttackBegin(phaseNbr);
-        Level.AddFX(m_screamSfx, Vector3.zero, Quaternion.identity);
+        for (int i = 0, l = m_screamSfx.Length; i < l; ++i)
+        {
+            Level.AddFX(m_screamSfx[i], Vector3.zero, Quaternion.identity);
+        }
         _phaseForArray = phaseNbr - 1;
         OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);
     }
