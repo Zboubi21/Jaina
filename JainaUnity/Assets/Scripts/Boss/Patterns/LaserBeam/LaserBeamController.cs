@@ -368,6 +368,13 @@ public class LaserBeamController : BossAttack
         StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation, m_timeToGolemLookAtPoint, m_golemLookAtPointCurve));
     }
 
+    public override void On_GolemAreGoingToDie()
+    {
+        StopAllCoroutines();
+        base.On_GolemAreGoingToDie();
+        // Arrêter tout ce qui est en cours !
+    }
+
 #endregion
 
 }

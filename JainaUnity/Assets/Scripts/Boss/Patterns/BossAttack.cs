@@ -14,34 +14,51 @@ public class BossAttack : MonoBehaviour
     public virtual void On_AttackEnd()
     {
         // Debug.Log("On_AttackEnd: " + this);
-        if(GolemController != null)
+        if(m_golemController != null)
         {
-            GolemController.On_AttackIsFinished();
+            m_golemController.On_AttackIsFinished();
         }
+    }
+    public virtual void On_GolemAreGoingToDie()
+    {
+        if(m_golemController.transform.eulerAngles.y != m_golemController.YStartRotation)
+        {
+            StopAllCoroutines();
+            StartCoroutine(RotateGolemBeforeGolemDie());
+        }
+        else
+        {
+            m_golemController.On_GolemDie();
+        }
+    }
+    IEnumerator RotateGolemBeforeGolemDie()
+    {
+        yield return StartCoroutine(RotateGolemToLookAtPointWithTime(m_golemController.YStartRotation, m_golemController.m_die.m_changeYRotSpeed, m_golemController.m_die.m_changeYRotCurve, true));
+        m_golemController.On_GolemDie();
     }
 
 
-    public IEnumerator RotateGolemToLookAtPointWithTime(float toRot, float timeToRotate, AnimationCurve rotateCurve)
+    protected IEnumerator RotateGolemToLookAtPointWithTime(float toRot, float timeToRotate, AnimationCurve rotateCurve, bool useSpeedInsteadOfTime = false)
     {
-        float fromRot = GolemController.transform.rotation.eulerAngles.y;
-        Debug.Log("dsgdsg");
+        float fromRot = m_golemController.transform.rotation.eulerAngles.y;
         float fracJourney = 0;
         float distance = Mathf.Abs(fromRot - toRot);
-        float vitesse = distance / timeToRotate;
+        // float vitesse = distance / timeToRotate;
+        float vitesse = !useSpeedInsteadOfTime ? distance / timeToRotate : timeToRotate;
         float actualValue = fromRot;
 
         while (actualValue != toRot)
         {
             fracJourney += (Time.deltaTime) * vitesse / distance;
             actualValue = Mathf.Lerp(fromRot, toRot, rotateCurve.Evaluate(fracJourney));
-            GolemController.transform.eulerAngles = new Vector3(GolemController.transform.rotation.eulerAngles.x, actualValue, GolemController.transform.rotation.eulerAngles.z);
+            m_golemController.transform.eulerAngles = new Vector3(m_golemController.transform.rotation.eulerAngles.x, actualValue, m_golemController.transform.rotation.eulerAngles.z);
             yield return null;
         }
     }
-    public void RotateGolemToLookAtPoint(Transform lookAtPoint)
+    protected void RotateGolemToLookAtPoint(Transform lookAtPoint)
     {
-        GolemController.transform.LookAt(lookAtPoint);
-        GolemController.transform.localEulerAngles = new Vector3(0, GolemController.transform.localEulerAngles.y, GolemController.transform.localEulerAngles.z);
+        m_golemController.transform.LookAt(lookAtPoint);
+        m_golemController.transform.localEulerAngles = new Vector3(0, m_golemController.transform.localEulerAngles.y, m_golemController.transform.localEulerAngles.z);
     }
 
 }

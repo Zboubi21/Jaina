@@ -244,4 +244,11 @@ public class LavaBeamController : BossAttack
         base.On_AttackEnd();
         lavaBeamPaternActif = false;
     }
+
+    public override void On_GolemAreGoingToDie()
+    {
+        base.On_GolemAreGoingToDie();
+        // Arrêter tout ce qui est en cours !
+    }
+    
 }

@@ -52,8 +52,13 @@ public class GolemController : MonoBehaviour
     }
 
     [Header("Die")]
-    [SerializeField] Die m_die;
+    public Die m_die;
     [Serializable] public class Die {
+        [Header("Before Die")]
+        public float m_changeYRotSpeed = 1;
+        public AnimationCurve m_changeYRotCurve; 
+
+        [Header("Die")]
         public float m_waitTimeToDieCrystal = 4.5f;
         public GolemCrystal m_golemCrystal;
 
@@ -116,6 +121,7 @@ public class GolemController : MonoBehaviour
 #region Private Variables
     Animator m_animator;
     AttackType m_lastAttack = AttackType.ArmedialsWrath;
+    bool m_inAttackPattern = false;
     int m_livingStalactite = 0;
 
     bool m_needToDoArmedialsWrath = false;
@@ -191,7 +197,7 @@ public class GolemController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.N))
         {
-            On_GolemDie();
+            On_GolemAreGoingToDie();
         }
     }
 
@@ -242,6 +248,7 @@ public class GolemController : MonoBehaviour
             m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
         }
         m_lastAttack = attackToDo;
+        m_inAttackPattern = true;
 
         SetBoolAnimation("FightIdle", false);
 
@@ -489,6 +496,20 @@ public class GolemController : MonoBehaviour
         m_needToChangePhase = true;
     }
 
+    public void On_GolemAreGoingToDie()
+    {
+        if(m_inAttackPattern)
+        {
+            if(m_bossAttacks.m_attacks[(int)m_lastAttack].m_attack != null)
+            {
+                m_bossAttacks.m_attacks[(int)m_lastAttack].m_attack.On_GolemAreGoingToDie();
+            }
+        }
+        else
+        {
+            On_GolemDie();
+        }
+    }
     public void On_GolemDie()
     {
         m_isDead = true;
@@ -507,10 +528,11 @@ public class GolemController : MonoBehaviour
         m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
         m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
         ActivateArmedialLight();
-    }
+    }    
 
     public void On_AttackIsFinished()
     {
+        m_inAttackPattern = false;
         SetBoolAnimation("FightIdle", true);
         StartCoroutine(DelayToDoNextAttack());
     }

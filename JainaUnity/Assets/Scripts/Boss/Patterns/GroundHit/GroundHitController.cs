@@ -351,4 +351,11 @@ public class GroundHitController : BossAttack
         m_rightRotateDirection =! m_rightRotateDirection;
         StartCoroutine(RotateGolemToLookAtPointWithTime(GolemController.YStartRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
     }
+
+    public override void On_GolemAreGoingToDie()
+    {
+        base.On_GolemAreGoingToDie();
+        // Arrêter tout ce qui est en cours !
+    }
+
 }

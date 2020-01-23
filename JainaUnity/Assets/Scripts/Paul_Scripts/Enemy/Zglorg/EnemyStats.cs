@@ -801,7 +801,7 @@ public class EnemyStats : CharacterStats {
         }
         else
         {
-            bossController.On_GolemDie();
+            bossController.On_GolemAreGoingToDie();
         }
     }
 
