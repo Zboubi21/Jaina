@@ -204,6 +204,7 @@ public class StalactiteSpawnManager : BossAttack
     {
         float randomTime = Random.Range(minTimeBeforeStalactiteFall, maxTimeBeforeStalactiteFall);
         yield return new WaitForSeconds(randomTime);
+        //C'est là
         if (isBeingCalledHadAnAttack)
         {
             SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleSlot);
@@ -212,6 +213,7 @@ public class StalactiteSpawnManager : BossAttack
         {
             SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleGreenSlot);
         }
+
         _countStalactite++;
         if (_countStalactite == usedSlots.Count && isBeingCalledHadAnAttack)
         {

@@ -203,11 +203,15 @@ public class LavaBeamController : BossAttack
             actifSpawnerScript[i].NbrOfShoot++;
             yield return new WaitForSeconds(timeBetweenEachShoot/2);
             actifSpawnerScript[i].HasToLookAt = true;
-            if(actifSpawnerScript[i].NbrOfShoot == nbrOfShot)
+
+            //Faut mettre ça en function et le call (je pense)
+            if (actifSpawnerScript[i].NbrOfShoot == nbrOfShot)
             {
                 actifSpawnerScript[i].HasToLookAt = false;
                 actifSpawnerScript[i].NbrOfShoot = 0;
-                yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i]));
+
+                yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i])); 
+
                 actifSpawnerParent[i].gameObject.SetActive(false);
                 actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
                 actifSpawnerScript[i].HasToLookAt = true;
