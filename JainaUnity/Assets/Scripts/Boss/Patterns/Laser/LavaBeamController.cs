@@ -204,19 +204,22 @@ public class LavaBeamController : BossAttack
             yield return new WaitForSeconds(timeBetweenEachShoot/2);
             actifSpawnerScript[i].HasToLookAt = true;
 
-            //Faut mettre ça en function et le call (je pense)
             if (actifSpawnerScript[i].NbrOfShoot == nbrOfShot)
             {
-                actifSpawnerScript[i].HasToLookAt = false;
-                actifSpawnerScript[i].NbrOfShoot = 0;
-
-                yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i])); 
-
-                actifSpawnerParent[i].gameObject.SetActive(false);
-                actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
-                actifSpawnerScript[i].HasToLookAt = true;
+                StartCoroutine(StopUseShootLava(i));
             }
         }
+    }
+    IEnumerator StopUseShootLava(int i)
+    {
+        actifSpawnerScript[i].HasToLookAt = false;
+        actifSpawnerScript[i].NbrOfShoot = 0;
+
+        yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i])); 
+
+        actifSpawnerParent[i].gameObject.SetActive(false);
+        actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
+        actifSpawnerScript[i].HasToLookAt = true;
     }
 
     IEnumerator SignAboutToShootForSpawner(AnimationCurve curve, ParticleSystem actifSpawner)
@@ -251,8 +254,15 @@ public class LavaBeamController : BossAttack
 
     public override void On_GolemAreGoingToDie()
     {
+        StopAllCoroutines();
         base.On_GolemAreGoingToDie();
-        // Arrêter tout ce qui est en cours !
+        lavaBeamPaternActif = false;
+
+        for (int i = 0, l = actifSpawner.Count; i < l; ++i)
+        {
+            StartCoroutine(StopUseShootLava(i));
+        }
+        
     }
     
 }

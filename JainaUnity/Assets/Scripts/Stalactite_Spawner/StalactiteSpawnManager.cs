@@ -294,8 +294,8 @@ public class StalactiteSpawnManager : BossAttack
 
     public override void On_GolemAreGoingToDie()
     {
+        StopAllCoroutines();
         base.On_GolemAreGoingToDie();
-        // Arrêter tout ce qui est en cours !
     }
 
 }

@@ -354,8 +354,17 @@ public class GroundHitController : BossAttack
 
     public override void On_GolemAreGoingToDie()
     {
+        StopAllCoroutines();
         base.On_GolemAreGoingToDie();
-        // Arrêter tout ce qui est en cours !
+        ResetAll();
+    }
+
+    void ResetAll()
+    {
+        m_leftSignMesh.color = new Color(0, 0, 0, 0);
+        m_middleSignMesh.color = new Color(0, 0, 0, 0);
+        m_rightSignMesh.color = new Color(0, 0, 0, 0);
+        
     }
 
 }

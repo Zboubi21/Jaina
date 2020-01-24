@@ -71,7 +71,8 @@ public class StalactiteController : MonoBehaviour
     [Serializable]
     public class DestroyExplosion
     {
-        public GameObject regularExpolion;
+        public GameObject regularExplosionWithDecal;
+        public GameObject regularExplosionWithOutDecal;
         public GameObject cristalExpolion;
     }
     [Header("FX")]
@@ -155,6 +156,8 @@ public class StalactiteController : MonoBehaviour
 
     GolemController m_golemController;
 
+    bool m_isOnGround = false;
+
     #endregion
 
 #region Get Set
@@ -235,9 +238,6 @@ public class StalactiteController : MonoBehaviour
             hasSpawnInRedSlots = value;
         }
     }
-#endregion
-
-#region Encapsulate Variables
 #endregion
 
 #region Event Functions
@@ -370,7 +370,7 @@ public class StalactiteController : MonoBehaviour
         }
         m_objectPooler.ReturnEnemyToPool(EnemyType.Stalactite, gameObject);
 
-        m_golemController.On_StalactiteDie();
+        m_golemController.On_StalactiteDie(this);
     }
 
     void ResetStalactiteForPool()
@@ -455,6 +455,7 @@ public class StalactiteController : MonoBehaviour
             m_fallSignImg.color = actualColor;
             yield return null;
         }
+        m_fallSignImg = null;
     }
 
     IEnumerator MoveStalactiteAnimation()
@@ -480,6 +481,7 @@ public class StalactiteController : MonoBehaviour
         Level.AddFX(m_fallDamage.audioFall, transform.position, Quaternion.identity);
 
         m_golemController.On_StalactiteLive();
+        m_isOnGround = true;
     }
 
     void CheckFallDamageArea()
@@ -516,6 +518,12 @@ public class StalactiteController : MonoBehaviour
 
     public void StartFallingStalactite()
     {
+        m_isOnGround = false;
+        if(m_golemController == null)
+        {
+            m_golemController = GolemController.Instance;
+        }
+        m_golemController.On_StalactiteStartToLive(this);
         Vector3 toPos = new Vector3(transform.position.x, m_moveAnimation.m_worldYTargetedPosition, transform.position.z);
         
         //m_fallSignGo = m_objectPooler.SpawnObjectFromPool(ObjectType.StalactiteSign, toPos, m_sign.m_fallSign.transform.rotation);
@@ -589,13 +597,25 @@ public class StalactiteController : MonoBehaviour
         {
             PlayerManager.Instance.GetComponentInChildren<CristalsChargeCounter>().AddCristCount();
             Level.AddFX(m_destroyExplosion.cristalExpolion, transform.position, Quaternion.identity);
-
         }
         else
         {
-            Level.AddFX(m_destroyExplosion.regularExpolion, transform.position, Quaternion.identity);
+            // Level.AddFX(m_destroyExplosion.regularExplosionWithDecal, transform.position, Quaternion.identity);
+
+            if(m_isOnGround)
+            {
+                Level.AddFX(m_destroyExplosion.regularExplosionWithDecal, transform.position, Quaternion.identity);
+            }
+            else
+            {
+                Level.AddFX(m_destroyExplosion.regularExplosionWithOutDecal, transform.position, Quaternion.identity);
+            }
         }
 
+        if (m_fallSignImg != null)
+        {
+            m_fallSignImg.color = new Color(0, 0, 0, 0);
+        }
     }
 
     #endregion

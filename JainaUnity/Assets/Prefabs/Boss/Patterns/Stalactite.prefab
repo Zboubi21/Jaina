@@ -1084,7 +1084,9 @@ MonoBehaviour:
     audioExplosion: {fileID: 700814231917549913, guid: 4d61ba3f169fe5544b9b09e982ffa329,
       type: 3}
   m_destroyExplosion:
-    regularExpolion: {fileID: 1601494591900918, guid: 0372ac80127ee42449e5632d51afd113,
+    regularExplosionWithDecal: {fileID: 1601494591900918, guid: 0372ac80127ee42449e5632d51afd113,
+      type: 3}
+    regularExplosionWithOutDecal: {fileID: 5736109665443438886, guid: 68210e17004a12649b3d62fa43c64783,
       type: 3}
     cristalExpolion: {fileID: 1601494591900918, guid: c9e262ad820e33b47a9669b22000663c,
       type: 3}
@@ -1204,6 +1206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 1000
   m_currentHealth: 100
+  m_canTakeDamage: 1
   damage:
     baseValue: 0
   armor:

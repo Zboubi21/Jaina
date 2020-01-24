@@ -51,6 +51,14 @@ public class GolemController : MonoBehaviour
         public float m_waitTimeToLaunchFirstAttack = 3;
     }
 
+    [Header("Stalactite Die")]
+    [SerializeField] StalactiteDie m_stalactiteDie;
+    [Serializable] public class StalactiteDie {
+        public float m_waitTimeBetweenStalactiteDie = 0.25f;
+        public float m_decreaseTimeAfterStalactiteDie = 0.05f;
+        public float m_minimumSpeed = 0.1f;
+    }
+
     [Header("Die")]
     public Die m_die;
     [Serializable] public class Die {
@@ -133,6 +141,9 @@ public class GolemController : MonoBehaviour
     PlayerManager m_playerManager;
     CameraManager m_cameraManager;
     CameraShaker m_cameraShaker;
+
+    List<StalactiteController> m_stalactites = new List<StalactiteController>();
+    float m_waitTimeAfterNextStalactiteDie = 0;
     
 #endregion
 
@@ -143,7 +154,7 @@ public class GolemController : MonoBehaviour
     public float YStartRotation { get { return m_yStartRotation; } }
 
     bool m_isDead = false;
-    public bool IsDead { get { return m_isDead; } set { m_isDead = value; } }
+    public bool IsDead { get { return m_isDead; } }
     
 #endregion
 
@@ -475,6 +486,25 @@ public class GolemController : MonoBehaviour
         }
     }
 
+    bool m_isFirstPass = false;
+    IEnumerator ExplodeAllStalactite()
+    {
+        if(m_stalactites.Count > 0)
+        {
+            m_stalactites[0].OnBeKilled();
+            yield return new WaitForSeconds(m_waitTimeAfterNextStalactiteDie);
+            if (!m_isFirstPass)
+            {
+                m_isFirstPass = true;
+                m_waitTimeAfterNextStalactiteDie = m_stalactiteDie.m_waitTimeBetweenStalactiteDie;
+            }
+            m_waitTimeAfterNextStalactiteDie = m_waitTimeAfterNextStalactiteDie - m_stalactiteDie.m_decreaseTimeAfterStalactiteDie;
+            if(m_waitTimeAfterNextStalactiteDie < m_stalactiteDie.m_minimumSpeed)
+                m_waitTimeAfterNextStalactiteDie = m_stalactiteDie.m_minimumSpeed;
+            StartCoroutine(ExplodeAllStalactite());
+        }
+    }
+
 #endregion
 
 #region Public Functions
@@ -509,6 +539,7 @@ public class GolemController : MonoBehaviour
         {
             On_GolemDie();
         }
+        StartCoroutine(ExplodeAllStalactite());
     }
     public void On_GolemDie()
     {
@@ -537,16 +568,21 @@ public class GolemController : MonoBehaviour
         StartCoroutine(DelayToDoNextAttack());
     }
 
+    public void On_StalactiteStartToLive(StalactiteController stalactite)
+    {
+        m_stalactites.Add(stalactite);
+    }
     public void On_StalactiteLive()
     {
         m_livingStalactite ++;
     }
-    public void On_StalactiteDie()
+    public void On_StalactiteDie(StalactiteController stalactite)
     {
         if(m_livingStalactite > 0)
         {
             m_livingStalactite --;
         }
+        m_stalactites.Remove(stalactite);
     }
 
     public void SetTriggerAnimation(string name)

@@ -149,8 +149,7 @@ public class LaserBeamController : BossAttack
     void StartLaserBeam(int phaseNbr)
     {
         m_actualNbrOfRotation = 0;
-        m_laserControlFx.StartLaserFx();
-        m_laserIsUsed = true;
+        UseLaser(true);
         RotateLaser(phaseNbr);
     }
     IEnumerator WaitTimeToStartLaser(int phaseNbr)
@@ -297,6 +296,20 @@ public class LaserBeamController : BossAttack
         m_characterStats.OnCharacterExitInLaserArea();
     }
 
+    void UseLaser(bool use)
+    {
+        if(use)
+        {
+            m_laserControlFx.StartLaserFx();
+            m_laserIsUsed = true;
+        }
+        else
+        {
+            m_laserControlFx.StopLaserFx();
+            m_laserIsUsed = false;
+        }
+    }
+
 #endregion
 
 #region Public Functions
@@ -357,8 +370,7 @@ public class LaserBeamController : BossAttack
 
     IEnumerator WaitAdditionnalTimeToEndAttack()
     {
-        m_laserControlFx.StopLaserFx();
-        m_laserIsUsed = false;
+        UseLaser(false);
         yield return new WaitForSeconds(m_waitAdditionnalTimeToEndAttack);
         On_AttackEnd();
     }
@@ -372,7 +384,7 @@ public class LaserBeamController : BossAttack
     {
         StopAllCoroutines();
         base.On_GolemAreGoingToDie();
-        // Arrêter tout ce qui est en cours !
+        UseLaser(false);
     }
 
 #endregion

@@ -452,6 +452,7 @@ public class EnemyStats : CharacterStats {
     }
     public override void AutoAttackArcanMark(int damage, float timerDebuf, int nbrMarks)
     {
+        if(!m_canTakeDamage) return;
         base.AutoAttackArcanMark(damage, timerDebuf, nbrMarks);
         if (!arcaneHasBeenInstanciated && ArcanMarkCount <= MaxArcanMarkCount && CurrentHealth - damage > 0)
         {
@@ -471,6 +472,7 @@ public class EnemyStats : CharacterStats {
 
     public override void AutoAttackFireMark(float timerDebuf)
     {
+        if(!m_canTakeDamage) return;
         base.AutoAttackFireMark(timerDebuf);
         if (!fireHasBeenInstanciated)
         {
@@ -525,6 +527,7 @@ public class EnemyStats : CharacterStats {
     
     public override void IceMark(float timerDebuf)
     {
+        if(!m_canTakeDamage) return;
         base.IceMark(timerDebuf);
         if (!iceHasBeenInstanciated)
         {
@@ -754,6 +757,7 @@ public class EnemyStats : CharacterStats {
     protected float m_timeToDecreaseWhiteLifeBar;
     public override void TakeDamage(int damage)
     {
+        if(!m_canTakeDamage) return;
         if(PlayerManager.Instance.GetComponent<PlayerStats>().IsInCombat && isActiveAndEnabled && !_bigBossFight)
         {
             m_canvas.SetActive(true);
