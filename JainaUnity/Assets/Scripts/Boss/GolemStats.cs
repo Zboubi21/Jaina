@@ -10,8 +10,8 @@ public class GolemStats : EnemyStats
 
     [Space]
     [Header("Boss Phases")]
-    [SerializeField, Range(0, 100)] float m_phase2LifeTrigger = 66;
-    [SerializeField, Range(0, 100)] float m_phase3LifeTrigger = 33;
+    [Range(0, 100)] public float m_phase2LifeTrigger = 66f;
+    [Range(0, 100)] public float m_phase3LifeTrigger = 33f;
 
     GolemController m_golemController;
     int m_actualPhase = 1;

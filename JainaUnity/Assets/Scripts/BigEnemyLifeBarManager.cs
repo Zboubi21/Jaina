@@ -200,14 +200,34 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             {
                 bossStats.m_cirlceCanvas.SetActive(true);
             }
+            else
+            {
+                if (!go1)
+                {
+                    LifeBarArray lifeArray = m_UnitFrame[bossStats.m_enemyPowerLevel].GetComponent<LifeBarArray>();
+
+                    Rect posP2 = lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.rect;
+                    posP2.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase2LifeTrigger / 100f);
+                    lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.localPosition = posP2.position;
+
+                    Rect posP3 = lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.rect;
+                    posP3.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase3LifeTrigger / 100f);
+                    lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.localPosition = posP3.position;
+
+                    go1 = true;
+                }
+            }
+
         }
     }
 
 
     EnemyStats bossStats;
+    bool go1;
     public void OnLoadBossGameObject(EnemyStats stats)
     {
         bossStats = stats;
+        
     }
 
     public void OnFightBoss(bool b)

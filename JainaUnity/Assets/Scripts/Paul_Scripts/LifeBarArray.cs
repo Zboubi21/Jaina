@@ -14,4 +14,6 @@ public class LifeBarArray : MonoBehaviour
     public Transform m_markRoot;
     [Space]
     public GameObject[] m_levelOfLifeBar;
+    [Space]
+    public GameObject[] phaseIcons;
 }
