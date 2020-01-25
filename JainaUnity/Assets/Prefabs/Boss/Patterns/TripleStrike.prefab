@@ -317,7 +317,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113522749520229491}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 16}
+  m_LocalPosition: {x: 0, y: 0, z: 16.000008}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2113522750018790974}
@@ -325,7 +325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.0000014305115, y: -1}
   m_SizeDelta: {x: 10, y: 27.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2113522749520229492
@@ -377,8 +377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a449742a36874c4baf952209897cfaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_startLocalPos: {x: 0, y: 0, z: -10}
-  m_endLocalPos: {x: 0, y: 0, z: 16}
+  m_startLocalPos: {x: 0, y: -1, z: -10}
+  m_endLocalPos: {x: 0, y: -1, z: 16}
   m_timeToDoMoveAnim: 5
   m_moveCurve:
     serializedVersion: 2
@@ -463,7 +463,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113522749993531419}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 15}
+  m_LocalPosition: {x: 0, y: 0, z: 15.00001}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2113522749281241447}
@@ -471,7 +471,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -0}
+  m_AnchoredPosition: {x: -0.00000047683716, y: -1}
   m_SizeDelta: {x: 10, y: 27.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2113522749993531423
@@ -523,8 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a449742a36874c4baf952209897cfaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_startLocalPos: {x: 0, y: 0, z: -9}
-  m_endLocalPos: {x: 0, y: 0, z: 15}
+  m_startLocalPos: {x: 0, y: -1, z: -9}
+  m_endLocalPos: {x: 0, y: -1, z: 15}
   m_timeToDoMoveAnim: 5
   m_moveCurve:
     serializedVersion: 2
@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 2113522750077638911}
   - component: {fileID: 2113522750077638910}
   m_Layer: 0
-  m_Name: GroundHit
+  m_Name: TripleStrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
       m_RotationOrder: 4
   m_damage:
     m_timeToDoDamage: 5
-    m_damage: 25
+    m_damage: 50
     m_hitSignColor: {r: 1, g: 1, b: 1, a: 0.33333334}
     m_waitTimeToShowHitSign: 4.9375
     m_timeToShowHitSign: 0.125
@@ -719,10 +719,10 @@ MonoBehaviour:
     m_timeToFallStalactite: 1
     m_spawnPhaseTwo:
       m_spawnMinStalactite: 1
-      m_spawnMaxStalactite: 3
+      m_spawnMaxStalactite: 2
     m_spawnPhaseThree:
       m_spawnMinStalactite: 2
-      m_spawnMaxStalactite: 5
+      m_spawnMaxStalactite: 3
   m_waitTimeBetweenAttack: 3
   m_stalactiteSpawner: {fileID: 0}
 --- !u!1 &2113522750090305842
@@ -901,7 +901,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113522751031787426}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 16}
+  m_LocalPosition: {x: 0, y: 0, z: 16.000006}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2113522749916346741}
@@ -909,7 +909,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: -0.0000009536743, y: -1}
   m_SizeDelta: {x: 10, y: 27.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2113522751031787430
@@ -961,8 +961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a449742a36874c4baf952209897cfaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_startLocalPos: {x: 0, y: 0, z: -7}
-  m_endLocalPos: {x: 0, y: 0, z: 16}
+  m_startLocalPos: {x: 0, y: -1, z: -7}
+  m_endLocalPos: {x: 0, y: -1, z: 16}
   m_timeToDoMoveAnim: 5
   m_moveCurve:
     serializedVersion: 2

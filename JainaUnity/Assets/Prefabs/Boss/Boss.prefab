@@ -5860,8 +5860,8 @@ MonoBehaviour:
   m_cirlceCanvas: {fileID: 0}
   m_auraSign: {fileID: 0}
   m_backPack: {fileID: 0}
-  m_phase2LifeTrigger: 66
-  m_phase3LifeTrigger: 33
+  m_phase2LifeTrigger: 80
+  m_phase3LifeTrigger: 50
 --- !u!114 &2739238033032202561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5888,22 +5888,22 @@ MonoBehaviour:
     - m_attack: {fileID: 0}
       m_probability: 10
     m_stalactiteNbrTrigger:
-    - m_triggerFallStalactite: 0
+    - m_triggerFallStalactite: 4
       m_triggerArmedialsWrath: 10
-    - m_triggerFallStalactite: 5
-      m_triggerArmedialsWrath: 15
-    - m_triggerFallStalactite: 10
+    - m_triggerFallStalactite: 6
       m_triggerArmedialsWrath: 20
+    - m_triggerFallStalactite: 8
+      m_triggerArmedialsWrath: 23
     m_delayBetweenAttacks:
-    - 5
+    - 4
     - 3
-    - 1
+    - 2
     m_delayToChangeBossPhase:
     - 7.5
     - 7.5
     - 7.5
     m_changePhaseShake:
-      m_magnitudeShake: 4
+      m_magnitudeShake: 2
       m_roughnessShake: 1
       m_fadeInTimeShake: 5
       m_fadeOutTimeShake: 5

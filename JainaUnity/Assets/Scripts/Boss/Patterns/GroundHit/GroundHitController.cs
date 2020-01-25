@@ -297,21 +297,25 @@ public class GroundHitController : BossAttack
     }
     void CheckDamageArea(AreaType areaType)
     {
+        Vector3 newRot;
         switch (areaType)
         {
             case AreaType.Left:
                 m_leftArea.CheckArea();
-                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[0].position,  m_impactFX.m_hitPos[0].rotation);
+                newRot = new Vector3(90, m_impactFX.m_hitPos[0].rotation.eulerAngles.y, m_impactFX.m_hitPos[0].rotation.eulerAngles.z);
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[0].position, Quaternion.Euler(newRot));
             break;
 
             case AreaType.Middle:
                 m_middleArea.CheckArea();
-                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[1].position,  m_impactFX.m_hitPos[2].rotation);
+                newRot = new Vector3(90, m_impactFX.m_hitPos[1].rotation.eulerAngles.y, m_impactFX.m_hitPos[1].rotation.eulerAngles.z);
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[1].position,  Quaternion.Euler(newRot));
             break;
 
             case AreaType.Right:
                 m_rightArea.CheckArea();
-                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[1].position,  m_impactFX.m_hitPos[2].rotation);
+                newRot = new Vector3(90, m_impactFX.m_hitPos[2].rotation.eulerAngles.y, m_impactFX.m_hitPos[2].rotation.eulerAngles.z);
+                Level.AddFX(m_impactFX.m_hitGroundFX, m_impactFX.m_hitPos[2].position,  Quaternion.Euler(newRot));
             break;
         }
         m_actualNbrOfAttack ++;

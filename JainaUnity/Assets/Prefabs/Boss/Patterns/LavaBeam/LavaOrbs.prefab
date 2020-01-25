@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3528133239760400641}
   - component: {fileID: 1264526930603190482}
   m_Layer: 0
-  m_Name: LavaBeamController
+  m_Name: LavaOrbs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,6 @@ MonoBehaviour:
   laserSpanwerPhase2:
   - {fileID: 3260074628655547467}
   - {fileID: 6387957356806539537}
-  target: {fileID: 0}
   timeBeforeShooting: 4
   timeBetweenEachShoot: 1
   nbrOfShot: 2
@@ -180,6 +179,7 @@ MonoBehaviour:
   phaseNbr: 3
   offset: 93.4
   lookAtOffset: 1
+  m_debugInput: 0
   mask:
     serializedVersion: 2
     m_Bits: 2048

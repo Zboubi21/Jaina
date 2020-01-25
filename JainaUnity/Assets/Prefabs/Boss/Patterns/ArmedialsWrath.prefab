@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 1939906442530386971}
   - component: {fileID: 1939906442530386964}
   m_Layer: 0
-  m_Name: LaserBeam
+  m_Name: ArmedialsWrath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,10 +364,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_waitAdditionnalTimeToEndAttack: 1
   m_rotate:
     m_leftWorldRotation: 310
     m_rightWorldRotation: 55
-    m_timeToRotate: 5
+    m_timeToRotate: 10
     m_rotateCurve:
       serializedVersion: 2
       m_Curve:
@@ -398,8 +399,8 @@ MonoBehaviour:
     m_damageLayer:
       serializedVersion: 2
       m_Bits: 3072
-    m_damage: 6
-    m_tick: 0.25
+    m_damage: 10
+    m_tick: 0.1
   m_gizmos:
     m_show: 0
     m_laserColor: {r: 1, g: 1, b: 1, a: 1}
