@@ -283,12 +283,12 @@ public class StalactiteController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
-            AddStalactiteState();
-        }
-        if(Input.GetKeyDown(KeyCode.M)){
-            RemoveStalactiteState();
-        }
+        // if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
+        //     AddStalactiteState();
+        // }
+        // if(Input.GetKeyDown(KeyCode.M)){
+        //     RemoveStalactiteState();
+        // }
     }
 
     void OnDisable()
@@ -311,21 +311,7 @@ public class StalactiteController : MonoBehaviour
         StartCoroutine(CheckOtherStalactiteArea());
 
         if (!isInLava)
-        {
             StartCoroutine(SpawnLava());
-        }
-        else
-        {
-            DisableStalactite();
-        }
-
-        #region Might need to reset bool when disable
-
-
-
-
-
-        #endregion
 
         if(spawnManager != null)
         {
@@ -349,6 +335,7 @@ public class StalactiteController : MonoBehaviour
                 }
             }
 		}
+        DisableStalactite();
     }
 
     IEnumerator SpawnLava(){
@@ -358,7 +345,6 @@ public class StalactiteController : MonoBehaviour
         Vector3 trans = go.transform.rotation.eulerAngles;
         trans.y = random;
         go.transform.eulerAngles = trans;
-        DisableStalactite();
     }
 
     void DisableStalactite()
