@@ -202,25 +202,38 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
             }
             else
             {
-                if (!go1)
-                {
-                    LifeBarArray lifeArray = m_UnitFrame[bossStats.m_enemyPowerLevel].GetComponent<LifeBarArray>();
-
-                    Rect posP2 = lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.rect;
-                    posP2.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase2LifeTrigger / 100f);
-                    lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.localPosition = posP2.position;
-
-                    Rect posP3 = lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.rect;
-                    posP3.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase3LifeTrigger / 100f);
-                    lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.localPosition = posP3.position;
-
-                    go1 = true;
-                }
+                FeedBackDeChangementDePhase(m_UnitFrame[bossStats.m_enemyPowerLevel].GetComponent<LifeBarArray>());
             }
 
         }
     }
 
+    void FeedBackDeChangementDePhase(LifeBarArray lifeArray)
+    {
+        if (!go1)
+        {
+            Rect posP2 = lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.rect;
+            posP2.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase2LifeTrigger / 100f);
+            posP2.y += 6.330001f;
+            lifeArray.phaseIcons[0].GetComponent<Image>().rectTransform.localPosition = posP2.position;
+
+            Rect posP3 = lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.rect;
+            posP3.x = Mathf.Lerp(0, lifeArray.m_lifeBar.rectTransform.rect.width, bossStats.GetComponent<GolemStats>().m_phase3LifeTrigger / 100f);
+            posP3.y += 6.330001f;
+            lifeArray.phaseIcons[1].GetComponent<Image>().rectTransform.localPosition = posP3.position;
+
+            go1 = true;
+        }
+
+        if (bossStats.GetComponent<GolemController>().PhaseNbr == 2)
+        {
+            lifeArray.phaseIcons[0].gameObject.GetComponent<CanvasGroup>().alpha -= Time.deltaTime;
+        }
+        else if (bossStats.GetComponent<GolemController>().PhaseNbr == 3)
+        {
+            lifeArray.phaseIcons[1].gameObject.GetComponent<CanvasGroup>().alpha -= Time.deltaTime;
+        }
+    }
 
     EnemyStats bossStats;
     bool go1;
@@ -352,6 +365,28 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     void ActivateUnitFrame(EnemyStats m_enemyStats)
     {
         LifeBarArray lifeArray = m_UnitFrame[m_enemyStats.m_enemyPowerLevel].GetComponent<LifeBarArray>();
+
+
+        /*if(lifeArray.m_timeBeforeNextPhaseFeedBack != null)
+        {
+            GolemController m_golemController = m_enemyStats.gameObject.GetComponent<GolemController>();
+            int m_actualPhase = m_golemController.PhaseNbr;
+            if (m_actualPhase == 1)
+            {
+                lifeArray.m_timeBeforeNextPhaseFeedBack.fillAmount = Mathf.InverseLerp(0, m_enemyStats.GetComponent<GolemStats>().m_timeBeforeTriggerPhase2, Time.deltaTime);
+            }
+            else if(m_actualPhase == 2)
+            {
+                lifeArray.m_timeBeforeNextPhaseFeedBack.fillAmount = 0;
+                lifeArray.m_timeBeforeNextPhaseFeedBack.fillAmount = Mathf.InverseLerp(0, m_enemyStats.GetComponent<GolemStats>().m_timeBeforeTriggerPhase3, Time.deltaTime);
+            }
+            else
+            {
+                lifeArray.m_timeBeforeNextPhaseFeedBack.fillAmount = 0;
+            }
+        }*/
+
+
         lifeArray.m_lifeBar.fillAmount = Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
         if (!m_enemyStats.HasTakenDamage && lifeArray.m_lifeBar.fillAmount != lifeArray.m_whiteLifeBar.fillAmount || DecreaseTimer())
         {
