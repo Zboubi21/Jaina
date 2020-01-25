@@ -316,6 +316,9 @@ public class LaserBeamController : BossAttack
 
     public void On_StalactiteEnterInLaserTrigger(GameObject obj)
     {
+        if (!m_laserIsUsed)
+            return;
+            
         if(TargetIsInLaser(obj))
         {
             // Debug.Log("! InLaser !");

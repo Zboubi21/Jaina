@@ -106,6 +106,8 @@ public class GroundHitController : BossAttack
 
     int m_actualNbrOfAttack = 0;
 
+    List <FX> m_impactSounds = new List<FX>();
+
     public enum AreaType{
 		Left,
 		Middle,
@@ -199,9 +201,12 @@ public class GroundHitController : BossAttack
                 StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_yRightAttackGolemRotation, m_rotate.m_timeToRotate, m_rotate.m_rotateCurve));
             break;
         }
+
+        m_impactSounds.Clear();
         for (int i = 0, l = m_impactFX.m_sounds.Length; i < l; ++i)
         {
-            Level.AddFX(m_impactFX.m_sounds[i], Vector3.zero, Quaternion.identity);
+            FX newFx = Level.AddFX(m_impactFX.m_sounds[i], Vector3.zero, Quaternion.identity);
+            m_impactSounds.Add(newFx);
         }
     }
 
@@ -369,6 +374,13 @@ public class GroundHitController : BossAttack
         m_middleSignMesh.color = new Color(0, 0, 0, 0);
         m_rightSignMesh.color = new Color(0, 0, 0, 0);
         
+        if (m_impactSounds.Count > 0)
+        {
+            for (int i = 0, l = m_impactSounds.Count; i < l; ++i)
+            {
+                Destroy(m_impactSounds[i].gameObject);
+            }
+        }
     }
 
 }

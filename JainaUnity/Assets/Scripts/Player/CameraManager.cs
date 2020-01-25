@@ -138,15 +138,17 @@ public class CameraManager : MonoBehaviour {
 		m_inEndBossCinematic = true;
 		Vector3 fromPos = transform.position;
 		Vector3 toPos = m_camPos;
+		Vector3 actualPos = fromPos;
 
         float fracJourney = 0;
         float distance = Vector3.Distance(fromPos, toPos);
         float vitesse = distance / m_timeToChangePos;
 
-        while (transform.position != toPos)
+        while (actualPos != toPos)
         {
             fracJourney += (Time.deltaTime) * vitesse / distance;
-            transform.position = Vector3.Lerp(fromPos, toPos, m_changePosCurve.Evaluate(fracJourney));
+            actualPos = Vector3.Lerp(fromPos, toPos, m_changePosCurve.Evaluate(fracJourney));
+			transform.position = actualPos;
             yield return null;
         }
 	}
