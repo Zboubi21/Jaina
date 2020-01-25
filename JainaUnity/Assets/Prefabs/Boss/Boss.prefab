@@ -5299,7 +5299,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67d12ebd9ae1e4b48bd9c129a5e316b9, type: 2}
+  - {fileID: 2100000, guid: 5f4058d7a964cf444aff492d4a943259, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5810,10 +5810,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 11.8
-  m_Height: 40.75
+  m_Radius: 10
+  m_Height: 20
   m_Direction: 1
-  m_Center: {x: 0, y: 19.3, z: 0}
+  m_Center: {x: 0, y: 22, z: 0}
 --- !u!114 &4439378691744697581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5826,7 +5826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc28add222e64af43bed91fec5e2e8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200000
+  maxHealth: 150000
   m_currentHealth: 100
   m_canTakeDamage: 0
   damage:
@@ -5838,11 +5838,11 @@ MonoBehaviour:
     m_timeToSeeHit: 0.1
     m_timeToRecovery: 0.1
     m_whiteSkin:
-    - {fileID: 1791881235362121711}
     - {fileID: 7420533786167537314}
     - {fileID: 4165956475555171865}
     - {fileID: 3451406331175806521}
     - {fileID: 4227845682150806435}
+    - {fileID: 1791881235362121711}
   _name: Armedial's Guardian
   m_enemyPowerLevel: 2
   m_enemyType: 0
@@ -5951,7 +5951,11 @@ MonoBehaviour:
     m_phase2Crystal:
     - {fileID: 7848719866813974986}
     - {fileID: 4882163981562125096}
+    m_phase2CrystalHit:
+    - {fileID: 1908888715968942579}
+    - {fileID: 7452133994040317339}
     m_phase3Crystal: {fileID: 9217210543539501081}
+    m_phase3CrystalHit: {fileID: 8756721035734831066}
     m_phase3Particles:
     - {fileID: 7413587468391460923}
     - {fileID: 1788639340946449675}
@@ -6709,7 +6713,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3451406331175806521}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -7107,7 +7111,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4165956475555171865}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -7215,7 +7219,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4227845682150806435}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

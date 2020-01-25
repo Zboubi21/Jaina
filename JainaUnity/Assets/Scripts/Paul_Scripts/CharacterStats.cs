@@ -176,7 +176,6 @@ public class CharacterStats : MonoBehaviour {
     }
     public virtual void AutoAttackFireMark(float timerDebuf)
     {
-        if(!m_canTakeDamage) return;
         if (FireMarkCount == 0)
         {
             FireMarkCount++;

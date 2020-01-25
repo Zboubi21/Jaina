@@ -71,7 +71,9 @@ public class GolemController : MonoBehaviour
         public GolemCrystal m_golemCrystal;
 
         public GolemCrystal[] m_phase2Crystal = new GolemCrystal[2];
+        public MeshRenderer[] m_phase2CrystalHit = new MeshRenderer[2];
         public GolemCrystal m_phase3Crystal;
+        public MeshRenderer m_phase3CrystalHit;
         public ParticleSystem[] m_phase3Particles = new ParticleSystem[2];
         [Space]
         public float m_waitTimeToAssEffect = 3f;
@@ -385,10 +387,15 @@ public class GolemController : MonoBehaviour
             {
                 m_die.m_phase2Crystal[i].On_CrystalLive(true);
             }
+            for (int i = 0, l = m_die.m_phase2CrystalHit.Length; i < l; ++i)
+            {
+                m_die.m_phase2CrystalHit[i].enabled = true;
+            }
         }
         if(m_phaseNbr == 3)
         {
             m_die.m_phase3Crystal.On_CrystalLive(true);
+            m_die.m_phase3CrystalHit.enabled = true;
             for (int i = 0, l = m_die.m_phase3Particles.Length; i < l; ++i)
             {
                 m_die.m_phase3Particles[i].Play();
