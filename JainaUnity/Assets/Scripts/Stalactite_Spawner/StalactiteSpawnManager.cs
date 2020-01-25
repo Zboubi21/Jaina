@@ -17,6 +17,8 @@ public class StalactiteSpawnManager : BossAttack
     [Space]
     [Range(0,100)]
     public float chanceForAStalactiteToBeCristilized;
+    [Range(0, 100)]
+    public float chanceForAStalactiteFromTripleStrickToBeCristilized = 10f;
     int _currentSpawnedStalactite;
     int _currentCristilizeStalactite;
     [Space]
@@ -76,9 +78,9 @@ public class StalactiteSpawnManager : BossAttack
         }
     }
 
-    public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
+    public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
     {
-        if (isBeingCalledHadAnAttack)
+        if (isBeingCalledAsAnAttack)
         {
             if (usedSlots.Count != 0)
             {
@@ -103,21 +105,21 @@ public class StalactiteSpawnManager : BossAttack
 
         if (nbrOfFreeSlots >= nbrOfStalactiteToSpawn)
         {
-            LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion, isBeingCalledHadAnAttack);
+            LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion, isBeingCalledAsAnAttack);
         }
         else
         {
-            LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion, isBeingCalledHadAnAttack);
+            LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion, isBeingCalledAsAnAttack);
         }
     }
-    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava, bool isBeingCalledHadAnAttack)
+    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava, bool isBeingCalledAsAnAttack)
     {
         if (hasToCreateLava)
         {
             lavaSlots.Add(pos);
         }
 
-        if (isBeingCalledHadAnAttack)
+        if (isBeingCalledAsAnAttack)
         {
             possibleSlotInts.Add(pos);
             usedSlots.Remove(pos);
@@ -132,14 +134,14 @@ public class StalactiteSpawnManager : BossAttack
 
     #region LockSlotsMethods
     int i;
-    void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
+    void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
     {
 
         if(nbrOfSlots == 0)
         {
             StartCoroutine(WaitUntilLastStalactilHasFallen(1f));
         }
-        if (isBeingCalledHadAnAttack)
+        if (isBeingCalledAsAnAttack)
         {
             while(i < nbrOfSlots)
             {
@@ -153,12 +155,12 @@ public class StalactiteSpawnManager : BossAttack
                 if (HasToCristilize())
                 {
                     _currentCristilizeStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledHadAnAttack));
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
                 }
                 else
                 {
                     _currentSpawnedStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledHadAnAttack));
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
                 }
             }
 
@@ -177,15 +179,15 @@ public class StalactiteSpawnManager : BossAttack
                 usedGreenSlots.Add(possibleGreenSlotInts[indexToSpawn]);
                 possibleGreenSlotInts.RemoveAt(indexToSpawn);
 
-                if (HasToCristilize())
+                if (LukyCrystilized())
                 {
                     _currentCristilizeStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledHadAnAttack));
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
                 }
                 else
                 {
                     _currentSpawnedStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledHadAnAttack));
+                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
                 }
             }
 
@@ -200,22 +202,22 @@ public class StalactiteSpawnManager : BossAttack
 
     #region Spawn Stalactite Corout
     int _countStalactite;
-    IEnumerator SpawnStalactiteOnSlots(int indexToSpawn, bool isCristilized, bool hasToEnterFusion, bool isBeingCalledHadAnAttack)
+    IEnumerator SpawnStalactiteOnSlots(int indexToSpawn, bool isCristilized, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
     {
         float randomTime = Random.Range(minTimeBeforeStalactiteFall, maxTimeBeforeStalactiteFall);
         yield return new WaitForSeconds(randomTime);
         //C'est là
-        if (isBeingCalledHadAnAttack)
+        if (isBeingCalledAsAnAttack)
         {
-            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleSlot);
+            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledAsAnAttack, possibleSlot);
         }
         else
         {
-            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledHadAnAttack, possibleGreenSlot);
+            SpawnFromPooler(indexToSpawn, isCristilized, hasToEnterFusion, isBeingCalledAsAnAttack, possibleGreenSlot);
         }
 
         _countStalactite++;
-        if (_countStalactite == usedSlots.Count && isBeingCalledHadAnAttack)
+        if (_countStalactite == usedSlots.Count && isBeingCalledAsAnAttack)
         {
             float time = timeToWaitUntilLastStalactiteHasFallen;
             StartCoroutine(WaitUntilLastStalactilHasFallen(time));
@@ -231,6 +233,19 @@ public class StalactiteSpawnManager : BossAttack
             return true;
         }
         return false;
+    }
+
+    bool LukyCrystilized()
+    {
+        float isCrys = Random.Range(0, 100);
+        if(isCrys <= chanceForAStalactiteFromTripleStrickToBeCristilized)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion, bool isBeingCalledHadAnAttack, Transform[] slots)
