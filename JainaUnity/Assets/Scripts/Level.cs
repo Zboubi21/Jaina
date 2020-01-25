@@ -21,13 +21,13 @@ public class Level : MonoBehaviour {
 
 // ---------------------------------- Fonctions "static" permet de pouvoir les appeler de nimporte où ----------------------------------
     static public FX AddFX(GameObject model, Vector3 position, Quaternion rotation){
-        if(model != null){	// Si la variable m_deadFX est différente de null alors :
+        // if(model != null){	// Si la variable m_deadFX est différente de null alors :
 			// Création d'une copie en mémoire de ce préfab dans la hiérarchie :
 			GameObject go = Instantiate(model, position, rotation);	// On instentie l'objet original (model) avec une position (position) et une rotation (Quaternion.identity)
             go.transform.SetParent(GetInstance().m_fxRoot);
             return go.GetComponent<FX>();
-		}
-        return null;    // On instentie pas de nouveaux FX
+		// }
+        // return null;    // On instentie pas de nouveaux FX
     }
     
 }
