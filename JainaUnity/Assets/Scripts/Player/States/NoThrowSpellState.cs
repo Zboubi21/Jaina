@@ -37,6 +37,11 @@ public class NoThrowSpellState : IState
 			m_playerManager.AutoAttack();
 		}
 
+		if(m_playerManager.m_canAutoAttackWithGamepad)
+		{
+			m_playerManager.AutoAttackWithGamepad();
+		}
+
 		if(m_playerManager.m_blinkButton && m_playerManager.m_powers.m_blink.m_canSwitch){
 			m_playerManager.ChangeState(PlayerState.BlinkState);
 		}

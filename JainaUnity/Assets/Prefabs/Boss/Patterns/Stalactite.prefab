@@ -1060,8 +1060,8 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 1024
     m_shakeCamera:
-      m_magnitudeShake: 3
-      m_roughnessShake: 3
+      m_magnitudeShake: 2
+      m_roughnessShake: 1
       m_fadeInTimeShake: 0.1
       m_fadeOutTimeShake: 0.15
     audioFall: {fileID: 1453988029760907930, guid: 2f02a35935164d2419d4c2b6353f2bfe,
@@ -1077,10 +1077,10 @@ MonoBehaviour:
     m_waitTimeToSpawnLava: 0
     m_waitToCheckOtherStalactiteArea: 0.125
     m_shakeCamera:
-      m_magnitudeShake: 5
-      m_roughnessShake: 5
+      m_magnitudeShake: 3
+      m_roughnessShake: 1
       m_fadeInTimeShake: 0.25
-      m_fadeOutTimeShake: 0.5
+      m_fadeOutTimeShake: 0.25
     audioExplosion: {fileID: 700814231917549913, guid: 4d61ba3f169fe5544b9b09e982ffa329,
       type: 3}
   m_destroyExplosion:
@@ -1162,6 +1162,7 @@ MonoBehaviour:
   m_fallDamageRangeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_explosionRangeColor: {r: 1, g: 1, b: 1, a: 1}
   m_canExploded: 1
+  m_canUseDebugInputs: 0
 --- !u!208 &836103098408811549
 NavMeshObstacle:
   m_ObjectHideFlags: 0

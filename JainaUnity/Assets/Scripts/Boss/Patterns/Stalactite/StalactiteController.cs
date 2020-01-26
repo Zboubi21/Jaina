@@ -118,6 +118,7 @@ public class StalactiteController : MonoBehaviour
 
     [Header("DEBUG")]
     [SerializeField] bool m_canExploded = false;
+    [SerializeField] bool m_canUseDebugInputs = false;
 
     [Serializable] public class CameraShake {
         public float m_magnitudeShake = 4f;
@@ -283,12 +284,15 @@ public class StalactiteController : MonoBehaviour
 
     void Update()
     {
-        // if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
-        //     AddStalactiteState();
-        // }
-        // if(Input.GetKeyDown(KeyCode.M)){
-        //     RemoveStalactiteState();
-        // }
+        if(m_canUseDebugInputs)
+        {
+            if(Input.GetKeyDown(KeyCode.P) && m_canExploded){
+                AddStalactiteState();
+            }
+            if(Input.GetKeyDown(KeyCode.M)){
+                RemoveStalactiteState();
+            }
+        }
     }
 
     void OnDisable()
