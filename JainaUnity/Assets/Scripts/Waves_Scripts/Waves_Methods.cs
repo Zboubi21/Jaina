@@ -283,7 +283,7 @@ public class Waves_Methods : MonoBehaviour
                 {
                     if (_spawnerMethod[i]._nbrOfWaves.Length != _spawnerMethod[i+1]._nbrOfWaves.Length)
                     {
-                        //Debug.LogError("Le spawner " + _spawnerMethod[i] + " a un nombre de vagues différentes du spawner " + _spawnerMethod[i - 1] + ". Tous les spawners d'une arène doivent avoir le même nombre de vague");
+                        Debug.LogError("Le spawner " + _spawnerMethod[i] + " a un nombre de vagues différentes du spawner " + _spawnerMethod[i - 1] + ". Tous les spawners d'une arène doivent avoir le même nombre de vague");
                     }
                     else
                     {
