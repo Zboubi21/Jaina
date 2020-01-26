@@ -22,7 +22,10 @@ public class RFX4_Decal : MonoBehaviour
         ps = GetComponent<ParticleSystem>();
         if (ps != null) psMain = ps.main;
 
-        if (Camera.main.depthTextureMode != DepthTextureMode.Depth) Camera.main.depthTextureMode = DepthTextureMode.Depth;
+        if(Camera.main != null)
+        {
+            if (Camera.main.depthTextureMode != DepthTextureMode.Depth) Camera.main.depthTextureMode = DepthTextureMode.Depth;
+        }
 
 #if KRIPTO_FX_LWRP_RENDERING
         var addCamData = Camera.main.GetComponent<LWRPAdditionalCameraData>();

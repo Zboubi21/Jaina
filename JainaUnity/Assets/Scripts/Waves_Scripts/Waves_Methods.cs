@@ -180,7 +180,7 @@ public class Waves_Methods : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.02f);
                 time -= Time.deltaTime;
-                Debug.Log(time);
+                //Debug.Log(time);
                 if(timeadd == 0)
                 {
                     if (time <= 0 || PreviousWaveMethods.nbrEnemyDead == PreviousWaveMethods.nbrOfEnemy || PreviousWaveMethods.nbrEnemyDead == 0 || PreviousWaveMethods.nbrOfEnemy == 0)
@@ -193,7 +193,7 @@ public class Waves_Methods : MonoBehaviour
                         {
                             OnUsingAreanUI(useArenaUI);
                         }
-                        Debug.Log("this is the nbrOfWave :" + nbrOfWave);
+                        //Debug.Log("this is the nbrOfWave :" + nbrOfWave);
                         Spawner(nbrOfWave);
                         StopCoroutine(WaitForFirstWave(time,timeadd));
                         break;
@@ -211,7 +211,7 @@ public class Waves_Methods : MonoBehaviour
                         {
                             OnUsingAreanUI(useArenaUI);
                         }
-                        Debug.Log("this is the nbrOfWave :" + nbrOfWave);
+                        //Debug.Log("this is the nbrOfWave :" + nbrOfWave);
                         Spawner(nbrOfWave);
                         StopCoroutine(WaitForFirstWave(time, timeadd));
                         break;
