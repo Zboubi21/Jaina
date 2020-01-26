@@ -14,6 +14,13 @@ using DuloGames.UI;
 public class PlayerManager : MonoBehaviour {
 
 	public static PlayerManager Instance;
+	static Gamepad m_gamepadIsUsed = Gamepad.None;
+	protected enum Gamepad
+	{
+		None,
+		False,
+		True
+	}
 
 	public PlayerDebug m_playerDebug = new PlayerDebug();
 	[Serializable] public class PlayerDebug {
@@ -708,6 +715,22 @@ public class PlayerManager : MonoBehaviour {
 			Debug.LogError("You need to have the same number of State in PlayerManager and PlayerStateEnum");
 		}
 		m_agent = GetComponent<NavMeshAgent>();
+
+		switch (m_gamepadIsUsed)
+		{
+			case Gamepad.None:
+			break;
+			case Gamepad.False:
+				m_playerDebug.m_useGamepad = false;
+			break;
+			case Gamepad.True:
+				m_playerDebug.m_useGamepad = true;
+			break;
+		}
+	}
+
+	void OnEnable(){
+		// ChangeState(m_gameManager.m_playerSettings.m_playerStartState);
 	}
 
 	void Start(){
@@ -738,10 +761,6 @@ public class PlayerManager : MonoBehaviour {
 		SetUiModeParameters();
 
 		SetUiButtons();
-	}
-	
-	void OnEnable(){
-		// ChangeState(m_gameManager.m_playerSettings.m_playerStartState);
 	}
 
 	void Update(){
@@ -846,36 +865,48 @@ public class PlayerManager : MonoBehaviour {
 		m_blinkButton = Input.GetButtonDown("Blink");
 		m_iceBlockButton = Input.GetButtonDown("IceBlock");
 
-		// m_leftSpellButton = Input.GetButtonDown("LeftSpell");
-		if(Input.GetAxis("LeftSpell") > m_gamepadInput.m_deadZoneValue){
-			m_useLeftSpell = true;
-		}else{
-			m_useLeftSpell = false;
-			m_lastUseLeftSpell = false;
-		}
-		if(m_useLeftSpell){
-			if(!m_lastUseLeftSpell){
-				m_lastUseLeftSpell = true;
-				m_leftSpellButton = true;
+		if (m_playerDebug.m_useGamepad)
+		{
+			if(Input.GetAxis("LeftSpell") > m_gamepadInput.m_deadZoneValue){
+				m_useLeftSpell = true;
 			}else{
-				m_leftSpellButton = false;
+				m_useLeftSpell = false;
+				m_lastUseLeftSpell = false;
 			}
+			if(m_useLeftSpell){
+				if(!m_lastUseLeftSpell){
+					m_lastUseLeftSpell = true;
+					m_leftSpellButton = true;
+				}else{
+					m_leftSpellButton = false;
+				}
+			}
+		}
+		else
+		{
+			m_leftSpellButton = Input.GetButtonDown("LeftSpell");
 		}
 
-		// m_rightSpellButton = Input.GetButtonDown("RightSpell");
-		if(Input.GetAxis("RightSpell") > m_gamepadInput.m_deadZoneValue){
-			m_useRightSpell = true;
-		}else{
-			m_useRightSpell = false;
-			m_lastUseRightSpell = false;
-		}
-		if(m_useRightSpell){
-			if(!m_lastUseRightSpell){
-				m_lastUseRightSpell = true;
-				m_rightSpellButton = true;
+		if (m_playerDebug.m_useGamepad)
+		{
+			if(Input.GetAxis("RightSpell") > m_gamepadInput.m_deadZoneValue){
+				m_useRightSpell = true;
 			}else{
-				m_rightSpellButton = false;
+				m_useRightSpell = false;
+				m_lastUseRightSpell = false;
 			}
+			if(m_useRightSpell){
+				if(!m_lastUseRightSpell){
+					m_lastUseRightSpell = true;
+					m_rightSpellButton = true;
+				}else{
+					m_rightSpellButton = false;
+				}
+			}
+		}
+		else
+		{
+			m_rightSpellButton = Input.GetButtonDown("RightSpell");
 		}
 
 		// Gamepad inputs
@@ -884,7 +915,11 @@ public class PlayerManager : MonoBehaviour {
 		Vector3 rot = new Vector3(Input.GetAxis("RightJoystick_h"), 0, Input.GetAxis("RightJoystick_v"));
 		if(rot != Vector3.zero){
 			m_rotationInput = rot;
-			AutoAttackWithGamepad();
+			m_canAutoAttackWithGamepad = true;
+		}
+		else
+		{
+			m_canAutoAttackWithGamepad = false;
 		}
 
 		m_healButton = Input.GetButtonDown("Heal");
@@ -893,6 +928,7 @@ public class PlayerManager : MonoBehaviour {
 			m_powers.m_healHandeler.HealEffect();
 		}
 	}
+	public bool m_canAutoAttackWithGamepad = true;
 
 	Vector3 m_lastDestination;
 	void RaycastToMovePlayer(){
@@ -1992,6 +2028,12 @@ public class PlayerManager : MonoBehaviour {
 	}
 	public void ChangeJainaCanDie(){
 		m_playerDebug.m_playerCanDie =! m_playerDebug.m_playerCanDie;
+	}
+
+	public void ChangeUseGamepadInputs(Toggle toggle){
+		// m_playerDebug.m_useGamepad =! m_playerDebug.m_useGamepad;
+		m_playerDebug.m_useGamepad = toggle.isOn;
+		m_gamepadIsUsed = m_playerDebug.m_useGamepad ? Gamepad.True : Gamepad.False;
 	}
 
 	public void SwitchPlayerToCinematicState(float timeToBeInCinematic){
