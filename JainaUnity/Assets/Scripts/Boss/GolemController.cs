@@ -32,7 +32,7 @@ public class GolemController : MonoBehaviour
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
-        public float[] m_delayToChangeBossPhase = new float[3];
+        public float[] m_delayToChangeBossPhase = new float[2];
         public CameraShake m_changePhaseShake;
         public GameObject m_changePhaseScream_SFX;
     }
