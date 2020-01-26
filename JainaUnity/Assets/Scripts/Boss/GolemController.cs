@@ -32,7 +32,7 @@ public class GolemController : MonoBehaviour
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
-        public float[] m_delayToChangeBossPhase = new float[3];
+        public float[] m_delayToChangeBossPhase = new float[2];
         public CameraShake m_changePhaseShake;
         public GameObject m_changePhaseScream_SFX;
     }
@@ -99,6 +99,9 @@ public class GolemController : MonoBehaviour
         public float m_timeToChangeColor = 3;
         public AnimationCurve m_materialCurve;
     }
+
+    [Header("Ambience Sounds")]
+    [SerializeField] BossAmbienceSoundManager m_bossSoundManager;
 
     [Header("Alea Debug")]
     public AleaDebug m_aleaDebug;
@@ -391,6 +394,7 @@ public class GolemController : MonoBehaviour
             {
                 m_die.m_phase2CrystalHit[i].enabled = true;
             }
+            m_bossSoundManager.On_GolemSwitchToP2();
         }
         if(m_phaseNbr == 3)
         {
@@ -400,6 +404,7 @@ public class GolemController : MonoBehaviour
             {
                 m_die.m_phase3Particles[i].Play();
             }
+            m_bossSoundManager.On_GolemSwitchToP3();
         }
 
         yield return new WaitForSeconds(m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 1] - 1);
@@ -450,7 +455,7 @@ public class GolemController : MonoBehaviour
         {
             StartCoroutine(ChangeArmedialLightValue(m_die.m_armedialLight.lights[i], m_die.m_toLightValue));
         }
-        StartCoroutine(ChangeArmedialMaterialtValue());
+        StartCoroutine(ChangeArmedialMaterialValue());
     }
     IEnumerator ChangeArmedialLightValue(Light light, float toValue)
     {
@@ -470,7 +475,7 @@ public class GolemController : MonoBehaviour
             yield return null;
         }
     }
-    IEnumerator ChangeArmedialMaterialtValue()
+    IEnumerator ChangeArmedialMaterialValue()
     {
         yield return new WaitForSeconds(m_die.m_waitTimeToActivateArtefact);
         
@@ -526,6 +531,7 @@ public class GolemController : MonoBehaviour
         m_die.m_assFX.IsVisible = true;
         StartCoroutine(WaitTimeToLunchFirstAttack());
         m_enemyStats.m_canTakeDamage = true;
+        m_bossSoundManager.On_GolemStartFight();
     }
 
     public void On_GolemChangePhase()
@@ -566,6 +572,8 @@ public class GolemController : MonoBehaviour
         m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
         m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
         ActivateArmedialLight();
+
+        m_bossSoundManager.On_GolemDie();
     }    
 
     public void On_AttackIsFinished()
