@@ -207,14 +207,14 @@ public class GolemController : MonoBehaviour
                 m_aleaDebug.m_value[alea] ++;
             }
         }
-        if(Input.GetKeyDown(KeyCode.L) && m_fightIsStarted == false)
-        {
-            StartAttack();
-        }
-        if(Input.GetKeyDown(KeyCode.N))
-        {
-            On_GolemAreGoingToDie();
-        }
+        // if(Input.GetKeyDown(KeyCode.L) && m_fightIsStarted == false)
+        // {
+        //     StartAttack();
+        // }
+        // if(Input.GetKeyDown(KeyCode.N))
+        // {
+        //     On_GolemAreGoingToDie();
+        // }
     }
 
 #endregion

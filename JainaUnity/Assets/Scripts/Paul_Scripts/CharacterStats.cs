@@ -367,6 +367,62 @@ public class CharacterStats : MonoBehaviour {
         }
     }
 
+    bool m_characterInLavaWave = false;
+    float m_lavaWaveTick;
+    public float LavaWaveTick
+    {
+        get
+        {
+            return m_lavaWaveTick;
+        }
+
+        set
+        {
+            m_lavaWaveTick = value;
+        }
+    }
+    float m_actualLavaWaveTick = 0;
+
+    int m_lavaWaveTickDamage;
+    public int LavaWaveTickDamage
+    {
+        get
+        {
+            return m_lavaWaveTickDamage;
+        }
+
+        set
+        {
+            m_lavaWaveTickDamage = value;
+        }
+    }
+    public void OnCharacterEnterInLavaWaveArea()
+    {
+        m_characterInLavaWave = true;
+        if(m_actualLavaWaveTick == 0){
+            m_actualLavaWaveTick = m_lavaWaveTick;
+        }
+    }
+    public void OnCharacterExitInLavaWaveArea()
+    {
+        m_characterInLavaWave = false;
+        m_actualLavaWaveTick = m_lavaWaveTick;
+    }
+    void LavaWaveAreaDamage()
+    {
+        m_actualLavaWaveTick -= Time.deltaTime;
+        if(m_actualLavaWaveTick <= 0)
+        {
+            if(m_playerState != null){
+                m_playerState.TakeDamage(m_lavaWaveTickDamage);
+            }else{
+                TakeDamage(m_lavaWaveTickDamage);
+                StartHitFxCorout();
+            }
+            m_actualLavaWaveTick = m_lavaWaveTick;
+        }
+    }
+
     bool m_characterInLaser = false;
     float m_laserTick;
     public float LaserTick
@@ -431,6 +487,9 @@ public class CharacterStats : MonoBehaviour {
     void FixedUpdate(){
         if(m_characterInLava && !isDead){
             LavaAreaDamage();
+        }
+        if(m_characterInLavaWave && ! isDead){
+            LavaWaveAreaDamage();
         }
         if(m_characterInLaser && !isDead){
             LaserAreaDamage();
