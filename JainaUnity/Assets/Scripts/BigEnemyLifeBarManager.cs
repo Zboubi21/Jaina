@@ -112,7 +112,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         enemyStats = GetByRay<EnemyStats>(ray);
-        if (!isFightingABoss)
+        if (!isFightingABoss && !PlayerManager.Instance.m_playerDebug.m_isBossFightJaina)
         {
             if(bossStats != null)
             {
