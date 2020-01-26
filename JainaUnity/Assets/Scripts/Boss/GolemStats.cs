@@ -42,6 +42,7 @@ public class GolemStats : EnemyStats
         loadPhase3 = true;
         CheckPhaseChanges();
     }
+
     protected override void CheckPhaseChanges()
     {
         if(m_actualPhase == 1 && (GetLifePercentage() <= m_phase2LifeTrigger || loadPhase2))

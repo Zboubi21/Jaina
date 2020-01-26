@@ -512,14 +512,17 @@ public class EnemyStats : CharacterStats {
                 m_arcanMarkPos = CheckPosition(fireHasBeenInstanciated, iceHasBeenInstanciated);
                 Level.AddFX(enemyController.m_fxs.m_markExplosion, enemyController.m_fxs.m_markExplosionRoot.position, enemyController.m_fxs.m_markExplosionRoot.rotation);
             }
+            else
+            {
+                // Fx pour faire exploser la marque de feu, faut le faire meme si ça arrive pas souvent
+                Level.AddFX(bossController.m_fxs.m_markExplosion, bossController.m_fxs.m_markExplosionRoot.position, bossController.m_fxs.m_markExplosionRoot.rotation);
+            }
             fireHasBeenInstanciated = false;
             FireMarkCount = 0;
             TimerTickDamage = saveDamageTick;
             StartFireCooldown = false;
             // Debug.Log("tien prend : " + FireExplosionDamage + " degats dasn ta face");
 
-            // Fx pour faire exploser la marque de feu, faut le faire meme si ça arrive pas souvent
-            Level.AddFX(bossController.m_fxs.m_markExplosion, bossController.m_fxs.m_markExplosionRoot.position, bossController.m_fxs.m_markExplosionRoot.rotation);
 
             TakeDamage(FireExplosionDamage);
         }
