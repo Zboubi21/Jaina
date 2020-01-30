@@ -264,7 +264,7 @@ public class StalactiteSpawnManager : BossAttack
         control.m_cristals.cristalsParent.SetActive(hasToCristilize);
         control.IsCristilize = hasToCristilize;
 
-        timeToWaitUntilLastStalactiteHasFallen = control.m_moveAnimation.m_timeToReachPosition + control.m_sign.m_timetoFallStalactite;
+        timeToWaitUntilLastStalactiteHasFallen = control.m_moveAnimation.m_timeToReachPosition + control.m_sign.m_timeToFallStalactite;
 
         if (hasToEnterFusion)
         {

@@ -16,7 +16,7 @@ public class StalactiteController : MonoBehaviour
     public Sign m_sign;
 	[Serializable] public class Sign {
         public GameObject m_fallSign;
-        public float m_timetoFallStalactite = 5;
+        public float m_timeToFallStalactite = 2.5f;
 
         [Header("Anim")]
         public Anim m_anim;
@@ -445,12 +445,11 @@ public class StalactiteController : MonoBehaviour
             m_fallSignImg.color = actualColor;
             yield return null;
         }
-        m_fallSignImg = null;
     }
 
     IEnumerator MoveStalactiteAnimation()
     {
-        yield return new WaitForSeconds(m_sign.m_timetoFallStalactite);
+        yield return new WaitForSeconds(m_sign.m_timeToFallStalactite);
 
         Vector3 fromPos = transform.position;
         Vector3 toPos = new Vector3(fromPos.x, m_moveAnimation.m_worldYTargetedPosition, fromPos.z);
@@ -472,6 +471,7 @@ public class StalactiteController : MonoBehaviour
 
         m_golemController.On_StalactiteLive();
         m_isOnGround = true;
+        m_fallSignImg = null;
     }
 
     void CheckFallDamageArea()

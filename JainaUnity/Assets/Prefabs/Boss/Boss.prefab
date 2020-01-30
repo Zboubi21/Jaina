@@ -5862,6 +5862,8 @@ MonoBehaviour:
   m_backPack: {fileID: 0}
   m_phase2LifeTrigger: 80
   m_phase3LifeTrigger: 50
+  m_timeBeforeTriggerPhase2: 120
+  m_timeBeforeTriggerPhase3: 180
 --- !u!114 &2739238033032202561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5899,9 +5901,9 @@ MonoBehaviour:
     - 3
     - 2
     m_delayToChangeBossPhase:
-    - 7.5
-    - 7.5
-    - 7.5
+    - 6
+    - 6
+    - 6
     m_changePhaseShake:
       m_magnitudeShake: 2
       m_roughnessShake: 1
@@ -6019,6 +6021,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+  m_bossSoundManager: {fileID: 0}
   m_aleaDebug:
     m_useDebug: 0
     m_debugInput: 103
