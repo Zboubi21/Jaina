@@ -5,7 +5,19 @@ using UnityEngine;
 public class LavaWaveController : BossAttack
 {
 
+#region SerializeField Variables
     [SerializeField] Transform m_lavaWave;
+
+    [Header("Positions")]
+    [SerializeField] Positions m_right;
+    [SerializeField] Positions m_left;
+
+    [System.Serializable] class Positions
+    {
+        public float m_posValue;
+        public Transform m_targetPos;
+        public GroundHitSign m_hitSign;
+    }
 
     [Header("Y Position")]
     [SerializeField] Mover m_moveYPos;
@@ -24,7 +36,17 @@ public class LavaWaveController : BossAttack
 
     [Header("Debug")]
     [SerializeField] bool m_useDebugInput = false;
+#endregion
 
+#region Private Variables
+    PlayerManager m_playerManager;
+#endregion
+
+#region Event Functions
+    void Start()
+    {
+        m_playerManager = PlayerManager.Instance;
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X) && m_useDebugInput)
@@ -32,7 +54,9 @@ public class LavaWaveController : BossAttack
             On_AttackBegin(0);
         }
     }
+#endregion
 
+#region Private Functions
     IEnumerator MoveYPosition()
     {
         yield return new WaitForSeconds(m_moveYPos.m_delayToStart);
@@ -69,10 +93,51 @@ public class LavaWaveController : BossAttack
         m_lavaWave.gameObject.SetActive(false);
     }
 
+    bool PlayerPosIsClosestToRightPos()
+    {
+        float rightDistance = Vector3.Distance(m_playerManager.transform.position, m_right.m_targetPos.position);
+        float leftDistance = Vector3.Distance(m_playerManager.transform.position, m_left.m_targetPos.position);
+        if (rightDistance < leftDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    float LavaXPos()
+    {
+        if (PlayerPosIsClosestToRightPos())
+        {
+            return m_right.m_posValue;
+        }
+        else
+        {
+            return m_left.m_posValue;
+        }
+    }
+    
+#endregion
+
+#region Public Functions
     public override void On_AttackBegin(int phaseNbr)
     {
         base.On_AttackBegin(phaseNbr);
         m_lavaWave.gameObject.SetActive(true);
+
+        float yPos = PlayerPosIsClosestToRightPos() ? m_lavaWave.localPosition.y : - m_lavaWave.localPosition.y;
+        m_lavaWave.localPosition = new Vector3(LavaXPos(), yPos, m_lavaWave.localPosition.z);
+        if(PlayerPosIsClosestToRightPos())
+        {
+            m_right.m_hitSign.StartToMove();
+            m_right.m_hitSign.StartToChangeColor();
+        }
+        else
+        {
+            m_left.m_hitSign.StartToMove();
+            m_left.m_hitSign.StartToChangeColor();
+        }
         StartCoroutine(MoveYPosition());
         StartCoroutine(MoveZPosition());
     }
@@ -86,6 +151,9 @@ public class LavaWaveController : BossAttack
     {
         // StopAllCoroutines();
         base.On_GolemAreGoingToDie();
+        m_right.m_hitSign.StopAllGroundHitCoroutine();
+        m_left.m_hitSign.StopAllGroundHitCoroutine();
     }
+#endregion
 
 }

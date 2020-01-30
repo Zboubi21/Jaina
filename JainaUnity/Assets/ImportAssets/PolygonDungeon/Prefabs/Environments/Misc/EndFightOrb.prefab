@@ -32,10 +32,7 @@ Transform:
   m_Children:
   - {fileID: 3525037570533109259}
   - {fileID: 8536653317992377470}
-  - {fileID: 2127933858}
-  - {fileID: 2560410514312547486}
-  - {fileID: 1542473320572045454}
-  - {fileID: 5082443098633033530}
+  - {fileID: 4560949155044672637}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -130,12 +127,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2127933857}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.374, y: 2.08, z: -0.437}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.374, y: 2.0799997, z: -0.43700004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 411698}
-  m_RootOrder: 2
+  m_Father: {fileID: 4560949155044672637}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &2127933859
 Light:
@@ -189,6 +186,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endPoint: {fileID: 7193636940368218904}
   startPoint: {fileID: 2587586215730160346}
+  dieBossPoint: {fileID: 6616913395034555534}
+--- !u!1 &498521933929413332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7253336683315485661}
+  m_Layer: 21
+  m_Name: DieBossPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7253336683315485661
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498521933929413332}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44500005, y: 1.8, z: 0.67300004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3348990239291598475}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1091737568709229276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6616913395034555534}
+  m_Layer: 21
+  m_Name: DieBossPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6616913395034555534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091737568709229276}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.374, y: 1.8, z: -0.43700004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7057998581162473356}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1438111140501984526
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,12 +332,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1542473320572045453}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.445, y: 2.08, z: -0.437}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44500002, y: 2.0799997, z: -0.43700004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 411698}
-  m_RootOrder: 4
+  m_Father: {fileID: 4560949155044672637}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &1542473320572045455
 Light:
@@ -333,6 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endPoint: {fileID: 8553208702380143156}
   startPoint: {fileID: 3931366103961852918}
+  dieBossPoint: {fileID: 2360056618015712452}
 --- !u!1 &1882675466666772229
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,6 +421,7 @@ Transform:
   m_Children:
   - {fileID: 2692195720902700416}
   - {fileID: 7304984717323322434}
+  - {fileID: 7253336683315485661}
   m_Father: {fileID: 8536653317992377470}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -394,6 +454,7 @@ Transform:
   m_Children:
   - {fileID: 7193636940368218904}
   - {fileID: 2587586215730160346}
+  - {fileID: 6616913395034555534}
   m_Father: {fileID: 8536653317992377470}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -422,12 +483,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2560410514312547485}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.374, y: 2.08, z: 0.673}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.374, y: 2.0799997, z: 0.67300004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 411698}
-  m_RootOrder: 3
+  m_Father: {fileID: 4560949155044672637}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &2560410514312547487
 Light:
@@ -481,6 +542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endPoint: {fileID: 4637732776321578532}
   startPoint: {fileID: 27184567888175078}
+  dieBossPoint: {fileID: 957067854969040503}
 --- !u!1 &2673628456345375006
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,6 +573,40 @@ Transform:
   m_Father: {fileID: 6825288074488307498}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3357302235238407683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4560949155044672637}
+  m_Layer: 21
+  m_Name: Lights
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4560949155044672637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3357302235238407683}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2127933858}
+  - {fileID: 2560410514312547486}
+  - {fileID: 1542473320572045454}
+  - {fileID: 5082443098633033530}
+  m_Father: {fileID: 411698}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3494043143583885362
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,6 +636,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7057998581162473356}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3565508733708881473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2360056618015712452}
+  m_Layer: 21
+  m_Name: DieBossPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2360056618015712452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3565508733708881473}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44500002, y: 1.8, z: -0.43700004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6825288074488307498}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4520604668842881282
 GameObject:
@@ -630,12 +756,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5082443098633033529}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.44500005, y: 2.08, z: 0.673}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44500005, y: 2.0799997, z: 0.67300004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 411698}
-  m_RootOrder: 5
+  m_Father: {fileID: 4560949155044672637}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &5082443098633033531
 Light:
@@ -689,6 +815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endPoint: {fileID: 2692195720902700416}
   startPoint: {fileID: 7304984717323322434}
+  dieBossPoint: {fileID: 7253336683315485661}
 --- !u!1 &5092208123807969536
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,6 +905,7 @@ Transform:
   m_Children:
   - {fileID: 8553208702380143156}
   - {fileID: 3931366103961852918}
+  - {fileID: 2360056618015712452}
   m_Father: {fileID: 8536653317992377470}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -810,6 +938,7 @@ Transform:
   m_Children:
   - {fileID: 4637732776321578532}
   - {fileID: 27184567888175078}
+  - {fileID: 957067854969040503}
   m_Father: {fileID: 8536653317992377470}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -872,4 +1001,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3348990239291598475}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9088219476090062899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 957067854969040503}
+  m_Layer: 21
+  m_Name: DieBossPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &957067854969040503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9088219476090062899}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.374, y: 1.8, z: 0.67300004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 88533205578962375}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

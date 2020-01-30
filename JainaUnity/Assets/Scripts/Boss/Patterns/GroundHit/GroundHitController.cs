@@ -381,6 +381,9 @@ public class GroundHitController : BossAttack
                 Destroy(m_impactSounds[i].gameObject);
             }
         }
+        m_leftGroundHitSign.StopAllGroundHitCoroutine();
+        m_middleGroundHitSign.StopAllGroundHitCoroutine();
+        m_rightGroundHitSign.StopAllGroundHitCoroutine();
     }
 
 }

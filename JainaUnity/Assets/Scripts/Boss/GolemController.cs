@@ -453,6 +453,7 @@ public class GolemController : MonoBehaviour
     {
         for (int i = 0, l = m_die.m_armedialLight.lights.Length; i < l; ++i)
         {
+            m_die.m_armedialLight.ResetLightPos();
             StartCoroutine(ChangeArmedialLightValue(m_die.m_armedialLight.lights[i], m_die.m_toLightValue));
         }
         StartCoroutine(ChangeArmedialMaterialValue());

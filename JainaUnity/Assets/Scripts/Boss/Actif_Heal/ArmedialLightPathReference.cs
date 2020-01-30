@@ -6,4 +6,6 @@ public class ArmedialLightPathReference : MonoBehaviour
 {
     public Transform endPoint;
     public Transform startPoint;
+    public Transform dieBossPoint;
+
 }
