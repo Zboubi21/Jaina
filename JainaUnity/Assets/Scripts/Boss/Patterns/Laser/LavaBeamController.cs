@@ -51,11 +51,14 @@ public class LavaBeamController : BossAttack
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M) && m_debugInput)
+#if UNITY_EDITOR
+
+        if (Input.GetKeyDown(KeyCode.M))
         {
             StartLaser(phaseNbr);
             lavaBeamPaternActif = true;
         }
+#endif
 
         SpawnerLookAt();
     }
@@ -128,7 +131,8 @@ public class LavaBeamController : BossAttack
                 break;
 
         }
-        StartCoroutine(WaitUntilShooting());
+        //StartCoroutine(WaitUntilShooting());
+        StartCoroutine(EntranceDeclencher());
     }
 
     void InitiateControle(GameObject[] laserSpanwerPhase, int nbrOfPhase)
@@ -171,44 +175,49 @@ public class LavaBeamController : BossAttack
         _currentTimeOfAnimation = 0;
     }
 
-
-    IEnumerator WaitUntilShooting()
+    IEnumerator EntranceDeclencher()
     {
-
         for (int i = 0, l = actifSpawner.Count; i < l; ++i)
         {
-            StartCoroutine(EntranceAndExit(startAndEndCurve[0], i, actifSpawner[i]));
+            yield return new WaitForSeconds(timeBeforeShooting / 2);
+            yield return StartCoroutine(EntranceAndExit(startAndEndCurve[0], i, actifSpawner[i]));
+            StartCoroutine(WaitUntilShooting(i));
         }
-
-        for (int i = 0; i < nbrOfShot; ++i)
+    }
+    IEnumerator WaitUntilShooting(int i)
+    {
+        for (int a = 0; a < nbrOfShot; ++a)
         {
             yield return new WaitForSeconds(timeBeforeShooting);
-            yield return StartCoroutine(ShootLava(nbrOfShot));
+            yield return StartCoroutine(ShootLava(nbrOfShot, i));
         }
-        
-        On_AttackEnd();
-    }
-    IEnumerator ShootLava(int nbrOfShot)
-    {
-        for (int i = 0, l = actifSpawner.Count; i < l; ++i)
+        if(i == actifSpawner.Count)
         {
-            actifSpawnerScript[i].HasToLookAt = false;
-            yield return new WaitForSeconds(timeBetweenEachShoot/2);
-            yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[0], actifSpawner[i].GetComponent<ParticleSystem>()));
-            GameObject go = ObjectPooler.Instance.SpawnSpellFromPool(SpellType.LavaBeam, actifSpawner[i].transform.position, actifSpawner[i].transform.rotation);
-            //Level.AddFX(lavaBeamVFX, actifSpawner[i].transform.position, actifSpawner[i].transform.rotation);
-            go.GetComponent<ProjectileReference>().childScript.GetComponent<Projectile>().Damage = damage;
-            Level.AddFX(lavaBeamShootSFX, transform.position, transform.rotation);
-            yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[1], actifSpawner[i].GetComponent<ParticleSystem>()));
-            actifSpawnerScript[i].NbrOfShoot++;
-            yield return new WaitForSeconds(timeBetweenEachShoot/2);
-            actifSpawnerScript[i].HasToLookAt = true;
-
-            if (actifSpawnerScript[i].NbrOfShoot == nbrOfShot)
-            {
-                StartCoroutine(StopUseShootLava(i));
-            }
+            On_AttackEnd();
         }
+    }
+    IEnumerator ShootLava(int nbrOfShot, int ActifSpawner)
+    {
+        //for (int i = 0, l = actifSpawner.Count; i < l; ++i)
+        //{
+        actifSpawnerScript[ActifSpawner].HasToLookAt = false;
+        yield return new WaitForSeconds(timeBetweenEachShoot/2);
+
+        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[0], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
+        GameObject go = ObjectPooler.Instance.SpawnSpellFromPool(SpellType.LavaBeam, actifSpawner[ActifSpawner].transform.position, actifSpawner[ActifSpawner].transform.rotation);
+        go.GetComponent<ProjectileReference>().childScript.GetComponent<Projectile>().Damage = damage;
+        Level.AddFX(lavaBeamShootSFX, transform.position, transform.rotation);
+        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[1], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
+        actifSpawnerScript[ActifSpawner].NbrOfShoot++;
+
+        yield return new WaitForSeconds(timeBetweenEachShoot/2);
+        actifSpawnerScript[ActifSpawner].HasToLookAt = true;
+
+        if (actifSpawnerScript[ActifSpawner].NbrOfShoot == nbrOfShot)
+        {
+            StartCoroutine(StopUseShootLava(ActifSpawner));
+        }
+        //}
     }
     IEnumerator StopUseShootLava(int i)
     {
