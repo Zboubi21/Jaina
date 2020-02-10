@@ -19,6 +19,8 @@ public class StalactiteSpawnManager : BossAttack
     public float chanceForAStalactiteToBeCristilized;
     [Range(0, 100)]
     public float chanceForAStalactiteFromTripleStrickToBeCristilized = 10f;
+    [Range(0, 100)]
+    public float[] chanceForStalactiteToBeMolten;
     int _currentSpawnedStalactite;
     int _currentCristilizeStalactite;
     [Space]
@@ -67,6 +69,7 @@ public class StalactiteSpawnManager : BossAttack
 
     private void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.W) && m_debugInput)
         {
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], false, true);   //Generation for the stalactite patern
@@ -76,6 +79,7 @@ public class StalactiteSpawnManager : BossAttack
         {
             OnGenerateStalactite(nbrOfStalactitePerPhase[_phaseForArray], true, true);   //Generation for the smash patern in P3
         }
+#endif
     }
 
     public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
@@ -266,12 +270,12 @@ public class StalactiteSpawnManager : BossAttack
 
         timeToWaitUntilLastStalactiteHasFallen = control.m_moveAnimation.m_timeToReachPosition + control.m_sign.m_timeToFallStalactite;
 
-        if (hasToEnterFusion)
+        if (hasToEnterFusion || RandomFusion())
         {
             control.AddStalactiteState();
         }
 
-        if(lavaSlots.Count != 0)
+        if (lavaSlots.Count != 0)
         {
             for (int i = 0, l = lavaSlots.Count; i < l; ++i)
             {
@@ -283,6 +287,16 @@ public class StalactiteSpawnManager : BossAttack
                 control.IsInLava = false;
             }
         }
+    }
+
+    bool RandomFusion()
+    {
+        float random = Random.Range(0f, 100f);
+        if(random < chanceForStalactiteToBeMolten[_phaseForArray])
+        {
+            return true;
+        }
+        return false;
     }
 
     IEnumerator WaitUntilLastStalactilHasFallen(float time)
