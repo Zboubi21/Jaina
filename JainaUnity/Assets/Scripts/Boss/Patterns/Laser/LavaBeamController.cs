@@ -16,6 +16,12 @@ public class LavaBeamController : BossAttack
     public int nbrOfShot=1;
     public int damage;
     [Space]
+    [Header("MovingSign")]
+    public AnimationCurve scaleSignCurve;
+    public Color signColor;
+    float minSignSize;
+    public float maxSignSize;
+    [Space]
     [Header("VFX")]
     public AnimationCurve[] startAndEndCurve;
     public float timeOfEntranceExitAnimation;
@@ -181,6 +187,8 @@ public class LavaBeamController : BossAttack
         {
             yield return new WaitForSeconds(timeBeforeShooting / 2);
             yield return StartCoroutine(EntranceAndExit(startAndEndCurve[0], i, actifSpawner[i]));
+            minSignSize = actifSpawnerScript[i].movingSign.rectTransform.localScale.y;
+            actifSpawnerScript[i].movingSign.color = signColor;
             StartCoroutine(WaitUntilShooting(i));
         }
     }
@@ -188,7 +196,7 @@ public class LavaBeamController : BossAttack
     {
         for (int a = 0; a < nbrOfShot; ++a)
         {
-            yield return new WaitForSeconds(timeBeforeShooting);
+            yield return StartCoroutine(MovingOrbsSign(scaleSignCurve, i));
             yield return StartCoroutine(ShootLava(nbrOfShot, i));
         }
         if(i == actifSpawner.Count)
@@ -196,6 +204,8 @@ public class LavaBeamController : BossAttack
             On_AttackEnd();
         }
     }
+
+
     IEnumerator ShootLava(int nbrOfShot, int ActifSpawner)
     {
         //for (int i = 0, l = actifSpawner.Count; i < l; ++i)
@@ -229,6 +239,23 @@ public class LavaBeamController : BossAttack
         actifSpawnerParent[i].gameObject.SetActive(false);
         actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
         actifSpawnerScript[i].HasToLookAt = true;
+    }
+
+    IEnumerator MovingOrbsSign(AnimationCurve curve, int actifSpawner)
+    {
+        float _currentTimeOfAnimation = 0;
+        while (_currentTimeOfAnimation / timeBeforeShooting <= 1)
+        {
+            yield return new WaitForSeconds(0.01f);
+            _currentTimeOfAnimation += Time.deltaTime;
+
+            float size = curve.Evaluate(_currentTimeOfAnimation / timeBeforeShooting);
+
+            Vector3 tempTrans = actifSpawnerScript[actifSpawner].movingSign.rectTransform.localScale;
+            tempTrans.y = Mathf.Lerp(minSignSize, maxSignSize, size);
+            actifSpawnerScript[actifSpawner].movingSign.rectTransform.localScale = tempTrans;
+        }
+        _currentTimeOfAnimation = 0;
     }
 
     IEnumerator SignAboutToShootForSpawner(AnimationCurve curve, ParticleSystem actifSpawner)

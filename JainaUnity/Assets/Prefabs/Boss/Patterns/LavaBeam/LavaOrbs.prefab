@@ -55,6 +55,32 @@ MonoBehaviour:
   timeBetweenEachShoot: 0.5
   nbrOfShot: 2
   damage: 20
+  scaleSignCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  signColor: {r: 1, g: 0, b: 0, a: 0.39215687}
+  maxSignSize: 4
   startAndEndCurve:
   - serializedVersion: 2
     m_Curve:

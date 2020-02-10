@@ -8,7 +8,7 @@ public class Beam_Spawner_Controller : MonoBehaviour
     public Transform startPivot;
     public Transform pivotPoint;
     public Image sign;
-    public Image butchSign;
+    public Image movingSign;
 
     
     bool hasToLookAt = true;
