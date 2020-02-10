@@ -22,6 +22,7 @@ public class GolemController : MonoBehaviour
             public BossAttack m_attack;
             [Range(0, 100)] public int m_probability;
         }
+        public LavaWaveController m_lavaWaveAttack;
 
         [Header("Attack Trigger per phase")]
         public StalactiteNbrTrigger[] m_stalactiteNbrTrigger = new StalactiteNbrTrigger[3];
@@ -32,9 +33,13 @@ public class GolemController : MonoBehaviour
 
         [Header("Delay")]
         public float[] m_delayBetweenAttacks = new float[3];
+
+        [Header("Change phase")]
         public float[] m_delayToChangeBossPhase = new float[2];
         public CameraShake m_changePhaseShake;
         public GameObject m_changePhaseScream_SFX;
+        [Space]
+        public float m_yLocalPosWhenLavaWave = -30;
     }
 
     [Header("FX")]
@@ -407,7 +412,9 @@ public class GolemController : MonoBehaviour
             m_bossSoundManager.On_GolemSwitchToP3();
         }
 
-        yield return new WaitForSeconds(m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 1] - 1);
+        m_bossAttacks.m_lavaWaveAttack.On_AttackBegin(0);
+
+        yield return new WaitForSeconds(m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 2] - 1);
         StartAttack();
     }
 

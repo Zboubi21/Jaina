@@ -5058,7 +5058,7 @@ ParticleSystem:
 --- !u!199 &2432320162837375902
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -5889,6 +5889,7 @@ MonoBehaviour:
       m_probability: 40
     - m_attack: {fileID: 0}
       m_probability: 10
+    m_lavaWaveAttack: {fileID: 0}
     m_stalactiteNbrTrigger:
     - m_triggerFallStalactite: 4
       m_triggerArmedialsWrath: 10
@@ -5903,7 +5904,6 @@ MonoBehaviour:
     m_delayToChangeBossPhase:
     - 6
     - 6
-    - 6
     m_changePhaseShake:
       m_magnitudeShake: 2
       m_roughnessShake: 1
@@ -5911,6 +5911,7 @@ MonoBehaviour:
       m_fadeOutTimeShake: 5
     m_changePhaseScream_SFX: {fileID: 1259768221557958327, guid: d91dd88220ca8db42b3d89c4d1acd38c,
       type: 3}
+    m_yLocalPosWhenLavaWave: -30
   m_fxs:
     m_freezed: {fileID: 0}
     m_markExplosion: {fileID: 1824010770675008, guid: a0d7f57f658ad324990e59977dfd6da6,
@@ -12389,7 +12390,7 @@ ParticleSystem:
 --- !u!199 &221203413884681009
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -17429,7 +17430,7 @@ ParticleSystem:
 --- !u!199 &6491980193718276381
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22294,7 +22295,7 @@ ParticleSystem:
 --- !u!199 &1876115632160026006
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
