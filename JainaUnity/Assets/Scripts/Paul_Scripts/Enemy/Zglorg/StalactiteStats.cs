@@ -150,6 +150,8 @@ public class StalactiteStats : EnemyStats {
 
     public override void TakeDamage(int damage)
     {
+        StartHitFxCorout();
+        
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 

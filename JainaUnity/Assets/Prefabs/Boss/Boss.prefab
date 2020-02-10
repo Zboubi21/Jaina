@@ -5058,7 +5058,7 @@ ParticleSystem:
 --- !u!199 &2432320162837375902
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -5902,8 +5902,8 @@ MonoBehaviour:
     - 3
     - 2
     m_delayToChangeBossPhase:
-    - 6
-    - 6
+    - 10
+    - 10
     m_changePhaseShake:
       m_magnitudeShake: 2
       m_roughnessShake: 1
@@ -5911,7 +5911,7 @@ MonoBehaviour:
       m_fadeOutTimeShake: 5
     m_changePhaseScream_SFX: {fileID: 1259768221557958327, guid: d91dd88220ca8db42b3d89c4d1acd38c,
       type: 3}
-    m_yLocalPosWhenLavaWave: -30
+    m_waitTimeToStartLavaWave: 4
   m_fxs:
     m_freezed: {fileID: 0}
     m_markExplosion: {fileID: 1824010770675008, guid: a0d7f57f658ad324990e59977dfd6da6,
@@ -7263,6 +7263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1261440518346112881}
   - component: {fileID: 4360109660782762954}
+  - component: {fileID: 6123924156994432007}
   m_Layer: 11
   m_Name: Golem_Mesh
   m_TagString: Untagged
@@ -7306,6 +7307,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6123924156994432007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294981614070753006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f222f371426a1e4fa549b5c79fa6931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4637186164180260386
 GameObject:
   m_ObjectHideFlags: 0
@@ -12390,7 +12403,7 @@ ParticleSystem:
 --- !u!199 &221203413884681009
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -17430,7 +17443,7 @@ ParticleSystem:
 --- !u!199 &6491980193718276381
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22295,7 +22308,7 @@ ParticleSystem:
 --- !u!199 &1876115632160026006
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
