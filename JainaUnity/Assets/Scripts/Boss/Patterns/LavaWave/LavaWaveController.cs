@@ -34,6 +34,9 @@ public class LavaWaveController : BossAttack
         public AnimationCurve m_moveCurve;
     }
 
+    [Space]
+    [SerializeField] float m_waitTimeToShowHitSings = 10;
+
     [Header("Debug")]
     [SerializeField] bool m_useDebugInput = false;
 #endregion
@@ -93,6 +96,13 @@ public class LavaWaveController : BossAttack
         m_lavaWave.gameObject.SetActive(false);
     }
 
+    IEnumerator WaitTimeToStopShowHitSigns()
+    {
+        yield return new WaitForSeconds(m_waitTimeToShowHitSings);
+        m_right.m_hitSign.StopShowSign();
+        m_left.m_hitSign.StopShowSign();
+    }
+
     bool PlayerPosIsClosestToRightPos()
     {
         float rightDistance = Vector3.Distance(m_playerManager.transform.position, m_right.m_targetPos.position);
@@ -140,6 +150,7 @@ public class LavaWaveController : BossAttack
         }
         StartCoroutine(MoveYPosition());
         StartCoroutine(MoveZPosition());
+        StartCoroutine(WaitTimeToStopShowHitSigns());
     }
 
     public override void On_AttackEnd()

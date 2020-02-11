@@ -11,6 +11,7 @@ public class GroundHitSign : MonoBehaviour
     public Vector3 m_endLocalPos;
     public float m_timeToDoMoveAnim = 5;
     public AnimationCurve m_moveCurve;
+    public bool m_hideImageAfterMove = true;
 
     [Header("Anim Color")]
     [SerializeField] AnimColor m_animColor;
@@ -27,7 +28,7 @@ public class GroundHitSign : MonoBehaviour
     void Start()
     {
         m_image = GetComponent<Image>();
-        m_image.enabled = false;
+        EnableSignImg(false);
     }
 
     IEnumerator HitMoveSign()
@@ -45,7 +46,8 @@ public class GroundHitSign : MonoBehaviour
             transform.localPosition = Vector3.Lerp(fromPos, toPos, m_moveCurve.Evaluate(fracJourney));
             yield return null;
         }
-        m_image.enabled = false;
+        if (m_hideImageAfterMove)
+            EnableSignImg(false);
     }
     IEnumerator HitColorSign()
     {
@@ -70,16 +72,25 @@ public class GroundHitSign : MonoBehaviour
         }
     }
 
+    void EnableSignImg(bool enable)
+    {
+        m_image.enabled = enable;
+    }
+
     public void StartToMove()
     {
-        m_image.enabled = true;
+        EnableSignImg(true);
         transform.localPosition = m_startLocalPos;
         StartCoroutine(HitMoveSign());
     }
     public void StartToChangeColor()
     {
-        m_image.enabled = true;
+        EnableSignImg(true);
         StartCoroutine(HitColorSign());
+    }
+    public void StopShowSign()
+    {
+        EnableSignImg(false);
     }
     public void StopAllGroundHitCoroutine()
     {
