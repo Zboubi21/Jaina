@@ -199,7 +199,7 @@ public class LavaBeamController : BossAttack
             yield return StartCoroutine(MovingOrbsSign(scaleSignCurve, i));
             yield return StartCoroutine(ShootLava(nbrOfShot, i));
         }
-        if(i == actifSpawner.Count)
+        if(i == actifSpawner.Count-1)
         {
             On_AttackEnd();
         }
