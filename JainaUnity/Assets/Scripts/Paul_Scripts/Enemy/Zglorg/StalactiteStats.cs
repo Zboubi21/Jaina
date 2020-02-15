@@ -17,6 +17,7 @@ public class StalactiteStats : EnemyStats {
     {
         base.Start();
         controller = GetComponent<StalactiteController>();
+        ResetHitFx();
     }
 
     public override void Die()
@@ -25,9 +26,10 @@ public class StalactiteStats : EnemyStats {
         DestroyAllMarks();
         if (!_bigBossFight)
         {
-            
             controller.OnBeKilled();
         }
+        // StopAllCoroutines();
+        ResetHitFx();
     }
     /*public override void AutoAttackFireMark(float timerDebuf)
     {
@@ -150,8 +152,6 @@ public class StalactiteStats : EnemyStats {
 
     public override void TakeDamage(int damage)
     {
-        StartHitFxCorout();
-        
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
@@ -183,4 +183,5 @@ public class StalactiteStats : EnemyStats {
         m_timeToDecreaseWhiteLifeBar = BigEnemyLifeBarManager.Instance.m_timeForWhiteLifeBarToDecrease;
         HasTakenDamage = true;
     }
+
 }

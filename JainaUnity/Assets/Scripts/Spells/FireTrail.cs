@@ -39,6 +39,7 @@ public class FireTrail : Spell {
             {
                 stats.TakeDamage(m_damage);
             }
+            stats.StartHitFxCorout();
         }
 
 	}

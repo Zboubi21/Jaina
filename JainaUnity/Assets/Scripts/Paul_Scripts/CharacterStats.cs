@@ -282,7 +282,9 @@ public class CharacterStats : MonoBehaviour {
 
     public void StartHitFxCorout(){
         if(!m_canTakeDamage) return;
-        StartCoroutine(HitFxCorout());
+
+        if (gameObject.activeSelf)
+            StartCoroutine(HitFxCorout());
     }
     IEnumerator HitFxCorout(){
         if(m_hit.m_whiteSkin == null || !m_canShowHitFx){
@@ -293,6 +295,11 @@ public class CharacterStats : MonoBehaviour {
         yield return new WaitForSeconds(m_hit.m_timeToSeeHit);
         SetActiveGameObject(m_hit.m_whiteSkin, false);
         StartCoroutine(RecoveryHit());
+    }
+    public void ResetHitFx()
+    {
+        SetActiveGameObject(m_hit.m_whiteSkin, false);
+        m_canShowHitFx = true;
     }
     void SetActiveGameObject(GameObject[] objects ,bool enable){
         for (int i = 0, l = objects.Length; i < l; ++i){

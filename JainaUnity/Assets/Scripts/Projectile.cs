@@ -167,6 +167,7 @@ public class Projectile : Spell {
                         }
                         break;
                 }
+            	CharacterStats.StartHitFxCorout();
                 if (m_dieWhenHit)
                 {
                     DestroyProjectile();
