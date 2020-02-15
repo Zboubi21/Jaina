@@ -57,6 +57,8 @@ public class GroundHitSign : MonoBehaviour
         Vector3 toPos = m_endLocalPos;
         toPos.x = xPos;
 
+        transform.localPosition = fromPos;
+
         float fracJourney = 0;
         float distance = Vector3.Distance(fromPos, toPos);
 

@@ -52,7 +52,7 @@ MonoBehaviour:
   - {fileID: 3260074628655547467}
   - {fileID: 6387957356806539537}
   timeBeforeShooting: 1
-  timeBetweenEachShoot: 0.5
+  timeBetweenEachShoot: 0.25
   nbrOfShot: 2
   damage: 20
   scaleSignCurve:
@@ -80,6 +80,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   signColor: {r: 1, g: 0, b: 0, a: 0.39215687}
+  shootingSignColor: {r: 0, g: 0, b: 0, a: 0}
   maxSignSize: 5
   startAndEndCurve:
   - serializedVersion: 2
@@ -216,10 +217,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3528133239760400641}
     m_Modifications:
-    - target: {fileID: 8261222381847391540, guid: 6d437c518f33a26489c62f45967c9bf8,
+    - target: {fileID: 5075673388024520687, guid: 6d437c518f33a26489c62f45967c9bf8,
         type: 3}
-      propertyPath: m_Name
-      value: LavaBeam_Mask_Sign_And_Spawner
+      propertyPath: m_FillMethod
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5566161724578048805, guid: 6d437c518f33a26489c62f45967c9bf8,
         type: 3}
@@ -275,6 +276,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812566197111644864, guid: 6d437c518f33a26489c62f45967c9bf8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8261222381847391540, guid: 6d437c518f33a26489c62f45967c9bf8,
+        type: 3}
+      propertyPath: m_Name
+      value: LavaBeam_Mask_Sign_And_Spawner
       objectReference: {fileID: 0}
     - target: {fileID: 7812566197111644867, guid: 6d437c518f33a26489c62f45967c9bf8,
         type: 3}
@@ -350,11 +361,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 4.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 7812566197111644864, guid: 6d437c518f33a26489c62f45967c9bf8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1581019009102168850, guid: 6d437c518f33a26489c62f45967c9bf8,
         type: 3}
@@ -476,11 +482,6 @@ PrefabInstance:
       propertyPath: sign
       value: 
       objectReference: {fileID: 515021174473603428}
-    - target: {fileID: 5075673388024520687, guid: 6d437c518f33a26489c62f45967c9bf8,
-        type: 3}
-      propertyPath: m_FillMethod
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5085174766800624140, guid: 6d437c518f33a26489c62f45967c9bf8,
         type: 3}
       propertyPath: m_IsActive

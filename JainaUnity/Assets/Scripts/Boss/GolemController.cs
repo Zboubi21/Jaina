@@ -42,6 +42,13 @@ public class GolemController : MonoBehaviour
         public float m_waitTimeToStartLavaWave = 5;
     }
 
+    [Header("Map Positions")]
+    [SerializeField] MapPositions m_mapPositions;
+    [Serializable] class MapPositions {
+        public Transform m_rightPos;
+        public Transform m_leftPos;
+    }
+
     [Header("FX")]
     public FXs m_fxs;
     [Serializable] public class FXs {
@@ -132,7 +139,8 @@ public class GolemController : MonoBehaviour
 		StalactiteFall, // 0
 		TripleStrike,   // 1
 		LavaBeam,       // 2
-        ArmedialsWrath  // 3
+        ArmedialsWrath,  // 3
+        ArmedialsWrathCustom  // 4
 	}
 #endregion
 
@@ -145,6 +153,8 @@ public class GolemController : MonoBehaviour
     bool m_needToDoArmedialsWrath = false;
     bool m_needToFallStalactite = false;
     bool m_needToChangePhase = false;
+    bool m_needToLavaOrbs = false;
+    bool m_needToDoArmedialsWrathCustom = false;
     bool m_fightIsStarted = false;
     EnemyStats m_enemyStats;
 
@@ -154,7 +164,6 @@ public class GolemController : MonoBehaviour
 
     List<StalactiteController> m_stalactites = new List<StalactiteController>();
     float m_waitTimeAfterNextStalactiteDie = 0;
-    
 #endregion
 
 #region Encapsulate Variables
@@ -249,6 +258,8 @@ public class GolemController : MonoBehaviour
                 }
             }
         }
+        if (m_bossAttacks.m_lavaWaveAttack != null)
+            m_bossAttacks.m_lavaWaveAttack.GolemController = this;
     }
 
     void StartAttack()
@@ -264,11 +275,23 @@ public class GolemController : MonoBehaviour
         }
         AttackType attackToDo = ChoseAttack();
         // Debug.Log("attackToDo = " + attackToDo);
-        if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
+
+        if (attackToDo == AttackType.ArmedialsWrathCustom)
         {
-            m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
+            if(m_bossAttacks.m_attacks[3].m_attack != null)
+            {
+                m_bossAttacks.m_attacks[3].m_attack.GetComponent<LaserBeamController>().On_AttackBeginCustom(m_phaseNbr, PlayerPosIsClosestToRightPos());
+            }
+            m_lastAttack = AttackType.ArmedialsWrath;
         }
-        m_lastAttack = attackToDo;
+        else
+        {
+            if(m_bossAttacks.m_attacks[(int)attackToDo].m_attack != null)
+            {
+                m_bossAttacks.m_attacks[(int)attackToDo].m_attack.On_AttackBegin(m_phaseNbr);
+            }
+            m_lastAttack = attackToDo;
+        }
         m_inAttackPattern = true;
 
         SetBoolAnimation("FightIdle", false);
@@ -294,6 +317,19 @@ public class GolemController : MonoBehaviour
 
     AttackType ChoseAttack()
     {
+        // ----- Se déclanche uniquement après un changement de phase ------
+        if(m_needToLavaOrbs)
+        {
+            m_needToLavaOrbs = false;
+            return AttackType.LavaBeam;
+        }
+        if(m_needToDoArmedialsWrathCustom)
+        {
+            m_needToDoArmedialsWrathCustom = false;
+            return AttackType.ArmedialsWrathCustom;
+        }
+
+        // ----- Se déclanche le reste du temps ------
         CheckStalactiteNbr();
         
         // Est-ce qu'il faut faire un "ArmedialsWrath" car il y a trop de stalactite ?
@@ -412,6 +448,8 @@ public class GolemController : MonoBehaviour
             m_bossSoundManager.On_GolemSwitchToP3();
         }
 
+        SetNextAttackAfterChangePhase();
+
         yield return new WaitForSeconds(m_bossAttacks.m_waitTimeToStartLavaWave);
 
         SetTriggerAnimation("LavaWave");
@@ -420,6 +458,11 @@ public class GolemController : MonoBehaviour
         float delayToStartAttack = m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 2] - 1;
         yield return new WaitForSeconds(delayToStartAttack - m_bossAttacks.m_waitTimeToStartLavaWave);
         StartAttack();
+    }
+    void SetNextAttackAfterChangePhase()
+    {
+        m_needToLavaOrbs = true;
+        m_needToDoArmedialsWrathCustom = true;
     }
 
     void CheckStalactiteNbr()
@@ -621,6 +664,19 @@ public class GolemController : MonoBehaviour
         m_animator.SetBool(name, value);
     }
 
+    public bool PlayerPosIsClosestToRightPos()
+    {
+        float rightDistance = Vector3.Distance(m_playerManager.transform.position, m_mapPositions.m_rightPos.position);
+        float leftDistance = Vector3.Distance(m_playerManager.transform.position, m_mapPositions.m_leftPos.position);
+        if (rightDistance < leftDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 #endregion
 
 }

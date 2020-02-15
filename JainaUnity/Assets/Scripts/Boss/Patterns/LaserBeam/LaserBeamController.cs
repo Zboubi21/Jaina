@@ -370,6 +370,18 @@ public class LaserBeamController : BossAttack
             StartCoroutine(RotateGolemToLookAtPointWithTime(m_rotate.m_leftWorldRotation, m_timeToGolemLookAtPoint, m_golemLookAtPointCurve));
         }
     }
+    public void On_AttackBeginCustom(int phaseNbr, bool startToRight)
+    {
+        if (startToRight)
+        {
+            m_lastRotateDirectionWasRight = false;   // Permet de lancer le laser depuis la droite
+        }
+        else
+        {
+            m_lastRotateDirectionWasRight = true;   // Permet de lancer le laser depuis la gauche
+        }
+        On_AttackBegin(phaseNbr);
+    }
 
     IEnumerator WaitAdditionnalTimeToEndAttack()
     {

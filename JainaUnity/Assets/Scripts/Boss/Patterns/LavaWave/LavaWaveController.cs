@@ -15,7 +15,6 @@ public class LavaWaveController : BossAttack
     [System.Serializable] class Positions
     {
         public float m_posValue;
-        public Transform m_targetPos;
         public GroundHitSign m_hitSign;
     }
 
@@ -44,7 +43,8 @@ public class LavaWaveController : BossAttack
         public float m_leftXPos = 11.5f;
 
         [Header("Anim")]
-        public float m_timeToShowLavaArea = 15;
+        public float m_timeToShowLavaAreaInP2 = 15;
+        public float m_timeToShowLavaAreaInP3 = 15;
         [Space]
         public float m_yLavaPos;
         public float m_timeToMoveYLavaPos = 1;
@@ -139,7 +139,15 @@ public class LavaWaveController : BossAttack
     {
         m_right.m_hitSign.StopShowSign();
         m_left.m_hitSign.StopShowSign();
-        yield return new WaitForSeconds(m_lavaWaveArea.m_timeToShowLavaArea);
+
+        float timeToWait = 0;
+        if (GolemController.PhaseNbr == 2)
+            timeToWait = m_lavaWaveArea.m_timeToShowLavaAreaInP2;
+
+        if (GolemController.PhaseNbr == 3)
+            timeToWait = m_lavaWaveArea.m_timeToShowLavaAreaInP3;
+
+        yield return new WaitForSeconds(timeToWait);
         StartCoroutine(MovaLavaYPos());
     }
     IEnumerator MovaLavaYPos()
@@ -159,22 +167,9 @@ public class LavaWaveController : BossAttack
         }
     }
 
-    bool PlayerPosIsClosestToRightPos()
-    {
-        float rightDistance = Vector3.Distance(m_playerManager.transform.position, m_right.m_targetPos.position);
-        float leftDistance = Vector3.Distance(m_playerManager.transform.position, m_left.m_targetPos.position);
-        if (rightDistance < leftDistance)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
     float LavaXPos()
     {
-        if (PlayerPosIsClosestToRightPos())
+        if (GolemController.PlayerPosIsClosestToRightPos())
         {
             return m_right.m_posValue;
         }
@@ -196,11 +191,11 @@ public class LavaWaveController : BossAttack
         m_lavaWave.localPosition = new Vector3(LavaXPos(), m_lavaWave.localPosition.y, m_lavaWave.localPosition.z);
 
         // Set LavaWave scale
-        float zScale = PlayerPosIsClosestToRightPos() ? -m_startZLavaWaveScale : m_startZLavaWaveScale;
+        float zScale = GolemController.PlayerPosIsClosestToRightPos() ? -m_startZLavaWaveScale : m_startZLavaWaveScale;
         m_lavaWave.localScale = new Vector3(m_lavaWave.localScale.x, m_lavaWave.localScale.y, zScale);
 
         float lavaWaveAreaXPos;
-        if(PlayerPosIsClosestToRightPos())
+        if(GolemController.PlayerPosIsClosestToRightPos())
         {
             m_right.m_hitSign.StartToMove();
             m_right.m_hitSign.StartToChangeColor();
