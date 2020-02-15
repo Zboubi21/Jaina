@@ -33,7 +33,19 @@ public class CristalsChargeCounter : MonoBehaviour
 
     public void AddCristCount()
     {
+        if(cristCount == 0)
+        {
+            _getImg.damageCount.gameObject.SetActive(true);
+        }
         cristCount++;
         _getImg.count.text = string.Format("x {0}", cristCount);
+        if(cristCount < 100)
+        {
+            _getImg.damageCount.text = string.Format("+ {0}% damage", cristCount* (percentDamageMultiplicator * 100f));
+        }
+        else
+        {
+            _getImg.damageCount.text = string.Format("Overpower");
+        }
     }
 }

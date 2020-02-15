@@ -8,6 +8,7 @@ public class ReferenceScript : MonoBehaviour {
 
     public Image[] marksArray;
     public TextMeshProUGUI count;
+    public TextMeshProUGUI damageCount;
 
     private void Awake()
     {
