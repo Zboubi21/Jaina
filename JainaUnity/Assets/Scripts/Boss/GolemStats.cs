@@ -30,18 +30,6 @@ public class GolemStats : EnemyStats
         StartCoroutine(PhaseTimer1());
     }
 
-    IEnumerator PhaseTimer1()
-    {
-        yield return new WaitForSeconds(m_timeBeforeTriggerPhase2);
-        loadPhase2 = true;
-        CheckPhaseChanges();
-    }
-    IEnumerator PhaseTimer2()
-    {
-        yield return new WaitForSeconds(m_timeBeforeTriggerPhase3);
-        loadPhase3 = true;
-        CheckPhaseChanges();
-    }
 
     protected override void CheckPhaseChanges()
     {
@@ -67,4 +55,18 @@ public class GolemStats : EnemyStats
         return CurrentHealth / maxHealth * 100;
     }
 
+
+
+    IEnumerator PhaseTimer1()
+    {
+        yield return new WaitForSeconds(m_timeBeforeTriggerPhase2);
+        loadPhase2 = true;
+        CheckPhaseChanges();
+    }
+    IEnumerator PhaseTimer2()
+    {
+        yield return new WaitForSeconds(m_timeBeforeTriggerPhase3);
+        loadPhase3 = true;
+        CheckPhaseChanges();
+    }
 }

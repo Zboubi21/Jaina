@@ -45,6 +45,7 @@ public class StalactiteSpawnManager : BossAttack
     int nbtOfFreeGreenSlots;
 
     int randomSlots;
+    int i;
 
     ObjectPooler m_objectPooler;
 
@@ -82,6 +83,26 @@ public class StalactiteSpawnManager : BossAttack
 #endif
     }
 
+    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava, bool isBeingCalledAsAnAttack)
+    {
+        if (hasToCreateLava)
+        {
+            lavaSlots.Add(pos);
+        }
+
+        if (isBeingCalledAsAnAttack)
+        {
+            possibleSlotInts.Add(pos);
+            usedSlots.Remove(pos);
+        }
+        else
+        {
+            possibleGreenSlotInts.Add(pos);
+            usedGreenSlots.Remove(pos);
+        }
+        _countStalactite--;
+    }
+
     public void OnGenerateStalactite(int nbrOfStalactiteToSpawn, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
     {
         if (isBeingCalledAsAnAttack)
@@ -107,6 +128,7 @@ public class StalactiteSpawnManager : BossAttack
             }
         }
 
+        //Check if there are enough freeslots compare to the number of stalactite to spawn
         if (nbrOfFreeSlots >= nbrOfStalactiteToSpawn)
         {
             LockSlotsForStalactite(nbrOfStalactiteToSpawn, hasToEnterFusion, isBeingCalledAsAnAttack);
@@ -116,91 +138,49 @@ public class StalactiteSpawnManager : BossAttack
             LockSlotsForStalactite(nbrOfFreeSlots, hasToEnterFusion, isBeingCalledAsAnAttack);
         }
     }
-    public void StalactiteHasBeenDestroyed(int pos, bool hasToCreateLava, bool isBeingCalledAsAnAttack)
-    {
-        if (hasToCreateLava)
-        {
-            lavaSlots.Add(pos);
-        }
-
-        if (isBeingCalledAsAnAttack)
-        {
-            possibleSlotInts.Add(pos);
-            usedSlots.Remove(pos);
-        }
-        else
-        {
-            possibleGreenSlotInts.Add(pos);
-            usedGreenSlots.Remove(pos);
-        }
-        _countStalactite--;
-    }
 
     #region LockSlotsMethods
-    int i;
+
     void LockSlotsForStalactite(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledAsAnAttack)
     {
-
+        //If there is no slots available wait then go to next attack
         if(nbrOfSlots == 0)
         {
             StartCoroutine(WaitUntilLastStalactilHasFallen(1f));
         }
-        if (isBeingCalledAsAnAttack)
-        {
-            while(i < nbrOfSlots)
-            {
-                i++;
-                int indexToSpawn = Random.Range(0, possibleSlotInts.Count);
-                int intSlotToSpawn = possibleSlotInts[indexToSpawn];
 
-                usedSlots.Add(possibleSlotInts[indexToSpawn]);
-                possibleSlotInts.RemoveAt(indexToSpawn);
-
-                if (HasToCristilize())
-                {
-                    _currentCristilizeStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
-                }
-                else
-                {
-                    _currentSpawnedStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
-                }
-            }
-
-            i = 0;
-            _currentCristilizeStalactite = 0;
-            _currentSpawnedStalactite = 0;
+        //Stalactite must fall from another list if there aren't called as an attack
+        if (isBeingCalledAsAnAttack){
+            SpawnStalactiteOnRightLists(nbrOfSlots, hasToEnterFusion, isBeingCalledAsAnAttack, possibleSlotInts, usedSlots);
+        }else{
+            SpawnStalactiteOnRightLists(nbrOfSlots, hasToEnterFusion, isBeingCalledAsAnAttack, possibleGreenSlotInts, usedGreenSlots);
         }
-        else
+    }
+
+    void SpawnStalactiteOnRightLists(int nbrOfSlots, bool hasToEnterFusion, bool isBeingCalledAsAnAttack, List<int> possibleSlotsList, List<int> usedSlotsList)
+    {
+        while (i < nbrOfSlots)
         {
-            while (i < nbrOfSlots)
-            {
-                i++;
-                int indexToSpawn = Random.Range(0, possibleGreenSlotInts.Count);
-                int intSlotToSpawn = possibleGreenSlotInts[indexToSpawn];
+            i++;
+            //Randomly choose a slot
+            int indexToSpawn = Random.Range(0, possibleSlotsList.Count);
+            int intSlotToSpawn = possibleSlotsList[indexToSpawn];
 
-                usedGreenSlots.Add(possibleGreenSlotInts[indexToSpawn]);
-                possibleGreenSlotInts.RemoveAt(indexToSpawn);
+            usedSlotsList.Add(possibleSlotsList[indexToSpawn]);
+            possibleSlotsList.RemoveAt(indexToSpawn);
 
-                if (LukyCrystilized())
-                {
-                    _currentCristilizeStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
-                }
-                else
-                {
-                    _currentSpawnedStalactite++;
-                    StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
-                }
+            if (HasToCristilize()){
+                _currentCristilizeStalactite++;
+                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
+            }else{
+                _currentSpawnedStalactite++;
+                StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
             }
-
-            i = 0;
-            _currentCristilizeStalactite = 0;
-            _currentSpawnedStalactite = 0;
         }
 
-
+        i = 0;
+        _currentCristilizeStalactite = 0;
+        _currentSpawnedStalactite = 0;
     }
     #endregion
 
@@ -228,29 +208,6 @@ public class StalactiteSpawnManager : BossAttack
         }
     }
     #endregion
-
-    bool HasToCristilize()
-    {
-        float isCristilize = Random.Range(0, 100);
-        if((_currentCristilizeStalactite != nbrOfCristilizeStalactitePerPhase[_phaseForArray] && isCristilize <= chanceForAStalactiteToBeCristilized) || (nbrOfStalactitePerPhase[_phaseForArray] - _currentSpawnedStalactite == nbrOfCristilizeStalactitePerPhase[_phaseForArray]))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    bool LukyCrystilized()
-    {
-        float isCrys = Random.Range(0, 100);
-        if(isCrys <= chanceForAStalactiteFromTripleStrickToBeCristilized)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     void SpawnFromPooler(int index, bool hasToCristilize, bool hasToEnterFusion, bool isBeingCalledHadAnAttack, Transform[] slots)
     {
@@ -286,6 +243,29 @@ public class StalactiteSpawnManager : BossAttack
                 }
                 control.IsInLava = false;
             }
+        }
+    }
+
+    bool HasToCristilize()
+    {
+        float isCristilize = Random.Range(0, 100);
+        if((_currentCristilizeStalactite != nbrOfCristilizeStalactitePerPhase[_phaseForArray] && isCristilize <= chanceForAStalactiteToBeCristilized) || (nbrOfStalactitePerPhase[_phaseForArray] - _currentSpawnedStalactite == nbrOfCristilizeStalactitePerPhase[_phaseForArray]))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool LukyCrystilized()
+    {
+        float isCrys = Random.Range(0, 100);
+        if(isCrys <= chanceForAStalactiteFromTripleStrickToBeCristilized)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -326,5 +306,52 @@ public class StalactiteSpawnManager : BossAttack
         StopAllCoroutines();
         base.On_GolemAreGoingToDie();
     }
+    /*while (i < nbrOfSlots)
+{
+    i++;
+    int indexToSpawn = Random.Range(0, possibleSlotInts.Count);
+    int intSlotToSpawn = possibleSlotInts[indexToSpawn];
 
+    usedSlots.Add(possibleSlotInts[indexToSpawn]);
+    possibleSlotInts.RemoveAt(indexToSpawn);
+
+    if (HasToCristilize())
+    {
+        _currentCristilizeStalactite++;
+        StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
+    }
+    else
+    {
+        _currentSpawnedStalactite++;
+        StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
+    }
+}
+
+i = 0;
+_currentCristilizeStalactite = 0;
+_currentSpawnedStalactite = 0;*/
+    /*while (i < nbrOfSlots)
+    {
+        i++;
+        int indexToSpawn = Random.Range(0, possibleGreenSlotInts.Count);
+        int intSlotToSpawn = possibleGreenSlotInts[indexToSpawn];
+
+        usedGreenSlots.Add(possibleGreenSlotInts[indexToSpawn]);
+        possibleGreenSlotInts.RemoveAt(indexToSpawn);
+
+        if (LukyCrystilized())
+        {
+            _currentCristilizeStalactite++;
+            StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, true, hasToEnterFusion, isBeingCalledAsAnAttack));
+        }
+        else
+        {
+            _currentSpawnedStalactite++;
+            StartCoroutine(SpawnStalactiteOnSlots(intSlotToSpawn, false, hasToEnterFusion, isBeingCalledAsAnAttack));
+        }
+    }
+
+    i = 0;
+    _currentCristilizeStalactite = 0;
+    _currentSpawnedStalactite = 0;*/
 }
