@@ -62,6 +62,10 @@ public class LavaWaveController : BossAttack
     { get { return m_moveZPosSpeed; } }
 
     float m_startYLavaWaveAreaPos;
+
+    float m_startZLavaWaveScale;
+
+    IEnumerator m_showingLavaWaveAreaCorout;
     #endregion
 
     #region Event Functions
@@ -73,6 +77,8 @@ public class LavaWaveController : BossAttack
         m_moveZPosSpeed = distance / m_moveZPos.m_timeToMove;
 
         m_startYLavaWaveAreaPos = m_lavaWaveArea.m_waveAreaMask.transform.localPosition.y;
+
+        m_startZLavaWaveScale = m_lavaWave.localScale.z;
     }
     void Update()
     {
@@ -124,6 +130,9 @@ public class LavaWaveController : BossAttack
     {
         yield return new WaitForSeconds(m_lavaWaveArea.m_waitTimeToStartShowLavaWaveArea);
         m_lavaWaveArea.m_waveAreaMask.transform.localPosition = new Vector3(m_lavaWaveArea.m_waveAreaMask.transform.localPosition.x, m_startYLavaWaveAreaPos, m_lavaWaveArea.m_waveAreaMask.transform.localPosition.z);
+        
+        if (m_showingLavaWaveAreaCorout != null)
+            StopCoroutine(m_showingLavaWaveAreaCorout);
         m_lavaWaveArea.m_waveAreaMask.StartToMoveWithSpeed(xPos, m_moveZPosSpeed, this);
     }
     IEnumerator ShowingLavaWaveArea()
@@ -183,8 +192,12 @@ public class LavaWaveController : BossAttack
         base.On_AttackBegin(phaseNbr);
         m_lavaWave.gameObject.SetActive(true);
 
-        float yPos = PlayerPosIsClosestToRightPos() ? m_lavaWave.localPosition.y : - m_lavaWave.localPosition.y;
-        m_lavaWave.localPosition = new Vector3(LavaXPos(), yPos, m_lavaWave.localPosition.z);
+        // Set x LavaWave pos
+        m_lavaWave.localPosition = new Vector3(LavaXPos(), m_lavaWave.localPosition.y, m_lavaWave.localPosition.z);
+
+        // Set LavaWave scale
+        float zScale = PlayerPosIsClosestToRightPos() ? -m_startZLavaWaveScale : m_startZLavaWaveScale;
+        m_lavaWave.localScale = new Vector3(m_lavaWave.localScale.x, m_lavaWave.localScale.y, zScale);
 
         float lavaWaveAreaXPos;
         if(PlayerPosIsClosestToRightPos())
@@ -220,7 +233,8 @@ public class LavaWaveController : BossAttack
 
     public void On_LavaWaveAreaStopped()
     {
-        StartCoroutine(ShowingLavaWaveArea());
+        m_showingLavaWaveAreaCorout = ShowingLavaWaveArea();
+        StartCoroutine(m_showingLavaWaveAreaCorout);
     }
 #endregion
 
