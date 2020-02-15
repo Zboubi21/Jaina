@@ -758,6 +758,7 @@ public class EnemyStats : CharacterStats {
     }
     bool hasTakenDamage;
     protected float m_timeToDecreaseWhiteLifeBar;
+
     public override void TakeDamage(int damage)
     {
         if(!m_canTakeDamage) return;
@@ -781,7 +782,7 @@ public class EnemyStats : CharacterStats {
         }
         else
         {
-            float n_damage = damage * (cris.CristCount*cris.percentDamageMultiplicator + 1);
+            float n_damage = damage * (cris.CristCount * cris.percentDamageMultiplicator + 1);
             if (CurrentHealth > 0)
             {
                 CurrentHealth -= n_damage;
