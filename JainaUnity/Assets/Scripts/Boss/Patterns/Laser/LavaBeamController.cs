@@ -143,6 +143,71 @@ public class LavaBeamController : BossAttack
         }
     }
 
+    IEnumerator EntranceDeclencher()
+    {
+        for (int i = 0, l = actifSpawner.Count; i < l; ++i)
+        {
+            yield return new WaitForSeconds(timeBeforeShooting / 2);
+            yield return StartCoroutine(EntranceAndExit(startAndEndCurve[0], i, actifSpawner[i]));
+            maxSignSize = actifSpawnerScript[i].sign.rectTransform.sizeDelta.y;
+            actifSpawnerScript[i].movingSign.color = signColor;
+            StartCoroutine(WaitUntilShooting(i));
+        }
+    }
+
+    IEnumerator WaitUntilShooting(int i)
+    {
+        for (int a = 0; a < nbrOfShot; ++a)
+        {
+            yield return StartCoroutine(MovingOrbsSign(scaleSignCurve, i));
+            yield return StartCoroutine(ShootLava(nbrOfShot, i));
+        }
+
+        if (i == (actifSpawner.Count-1))
+        {
+            On_AttackEnd();
+        }
+    }
+
+    IEnumerator ShootLava(int nbrOfShot, int ActifSpawner)
+    {
+        actifSpawnerScript[ActifSpawner].HasToLookAt = false;
+
+        yield return new WaitForSeconds(timeBetweenEachShoot/2);
+
+        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[0], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
+
+        actifSpawnerScript[ActifSpawner].movingSign.color = shootingSignColor;
+        GameObject go = ObjectPooler.Instance.SpawnSpellFromPool(SpellType.LavaBeam, actifSpawner[ActifSpawner].transform.position, actifSpawner[ActifSpawner].transform.rotation);
+        go.GetComponent<ProjectileReference>().childScript.GetComponent<Projectile>().Damage = damage;
+        Level.AddFX(lavaBeamShootSFX, transform.position, transform.rotation);
+
+        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[1], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
+
+        actifSpawnerScript[ActifSpawner].movingSign.color = signColor;
+        actifSpawnerScript[ActifSpawner].NbrOfShoot++;
+
+        yield return new WaitForSeconds(timeBetweenEachShoot/2);
+
+        actifSpawnerScript[ActifSpawner].HasToLookAt = true;
+
+        if (actifSpawnerScript[ActifSpawner].NbrOfShoot == nbrOfShot)
+        {
+            StartCoroutine(StopUseShootLava(ActifSpawner));
+        }
+    }
+
+    IEnumerator StopUseShootLava(int i)
+    {
+        actifSpawnerScript[i].HasToLookAt = false;
+        actifSpawnerScript[i].NbrOfShoot = 0;
+
+        yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i])); 
+
+        actifSpawnerParent[i].gameObject.SetActive(false);
+        actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
+        actifSpawnerScript[i].HasToLookAt = true;
+    }
 
     IEnumerator EntranceAndExit(AnimationCurve curve, int i, GameObject actifSpawner)
     {
@@ -166,70 +231,6 @@ public class LavaBeamController : BossAttack
         _currentTimeOfAnimation = 0;
     }
 
-    IEnumerator EntranceDeclencher()
-    {
-        for (int i = 0, l = actifSpawner.Count; i < l; ++i)
-        {
-            yield return new WaitForSeconds(timeBeforeShooting / 2);
-            yield return StartCoroutine(EntranceAndExit(startAndEndCurve[0], i, actifSpawner[i]));
-            /*minSignSize*/
-            maxSignSize = actifSpawnerScript[i].sign.rectTransform.sizeDelta.y;
-            actifSpawnerScript[i].movingSign.color = signColor;
-            StartCoroutine(WaitUntilShooting(i));
-        }
-    }
-    IEnumerator WaitUntilShooting(int i)
-    {
-        for (int a = 0; a < nbrOfShot; ++a)
-        {
-            yield return StartCoroutine(MovingOrbsSign(scaleSignCurve, i));
-            yield return StartCoroutine(ShootLava(nbrOfShot, i));
-        }
-
-        if (i == (actifSpawner.Count-1))
-        {
-            On_AttackEnd();
-        }
-    }
-
-
-    IEnumerator ShootLava(int nbrOfShot, int ActifSpawner)
-    {
-        //for (int i = 0, l = actifSpawner.Count; i < l; ++i)
-        //{
-        actifSpawnerScript[ActifSpawner].HasToLookAt = false;
-        yield return new WaitForSeconds(timeBetweenEachShoot/2);
-        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[0], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
-        actifSpawnerScript[ActifSpawner].movingSign.color = shootingSignColor;
-        GameObject go = ObjectPooler.Instance.SpawnSpellFromPool(SpellType.LavaBeam, actifSpawner[ActifSpawner].transform.position, actifSpawner[ActifSpawner].transform.rotation);
-        go.GetComponent<ProjectileReference>().childScript.GetComponent<Projectile>().Damage = damage;
-        Level.AddFX(lavaBeamShootSFX, transform.position, transform.rotation);
-        //Debug.LogError("stop");
-        yield return StartCoroutine(SignAboutToShootForSpawner(shootingCurve[1], actifSpawner[ActifSpawner].GetComponent<ParticleSystem>()));
-        actifSpawnerScript[ActifSpawner].movingSign.color = signColor;
-        actifSpawnerScript[ActifSpawner].NbrOfShoot++;
-
-        yield return new WaitForSeconds(timeBetweenEachShoot/2);
-        actifSpawnerScript[ActifSpawner].HasToLookAt = true;
-
-        if (actifSpawnerScript[ActifSpawner].NbrOfShoot == nbrOfShot)
-        {
-            StartCoroutine(StopUseShootLava(ActifSpawner));
-        }
-        //}
-    }
-    IEnumerator StopUseShootLava(int i)
-    {
-        actifSpawnerScript[i].HasToLookAt = false;
-        actifSpawnerScript[i].NbrOfShoot = 0;
-
-        yield return StartCoroutine(EntranceAndExit(startAndEndCurve[1], i, actifSpawner[i])); 
-
-        actifSpawnerParent[i].gameObject.SetActive(false);
-        actifSpawnerScript[i].pivotPoint.gameObject.SetActive(false);
-        actifSpawnerScript[i].HasToLookAt = true;
-    }
-
     IEnumerator MovingOrbsSign(AnimationCurve curve, int actifSpawner)
     {
         float _currentTimeOfAnimation = 0;
@@ -237,16 +238,13 @@ public class LavaBeamController : BossAttack
         {
             yield return new WaitForSeconds(Time.deltaTime);
             _currentTimeOfAnimation += Time.deltaTime;
-            //Debug.Log(actifSpawner + " " + _currentTimeOfAnimation);
             float size = curve.Evaluate(_currentTimeOfAnimation / timeBeforeShooting);
 
             Vector2 tempTrans = actifSpawnerScript[actifSpawner].sign.rectTransform.sizeDelta;
-            //tempTrans.y = minSignSize + maxSignSize * size;
             tempTrans.y = Mathf.Lerp(0, maxSignSize, size);
             actifSpawnerScript[actifSpawner].movingSign.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tempTrans.y);
             yield return null;
         }
-        //Debug.Log(actifSpawner + " " + _currentTimeOfAnimation);
         _currentTimeOfAnimation = 0;
     }
 
