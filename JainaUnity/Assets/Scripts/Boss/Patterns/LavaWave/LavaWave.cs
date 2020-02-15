@@ -27,7 +27,7 @@ public class LavaWave : Spell
                 CharacterStats.LavaWaveTickDamage = m_lavaWaveTickDamage;
             }
 
-            CharacterStats.OnCharacterEnterInLavaWaveArea();
+            CharacterStats.OnCharacterEnterInLavaWave();
         }
 
 	}
@@ -37,7 +37,7 @@ public class LavaWave : Spell
         {
             // Debug.Log("OnTriggerExit");
             CharacterStats = col.gameObject.GetComponent<CharacterStats>();
-            CharacterStats.OnCharacterExitInLavaWaveArea();
+            CharacterStats.OnCharacterExitInLavaWave();
         }
     }
     

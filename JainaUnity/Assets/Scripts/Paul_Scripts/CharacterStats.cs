@@ -396,19 +396,19 @@ public class CharacterStats : MonoBehaviour {
             m_lavaWaveTickDamage = value;
         }
     }
-    public void OnCharacterEnterInLavaWaveArea()
+    public void OnCharacterEnterInLavaWave()
     {
         m_characterInLavaWave = true;
         if(m_actualLavaWaveTick == 0){
             m_actualLavaWaveTick = m_lavaWaveTick;
         }
     }
-    public void OnCharacterExitInLavaWaveArea()
+    public void OnCharacterExitInLavaWave()
     {
         m_characterInLavaWave = false;
         m_actualLavaWaveTick = m_lavaWaveTick;
     }
-    void LavaWaveAreaDamage()
+    void LavaWaveDamage()
     {
         m_actualLavaWaveTick -= Time.deltaTime;
         if(m_actualLavaWaveTick <= 0)
@@ -420,6 +420,62 @@ public class CharacterStats : MonoBehaviour {
                 StartHitFxCorout();
             }
             m_actualLavaWaveTick = m_lavaWaveTick;
+        }
+    }
+
+    bool m_characterInLavaWaveArea = false;
+    float m_lavaWaveAreaTick;
+    public float LavaWaveAreaTick
+    {
+        get
+        {
+            return m_lavaWaveAreaTick;
+        }
+
+        set
+        {
+            m_lavaWaveAreaTick = value;
+        }
+    }
+    float m_actualLavaWaveAreaTick = 0;
+
+    int m_lavaWaveAreaTickDamage;
+    public int LavaWaveAreaTickDamage
+    {
+        get
+        {
+            return m_lavaWaveAreaTickDamage;
+        }
+
+        set
+        {
+            m_lavaWaveAreaTickDamage = value;
+        }
+    }
+    public void OnCharacterEnterInLavaWaveArea()
+    {
+        m_characterInLavaWaveArea = true;
+        if(m_actualLavaWaveAreaTick == 0){
+            m_actualLavaWaveAreaTick = m_lavaWaveAreaTick;
+        }
+    }
+    public void OnCharacterExitInLavaWaveArea()
+    {
+        m_characterInLavaWaveArea = false;
+        m_actualLavaWaveAreaTick = m_lavaWaveAreaTick;
+    }
+    void LavaWaveAreaDamage()
+    {
+        m_actualLavaWaveAreaTick -= Time.deltaTime;
+        if(m_actualLavaWaveAreaTick <= 0)
+        {
+            if(m_playerState != null){
+                m_playerState.TakeDamage(m_lavaWaveAreaTickDamage);
+            }else{
+                TakeDamage(m_lavaWaveAreaTickDamage);
+                StartHitFxCorout();
+            }
+            m_actualLavaWaveAreaTick = m_lavaWaveAreaTick;
         }
     }
 
@@ -489,6 +545,9 @@ public class CharacterStats : MonoBehaviour {
             LavaAreaDamage();
         }
         if(m_characterInLavaWave && ! isDead){
+            LavaWaveDamage();
+        }
+        if(m_characterInLavaWaveArea && ! isDead){
             LavaWaveAreaDamage();
         }
         if(m_characterInLaser && !isDead){

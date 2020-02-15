@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,8 +34,21 @@ public class LavaWaveController : BossAttack
         public AnimationCurve m_moveCurve;
     }
 
-    [Space]
-    [SerializeField] float m_waitTimeToShowHitSings = 10;
+    [Header("Lava Wave Area")]
+    [SerializeField] LavaWaveArea m_lavaWaveArea;
+    [System.Serializable] class LavaWaveArea
+    {
+        public GroundHitSign m_waveAreaMask;
+        public float m_waitTimeToStartShowLavaWaveArea = 10;
+        public float m_rightXPos = -9;
+        public float m_leftXPos = 11.5f;
+
+        [Header("Anim")]
+        public float m_timeToShowLavaArea = 15;
+        [Space]
+        public float m_yLavaPos;
+        public float m_timeToMoveYLavaPos = 1;
+    }
 
     [Header("Debug")]
     [SerializeField] bool m_useDebugInput = false;
@@ -43,12 +56,23 @@ public class LavaWaveController : BossAttack
 
 #region Private Variables
     PlayerManager m_playerManager;
-#endregion
 
-#region Event Functions
+    float m_moveZPosSpeed;
+    public float MoveZPosSpeed
+    { get { return m_moveZPosSpeed; } }
+
+    float m_startYLavaWaveAreaPos;
+    #endregion
+
+    #region Event Functions
     void Start()
     {
         m_playerManager = PlayerManager.Instance;
+
+        float distance = Mathf.Abs(m_moveZPos.m_fromValue - m_moveZPos.m_toValue);
+        m_moveZPosSpeed = distance / m_moveZPos.m_timeToMove;
+
+        m_startYLavaWaveAreaPos = m_lavaWaveArea.m_waveAreaMask.transform.localPosition.y;
     }
     void Update()
     {
@@ -96,11 +120,34 @@ public class LavaWaveController : BossAttack
         m_lavaWave.gameObject.SetActive(false);
     }
 
-    IEnumerator WaitTimeToStopShowHitSigns()
+    IEnumerator WaitTimeToStartShowLavaWaveArea(float xPos)
     {
-        yield return new WaitForSeconds(m_waitTimeToShowHitSings);
+        yield return new WaitForSeconds(m_lavaWaveArea.m_waitTimeToStartShowLavaWaveArea);
+        m_lavaWaveArea.m_waveAreaMask.transform.localPosition = new Vector3(m_lavaWaveArea.m_waveAreaMask.transform.localPosition.x, m_startYLavaWaveAreaPos, m_lavaWaveArea.m_waveAreaMask.transform.localPosition.z);
+        m_lavaWaveArea.m_waveAreaMask.StartToMoveWithSpeed(xPos, m_moveZPosSpeed, this);
+    }
+    IEnumerator ShowingLavaWaveArea()
+    {
         m_right.m_hitSign.StopShowSign();
         m_left.m_hitSign.StopShowSign();
+        yield return new WaitForSeconds(m_lavaWaveArea.m_timeToShowLavaArea);
+        StartCoroutine(MovaLavaYPos());
+    }
+    IEnumerator MovaLavaYPos()
+    {
+        Vector3 fromPos = m_lavaWaveArea.m_waveAreaMask.transform.localPosition;
+        Vector3 toPos = new Vector3(m_lavaWaveArea.m_waveAreaMask.transform.localPosition.x, m_lavaWaveArea.m_yLavaPos, m_lavaWaveArea.m_waveAreaMask.transform.localPosition.z);
+
+        float fracJourney = 0;
+        float distance = Vector3.Distance(fromPos, toPos);
+        float speed = distance / m_lavaWaveArea.m_timeToMoveYLavaPos;
+
+        while (m_lavaWaveArea.m_waveAreaMask.transform.localPosition != toPos)
+        {
+            fracJourney += (Time.deltaTime) * speed / distance;
+            m_lavaWaveArea.m_waveAreaMask.transform.localPosition = Vector3.Lerp(fromPos, toPos, fracJourney);
+            yield return null;
+        }
     }
 
     bool PlayerPosIsClosestToRightPos()
@@ -138,19 +185,24 @@ public class LavaWaveController : BossAttack
 
         float yPos = PlayerPosIsClosestToRightPos() ? m_lavaWave.localPosition.y : - m_lavaWave.localPosition.y;
         m_lavaWave.localPosition = new Vector3(LavaXPos(), yPos, m_lavaWave.localPosition.z);
+
+        float lavaWaveAreaXPos;
         if(PlayerPosIsClosestToRightPos())
         {
             m_right.m_hitSign.StartToMove();
             m_right.m_hitSign.StartToChangeColor();
+            lavaWaveAreaXPos = m_lavaWaveArea.m_rightXPos;
         }
         else
         {
             m_left.m_hitSign.StartToMove();
             m_left.m_hitSign.StartToChangeColor();
+            lavaWaveAreaXPos = m_lavaWaveArea.m_leftXPos;
         }
         StartCoroutine(MoveYPosition());
         StartCoroutine(MoveZPosition());
-        StartCoroutine(WaitTimeToStopShowHitSigns());
+
+        StartCoroutine(WaitTimeToStartShowLavaWaveArea(lavaWaveAreaXPos));
     }
 
     public override void On_AttackEnd()
@@ -164,6 +216,11 @@ public class LavaWaveController : BossAttack
         base.On_GolemAreGoingToDie();
         m_right.m_hitSign.StopAllGroundHitCoroutine();
         m_left.m_hitSign.StopAllGroundHitCoroutine();
+    }
+
+    public void On_LavaWaveAreaStopped()
+    {
+        StartCoroutine(ShowingLavaWaveArea());
     }
 #endregion
 

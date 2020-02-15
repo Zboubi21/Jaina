@@ -412,13 +412,13 @@ public class GolemController : MonoBehaviour
             m_bossSoundManager.On_GolemSwitchToP3();
         }
 
-        float delayToStartAttack = m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 2] - 1;
-        yield return new WaitForSeconds(delayToStartAttack - m_bossAttacks.m_waitTimeToStartLavaWave);
+        yield return new WaitForSeconds(m_bossAttacks.m_waitTimeToStartLavaWave);
 
         SetTriggerAnimation("LavaWave");
         m_bossAttacks.m_lavaWaveAttack.On_AttackBegin(0);
 
-        yield return new WaitForSeconds(delayToStartAttack);
+        float delayToStartAttack = m_bossAttacks.m_delayToChangeBossPhase[m_phaseNbr - 2] - 1;
+        yield return new WaitForSeconds(delayToStartAttack - m_bossAttacks.m_waitTimeToStartLavaWave);
         StartAttack();
     }
 

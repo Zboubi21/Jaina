@@ -24,6 +24,7 @@ public class GroundHitSign : MonoBehaviour
     }
 
     Image m_image;
+    LavaWaveController m_lavaWaveController;
 
     void Start()
     {
@@ -48,6 +49,29 @@ public class GroundHitSign : MonoBehaviour
         }
         if (m_hideImageAfterMove)
             EnableSignImg(false);
+    }
+    IEnumerator HitMoveSignWithSpeed(float xPos, float speed)
+    {
+        Vector3 fromPos = m_startLocalPos;
+        fromPos.x = xPos;
+        Vector3 toPos = m_endLocalPos;
+        toPos.x = xPos;
+
+        float fracJourney = 0;
+        float distance = Vector3.Distance(fromPos, toPos);
+
+        while (transform.localPosition != toPos)
+        {
+            fracJourney += (Time.deltaTime) * speed / distance;
+            transform.localPosition = Vector3.Lerp(fromPos, toPos, m_moveCurve.Evaluate(fracJourney));
+            yield return null;
+        }
+
+        if (m_hideImageAfterMove)
+            EnableSignImg(false);
+
+        if (m_lavaWaveController != null)
+            m_lavaWaveController.On_LavaWaveAreaStopped();
     }
     IEnumerator HitColorSign()
     {
@@ -74,7 +98,8 @@ public class GroundHitSign : MonoBehaviour
 
     void EnableSignImg(bool enable)
     {
-        m_image.enabled = enable;
+        if (m_image != null)
+            m_image.enabled = enable;
     }
 
     public void StartToMove()
@@ -82,6 +107,11 @@ public class GroundHitSign : MonoBehaviour
         EnableSignImg(true);
         transform.localPosition = m_startLocalPos;
         StartCoroutine(HitMoveSign());
+    }
+    public void StartToMoveWithSpeed(float xPos, float newSpeed, LavaWaveController lavaWaveController)
+    {
+        m_lavaWaveController = lavaWaveController;
+        StartCoroutine(HitMoveSignWithSpeed(xPos, newSpeed));
     }
     public void StartToChangeColor()
     {
