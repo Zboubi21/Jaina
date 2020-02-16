@@ -27,7 +27,7 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
     [Space]
 
     public float m_timeForWhiteLifeBarToDecrease;
-    [Range(0.1f,10f)]
+    [Range(0.1f,100f)]
     public float m_decreaseSpeed;
     float timeForWhiteLifeBar;
     float m_showLifeBar;
@@ -338,8 +338,11 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
 
     bool DecreaseTimer()
     {
-        timeForWhiteLifeBar -= Time.deltaTime;
-        if (timeForWhiteLifeBar <= 0)
+        if(timeForWhiteLifeBar <= m_timeForWhiteLifeBarToDecrease)
+        {
+            timeForWhiteLifeBar += Time.deltaTime;
+        }
+        if (timeForWhiteLifeBar > m_timeForWhiteLifeBarToDecrease)
         {
             return true;
         }
@@ -391,22 +394,24 @@ public class BigEnemyLifeBarManager : MonoBehaviour {
         if (!m_enemyStats.HasTakenDamage && lifeArray.m_lifeBar.fillAmount != lifeArray.m_whiteLifeBar.fillAmount || DecreaseTimer())
         {
             //Mathf.InverseLerp(0, m_enemyStats.maxHealth, m_enemyStats.CurrentHealth);
+            damageRange = (lifeArray.m_whiteLifeBar.fillAmount - lifeArray.m_lifeBar.fillAmount);
             if (go)
             {
                 whitefill = lifeArray.m_whiteLifeBar.fillAmount;
-                damageRange = (lifeArray.m_whiteLifeBar.fillAmount - lifeArray.m_lifeBar.fillAmount);
                 go = false;
             }
             time += Time.deltaTime;
+            float tempLerp = time / m_decreaseSpeed;
             //m_whiteLifeBar.fillAmount = Mathf.InverseLerp(m_lifeBar.fillAmount, whitefill, Mathf.Lerp(0, 1, Time.deltaTime / 20));
 
-            lifeArray.m_whiteLifeBar.fillAmount -= Mathf.Lerp(0 , damageRange, time / m_decreaseSpeed);
+            lifeArray.m_whiteLifeBar.fillAmount = Mathf.Lerp(whitefill, lifeArray.m_lifeBar.fillAmount, tempLerp);
 
             if(lifeArray.m_whiteLifeBar.fillAmount <= lifeArray.m_lifeBar.fillAmount)
             {
-                timeForWhiteLifeBar = m_timeForWhiteLifeBarToDecrease;
+                timeForWhiteLifeBar = 0;
                 time = 0;
                 go = true;
+
             }
         }
 
