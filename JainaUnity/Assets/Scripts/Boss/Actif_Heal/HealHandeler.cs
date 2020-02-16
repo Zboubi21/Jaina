@@ -55,9 +55,10 @@ public class HealHandeler : MonoBehaviour
         {
             return;
         }
-        if (_currentHealCount - 1 >= 0 && stats.HealDamage(healAmount) && _currenthealCooldown == 0)
+        if (_currentHealCount > 0 && _currenthealCooldown == 0 && stats.CurrentHealth != stats.maxHealth)
         {
             _currentHealCount--;
+            stats.HealDamage(healAmount);
             startCoolDown = true;
             _getImg.count.text = string.Format("x {0}", _currentHealCount);
             if (artefactRef != null)
