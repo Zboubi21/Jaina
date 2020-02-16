@@ -623,7 +623,7 @@ public class GolemController : MonoBehaviour
         {
             Level.AddFX(m_die.m_dieSFX[i], Vector3.zero, Quaternion.identity);
         }
-        m_playerManager.SwitchPlayerToCinematicState(900);
+        m_playerManager.SwitchPlayerToEndBossCinematicState(900);
         m_playerManager.StartCoroutine(m_playerManager.StartBossFightBlackScreen());
         m_cameraManager.StartCoroutine(m_cameraManager.LookEndBossFightPos());
         ActivateArmedialLight();

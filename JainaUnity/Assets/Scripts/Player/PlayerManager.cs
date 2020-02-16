@@ -442,6 +442,11 @@ public class PlayerManager : MonoBehaviour {
 		public float m_timeToEndAnim = 3;
 		public AnimationCurve m_curve;
 
+		[Header("End Boss Animation")]
+		public CanvasGroup[] m_canvasToHideWhenInCinematic;
+		public float m_timeToChangeCanvaGroupValues = 1;
+		public AnimationCurve m_curveToChangeCanvaGroupValues;
+
 		[Header("Boss Black Screen")]
 		public Animator m_winScreenAnimator;
 		public float m_waitTimeToShowWinText = 7.5f;
@@ -2064,6 +2069,33 @@ public class PlayerManager : MonoBehaviour {
 	}
 	public void GetOutOfCinematicState(){
 		ChangeState(PlayerState.NoThrowSpellState);
+	}
+	public void SwitchPlayerToEndBossCinematicState(float timeToBeInCinematic){
+		m_cinematic.m_timeToBeInCinematic = timeToBeInCinematic;
+		ChangeState(PlayerState.PlayerCinematicState);
+
+		StartCoroutine(ChangeCinematicCanvaGroup());
+	}
+	IEnumerator ChangeCinematicCanvaGroup(){
+		
+		float fromValue = 1;
+		float toValue = 0;
+
+		float distance = Mathf.Abs(fromValue - toValue);
+		float vitesse = distance / m_cinematic.m_timeToChangeCanvaGroupValues;
+		float moveFracJourney = new float();
+		float actualValue = fromValue;
+
+		while(actualValue != toValue){
+			moveFracJourney += (Time.deltaTime) * vitesse / distance;
+			actualValue = Mathf.Lerp(fromValue, toValue, m_cinematic.m_curveToChangeCanvaGroupValues.Evaluate(moveFracJourney));
+			
+			for (int i = 0, l = m_cinematic.m_canvasToHideWhenInCinematic.Length; i < l; ++i)
+			{
+				m_cinematic.m_canvasToHideWhenInCinematic[i].alpha = actualValue;
+			}
+			yield return null;
+		}
 	}
 
 	public GameObject SpawnRandomGameObject(GameObject[] objects){
