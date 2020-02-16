@@ -60,7 +60,7 @@ public class LavaBeamController : BossAttack
     {
 #if UNITY_EDITOR
 
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M) && m_debugInput)
         {
             StartLaser(phaseNbr);
             lavaBeamPaternActif = true;
