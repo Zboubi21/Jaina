@@ -24,6 +24,8 @@ public class HealHandeler : MonoBehaviour
     ReferenceScript _getImg;
     CharacterStats stats;
 
+
+    bool startCoolDown;
     private void Start()
     {
         _getImg = GetComponent<ReferenceScript>();
@@ -53,10 +55,12 @@ public class HealHandeler : MonoBehaviour
         {
             return;
         }
-        if (_currentHealCount - 1 >= 0 && stats.HealDamage(healAmount))
+        if (_currentHealCount - 1 >= 0 && stats.HealDamage(healAmount) && _currenthealCooldown == 0)
         {
             _currentHealCount--;
-            if(artefactRef != null)
+            startCoolDown = true;
+            _getImg.count.text = string.Format("x {0}", _currentHealCount);
+            if (artefactRef != null)
             {
                 StartCoroutine(ArmedialsHealFeedBack());
                 Level.AddFX(m_healVFX_ForArmedial, artefactRef.VFX_Spawn.position, artefactRef.VFX_Spawn.rotation);
@@ -114,7 +118,7 @@ public class HealHandeler : MonoBehaviour
 
     public void HealCoolDownHandeler()
     {
-        if (_currentHealCount < maxHealCount)
+        if (startCoolDown)
         {
             _currenthealCooldown += Time.deltaTime;
 
@@ -122,24 +126,25 @@ public class HealHandeler : MonoBehaviour
             {
                 _getImg.marksArray[1].fillAmount = Mathf.InverseLerp(0, healCooldown, _currenthealCooldown);
             }
-            else
+            /*else
             {
                 _getImg.marksArray[1].fillAmount = 0;
                 _getImg.marksArray[0].fillAmount = Mathf.InverseLerp(0, healCooldown, _currenthealCooldown);
-            }
+            }*/
 
             if (_currenthealCooldown >= healCooldown)
             {
                 _currenthealCooldown = 0;
-                _currentHealCount++;
+                startCoolDown = false;
+                //_currentHealCount++;
             }
         }
-        else
+        /*else
         {
             _currentHealCount = maxHealCount;
-        }
+        }*/
 
-        _getImg.count.text = string.Format("x {0}", _currentHealCount);
+        //_getImg.count.text = string.Format("x {0}", _currentHealCount);
 
     }
 }

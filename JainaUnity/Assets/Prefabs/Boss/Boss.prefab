@@ -5882,21 +5882,21 @@ MonoBehaviour:
   m_bossAttacks:
     m_attacks:
     - m_attack: {fileID: 0}
-      m_probability: 10
+      m_probability: 15
     - m_attack: {fileID: 0}
-      m_probability: 40
+      m_probability: 50
     - m_attack: {fileID: 0}
-      m_probability: 40
+      m_probability: 35
     - m_attack: {fileID: 0}
-      m_probability: 10
+      m_probability: 0
     m_lavaWaveAttack: {fileID: 0}
     m_stalactiteNbrTrigger:
-    - m_triggerFallStalactite: 4
-      m_triggerArmedialsWrath: 10
-    - m_triggerFallStalactite: 6
-      m_triggerArmedialsWrath: 20
     - m_triggerFallStalactite: 8
-      m_triggerArmedialsWrath: 23
+      m_triggerArmedialsWrath: 20
+    - m_triggerFallStalactite: 13
+      m_triggerArmedialsWrath: 30
+    - m_triggerFallStalactite: 15
+      m_triggerArmedialsWrath: 35
     m_delayBetweenAttacks:
     - 4
     - 3
@@ -5912,6 +5912,9 @@ MonoBehaviour:
     m_changePhaseScream_SFX: {fileID: 1259768221557958327, guid: d91dd88220ca8db42b3d89c4d1acd38c,
       type: 3}
     m_waitTimeToStartLavaWave: 4
+  m_mapPositions:
+    m_rightPos: {fileID: 0}
+    m_leftPos: {fileID: 0}
   m_fxs:
     m_freezed: {fileID: 0}
     m_markExplosion: {fileID: 1824010770675008, guid: a0d7f57f658ad324990e59977dfd6da6,
