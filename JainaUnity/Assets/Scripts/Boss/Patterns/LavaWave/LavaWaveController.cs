@@ -50,6 +50,11 @@ public class LavaWaveController : BossAttack
         public float m_timeToMoveYLavaPos = 1;
     }
 
+    [Header("Positions")]
+    [SerializeField] Transform m_lavaPivot;
+    [SerializeField] float m_rightPivotRotation = 45;
+    [SerializeField] float m_leftPivotRotation = -45;
+
     [Header("Debug")]
     [SerializeField] bool m_useDebugInput = false;
 #endregion
@@ -187,15 +192,20 @@ public class LavaWaveController : BossAttack
         base.On_AttackBegin(phaseNbr);
         m_lavaWave.gameObject.SetActive(true);
 
+        bool playerPosIsClosestToRightPos = GolemController.PlayerPosIsClosestToRightPos();
+
+        float yPivotRot = playerPosIsClosestToRightPos ? m_rightPivotRotation : m_leftPivotRotation;
+        m_lavaPivot.localEulerAngles = new Vector3(m_lavaPivot.localEulerAngles.x, yPivotRot, m_lavaPivot.localEulerAngles.z);
+
         // Set x LavaWave pos
         m_lavaWave.localPosition = new Vector3(LavaXPos(), m_lavaWave.localPosition.y, m_lavaWave.localPosition.z);
 
         // Set LavaWave scale
-        float zScale = GolemController.PlayerPosIsClosestToRightPos() ? -m_startZLavaWaveScale : m_startZLavaWaveScale;
+        float zScale = playerPosIsClosestToRightPos ? -m_startZLavaWaveScale : m_startZLavaWaveScale;
         m_lavaWave.localScale = new Vector3(m_lavaWave.localScale.x, m_lavaWave.localScale.y, zScale);
 
         float lavaWaveAreaXPos;
-        if(GolemController.PlayerPosIsClosestToRightPos())
+        if(playerPosIsClosestToRightPos)
         {
             m_right.m_hitSign.StartToMove();
             m_right.m_hitSign.StartToChangeColor();

@@ -273,8 +273,23 @@ public class GolemController : MonoBehaviour
         {
             m_fightIsStarted = true;
         }
+
         AttackType attackToDo = ChoseAttack();
         // Debug.Log("attackToDo = " + attackToDo);
+        
+        // ----- Se déclanche uniquement après un changement de phase ------
+        if(m_needToLavaOrbs)
+        {
+            m_needToLavaOrbs = false;
+            attackToDo = AttackType.LavaBeam;
+        }
+        else if (!m_needToLavaOrbs && m_needToDoArmedialsWrathCustom)
+        {
+            m_needToDoArmedialsWrathCustom = false;
+            attackToDo = AttackType.ArmedialsWrathCustom;
+        }
+
+        // ----- Se déclanche le reste du temps ------
 
         if (attackToDo == AttackType.ArmedialsWrathCustom)
         {
@@ -317,19 +332,7 @@ public class GolemController : MonoBehaviour
 
     AttackType ChoseAttack()
     {
-        // ----- Se déclanche uniquement après un changement de phase ------
-        if(m_needToLavaOrbs)
-        {
-            m_needToLavaOrbs = false;
-            return AttackType.LavaBeam;
-        }
-        if(m_needToDoArmedialsWrathCustom)
-        {
-            m_needToDoArmedialsWrathCustom = false;
-            return AttackType.ArmedialsWrathCustom;
-        }
 
-        // ----- Se déclanche le reste du temps ------
         CheckStalactiteNbr();
         
         // Est-ce qu'il faut faire un "ArmedialsWrath" car il y a trop de stalactite ?
@@ -395,7 +398,7 @@ public class GolemController : MonoBehaviour
     
     IEnumerator DelayToDoNextAttack()
     {
-        if(m_needToChangePhase)
+        if(m_needToChangePhase && !m_needToLavaOrbs && !m_needToDoArmedialsWrathCustom) // TEST
         {
             StartCoroutine(ChangePhase(true));
         }
@@ -403,7 +406,7 @@ public class GolemController : MonoBehaviour
         {
             float delay = m_bossAttacks.m_delayBetweenAttacks[m_phaseNbr - 1];
             yield return new WaitForSeconds(delay);
-            if(m_needToChangePhase)
+            if(m_needToChangePhase && !m_needToLavaOrbs && !m_needToDoArmedialsWrathCustom) // TEST
             {
                 StartCoroutine(ChangePhase(false));
             }
