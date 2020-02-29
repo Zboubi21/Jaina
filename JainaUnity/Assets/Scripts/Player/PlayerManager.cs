@@ -2001,6 +2001,10 @@ public class PlayerManager : MonoBehaviour {
 		CameraShaker.Instance.ShakeOnce(magnitude, rougness, fadeInTime, fadeOutTime);
 	}
 
+	public void MoveToNewPos(Transform newPos)
+	{
+		m_agent.SetDestination(newPos.position);
+	}
 	public void SetTpPoint(Vector3 position){
 		m_agent.Warp(position);
 	}
