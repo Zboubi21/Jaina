@@ -585,7 +585,11 @@ public class StalactiteController : MonoBehaviour
 
         if (IsCristilize)
         {
-            PlayerManager.Instance.GetComponentInChildren<CristalsChargeCounter>().AddCristCount();
+            CristalsChargeCounter cris = PlayerManager.Instance.GetComponentInChildren<CristalsChargeCounter>();
+            if (cris != null)
+            {
+                cris.AddCristCount();
+            }
             Level.AddFX(m_destroyExplosion.cristalExpolion, transform.position, Quaternion.identity);
         }
         else

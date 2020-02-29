@@ -614,7 +614,7 @@ public class EnemyStats : CharacterStats {
     {
         base.Update();
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(4999);
@@ -627,7 +627,7 @@ public class EnemyStats : CharacterStats {
         {
             TakeDamage(100);
         }
-#endif
+//#endif
         MarksCoolDownMethods();
         if (hasTakenDamage)
         {
@@ -782,10 +782,20 @@ public class EnemyStats : CharacterStats {
         }
         else
         {
-            float n_damage = damage * (cris.CristCount * cris.percentDamageMultiplicator + 1);
-            if (CurrentHealth > 0)
+            if(cris != null)
             {
-                CurrentHealth -= n_damage;
+                float n_damage = damage * (cris.CristCount * cris.percentDamageMultiplicator + 1);
+                if (CurrentHealth > 0)
+                {
+                    CurrentHealth -= n_damage;
+                }
+            }
+            else
+            {
+                if (CurrentHealth > 0)
+                {
+                    CurrentHealth -= damage;
+                }
             }
 
             CheckIfHasToDie(CurrentHealth);
