@@ -327,6 +327,10 @@ public class GolemController : MonoBehaviour
             case AttackType.ArmedialsWrath:
                 SetTriggerAnimation("Armedial's Wrath");
             break;
+
+            case AttackType.ArmedialsWrathCustom:
+                SetTriggerAnimation("Armedial's Wrath");
+            break;
         }
     }
 
