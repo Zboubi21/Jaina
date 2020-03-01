@@ -614,7 +614,7 @@ public class EnemyStats : CharacterStats {
     {
         base.Update();
 
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(4999);
@@ -627,7 +627,7 @@ public class EnemyStats : CharacterStats {
         {
             TakeDamage(100);
         }
-//#endif
+#endif
         MarksCoolDownMethods();
         if (hasTakenDamage)
         {
