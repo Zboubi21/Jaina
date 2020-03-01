@@ -119,6 +119,8 @@ public class StalactiteController : MonoBehaviour
     [Header("DEBUG")]
     [SerializeField] bool m_canExploded = false;
     [SerializeField] bool m_canUseDebugInputs = false;
+    [SerializeField] bool m_canUseDebugCris = false;
+    [SerializeField] bool m_isFakeCris = false;
 
     [Serializable] public class CameraShake {
         public float m_magnitudeShake = 4f;
@@ -280,6 +282,12 @@ public class StalactiteController : MonoBehaviour
         }
 
         m_firstInitialization = true;
+
+        if (m_canUseDebugCris)
+        {
+            m_cristals.cristalsParent.SetActive(m_isFakeCris);
+        }
+
     }
 
     void Update()
@@ -360,7 +368,10 @@ public class StalactiteController : MonoBehaviour
         }
         m_objectPooler.ReturnEnemyToPool(EnemyType.Stalactite, gameObject);
 
-        m_golemController.On_StalactiteDie(this);
+        if(m_golemController != null)
+        {
+            m_golemController.On_StalactiteDie(this);
+        }
     }
 
     void ResetStalactiteForPool()
@@ -581,7 +592,10 @@ public class StalactiteController : MonoBehaviour
     public void OnBeKilled()
     {
         DisableStalactite();
-        spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false, hasSpawnInRedSlots);
+        if(spawnManager != null)
+        {
+            spawnManager.StalactiteHasBeenDestroyed(intSlotPosition, false, hasSpawnInRedSlots);
+        }
 
         if (IsCristilize)
         {

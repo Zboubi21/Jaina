@@ -20,11 +20,13 @@ public class CameraDisplayController : MonoBehaviour
             {
                 cam.enabled = true;
                 toggleOn = true;
+                Time.timeScale = 0.5f;
             }
             else if(Input.GetKeyDown(input) && toggleOn)
             {
                 cam.enabled = false;
                 toggleOn = false;
+                Time.timeScale = 1f;
             }
         }
     }
