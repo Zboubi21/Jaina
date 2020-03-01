@@ -596,6 +596,31 @@ public class GolemController : MonoBehaviour
         m_bossSoundManager.On_GolemStartFight();
     }
 
+    // Start the fight with all crystals and eyes active (for the trailer)
+    public void On_StartFightForTrailer()
+    {
+        m_die.m_golemCrystal.On_CrystalLive(true);
+        for (int i = 0, l = m_die.m_phase2Crystal.Length; i < l; ++i)
+        {
+            m_die.m_phase2Crystal[i].On_CrystalLive(true);
+        }
+        m_die.m_phase3Crystal.On_CrystalLive(true);
+
+        m_die.m_golemTornado.On_ScaleTornado(true);
+        m_die.m_assFX.IsVisible = true;
+        
+        StartCoroutine(WaitTimeToLunchFirstAttack());
+
+        m_bossSoundManager.On_GolemStartFight();
+    }
+    public void On_ActiveGolemEyes()
+    {
+        for (int i = 0, l = m_die.m_phase3Particles.Length; i < l; ++i)
+        {
+            m_die.m_phase3Particles[i].Play();
+        }
+    }
+
     public void On_GolemChangePhase()
     {
         m_needToChangePhase = true;
